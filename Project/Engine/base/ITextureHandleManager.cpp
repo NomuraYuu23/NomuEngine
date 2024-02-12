@@ -16,13 +16,12 @@ void ITextureHandleManager::SetTextureHandle(uint32_t textureHandle)
 void ITextureHandleManager::ResetTextureHandles()
 {
 
-	std::vector<uint32_t> textureHandles;
+	//std::vector<uint32_t> textureHandles;
 
-	for (uint32_t i = 0; i < indexNextTextureHandle_; ++i) {
-		textureHandles.push_back(textureHandles_[i]);
-	}
+	//for (uint32_t i = 0; i < indexNextTextureHandle_; ++i) {
+	//	textureHandles.push_back(textureHandles_[i]);
+	//}
 
-	TextureManager::GetInstance()->ResetTexture(textureHandles);
-	//indexNextTextureHandle_ = 0u;
+	//TextureManager::GetInstance()->ResetTexture(textureHandles);
 
 }
