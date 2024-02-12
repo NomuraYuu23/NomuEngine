@@ -115,6 +115,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Animation\AnimationFile.cpp" />
     <ClCompile Include="Engine\Animation\IBone.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
+    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\ITextureHandleManager.cpp" />
     <ClCompile Include="Engine\Collider\Capsule\Capsule.cpp" />
     <ClCompile Include="Engine\Line\Line.cpp" />
@@ -195,6 +196,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Animation\BoneData.h" />
     <ClInclude Include="Engine\Animation\IBone.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
+    <ClInclude Include="Engine\base\DescriptorHerpManager.h" />
     <ClInclude Include="Engine\base\ITextureHandleManager.h" />
     <ClInclude Include="Engine\Camera\CameraForGPU.h" />
     <ClInclude Include="Engine\Collider\Capsule\Capsule.h" />

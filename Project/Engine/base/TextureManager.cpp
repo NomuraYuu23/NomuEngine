@@ -40,9 +40,6 @@ void TextureManager::Initialize(ID3D12Device* device, std::string directoryPath 
 	device_ = device;
 	directoryPath_ = directoryPath;
 
-	//ディスクリプタサイズを取得
-	descriptorHandleIncrementSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 	// 全テクスチャリセット
 	ResetAll();
 
@@ -54,16 +51,6 @@ void TextureManager::Initialize(ID3D12Device* device, std::string directoryPath 
 /// </summary>
 void TextureManager::ResetAll() {
 
-	HRESULT result = S_FALSE;
-
-	// ディスクリプタヒープを生成
-	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descHeapDesc.NumDescriptors = kNumDescriptors;
-	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descriptorHeap_));
-	assert(SUCCEEDED(result));
-
 	ResetTexture();
 
 }
@@ -71,26 +58,49 @@ void TextureManager::ResetAll() {
 void TextureManager::ResetTexture()
 {
 
+	uint32_t descriptorSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	uint32_t srvPtr = 0;
+	uint32_t makeNullIndex = 0;
+	uint32_t forHeapStartPtr = static_cast<uint32_t>(DescriptorHerpManager::descriptorHeap_->GetCPUDescriptorHandleForHeapStart().ptr);
+
 	//全テクスチャを初期化
-	for (size_t i = 0; i < kNumDescriptors; i++) {
+	for (size_t i = 0; i < DescriptorHerpManager::kNumDescriptors; i++) {
+
+		srvPtr = static_cast<uint32_t>(textures_[i].cpuDescHandleSRV.ptr);
+		makeNullIndex = srvPtr - forHeapStartPtr;
+		makeNullIndex /= descriptorSize;
+
 		textures_[i].resource.Reset();
 		textures_[i].cpuDescHandleSRV.ptr = 0;
 		textures_[i].gpuDescHandleSRV.ptr = 0;
 		textures_[i].name.clear();
 		textures_[i].used = false;
+		DescriptorHerpManager::DescriptorHeapsMakeNull(static_cast<uint32_t>(i));
 	}
 
 }
 
 void TextureManager::ResetTexture(const std::vector<uint32_t>& handles)
 {
+
+	uint32_t descriptorSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	uint32_t srvPtr = 0;
+	uint32_t makeNullIndex = 0;
+	uint32_t forHeapStartPtr = static_cast<uint32_t>(DescriptorHerpManager::descriptorHeap_->GetCPUDescriptorHandleForHeapStart().ptr);
+
 	//指定したハンドルのテクスチャを初期化
 	for (uint32_t i = 0; i < handles.size(); i++) {
+
+		srvPtr = static_cast<uint32_t>(textures_[handles[i]].cpuDescHandleSRV.ptr);
+		makeNullIndex = srvPtr - forHeapStartPtr;
+		makeNullIndex /= descriptorSize;
+		
 		textures_[handles[i]].resource.Reset();
 		textures_[handles[i]].cpuDescHandleSRV.ptr = 0;
 		textures_[handles[i]].gpuDescHandleSRV.ptr = 0;
 		textures_[handles[i]].name.clear();
 		textures_[handles[i]].used = false;
+		DescriptorHerpManager::DescriptorHeapsMakeNull(makeNullIndex);
 	}
 
 }
@@ -117,7 +127,7 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle) {
 
 	assert(textureHandle < textures_.size());
-	ID3D12DescriptorHeap* ppHeaps[] = { descriptorHeap_.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorHerpManager::descriptorHeap_.Get() };
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	
 	//シェーダーリソースビューをセット
@@ -152,23 +162,6 @@ std::string TextureManager::ConvertString(const std::wstring& str) {
 	std::string result(sizeNeeded, 0);
 	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
 	return result;
-}
-
-
-D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
-
 }
 
 //テキストデータを読む
@@ -268,7 +261,7 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 		}
 	}
 
-	assert(indexNextDescriptorHeap < kNumDescriptors);
+	assert(indexNextDescriptorHeap < DescriptorHerpManager::kNumDescriptors);
 	uint32_t handle = indexNextDescriptorHeap;
 
 	Texture& texture = textures_.at(handle);
@@ -324,8 +317,9 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 	const uint32_t desriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	texture.cpuDescHandleSRV = GetCPUDescriptorHandle(descriptorHeap_.Get(), desriptorSizeSRV, indexNextDescriptorHeap + textureIndexDescriptorHeap);
-	texture.gpuDescHandleSRV = GetGPUDescriptorHandle(descriptorHeap_.Get(), desriptorSizeSRV, indexNextDescriptorHeap + textureIndexDescriptorHeap);
+	texture.cpuDescHandleSRV = DescriptorHerpManager::GetCPUDescriptorHandle();
+	texture.gpuDescHandleSRV = DescriptorHerpManager::GetGPUDescriptorHandle();
+	DescriptorHerpManager::NextIndexDescriptorHeapChange();
 	//SRVの生成
 	device_->CreateShaderResourceView(texture.resource.Get(), &srvDesc, texture.cpuDescHandleSRV);
 

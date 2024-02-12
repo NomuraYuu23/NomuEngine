@@ -4,6 +4,7 @@
 #include "../3D/Model.h"
 #include "../Math/DeltaTime.h"
 #include "../../Application/Particle/MakeEmitter.h"
+#include "../base/DescriptorHerpManager.h"
 
 uint32_t ParticleManager::kNumInstanceMax_ = 32768;
 
@@ -59,8 +60,9 @@ void ParticleManager::SRVCreate()
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstanceMax_;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-	instancingSrvHandleCPU_ = TextureManager::GetInstance()->StaticGetCPUDescriptorHandle(1);
-	instancingSrvHandleGPU_ = TextureManager::GetInstance()->StaticGetGPUDescriptorHandle(1);
+	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
+	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
+	DescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(particleForGPUBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 
 }

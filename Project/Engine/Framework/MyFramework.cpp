@@ -11,6 +11,10 @@ void MyFramework::Initialize()
 	dxCommon = DirectXCommon::GetInstance();
 	dxCommon->Initialize(win);
 
+	// ディスクリプタヒープ
+	descriptorHerpManager = DescriptorHerpManager::GetInstance();
+	descriptorHerpManager->Initialize(dxCommon);
+
 	//入力デバイス
 	input = Input::GetInstance();
 	input->Initialize(win->GetHInstance(), win->GetHwnd());
@@ -51,7 +55,7 @@ void MyFramework::Initialize()
 
 	// ImGuiマネージャー
 	imGuiManager = ImGuiManager::GetInstance();
-	imGuiManager->Initialize(win, dxCommon, TextureManager::GetInstance());
+	imGuiManager->Initialize(win, dxCommon);
 
 	//グローバル変数ファイル読み込み
 	GlobalVariables::GetInstance()->LoadFiles();

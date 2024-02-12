@@ -10,6 +10,7 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "ITextureHandleManager.h"
+#include "DescriptorHerpManager.h"
 
 using namespace DirectX;
 
@@ -17,8 +18,6 @@ using namespace DirectX;
 class TextureManager
 {
 public:
-	//ディスクリプタの数
-	static const size_t kNumDescriptors = 256;
 
 	struct Texture{
 		// テクスチャリソース
@@ -84,13 +83,6 @@ public:
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
 
-	static ID3D12DescriptorHeap* StaticGetDescriptorHeap() { return GetInstance()->descriptorHeap_.Get(); }
-
-	static D3D12_CPU_DESCRIPTOR_HANDLE StaticGetCPUDescriptorHandle(uint32_t index) { return GetInstance()->GetCPUDescriptorHandle(GetInstance()->descriptorHeap_.Get(), GetInstance()->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV), index); }
-
-	static D3D12_GPU_DESCRIPTOR_HANDLE StaticGetGPUDescriptorHandle(uint32_t index) { return GetInstance()->GetGPUDescriptorHandle(GetInstance()->descriptorHeap_.Get(), GetInstance()->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV), index); }
-
-
 private:
 	TextureManager() = default;
 	~TextureManager() = default;
@@ -99,25 +91,15 @@ private:
 
 	//デバイス
 	ID3D12Device* device_;
-	//ディスクリプタサイズ
-	UINT descriptorHandleIncrementSize = 0u;
 	//ディレクトリパス
 	std::string directoryPath_;
-	//ディスクリプタヒープ
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
-	//テクスチャマネージャーが使うディスクリプタヒープの最初の番号
-	uint32_t textureIndexDescriptorHeap = 2;
 	//テクスチャコンテナ
-	std::array<Texture, kNumDescriptors> textures_;
+	std::array<Texture, DescriptorHerpManager::kNumDescriptors> textures_;
 
 	//コンバートストリング
 	std::wstring ConvertString(const std::string& str);
 	//コンバートストリング
 	std::string ConvertString(const std::wstring& str);
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	/// <summary>
 	/// テキストデータを読む

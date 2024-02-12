@@ -45,6 +45,9 @@
 // アニメーション
 #include "../Animation/AnimationFile.h"
 
+// ディスクリプタヒープ
+#include ".../../../base/DescriptorHerpManager.h"
+
 class MyFramework
 {
 
@@ -79,6 +82,7 @@ protected: // メンバ変数
 
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
+	DescriptorHerpManager* descriptorHerpManager = nullptr;
 
 	Audio* audio = nullptr;
 	Input* input = nullptr;
