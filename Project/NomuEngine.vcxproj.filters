@@ -106,6 +106,9 @@
     <Filter Include="Application\UI">
       <UniqueIdentifier>{0b3658e1-3d24-45eb-85b9-841a9f303cf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\ShadowManager">
+      <UniqueIdentifier>{2dc79464-0118-45cd-be8d-632b77b942fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -316,20 +319,20 @@
     <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Math\Quaternion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\OutLineData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\ShadowManager\ShadowManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\AudioManager\ClearAudioManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Application\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\TutorialScene\TutorialScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\ShadowManager\ShadowManager.cpp">
+      <Filter>Application\ShadowManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Quaternion.cpp">
+      <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\OutLineData.cpp">
+      <Filter>Engine\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -606,26 +609,26 @@
     <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Math\Quaternion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Collider\CollisionConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\RandomEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\OutLineData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\ShadowManager\ShadowManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\AudioManager\ClearAudioManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Application\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Application\Scene\TutorialScene\TutorialScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\ShadowManager\ShadowManager.h">
+      <Filter>Application\ShadowManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Quaternion.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\RandomEngine.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Collider\CollisionConfig.h">
+      <Filter>Application\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\OutLineData.h">
+      <Filter>Engine\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
