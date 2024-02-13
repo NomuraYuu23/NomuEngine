@@ -17,9 +17,9 @@ UINT Model::sDescriptorHandleIncrementSize;
 // コマンドリスト
 ID3D12GraphicsCommandList* Model::sCommandList = nullptr;
 // ルートシグネチャ
-ID3D12RootSignature* Model::sRootSignature[GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName];
+ID3D12RootSignature* Model::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
-ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName];
+ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 //計算
 Matrix4x4Calc* Model::matrix4x4Calc = nullptr;
 
@@ -28,8 +28,8 @@ Matrix4x4Calc* Model::matrix4x4Calc = nullptr;
 /// </summary>
 /// <param name="device">デバイス</param>
 void Model::StaticInitialize(ID3D12Device* device,
-	const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName>& rootSignature,
-	const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName>& pipelineState) {
+	const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
+	const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& pipelineState) {
 
 	assert(device);
 
@@ -38,7 +38,7 @@ void Model::StaticInitialize(ID3D12Device* device,
 	matrix4x4Calc = Matrix4x4Calc::GetInstance();
 
 	// グラフィックパイプライン生成
-	for (uint32_t i = 0u; i < GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName; i++) {
+	for (uint32_t i = 0u; i < GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount; i++) {
 		sRootSignature[i] = rootSignature[i];
 		sPipelineState[i] = pipelineState[i];
 	}
@@ -56,8 +56,8 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList) {
 	sCommandList = cmdList;
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kModel]);
+	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameModel]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -72,8 +72,8 @@ void Model::PreParticleDraw(ID3D12GraphicsCommandList* cmdList, const Matrix4x4&
 	sCommandList = cmdList;
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kParticle]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kParticle]);
+	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameParticle]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameParticle]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -93,11 +93,11 @@ void Model::PreDrawOutLine(ID3D12GraphicsCommandList* cmdList) {
 
 	sCommandList = cmdList;
 
-	assert(sPipelineState[GraphicsPipelineState::PipelineStateName::kOutLine]);
+	assert(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kOutLine]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kOutLine]);
+	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

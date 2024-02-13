@@ -25,19 +25,19 @@ void MyFramework::Initialize()
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
 
 	// スプライト静的初期化
-	Sprite::StaticInitialize(dxCommon->GetDevice(), GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kSprite], GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kSprite]);
+	Sprite::StaticInitialize(dxCommon->GetDevice(), GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite], GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite]);
 
 	// モデル静的初期化
-	std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName> rootSignature = { 
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kModel].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kSprite].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kParticle].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kOutLine].Get() };
-	std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName> pipelineState = {
-	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kModel].Get(),
-	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kSprite].Get(),
-	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kParticle].Get(),
-	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kOutLine].Get() };
+	std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount> rootSignature = {
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameModel].Get(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite].Get(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameOutLine].Get() };
+	std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount> pipelineState = {
+	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameModel].Get(),
+	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite].Get(),
+	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
+	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameOutLine].Get() };
 	Model::StaticInitialize(dxCommon->GetDevice(), rootSignature, pipelineState);
 
 	// マテリアル静的初期化

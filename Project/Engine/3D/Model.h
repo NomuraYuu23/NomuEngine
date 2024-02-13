@@ -52,8 +52,8 @@ public:
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	static void StaticInitialize(ID3D12Device* device,
-		const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName>& rootSignature,
-		const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName>& pipelineState);
+		const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
+		const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& pipelineState);
 
 	/// <summary>
 	/// 静的前処理
@@ -93,9 +93,9 @@ private:
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList;
 	// ルートシグネチャ
-	static ID3D12RootSignature* sRootSignature[GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName];
+	static ID3D12RootSignature* sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 	// パイプラインステートオブジェクト
-	static ID3D12PipelineState* sPipelineState[GraphicsPipelineState::PipelineStateName::kCountOfPipelineStateName];
+	static ID3D12PipelineState* sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 	//計算
 	static Matrix4x4Calc* matrix4x4Calc;
 
