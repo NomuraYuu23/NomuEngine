@@ -33,18 +33,29 @@ public: // 変数
 
 public: // 関数
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="sDevice">デバイス</param>
 	static void Initialize(ID3D12Device* sDevice);
 
-private:
+private: // グラフィックスパイプライン作成関数
 
-	// グラフィックスパイプライン作成
-	// モデル用
+	/// <summary>
+	/// モデル
+	/// </summary>
 	static void CreateForModel();
-	// スプライト用
+	/// <summary>
+	/// スプライト
+	/// </summary>
 	static void CreateForSprite();
-	// パーティクル用
+	/// <summary>
+	/// パーティクル
+	/// </summary>
 	static void CreateForParticle();
-	// アウトライン用
+	/// <summary>
+	/// アウトライン
+	/// </summary>
 	static void CreateForOutLine();
 
 private: // 以下パイプラインの変数やenum
@@ -61,6 +72,7 @@ private: // 以下パイプラインの変数やenum
 		IDxcIncludeHandler* includeHandler = nullptr;
 	};
 
+	// シェーダーコンパイル用
 	static CompileShaderStruct compileShaderStruct_;
 
 	/// <summary>
@@ -92,9 +104,9 @@ private: // パイプラインステートオブジェクト作成
 	/// <summary>
 	/// RootSignature設定
 	/// </summary>
-	/// <param name="pipelineStateName"></param>
-	/// <param name="rootParameterIndex"></param>
-	/// <param name="samplerIndex"></param>
+	/// <param name="pipelineStateName">パイプラインステートの名前</param>
+	/// <param name="rootParameterIndex">ルートパラメータの名前</param>
+	/// <param name="samplerIndex">サンプラーの名前</param>
 	static void RootsignatureSetting(PipelineStateName pipelineStateName, D3D12_ROOT_SIGNATURE_FLAGS rootsignatureFlags,
 		RootParameterIndex rootParameterIndex, SamplerIndex samplerIndex);
 
@@ -110,13 +122,14 @@ private: // パイプラインステートオブジェクト作成
 	/// <summary>
 	/// InputLayoutの設定
 	/// </summary>
-	/// <param name="inputLayoutIndex"></param>
+	/// <param name="inputLayoutIndex">インプットレイアウトの名前</param>
 	/// <returns></returns>
 	static D3D12_INPUT_LAYOUT_DESC InputLayoutSetting(InputLayoutIndex inputLayoutIndex);
 
 	/// <summary>
 	/// BlendStateの設定
 	/// </summary>
+	/// <param name="blendStateIndex">ブレンドステートの名前</param>
 	/// <returns></returns>
 	static D3D12_BLEND_DESC BlendStateSetting(BlendStateIndex blendStateIndex);
 
@@ -141,6 +154,7 @@ private: // パイプラインステートオブジェクト作成
 	/// <summary>
 	/// PSOを生成 
 	/// </summary>
+	/// <param name="createPSODesc_">作るための引数</param>
 	static void CreatePSO(const CreatePSODesc& createPSODesc_);
 
 private: // その他の関数
