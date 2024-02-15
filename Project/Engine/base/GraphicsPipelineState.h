@@ -68,6 +68,24 @@ private: // ルートパラメータの変数
 
 	static std::array<std::vector<D3D12_ROOT_PARAMETER>, kRootParameterIndexOfCount> rootParameters_;
 
+private: // ディスクリプタレンジ
+
+	static void DescriptorRangeInitialize();
+
+private: // ディスクリプタレンジ
+
+	/// <summary>
+	/// ディスクリプタレンジの名前
+	/// </summary>
+	enum DescriptorRangeIndex {
+		kDescriptorRangeIndexTexture,
+		kDescriptorRangeIndexInstancing,
+		kDescriptorRangeIndexOfCount,
+	};
+
+	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kDescriptorRangeIndexOfCount> descriptorRanges_;
+
+
 private: // サンプラーの関数
 
 	/// <summary>
@@ -105,6 +123,8 @@ private: // インプットレイアウトの変数
 	};
 
 	static std::array<D3D12_INPUT_LAYOUT_DESC, kInputLayoutIndexOfCount> inputLayoutDescs_;
+
+	static std::array< std::vector<D3D12_INPUT_ELEMENT_DESC>, kInputLayoutIndexOfCount> inputElementDescs_;
 
 private: // ブレンドの関数
 
