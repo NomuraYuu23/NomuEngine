@@ -62,7 +62,7 @@ public:
 	void SetUvTransform(const TransformStructure& uvTransform);
 	void SetColor(const Vector4& color);
 	void SetEnableLighting(const int32_t enableLighting);
-	void SetShininess(const float uvTransform);
+	void SetShininess(const float shininess);
 
 private:
 

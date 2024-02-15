@@ -11,6 +11,7 @@
 #include "../../../Engine/3D/OutLineData.h"
 #include "../../ShadowManager/ShadowManager.h"
 
+#include "../../Object/Sample/SampleObject.h"
 
 class GameScene : public IScene
 {
@@ -103,6 +104,7 @@ private:
 	std::unique_ptr<Model> shadowModel_;
 
 	// サンプルOBJ
-
+	std::unique_ptr<SampleObject> sampleObj_;
+	std::unique_ptr<Model> sampleObjModel_;
 
 };

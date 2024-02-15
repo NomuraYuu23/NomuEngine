@@ -70,6 +70,10 @@ void GameScene::Initialize() {
 	shadowManager_ = std::make_unique<ShadowManager>();
 	shadowManager_->Initialize(shadowModel_.get());
 
+	// サンプルobj
+	sampleObj_ = std::make_unique<SampleObject>();
+	sampleObj_->Initialize(sampleObjModel_.get());
+
 }
 
 /// <summary>
@@ -103,6 +107,9 @@ void GameScene::Update() {
 	//directionalLightData.direction = Vector3Calc::Normalize(direction);
 	//directionalLightData.intencity = intencity;
 	//directionalLight_->Update(directionalLightData);
+
+	//Obj
+	sampleObj_->Update();
 
 	// あたり判定
 	collisionManager_->ListClear();
@@ -153,6 +160,9 @@ void GameScene::Draw() {
 	//directionalLight_->Draw(dxCommon_->GetCommadList());
 	//3Dオブジェクトはここ
 	
+	//Obj
+	sampleObj_->Draw(camera_);
+
 	// スカイドーム
 	skydome_->Draw(camera_);
 
@@ -212,6 +222,9 @@ void GameScene::ImguiDraw(){
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 
+	//Obj
+	sampleObj_->ImGuiDraw();
+
 	// スカイドーム
 	skydome_->ImGuiDraw();
 
@@ -256,6 +269,9 @@ void GameScene::ModelCreate()
 
 	// スカイドーム
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
+
+	// サンプルobj
+	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
 
 }
 
