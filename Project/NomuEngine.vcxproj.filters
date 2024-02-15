@@ -109,6 +109,9 @@
     <Filter Include="Application\ShadowManager">
       <UniqueIdentifier>{2dc79464-0118-45cd-be8d-632b77b942fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Base\GraphicsPipelineState">
+      <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -157,9 +160,6 @@
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\TextureManager.cpp">
@@ -334,20 +334,23 @@
     <ClCompile Include="Engine\3D\OutLineData.cpp">
       <Filter>Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\RootParameterManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\InputLayoutManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\InputLayoutManager.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\RootParameterManager.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,9 +418,6 @@
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
@@ -645,20 +645,23 @@
     <ClInclude Include="Engine\3D\OutLineData.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DescriptorHerpManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.h">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\GraphicsPipelineState\SamplerManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\GraphicsPipelineState\InputLayoutManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\GraphicsPipelineState\BlendStateManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DescriptorHerpManager.h">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\GraphicsPipelineState\InputLayoutManager.h">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
