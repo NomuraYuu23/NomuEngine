@@ -6,16 +6,12 @@ using namespace Microsoft::WRL;
 Microsoft::WRL::ComPtr<ID3D12RootSignature> GraphicsPipelineState::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
 Microsoft::WRL::ComPtr<ID3D12PipelineState> GraphicsPipelineState::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
-// インプットレイアウト
-std::array<D3D12_INPUT_LAYOUT_DESC, GraphicsPipelineState::kInputLayoutIndexOfCount> GraphicsPipelineState::inputLayoutDescs_;
 // ブレンド
 std::array<D3D12_BLEND_DESC, GraphicsPipelineState::kBlendStateIndexOfCount> GraphicsPipelineState::blendDescs_;
 // デバイス
 ID3D12Device* GraphicsPipelineState::sDevice_;
 // シェーダーコンパイル用
 GraphicsPipelineState::CompileShaderStruct GraphicsPipelineState::compileShaderStruct_;
-
-std::array< std::vector<D3D12_INPUT_ELEMENT_DESC>, GraphicsPipelineState::kInputLayoutIndexOfCount> GraphicsPipelineState::inputElementDescs_;
 
 void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 {
@@ -29,8 +25,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	RootParameterManager::Initialize();
 	// サンプラー
 	SamplerManager::Initialize();
-
-	InputLayoutInitialize();
+	// インプットレイアウト
+	InputLayoutManager::Initialize();
 
 	BlendStateInitialize();
 
@@ -233,34 +229,6 @@ void GraphicsPipelineState::CreateForOutLine()
 
 }
 
-void GraphicsPipelineState::InputLayoutInitialize()
-{
-
-	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-	inputElementDescs[0].SemanticName = "POSITION";
-	inputElementDescs[0].SemanticIndex = 0;
-	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[1].SemanticName = "TEXCOORD";
-	inputElementDescs[1].SemanticIndex = 0;
-	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[2].SemanticName = "NORMAL";
-	inputElementDescs[2].SemanticIndex = 0;
-	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	
-	for (uint32_t i = 0; i < 3; i++) {
-		inputElementDescs_[kInputLayoutIndexNormal].push_back(inputElementDescs[i]);
-	}
-
-	inputLayoutDescs_[kInputLayoutIndexNormal].pInputElementDescs = inputElementDescs_[kInputLayoutIndexNormal].data();
-	inputLayoutDescs_[kInputLayoutIndexNormal].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexNormal].size());
-
-}
-
-
 void GraphicsPipelineState::BlendStateInitialize()
 {
 
@@ -348,7 +316,7 @@ D3D12_DEPTH_STENCIL_DESC GraphicsPipelineState::DepthStencilStateSetting(bool de
 
 D3D12_INPUT_LAYOUT_DESC GraphicsPipelineState::InputLayoutSetting(InputLayoutIndex inputLayoutIndex)
 {
-	return inputLayoutDescs_[inputLayoutIndex];
+	return InputLayoutManager::inputLayouts_[inputLayoutIndex];
 
 }
 

@@ -31,7 +31,7 @@ enum RootParameterIndex {
 class RootParameterManager
 {
 
-public: // ルートパラメータの関数
+public: // 関数
 
 	/// <summary>
 	/// シングルトンインスタンスの取得

@@ -10,6 +10,7 @@
 
 #include "RootParameterManager.h"
 #include "SamplerManager.h"
+#include "InputLayoutManager.h"
 
 class GraphicsPipelineState
 {
@@ -44,27 +45,6 @@ private:
 	static void CreateForParticle();
 	// アウトライン用
 	static void CreateForOutLine();
-
-private: // インプットレイアウトの関数
-
-	/// <summary>
-	/// インプットレイアウト初期化
-	/// </summary>
-	static void InputLayoutInitialize();
-
-private: // インプットレイアウトの変数
-
-	/// <summary>
-	/// インプットレイアウトの名前
-	/// </summary>
-	enum InputLayoutIndex {
-		kInputLayoutIndexNormal,
-		kInputLayoutIndexOfCount,
-	};
-
-	static std::array<D3D12_INPUT_LAYOUT_DESC, kInputLayoutIndexOfCount> inputLayoutDescs_;
-
-	static std::array< std::vector<D3D12_INPUT_ELEMENT_DESC>, kInputLayoutIndexOfCount> inputElementDescs_;
 
 private: // ブレンドの関数
 

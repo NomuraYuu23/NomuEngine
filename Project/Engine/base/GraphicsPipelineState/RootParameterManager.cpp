@@ -7,7 +7,6 @@ std::array<std::vector<D3D12_ROOT_PARAMETER>, kRootParameterIndexOfCount> RootPa
 // ディスクリプタレンジ
 std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kDescriptorRangeIndexOfCount> RootParameterManager::descriptorRanges_;
 
-
 RootParameterManager* RootParameterManager::GetInstance()
 {
 	static RootParameterManager instance;

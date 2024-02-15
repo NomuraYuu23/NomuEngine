@@ -19,7 +19,7 @@ enum SamplerIndex {
 class SamplerManager
 {
 
-public: // ルートパラメータの関数
+public: // 関数
 
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -32,8 +32,9 @@ public: // ルートパラメータの関数
 	/// </summary>
 	static void Initialize();
 
-public: // サンプラーの変数
+public: // 変数
 
+	// サンプラー
 	static std::array<std::vector<D3D12_STATIC_SAMPLER_DESC>, kSamplerIndexOfCount> samplers_;
 
 private: // シングルトン
