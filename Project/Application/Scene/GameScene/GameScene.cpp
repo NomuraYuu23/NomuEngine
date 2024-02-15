@@ -70,6 +70,10 @@ void GameScene::Initialize() {
 	shadowManager_ = std::make_unique<ShadowManager>();
 	shadowManager_->Initialize(shadowModel_.get());
 
+	// 平行光源
+	directionalLight_ = std::make_unique<DirectionalLight>();
+	directionalLight_->Initialize();
+
 	// サンプルobj
 	sampleObj_ = std::make_unique<SampleObject>();
 	sampleObj_->Initialize(sampleObjModel_.get());
@@ -102,11 +106,11 @@ void GameScene::Update() {
 	//}
 
 	//光源
-	//DirectionalLightData directionalLightData;
-	//directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
-	//directionalLightData.direction = Vector3Calc::Normalize(direction);
-	//directionalLightData.intencity = intencity;
-	//directionalLight_->Update(directionalLightData);
+	DirectionalLightData directionalLightData;
+	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
+	directionalLightData.direction = Vector3Calc::Normalize(direction);
+	directionalLightData.intencity = intencity;
+	directionalLight_->Update(directionalLightData);
 
 	//Obj
 	sampleObj_->Update();
@@ -157,7 +161,7 @@ void GameScene::Draw() {
 	Model::PreDraw(dxCommon_->GetCommadList());
 
 	//光源
-	//directionalLight_->Draw(dxCommon_->GetCommadList());
+	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -186,7 +190,7 @@ void GameScene::Draw() {
 	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
 
 	//光源
-	//directionalLight_->Draw(dxCommon_->GetCommadList());
+	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
 
 	// パーティクルはここ
 	particleManager_->Draw();

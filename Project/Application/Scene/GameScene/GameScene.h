@@ -11,7 +11,9 @@
 #include "../../../Engine/3D/OutLineData.h"
 #include "../../ShadowManager/ShadowManager.h"
 
-#include "../../Object/Sample/SampleObject.h"
+#include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
+
+#include "../../../Engine/Light/DirectionalLight/DirectionalLight.h" // 平行光源
 
 class GameScene : public IScene
 {
@@ -79,6 +81,7 @@ private:
 	std::unique_ptr<Model> particleCircleModel_ = nullptr;
 
 	// ライト
+	std::unique_ptr<DirectionalLight> directionalLight_;
 	Vector3 direction = { 1.0f, -1.0f, 0.0f};
 	float intencity = 1.0f;
 
