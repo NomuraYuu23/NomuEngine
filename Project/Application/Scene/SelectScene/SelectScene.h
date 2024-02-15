@@ -27,11 +27,6 @@ private: // メンバ関数
 	void ModelCreate() override;
 
 	/// <summary>
-	/// マテリアルクリエイト
-	/// </summary>
-	void MaterialCreate() override;
-
-	/// <summary>
 	/// テクスチャロード
 	/// </summary>
 	void TextureLoad() override;

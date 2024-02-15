@@ -1,12 +1,12 @@
 #include "DirectionalLight.h"
-#include "../base/TextureManager.h"
-#include "../base/WinApp.h"
+#include "../../base/TextureManager.h"
+#include "../../base/WinApp.h"
 #include <cassert>
 
 #include <fstream>
 #include <sstream>
 #include <format>
-#include "../base/BufferResource.h"
+#include "../../base/BufferResource.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -78,14 +78,14 @@ void DirectionalLight::Update(const DirectionalLightData& directionalLightData) 
 /// <summary>
 /// 描画
 /// </summary>
-void DirectionalLight::Draw(ID3D12GraphicsCommandList* cmdList) {
+void DirectionalLight::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex) {
 
 	assert(sCommandList == nullptr);
 
 	sCommandList = cmdList;
 
 	//光源
-	sCommandList->SetGraphicsRootConstantBufferView(3, directionalLightBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(rootParameterIndex, directionalLightBuff_->GetGPUVirtualAddress());
 
 	// コマンドリストを解除
 	sCommandList = nullptr;

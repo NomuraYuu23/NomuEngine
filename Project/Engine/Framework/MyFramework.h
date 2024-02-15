@@ -8,7 +8,6 @@
 #include "../3D/TransformationMatrix.h"
 #include "../3D/TransformStructure.h"
 #include "../3D/MaterialData.h"
-#include "../3D/DirectionalLightData.h"
 #include "../base/SafeDelete.h"
 #include "../base/GraphicsPipelineState/GraphicsPipelineState.h"
 //クラス化
@@ -18,7 +17,7 @@
 #include "../2D/Sprite.h"
 #include "../3D/Model.h"
 #include "../3D/Material.h"
-#include "../3D/DirectionalLight.h"
+#include "../Light/DirectionalLight/DirectionalLight.h"
 #include "../base/D3DResourceLeakChecker.h"
 
 // サウンド再生

@@ -9,7 +9,6 @@
 #include "../../2D/Sprite.h"
 #include "../../3D/Model.h"
 #include "../../3D/Material.h"
-#include "../../3D/DirectionalLight.h"
 #include "../../Particle/ParticleManager.h"
 
 #include "../../../Application/Scene/SceneName.h"
@@ -38,9 +37,6 @@ protected: // 静的メンバ変数
 	//デバッグカメラ
 	static std::unique_ptr<DebugCamera> debugCamera_;
 	static bool isDebugCameraActive_;
-
-	//光源
-	static std::unique_ptr<DirectionalLight> directionalLight_;
 
 public: // メンバ関数
 
@@ -85,11 +81,6 @@ protected:  // メンバ関数
 	/// モデルクリエイト
 	/// </summary>
 	virtual void ModelCreate();
-
-	/// <summary>
-	/// マテリアルクリエイト
-	/// </summary>
-	virtual void MaterialCreate();
 
 	/// <summary>
 	/// テクスチャロード

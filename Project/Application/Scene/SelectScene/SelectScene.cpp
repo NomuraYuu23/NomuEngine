@@ -60,10 +60,6 @@ void SelectScene::ModelCreate()
 {
 }
 
-void SelectScene::MaterialCreate()
-{
-}
-
 void SelectScene::TextureLoad()
 {
 }

@@ -98,11 +98,11 @@ void GameScene::Update() {
 	//}
 
 	//光源
-	DirectionalLightData directionalLightData;
-	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
-	directionalLightData.direction = Vector3Calc::Normalize(direction);
-	directionalLightData.intencity = intencity;
-	directionalLight_->Update(directionalLightData);
+	//DirectionalLightData directionalLightData;
+	//directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
+	//directionalLightData.direction = Vector3Calc::Normalize(direction);
+	//directionalLightData.intencity = intencity;
+	//directionalLight_->Update(directionalLightData);
 
 	// あたり判定
 	collisionManager_->ListClear();
@@ -150,7 +150,7 @@ void GameScene::Draw() {
 	Model::PreDraw(dxCommon_->GetCommadList());
 
 	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList());
+	//directionalLight_->Draw(dxCommon_->GetCommadList());
 	//3Dオブジェクトはここ
 	
 	// スカイドーム
@@ -176,7 +176,7 @@ void GameScene::Draw() {
 	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
 
 	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList());
+	//directionalLight_->Draw(dxCommon_->GetCommadList());
 
 	// パーティクルはここ
 	particleManager_->Draw();

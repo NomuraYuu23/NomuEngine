@@ -85,7 +85,7 @@ private:
 
 	// UIマネージャー
 	//std::unique_ptr<UIManager> uiManager_;
-	//::array<uint32_t, UITextureHandleIndex::kUITextureHandleIndexOfCount> uiTextureHandles_;
+	//std:::array<uint32_t, UITextureHandleIndex::kUITextureHandleIndexOfCount> uiTextureHandles_;
 
 	// オーディオマネージャー
 	std::unique_ptr<GameAudioManager> audioManager_;
@@ -101,5 +101,8 @@ private:
 	//影
 	std::unique_ptr<ShadowManager> shadowManager_;
 	std::unique_ptr<Model> shadowModel_;
+
+	// サンプルOBJ
+
 
 };

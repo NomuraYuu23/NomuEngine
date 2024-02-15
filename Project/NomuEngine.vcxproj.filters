@@ -70,9 +70,6 @@
     <Filter Include="Application">
       <UniqueIdentifier>{9c627bdc-6eab-4551-adce-18be8337f0d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Application\BaseCharacter">
-      <UniqueIdentifier>{b8638190-f575-429b-9585-7fcd07f6a39c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application\Skydome">
       <UniqueIdentifier>{5e2ab7d8-fdc5-492f-bc01-9c18dd7e23a6}</UniqueIdentifier>
     </Filter>
@@ -112,6 +109,18 @@
     <Filter Include="Engine\Base\GraphicsPipelineState">
       <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Light">
+      <UniqueIdentifier>{5a091109-c03a-49db-8519-00c4afaea1c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Light\DirctionalLight">
+      <UniqueIdentifier>{730d29a6-eb73-4747-b63e-a560d53d9922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Object">
+      <UniqueIdentifier>{9b49da27-3781-4d42-bc44-35235504c6e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Object\Sample">
+      <UniqueIdentifier>{3cd2eab6-d125-4f00-80a5-f268f1095b83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -140,9 +149,6 @@
     </ClCompile>
     <ClCompile Include="Engine\2D\Sprite.cpp">
       <Filter>Engine\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\DirectionalLight.cpp">
-      <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Material.cpp">
       <Filter>Engine\3D</Filter>
@@ -242,9 +248,6 @@
     </ClCompile>
     <ClCompile Include="Engine\SceneTransition\ISceneTransition\ISceneTransition.cpp">
       <Filter>Engine\SceneTransition</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BaseCharacter\BaseCharacter.cpp">
-      <Filter>Application\BaseCharacter</Filter>
     </ClCompile>
     <ClCompile Include="Application\Skydome\Skydome.cpp">
       <Filter>Application\Skydome</Filter>
@@ -352,6 +355,12 @@
     <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Light\DirectionalLight\DirectionalLight.cpp">
+      <Filter>Engine\Light\DirctionalLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Object\Sample\SampleObject.cpp">
+      <Filter>Application\Object\Sample</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -380,12 +389,6 @@
     </ClInclude>
     <ClInclude Include="Engine\2D\ImGuiManager.h">
       <Filter>Engine\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\DirectionalLight.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\DirectionalLightData.h">
-      <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Material.h">
       <Filter>Engine\3D</Filter>
@@ -521,9 +524,6 @@
     </ClInclude>
     <ClInclude Include="Engine\SceneTransition\SceneTransitionFactory\AbstractSceneTransitionFactory.h">
       <Filter>Engine\SceneTransition</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BaseCharacter\BaseCharacter.h">
-      <Filter>Application\BaseCharacter</Filter>
     </ClInclude>
     <ClInclude Include="Application\Skydome\Skydome.h">
       <Filter>Application\Skydome</Filter>
@@ -662,6 +662,15 @@
     </ClInclude>
     <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light\DirectionalLight\DirectionalLight.h">
+      <Filter>Engine\Light\DirctionalLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light\DirectionalLight\DirectionalLightData.h">
+      <Filter>Engine\Light\DirctionalLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Object\Sample\SampleObject.h">
+      <Filter>Application\Object\Sample</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
