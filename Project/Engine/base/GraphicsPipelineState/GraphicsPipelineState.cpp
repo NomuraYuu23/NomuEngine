@@ -6,8 +6,6 @@ using namespace Microsoft::WRL;
 Microsoft::WRL::ComPtr<ID3D12RootSignature> GraphicsPipelineState::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
 Microsoft::WRL::ComPtr<ID3D12PipelineState> GraphicsPipelineState::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
-// ブレンド
-std::array<D3D12_BLEND_DESC, GraphicsPipelineState::kBlendStateIndexOfCount> GraphicsPipelineState::blendDescs_;
 // デバイス
 ID3D12Device* GraphicsPipelineState::sDevice_;
 // シェーダーコンパイル用
@@ -27,8 +25,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	SamplerManager::Initialize();
 	// インプットレイアウト
 	InputLayoutManager::Initialize();
-
-	BlendStateInitialize();
+	// ブレンドステート
+	BlendStateManager::Initialize();
 
 	// パイプラインステート作る
 
@@ -229,33 +227,6 @@ void GraphicsPipelineState::CreateForOutLine()
 
 }
 
-void GraphicsPipelineState::BlendStateInitialize()
-{
-
-	//すべての色要素を書き込む
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].BlendEnable = TRUE;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDescs_[kBlendStateIndexNormal].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-
-	// Addブレンド
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].BlendEnable = TRUE;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDescs_[kBlendStateIndexAdd].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-
-}
-
 void GraphicsPipelineState::DxcCompilerInitialize()
 {
 
@@ -323,7 +294,7 @@ D3D12_INPUT_LAYOUT_DESC GraphicsPipelineState::InputLayoutSetting(InputLayoutInd
 D3D12_BLEND_DESC GraphicsPipelineState::BlendStateSetting(BlendStateIndex blendStateIndex)
 {
 
-	return blendDescs_[blendStateIndex];
+	return BlendStateManager::blendStates_[blendStateIndex];
 
 }
 

@@ -11,6 +11,7 @@
 #include "RootParameterManager.h"
 #include "SamplerManager.h"
 #include "InputLayoutManager.h"
+#include "BlendStateManager.h"
 
 class GraphicsPipelineState
 {
@@ -46,27 +47,7 @@ private:
 	// アウトライン用
 	static void CreateForOutLine();
 
-private: // ブレンドの関数
-
-	/// <summary>
-	/// ブレンドステート初期化
-	/// </summary>
-	static void BlendStateInitialize();
-
-private: // ブレンドの変数
-
-	/// <summary>
-	/// ブレンドの名前
-	/// </summary>
-	enum BlendStateIndex {
-		kBlendStateIndexNormal,
-		kBlendStateIndexAdd,
-		kBlendStateIndexOfCount,
-	};
-
-	static std::array<D3D12_BLEND_DESC, kBlendStateIndexOfCount> blendDescs_;
-
-private: // 以下パイプライン
+private: // 以下パイプラインの変数やenum
 
 	// デバイス
 	static ID3D12Device* sDevice_;

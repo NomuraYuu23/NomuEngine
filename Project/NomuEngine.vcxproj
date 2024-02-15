@@ -116,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Animation\IBone.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\DescriptorHerpManager.cpp" />
+    <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\InputLayoutManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\RootParameterManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp" />
@@ -200,6 +201,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Animation\IBone.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\DescriptorHerpManager.h" />
+    <ClInclude Include="Engine\base\GraphicsPipelineState\BlendStateManager.h" />
     <ClInclude Include="Engine\base\GraphicsPipelineState\InputLayoutManager.h" />
     <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h" />
     <ClInclude Include="Engine\base\GraphicsPipelineState\SamplerManager.h" />
