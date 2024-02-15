@@ -159,7 +159,7 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState.cpp">
+    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\TextureManager.cpp">
@@ -337,6 +337,9 @@
     <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\RootParameterManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -405,7 +408,7 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\GraphicsPipelineState.h">
+    <ClInclude Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
@@ -634,6 +637,9 @@
       <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DescriptorHerpManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

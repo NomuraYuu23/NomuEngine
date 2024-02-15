@@ -24,7 +24,7 @@
 
 #include <list>
 
-#include "../base/GraphicsPipelineState.h"
+#include "../base/GraphicsPipelineState/GraphicsPipelineState.h"
 #include "../Particle/ParticleManager.h"
 
 #include "../Camera/BaseCamera.h"

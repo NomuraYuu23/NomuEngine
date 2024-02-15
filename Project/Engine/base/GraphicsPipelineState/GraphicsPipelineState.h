@@ -7,6 +7,9 @@
 #include <wrl.h>
 #include <array>
 #include <vector>
+
+#include "RootParameterManager.h"
+
 class GraphicsPipelineState
 {
 
@@ -40,51 +43,6 @@ private:
 	static void CreateForParticle();
 	// アウトライン用
 	static void CreateForOutLine();
-
-private: // ルートパラメータの関数
-
-	/// <summary>
-	/// ルートパラメータ初期化
-	/// </summary>
-	static void RootParameterInitialize();
-
-	static void RootParameterInitializeForModel();
-	static void RootParameterInitializeForSprite();
-	static void RootParameterInitializeForParticle();
-	static void RootParameterInitializeForOutLine();
-
-private: // ルートパラメータの変数
-
-	/// <summary>
-	/// ルートパラメータの名前
-	/// </summary>
-	enum RootParameterIndex {
-		kRootParameterIndexModel,
-		kRootParameterIndexSprite,
-		kRootParameterIndexParticle,
-		kRootParameterIndexOutLine,
-		kRootParameterIndexOfCount,
-	};
-
-	static std::array<std::vector<D3D12_ROOT_PARAMETER>, kRootParameterIndexOfCount> rootParameters_;
-
-private: // ディスクリプタレンジ
-
-	static void DescriptorRangeInitialize();
-
-private: // ディスクリプタレンジ
-
-	/// <summary>
-	/// ディスクリプタレンジの名前
-	/// </summary>
-	enum DescriptorRangeIndex {
-		kDescriptorRangeIndexTexture,
-		kDescriptorRangeIndexInstancing,
-		kDescriptorRangeIndexOfCount,
-	};
-
-	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kDescriptorRangeIndexOfCount> descriptorRanges_;
-
 
 private: // サンプラーの関数
 
@@ -257,5 +215,12 @@ private: // その他の関数
 	/// </summary>
 	/// <param name="message"></param>
 	static void Log(const std::string& message);
+
+private: // シングルトン
+
+	GraphicsPipelineState() = default;
+	~GraphicsPipelineState() = default;
+	GraphicsPipelineState(const GraphicsPipelineState&) = delete;
+	GraphicsPipelineState& operator=(const GraphicsPipelineState&) = delete;
 
 };
