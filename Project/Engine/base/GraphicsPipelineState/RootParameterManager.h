@@ -30,6 +30,7 @@ enum RootParameterIndex {
 
 class RootParameterManager
 {
+
 public: // ルートパラメータの関数
 
 	/// <summary>

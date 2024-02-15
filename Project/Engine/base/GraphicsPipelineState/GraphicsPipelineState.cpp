@@ -6,8 +6,6 @@ using namespace Microsoft::WRL;
 Microsoft::WRL::ComPtr<ID3D12RootSignature> GraphicsPipelineState::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
 Microsoft::WRL::ComPtr<ID3D12PipelineState> GraphicsPipelineState::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
-// サンプラー
-std::array<std::vector<D3D12_STATIC_SAMPLER_DESC>, GraphicsPipelineState::kSamplerIndexOfCount> GraphicsPipelineState::samplerDescs_;
 // インプットレイアウト
 std::array<D3D12_INPUT_LAYOUT_DESC, GraphicsPipelineState::kInputLayoutIndexOfCount> GraphicsPipelineState::inputLayoutDescs_;
 // ブレンド
@@ -29,8 +27,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 
 	// ルートパラメータ
 	RootParameterManager::Initialize();
-
-	SamplerInitialize();
+	// サンプラー
+	SamplerManager::Initialize();
 
 	InputLayoutInitialize();
 
@@ -235,23 +233,6 @@ void GraphicsPipelineState::CreateForOutLine()
 
 }
 
-void GraphicsPipelineState::SamplerInitialize()
-{
-
-	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
-	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-	samplerDesc.ShaderRegister = 0;
-	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	samplerDescs_[kSamplerIndexNormal].push_back(samplerDesc);
-
-}
-
 void GraphicsPipelineState::InputLayoutInitialize()
 {
 
@@ -335,8 +316,8 @@ void GraphicsPipelineState::RootsignatureSetting(PipelineStateName pipelineState
 	descriptionRootsignature.pParameters = RootParameterManager::rootParameters_[rootParameterIndex].data(); //ルートパラメータ配列へのポインタ
 	descriptionRootsignature.NumParameters = static_cast<uint32_t>(RootParameterManager::rootParameters_[rootParameterIndex].size()); //配列の長さ
 
-	descriptionRootsignature.pStaticSamplers = samplerDescs_[samplerIndex].data();
-	descriptionRootsignature.NumStaticSamplers = static_cast<uint32_t>(samplerDescs_[samplerIndex].size());
+	descriptionRootsignature.pStaticSamplers = SamplerManager::samplers_[samplerIndex].data();
+	descriptionRootsignature.NumStaticSamplers = static_cast<uint32_t>(SamplerManager::samplers_[samplerIndex].size());
 
 	//シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob = nullptr;

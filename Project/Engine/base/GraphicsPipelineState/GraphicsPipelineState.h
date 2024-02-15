@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "RootParameterManager.h"
+#include "SamplerManager.h"
 
 class GraphicsPipelineState
 {
@@ -43,25 +44,6 @@ private:
 	static void CreateForParticle();
 	// アウトライン用
 	static void CreateForOutLine();
-
-private: // サンプラーの関数
-
-	/// <summary>
-	/// サンプラー初期化
-	/// </summary>
-	static void SamplerInitialize();
-
-private: // サンプラーの変数
-
-	/// <summary>
-	/// サンプラーの名前
-	/// </summary>
-	enum SamplerIndex {
-		kSamplerIndexNormal,
-		kSamplerIndexOfCount,
-	};
-
-	static std::array<std::vector<D3D12_STATIC_SAMPLER_DESC>, kSamplerIndexOfCount> samplerDescs_;
 
 private: // インプットレイアウトの関数
 
