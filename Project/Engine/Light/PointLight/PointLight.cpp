@@ -51,6 +51,8 @@ void PointLight::Initialize()
 	pointLightMap->color = { 1.0f,1.0f,1.0f,1.0f };
 	pointLightMap->position = { 0.0f, -1.0f, 0.0f };
 	pointLightMap->intencity = 1.0f;
+	pointLightMap->radius = 10.0f;
+	pointLightMap->decay = 10.0f;
 
 }
 
@@ -60,6 +62,8 @@ void PointLight::Update(const PointLightData& directionalLightData)
 	pointLightMap->color = directionalLightData.color;
 	pointLightMap->position = directionalLightData.position;
 	pointLightMap->intencity = directionalLightData.intencity;
+	pointLightMap->radius = directionalLightData.radius;
+	pointLightMap->decay = directionalLightData.decay;
 
 }
 

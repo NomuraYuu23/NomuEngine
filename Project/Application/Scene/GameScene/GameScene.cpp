@@ -84,6 +84,8 @@ void GameScene::Initialize() {
 	pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
 	pointLightData_.position = { 0.0f, -1.0f, 0.0f };
 	pointLightData_.intencity = 1.0f;
+	pointLightData_.radius = 10.0f;
+	pointLightData_.decay = 10.0f;
 
 }
 
@@ -236,6 +238,8 @@ void GameScene::ImguiDraw(){
 
 	ImGui::DragFloat3("PointPosition", &pointLightData_.position.x, 0.1f);
 	ImGui::DragFloat("PointIntencity", &pointLightData_.intencity, 0.01f);
+	ImGui::DragFloat("PointRadius", &pointLightData_.radius, 0.01f);
+	ImGui::DragFloat("PointDecay", &pointLightData_.decay, 0.01f);
 	
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();

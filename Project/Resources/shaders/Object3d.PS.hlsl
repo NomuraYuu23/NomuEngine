@@ -21,9 +21,11 @@ struct Camera {
 };
 
 struct PointLight {
-	float32_t4 color;
-	float32_t3 position;
-	float intencity;
+	float32_t4 color; // ライト色
+	float32_t3 position; // ライトの位置
+	float intencity; // 輝度
+	float radius; // ライトの届く最大距離
+	float decay; // 減衰率
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -47,6 +49,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	// ポイントライト
 	float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
 
+	// 逆二乗の法則
+	float32_t distance = length(gPointLight.position - input.worldPosition);
+	float32_t factor = pow(saturate(-distance / gPointLight.radius + 1.0), gPointLight.decay);
+
 	// ライティング無し
 	if (gMaterial.enableLighting == 0) {
 		output.color = gMaterial.color * textureColor;
@@ -59,7 +65,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 
 		// ポイントライト
 		float pointLightCos = saturate(dot(normalize(input.normal), -pointLightDirection));
-		float32_t3 pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intencity;
+		float32_t3 pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intencity * factor;
 
 		// 全てのライトデータを入れる
 		output.color.rgb = gMaterial.color.rgb * textureColor.rgb * directionalLightColor * pointLightColor;
@@ -75,7 +81,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		// ポイントライト
 		float pointLightNdotL = dot(normalize(input.normal), -pointLightDirection);
 		float pointLightCos = pow(pointLightNdotL * 0.5f + 0.5f, 2.0f);
-		float32_t3 pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intencity;
+		float32_t3 pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intencity * factor;
 
 		// 全てのライトデータを入れる
 		output.color.rgb = gMaterial.color.rgb * textureColor.rgb * directionalLightColor * pointLightColor;
@@ -104,10 +110,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		float pointLightSpecularPow = pow(saturate(pointLightRdotE), gMaterial.shininess);
 		// 拡散反射
 		float32_t3 pointLightDiffuse =
-			gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * pointLightCos * gPointLight.intencity;
+			gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * pointLightCos * gPointLight.intencity * factor;
 		// 鏡面反射
 		float32_t3 pointLightSpecular =
-			gPointLight.color.rgb * gPointLight.intencity * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+			gPointLight.color.rgb * gPointLight.intencity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
 		// 全てのライトデータを入れる
 		// 拡散反射+鏡面反射
@@ -141,10 +147,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		float pointLightSpecularPow = pow(saturate(pointLightNDotH), gMaterial.shininess);
 		// 拡散反射
 		float32_t3 pointLightDiffuse =
-			gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * pointLightCos * gPointLight.intencity;
+			gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * pointLightCos * gPointLight.intencity * factor;
 		// 鏡面反射
 		float32_t3 pointLightSpecular =
-			gPointLight.color.rgb * gPointLight.intencity * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+			gPointLight.color.rgb * gPointLight.intencity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
 		// 全てのライトデータを入れる
 		// 拡散反射+鏡面反射
