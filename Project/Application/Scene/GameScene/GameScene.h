@@ -15,6 +15,7 @@
 
 #include "../../../Engine/Light/DirectionalLight/DirectionalLight.h" // 平行光源
 #include "../../../Engine/Light/PointLight/PointLight.h" // 点光源
+#include "../../../Engine/Light/SpotLight/SpotLight.h" //
 
 class GameScene : public IScene
 {
@@ -114,6 +115,10 @@ private:
 	// 点光源
 	std::unique_ptr<PointLight> pointLight_;
 	PointLightData pointLightData_;
+
+	//SpotLight
+	std::unique_ptr<SpotLight> spotLight_;
+	SpotLightData spotLightData_;
 
 
 };

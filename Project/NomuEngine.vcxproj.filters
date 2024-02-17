@@ -694,7 +694,7 @@
       <Filter>Engine\Light\SpotLight</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Light\SpotLight\SpotLightData.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Light\SpotLight</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

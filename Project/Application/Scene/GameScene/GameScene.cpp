@@ -87,6 +87,16 @@ void GameScene::Initialize() {
 	pointLightData_.radius = 10.0f;
 	pointLightData_.decay = 10.0f;
 
+	spotLight_ = std::make_unique<SpotLight>();
+	spotLight_->Initialize();
+	spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	spotLightData_.position = { 0.0f, -1.0f, 0.0f };
+	spotLightData_.intencity = 1.0f;
+	spotLightData_.direction = { 0.0f, -1.0f, 0.0f };
+	spotLightData_.distance = 10.0f;
+	spotLightData_.decay = 10.0f;
+	spotLightData_.cosAngle = 1.0f;
+
 }
 
 /// <summary>
@@ -122,6 +132,7 @@ void GameScene::Update() {
 	directionalLight_->Update(directionalLightData);
 
 	pointLight_->Update(pointLightData_);
+	spotLight_->Update(spotLightData_);
 
 	//Obj
 	sampleObj_->Update();
@@ -174,6 +185,7 @@ void GameScene::Draw() {
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
 	pointLight_->Draw(dxCommon_->GetCommadList(), 5);
+	spotLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -240,6 +252,13 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat("PointIntencity", &pointLightData_.intencity, 0.01f);
 	ImGui::DragFloat("PointRadius", &pointLightData_.radius, 0.01f);
 	ImGui::DragFloat("PointDecay", &pointLightData_.decay, 0.01f);
+
+	ImGui::DragFloat3("SpotPosition", &spotLightData_.position.x, 0.1f);
+	ImGui::DragFloat("SpotIntencity", &spotLightData_.intencity, 0.01f);
+	ImGui::DragFloat3("SpotDirection", &spotLightData_.direction.x, 0.1f);
+	ImGui::DragFloat("SpotDistance", &spotLightData_.distance, 0.01f);
+	ImGui::DragFloat("SpotDecay", &spotLightData_.decay, 0.01f);
+	ImGui::DragFloat("SpotCosAngle", &spotLightData_.cosAngle, 0.01f);
 	
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -293,7 +312,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "teapot.obj", dxCommon_, textureHandleManager_.get()));
 
 }
 

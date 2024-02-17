@@ -46,6 +46,7 @@ void MyFramework::Initialize()
 	// 光源静的初期化
 	DirectionalLight::StaticInitialize(dxCommon->GetDevice());
 	PointLight::StaticInitialize(dxCommon->GetDevice());
+	SpotLight::StaticInitialize(dxCommon->GetDevice());
 
 	// パーティクル
 	ParticleManager::GetInstance()->Initialize();
