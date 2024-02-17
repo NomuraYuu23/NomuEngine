@@ -70,7 +70,7 @@ void DirectionalLight::Initialize() {
 void DirectionalLight::Update(const DirectionalLightData& directionalLightData) {
 
 	directionalLightMap->color = directionalLightData.color;
-	directionalLightMap->direction = directionalLightData.direction;
+	directionalLightMap->direction = Vector3Calc::Normalize(directionalLightData.direction);
 	directionalLightMap->intencity = directionalLightData.intencity;
 
 }

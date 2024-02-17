@@ -8,9 +8,9 @@
 
 #pragma comment(lib, "dxcompiler.lib")
 
-#include "PointLightData.h"
+#include "SpotLightData.h"
 
-class PointLight
+class SpotLight
 {
 
 public:
@@ -25,7 +25,7 @@ public:
 	/// 光源生成
 	/// </summary>
 	/// <returns></returns>
-	static PointLight* Create();
+	static SpotLight* Create();
 
 private:
 
@@ -44,7 +44,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(const PointLightData& pointLightData);
+	void Update(const SpotLightData& spotLightData);
 
 	/// <summary>
 	/// 描画
@@ -53,9 +53,11 @@ public:
 
 private:
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightBuff_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> spotLightBuff_;
 
-	PointLightData* pointLightMap = nullptr;
+	SpotLightData* spotLightMap = nullptr;
 
 };
+
+
 

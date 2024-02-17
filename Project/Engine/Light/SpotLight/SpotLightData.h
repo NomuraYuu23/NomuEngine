@@ -1,0 +1,14 @@
+#pragma once
+#include "../../Math/Vector4.h"
+#include "../../Math/Vector3.h"
+
+struct SpotLightData {
+	Vector4 color; // ライト色
+	Vector3 position; // ライトの位置
+	float intencity; // 輝度
+	Vector3 direction; // ライトの方向
+	float distance; // ライトの届く距離
+	float decay; // 減衰率
+	float cosAngle; // スポットライトの余弦
+	float padding[2];
+};
