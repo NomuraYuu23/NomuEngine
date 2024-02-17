@@ -123,6 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp" />
     <ClCompile Include="Engine\base\ITextureHandleManager.cpp" />
     <ClCompile Include="Engine\Collider\Capsule\Capsule.cpp" />
+    <ClCompile Include="Engine\Light\PointLight\PointLight.cpp" />
     <ClCompile Include="Engine\Line\Line.cpp" />
     <ClCompile Include="Engine\Line\Segment.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
@@ -211,6 +212,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Collider\Capsule\Capsule.h" />
     <ClInclude Include="Engine\Collider\ColliderShape.h" />
     <ClInclude Include="Engine\Collision\CollisionData.h" />
+    <ClInclude Include="Engine\Light\PointLight\PointLight.h" />
+    <ClInclude Include="Engine\Light\PointLight\PointLightData.h" />
     <ClInclude Include="Engine\Line\Line.h" />
     <ClInclude Include="Engine\Line\Segment.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />

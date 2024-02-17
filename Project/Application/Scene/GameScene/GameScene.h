@@ -14,6 +14,7 @@
 #include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
 
 #include "../../../Engine/Light/DirectionalLight/DirectionalLight.h" // 平行光源
+#include "../../../Engine/Light/PointLight/PointLight.h" // 点光源
 
 class GameScene : public IScene
 {
@@ -109,5 +110,10 @@ private:
 	// サンプルOBJ
 	std::unique_ptr<SampleObject> sampleObj_;
 	std::unique_ptr<Model> sampleObjModel_;
+
+	// 点光源
+	std::unique_ptr<PointLight> pointLight_;
+	PointLightData pointLightData_;
+
 
 };

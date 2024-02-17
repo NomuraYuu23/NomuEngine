@@ -121,6 +121,9 @@
     <Filter Include="Application\Object\Sample">
       <UniqueIdentifier>{3cd2eab6-d125-4f00-80a5-f268f1095b83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Light\PointLight">
+      <UniqueIdentifier>{45e944ff-3794-4207-a952-3e887cba860a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -360,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="Application\Object\Sample\SampleObject.cpp">
       <Filter>Application\Object\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Light\PointLight\PointLight.cpp">
+      <Filter>Engine\Light\PointLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -671,6 +677,12 @@
     </ClInclude>
     <ClInclude Include="Application\Object\Sample\SampleObject.h">
       <Filter>Application\Object\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light\PointLight\PointLight.h">
+      <Filter>Engine\Light\PointLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light\PointLight\PointLightData.h">
+      <Filter>Engine\Light\PointLight</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

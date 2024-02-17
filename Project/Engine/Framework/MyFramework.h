@@ -18,6 +18,7 @@
 #include "../3D/Model.h"
 #include "../3D/Material.h"
 #include "../Light/DirectionalLight/DirectionalLight.h"
+#include "../Light/PointLight/PointLight.h"
 #include "../base/D3DResourceLeakChecker.h"
 
 // サウンド再生

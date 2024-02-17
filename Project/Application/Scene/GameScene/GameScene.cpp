@@ -78,6 +78,13 @@ void GameScene::Initialize() {
 	sampleObj_ = std::make_unique<SampleObject>();
 	sampleObj_->Initialize(sampleObjModel_.get());
 
+	// 点光源
+	pointLight_ = std::make_unique<PointLight>();
+	pointLight_->Initialize();
+	pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	pointLightData_.position = { 0.0f, -1.0f, 0.0f };
+	pointLightData_.intencity = 1.0f;
+
 }
 
 /// <summary>
@@ -111,6 +118,8 @@ void GameScene::Update() {
 	directionalLightData.direction = Vector3Calc::Normalize(direction);
 	directionalLightData.intencity = intencity;
 	directionalLight_->Update(directionalLightData);
+
+	pointLight_->Update(pointLightData_);
 
 	//Obj
 	sampleObj_->Update();
@@ -162,6 +171,7 @@ void GameScene::Draw() {
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
+	pointLight_->Draw(dxCommon_->GetCommadList(), 5);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -223,6 +233,10 @@ void GameScene::ImguiDraw(){
 	ImGui::Begin("Light");
 	ImGui::DragFloat3("direction", &direction.x, 0.1f);
 	ImGui::DragFloat("i", &intencity, 0.01f);
+
+	ImGui::DragFloat3("PointPosition", &pointLightData_.position.x, 0.1f);
+	ImGui::DragFloat("PointIntencity", &pointLightData_.intencity, 0.01f);
+	
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 
