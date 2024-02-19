@@ -36,6 +36,7 @@ struct SpotLight {
 	float32_t distance; // ライトの届く最大距離
 	float32_t decay; // 減衰率
 	float32_t cosAngle; // スポットライトの余弦
+	float32_t cosFalloffStart; // フォールオフ開始位置
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -223,7 +224,15 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	float32_t spotFactor = pow(saturate(-spotDistance / gSpotLight.distance + 1.0), gSpotLight.decay);
 	//
 	float32_t cosAngle = dot(soptLightDirectionOnSuface, gSpotLight.direction);
-	float32_t fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
+	float32_t fallofFactor = 0;
+
+	if (gSpotLight.cosFalloffStart == 0.0) {
+		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0 - gSpotLight.cosAngle));
+	}
+	else {
+		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFalloffStart - gSpotLight.cosAngle));
+	}
+
 	spotFactor = spotFactor * fallofFactor;
 
 

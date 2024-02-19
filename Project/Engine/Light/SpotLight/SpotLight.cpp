@@ -55,6 +55,7 @@ void SpotLight::Initialize()
 	spotLightMap->distance = 10.0f;
 	spotLightMap->decay = 10.0f;
 	spotLightMap->cosAngle = 1.0f;
+	spotLightMap->cosFalloffStart = 1.0f;
 
 }
 
@@ -67,6 +68,7 @@ void SpotLight::Update(const SpotLightData& spotLightData)
 	spotLightMap->distance = spotLightData.distance;
 	spotLightMap->decay = spotLightData.decay;
 	spotLightMap->cosAngle = spotLightData.cosAngle;
+	spotLightMap->cosFalloffStart = spotLightData.cosFalloffStart;
 
 }
 

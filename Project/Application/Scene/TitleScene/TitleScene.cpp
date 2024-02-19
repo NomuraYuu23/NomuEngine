@@ -49,7 +49,7 @@ void TitleScene::Update()
 	ImguiDraw();
 #endif // _DEBUG
 
-	if ((input_->TriggerJoystick(JoystickButton::kJoystickButtonA)) &&
+	if ((input_->TriggerJoystick(JoystickButton::kJoystickButtonA) || input_->TriggerKey(DIK_SPACE)) &&
 		requestSceneNo == kTitle) {
 		// 行きたいシーンへ
 		requestSceneNo = kGame;

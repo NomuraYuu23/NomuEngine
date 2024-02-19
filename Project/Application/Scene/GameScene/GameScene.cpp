@@ -96,6 +96,7 @@ void GameScene::Initialize() {
 	spotLightData_.distance = 10.0f;
 	spotLightData_.decay = 10.0f;
 	spotLightData_.cosAngle = 1.0f;
+	spotLightData_.cosFalloffStart = 1.0f;
 
 }
 
@@ -259,7 +260,8 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat("SpotDistance", &spotLightData_.distance, 0.01f);
 	ImGui::DragFloat("SpotDecay", &spotLightData_.decay, 0.01f);
 	ImGui::DragFloat("SpotCosAngle", &spotLightData_.cosAngle, 0.01f);
-	
+	ImGui::DragFloat("SpotCosFalloffStart", &spotLightData_.cosFalloffStart, 0.01f);
+
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 

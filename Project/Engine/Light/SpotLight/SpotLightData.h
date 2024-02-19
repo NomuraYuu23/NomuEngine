@@ -10,5 +10,6 @@ struct SpotLightData {
 	float distance; // ライトの届く距離
 	float decay; // 減衰率
 	float cosAngle; // スポットライトの余弦
-	float padding[2];
+	float cosFalloffStart; // フォールオフ開始位置
+	float padding;
 };
