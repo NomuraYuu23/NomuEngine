@@ -105,7 +105,8 @@ float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor, float3
 /// 鏡面反射
 /// </summary>
 float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor,
-	float32_t3 pointLightDirection, float32_t pointFactor, float32_t3 toEye) {
+	float32_t3 pointLightDirection, float32_t pointFactor, float32_t3 toEye,
+	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
 
 	float32_t4 color;
 
@@ -135,9 +136,22 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor,
 	float32_t3 pointLightSpecular =
 		gPointLight.color.rgb * gPointLight.intencity * pointFactor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
+	// スポットライト
+	float spotLightNdotL = dot(normalize(input.normal), -spotLightDirectionOnSuface);
+	float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
+	float32_t3 spotLightReflectLight = reflect(spotLightDirectionOnSuface, normalize(input.normal));
+	float spotLightRdotE = dot(spotLightReflectLight, toEye);
+	float spotLightSpecularPow = pow(saturate(spotLightRdotE), gMaterial.shininess);
+	// 拡散反射
+	float32_t3 spotLightDiffuse =
+		gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
+	//// 鏡面反射
+	float32_t3 spotLightSpecular =
+		gSpotLight.color.rgb * gSpotLight.intencity * spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+
 	// 全てのライトデータを入れる
 	// 拡散反射+鏡面反射
-	color.rgb = directionalLightDiffuse + directionalLightSpecular + pointLightDiffuse + pointLightSpecular;
+	color.rgb = directionalLightDiffuse + directionalLightSpecular + pointLightDiffuse + pointLightSpecular + spotLightDiffuse + spotLightSpecular;
 	// α
 	color.a = gMaterial.color.a * textureColor.a;
 
@@ -150,7 +164,7 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor,
 /// </summary>
 float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColor,
 	float32_t3 pointLightDirection, float32_t pointFactor, float32_t3 toEye,
-	float32_t3 soptLightDirectionOnSuface, float32_t spotFactor ) {
+	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor ) {
 
 	float32_t4 color;
 
@@ -182,22 +196,22 @@ float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColo
 		gPointLight.color.rgb * gPointLight.intencity * pointFactor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
 	// スポットライト
-	float soptLightNdotL = dot(normalize(input.normal), -soptLightDirectionOnSuface);
-	float soptLightCos = pow(soptLightNdotL * 0.5f + 0.5f, 2.0f);
-	float32_t3 soptLightHalfVector = normalize(-soptLightDirectionOnSuface + toEye);
-	float soptLightNDotH = dot(normalize(input.normal), soptLightHalfVector);
-	float soptLightSpecularPow = pow(saturate(soptLightNDotH), gMaterial.shininess);
+	float spotLightNdotL = dot(normalize(input.normal), -spotLightDirectionOnSuface);
+	float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
+	float32_t3 spotLightHalfVector = normalize(-spotLightDirectionOnSuface + toEye);
+	float spotLightNDotH = dot(normalize(input.normal), spotLightHalfVector);
+	float spotLightSpecularPow = pow(saturate(spotLightNDotH), gMaterial.shininess);
 	// 拡散反射
-	float32_t3 soptLightDiffuse =
-		gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * soptLightCos * gSpotLight.intencity * spotFactor;
+	float32_t3 spotLightDiffuse =
+		gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
 	//// 鏡面反射
-	float32_t3 soptLightSpecular =
-		gSpotLight.color.rgb * gSpotLight.intencity * spotFactor * soptLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+	float32_t3 spotLightSpecular =
+		gSpotLight.color.rgb * gSpotLight.intencity * spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
 
 	// 全てのライトデータを入れる
 	// 拡散反射+鏡面反射
-	color.rgb = directionalLightDiffuse + directionalLightSpecular + pointLightDiffuse + pointLightSpecular + soptLightDiffuse + soptLightSpecular;
+	color.rgb = directionalLightDiffuse + directionalLightSpecular + pointLightDiffuse + pointLightSpecular + spotLightDiffuse + spotLightSpecular;
 	// α
 	color.a = gMaterial.color.a * textureColor.a;
 
@@ -218,12 +232,12 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	float32_t pointFactor = pow(saturate(-pointDistance / gPointLight.radius + 1.0), gPointLight.decay);
 
 	// スポットライト
-	float32_t3 soptLightDirectionOnSuface = normalize(input.worldPosition - gSpotLight.position);
+	float32_t3 spotLightDirectionOnSuface = normalize(input.worldPosition - gSpotLight.position);
 	//
 	float32_t spotDistance = length(gSpotLight.position - input.worldPosition);
 	float32_t spotFactor = pow(saturate(-spotDistance / gSpotLight.distance + 1.0), gSpotLight.decay);
 	//
-	float32_t cosAngle = dot(soptLightDirectionOnSuface, gSpotLight.direction);
+	float32_t cosAngle = dot(spotLightDirectionOnSuface, gSpotLight.direction);
 	float32_t fallofFactor = 0;
 
 	if (gSpotLight.cosFalloffStart == 0.0) {
@@ -250,11 +264,11 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	}
 	// 鏡面反射
 	else if (gMaterial.enableLighting == 3) {
-		output.color = PhongReflection(input, textureColor, pointLightDirection, pointFactor, toEye);
+		output.color = PhongReflection(input, textureColor, pointLightDirection, pointFactor, toEye, spotLightDirectionOnSuface, spotFactor);
 	}
 	// ブリン鏡面反射
 	else if (gMaterial.enableLighting == 4) {
-		output.color = BlinnPhongReflection(input, textureColor, pointLightDirection, pointFactor, toEye, soptLightDirectionOnSuface, spotFactor);
+		output.color = BlinnPhongReflection(input, textureColor, pointLightDirection, pointFactor, toEye, spotLightDirectionOnSuface, spotFactor);
 	}
 	// その他の数が入ってきた場合
 	else {
