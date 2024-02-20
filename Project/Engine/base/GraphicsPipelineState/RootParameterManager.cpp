@@ -57,10 +57,14 @@ void RootParameterManager::RootParameterInitializeForModel()
 	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParameters[4].Descriptor.ShaderRegister = 2;
 	// ポイントライト
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParameters[5].Descriptor.ShaderRegister = 3;
-	// ポイントライト
+	rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexPointLight].data();//Tableの中身の配列を指定
+	rootParameters[5].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexPointLight].size());//Tableで利用する数
+	//rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	//rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	//rootParameters[5].Descriptor.ShaderRegister = 3;
+	// スポットライト
 	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParameters[6].Descriptor.ShaderRegister = 4;
@@ -172,5 +176,13 @@ void RootParameterManager::DescriptorRangeInitialize()
 	descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	descriptorRanges_[kDescriptorRangeIndexInstancing].push_back(descriptorRangeForInstancing[0]);
+	
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForPointLight[1] = {};
+	descriptorRangeForPointLight[0].BaseShaderRegister = 1;//0から始まる
+	descriptorRangeForPointLight[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeForPointLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使う
+	descriptorRangeForPointLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+	descriptorRanges_[kDescriptorRangeIndexPointLight].push_back(descriptorRangeForPointLight[0]);
 
 }

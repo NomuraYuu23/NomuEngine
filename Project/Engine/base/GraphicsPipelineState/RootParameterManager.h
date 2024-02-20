@@ -14,6 +14,7 @@
 enum DescriptorRangeIndex {
 	kDescriptorRangeIndexTexture,
 	kDescriptorRangeIndexInstancing,
+	kDescriptorRangeIndexPointLight,
 	kDescriptorRangeIndexOfCount,
 };
 

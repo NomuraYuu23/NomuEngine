@@ -185,7 +185,7 @@ void GameScene::Draw() {
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
-	pointLight_->Draw(dxCommon_->GetCommadList(), 5);
+	//pointLight_->Draw(dxCommon_->GetCommadList(), 5);
 	spotLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
 	
