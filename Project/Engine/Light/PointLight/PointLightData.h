@@ -9,5 +9,5 @@ struct PointLightData{
 	float radius; // ライトの届く最大距離
 	float decay; // 減衰率
 	bool used; // 使用している
-	float padding[1];
+	bool padding;
 };

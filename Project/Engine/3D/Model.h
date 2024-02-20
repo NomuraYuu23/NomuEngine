@@ -31,6 +31,7 @@
 
 #include "../base/ITextureHandleManager.h"
 #include "OutLineData.h"
+#include "../Light/PointLight/PointLightManager.h"
 class Model
 {
 
@@ -59,7 +60,7 @@ public:
 	/// 静的前処理
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+	static void PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr);
 
 	/// <summary>
 	/// 静的前処理
@@ -157,5 +158,8 @@ private:
 
 	// デフォルトマテリアル
 	std::unique_ptr<Material> defaultMaterial_;
+
+	// ポイントライトマネージャ
+	static PointLightManager* pointLightManager_;
 
 };

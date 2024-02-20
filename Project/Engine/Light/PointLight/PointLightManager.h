@@ -11,7 +11,7 @@ class PointLightManager
 public: // 静的メンバ変数
 
 	// パーティクル最大数
-	static uint32_t kNumInstanceMax_;
+	static const uint32_t kNumInstanceMax_ = 256;
 
 private:
 
@@ -29,9 +29,15 @@ public: // メンバ関数
 	static PointLightManager* GetInstance();
 
 	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	static void StaticInitialize(ID3D12Device* device);
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(ID3D12Device* device);
+	void Initialize();
 
 	/// <summary>
 	/// SRVを作る
@@ -41,7 +47,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(const std::array<PointLightData, PointLightManager::kNumInstanceMax_>& pointLightDatas);
 
 	/// <summary>
 	/// 描画

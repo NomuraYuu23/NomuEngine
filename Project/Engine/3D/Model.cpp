@@ -22,6 +22,8 @@ ID3D12RootSignature* Model::sRootSignature[GraphicsPipelineState::PipelineStateN
 ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 //計算
 Matrix4x4Calc* Model::matrix4x4Calc = nullptr;
+// ポイントライトマネージャ
+PointLightManager* Model::pointLightManager_ = nullptr;
 
 /// <summary>
 /// 静的初期化
@@ -49,7 +51,7 @@ void Model::StaticInitialize(ID3D12Device* device,
 /// 静的前処理
 /// </summary>
 /// <param name="cmdList">描画コマンドリスト</param>
-void Model::PreDraw(ID3D12GraphicsCommandList* cmdList) {
+void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager) {
 
 	assert(sCommandList == nullptr);
 
@@ -61,6 +63,8 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList) {
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	pointLightManager_ = pointLightManager;
 
 }
 
@@ -110,6 +114,8 @@ void Model::PreDrawOutLine(ID3D12GraphicsCommandList* cmdList) {
 void Model::PostDraw() {
 	// コマンドリストを解除
 	sCommandList = nullptr;
+
+	pointLightManager_ = nullptr;
 }
 
 /// <summary>
@@ -319,6 +325,11 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
+
+	// お試し
+	if (pointLightManager_) {
+		pointLightManager_->Draw(sCommandList, 7);
+	}
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);

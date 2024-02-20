@@ -10,8 +10,6 @@ using namespace Microsoft::WRL;
 ID3D12Device* PointLightManager::sDevice = nullptr;
 // コマンドリスト
 ID3D12GraphicsCommandList* PointLightManager::sCommandList = nullptr;
-// インスタンス
-uint32_t PointLightManager::kNumInstanceMax_ = 256;
 
 PointLightManager* PointLightManager::GetInstance()
 {
@@ -19,12 +17,17 @@ PointLightManager* PointLightManager::GetInstance()
 	return &instance;
 }
 
-void PointLightManager::Initialize(ID3D12Device* device)
+void PointLightManager::StaticInitialize(ID3D12Device* device)
 {
 
 	assert(device);
 
 	sDevice = device;
+
+}
+
+void PointLightManager::Initialize()
+{
 
 	//平行光源リソースを作る
 	pointLightDataBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(PointLightData) + 0xff) & ~0xff) * kNumInstanceMax_);
@@ -55,7 +58,7 @@ void PointLightManager::SRVCreate()
 	instancingSrvDesc.Buffer.FirstElement = 0;
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstanceMax_;
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+	instancingSrvDesc.Buffer.StructureByteStride = sizeof(PointLightData);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
 	DescriptorHerpManager::NextIndexDescriptorHeapChange();
@@ -63,10 +66,17 @@ void PointLightManager::SRVCreate()
 
 }
 
-void PointLightManager::Update()
+void PointLightManager::Update(const std::array<PointLightData, PointLightManager::kNumInstanceMax_>& pointLightDatas)
 {
 
-
+	for (size_t i = 0; i < kNumInstanceMax_; i++) {
+		pointLightDataMap_[i].color = pointLightDatas[i].color;
+		pointLightDataMap_[i].position = pointLightDatas[i].position;
+		pointLightDataMap_[i].intencity = pointLightDatas[i].intencity;
+		pointLightDataMap_[i].radius = pointLightDatas[i].radius;
+		pointLightDataMap_[i].decay = pointLightDatas[i].decay;
+		pointLightDataMap_[i].used = pointLightDatas[i].used;
+	}
 
 }
 

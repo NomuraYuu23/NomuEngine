@@ -87,6 +87,21 @@ void GameScene::Initialize() {
 	pointLightData_.radius = 10.0f;
 	pointLightData_.decay = 10.0f;
 
+	pointLightManager_ = std::make_unique<PointLightManager>();
+	pointLightManager_->Initialize();
+
+	for (size_t i = 0; i < pointLightDatas_.size(); ++i) {
+		pointLightDatas_[i].color = { 1.0f,1.0f,1.0f,1.0f };
+		pointLightDatas_[i].position = { 0.0f, -1.0f, 0.0f };
+		pointLightDatas_[i].intencity = 1.0f;
+		pointLightDatas_[i].radius = 10.0f;
+		pointLightDatas_[i].decay = 10.0f;
+		pointLightDatas_[i].used = false;
+	}
+	pointLightDatas_[0].used = false;
+	pointLightDatas_[1].used = true;
+	pointLightDatas_[2].used = true;
+
 	spotLight_ = std::make_unique<SpotLight>();
 	spotLight_->Initialize();
 	spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
@@ -133,6 +148,7 @@ void GameScene::Update() {
 	directionalLight_->Update(directionalLightData);
 
 	pointLight_->Update(pointLightData_);
+	pointLightManager_->Update(pointLightDatas_);
 	spotLight_->Update(spotLightData_);
 
 	//Obj
@@ -181,12 +197,13 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	Model::PreDraw(dxCommon_->GetCommadList());
+	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get());
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
-	//pointLight_->Draw(dxCommon_->GetCommadList(), 5);
+	pointLight_->Draw(dxCommon_->GetCommadList(), 5);
 	spotLight_->Draw(dxCommon_->GetCommadList(), 6);
+	//pointLightManager_->Draw(dxCommon_->GetCommadList(), 7);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -253,6 +270,21 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat("PointIntencity", &pointLightData_.intencity, 0.01f);
 	ImGui::DragFloat("PointRadius", &pointLightData_.radius, 0.01f);
 	ImGui::DragFloat("PointDecay", &pointLightData_.decay, 0.01f);
+
+	ImGui::DragFloat3("PointPosition0", &pointLightDatas_[0].position.x, 0.1f);
+	ImGui::DragFloat("PointIntencity0", &pointLightDatas_[0].intencity, 0.01f);
+	ImGui::DragFloat("PointRadius0", &pointLightDatas_[0].radius, 0.01f);
+	ImGui::DragFloat("PointDecay0", &pointLightDatas_[0].decay, 0.01f);
+
+	ImGui::DragFloat3("PointPosition1", &pointLightDatas_[1].position.x, 0.1f);
+	ImGui::DragFloat("PointIntencity1", &pointLightDatas_[1].intencity, 0.01f);
+	ImGui::DragFloat("PointRadius1", &pointLightDatas_[1].radius, 0.01f);
+	ImGui::DragFloat("PointDecay1", &pointLightDatas_[1].decay, 0.01f);
+
+	ImGui::DragFloat3("PointPosition2", &pointLightDatas_[2].position.x, 0.1f);
+	ImGui::DragFloat("PointIntencity2", &pointLightDatas_[2].intencity, 0.01f);
+	ImGui::DragFloat("PointRadius2", &pointLightDatas_[2].radius, 0.01f);
+	ImGui::DragFloat("PointDecay2", &pointLightDatas_[2].decay, 0.01f);
 
 	ImGui::DragFloat3("SpotPosition", &spotLightData_.position.x, 0.1f);
 	ImGui::DragFloat("SpotIntencity", &spotLightData_.intencity, 0.01f);
