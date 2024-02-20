@@ -56,7 +56,8 @@ struct PixelShaderOutput {
 /// <summary>
 /// ランバート
 /// </summary>
-float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor, float32_t3 pointLightDirection, float32_t pointFactor){
+float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor, float32_t3 pointLightDirection, float32_t pointFactor,
+	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor){
 
 	float32_t4 color;
 
@@ -68,8 +69,12 @@ float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor, float32_t3
 	float pointLightCos = saturate(dot(normalize(input.normal), -pointLightDirection));
 	float32_t3 pointLightColor = gPointLight.color.rgb * pointLightCos * gPointLight.intencity * pointFactor;
 
+	// スポットライト
+	float spotLightCos = saturate(dot(normalize(input.normal), -spotLightDirectionOnSuface));
+	float32_t3 spotLightColor = gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
+
 	//// 全てのライトデータを入れる
-	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + pointLightColor);
+	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + pointLightColor + spotLightColor);
 	color.a = gMaterial.color.a * textureColor.a;
 
 	return color;
@@ -262,7 +267,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	}
 	// ランバート
 	else if (gMaterial.enableLighting == 1) {
-		output.color = Lambert(input, textureColor, pointLightDirection, pointFactor);
+		output.color = Lambert(input, textureColor, pointLightDirection, pointFactor, spotLightDirectionOnSuface, spotFactor);
 	}
 	// ハーフランバート
 	else if (gMaterial.enableLighting == 2) {
