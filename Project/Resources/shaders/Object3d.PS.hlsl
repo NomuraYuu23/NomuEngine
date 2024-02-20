@@ -46,8 +46,6 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
 ConstantBuffer<Camera> gCamera : register(b2);
 
-ConstantBuffer<PointLight> gPointLight : register(b3);
-
 ConstantBuffer<SpotLight> gSpotLight : register(b4);
 
 StructuredBuffer<PointLight> gPointLights : register(t1);
@@ -175,7 +173,7 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 			allPointLightDiffuse += pointLightDiffuse;
 			// 鏡面反射
 			float32_t3 pointLightSpecular =
-				gPointLight.color.rgb * gPointLights[i].intencity * pointLightCalcDatas[i].pointFactor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+				gPointLights[i].color.rgb * gPointLights[i].intencity * pointLightCalcDatas[i].pointFactor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 			allPointLightSpecular += pointLightSpecular;
 		}
 	}

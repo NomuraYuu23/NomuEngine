@@ -79,17 +79,8 @@ void GameScene::Initialize() {
 	sampleObj_->Initialize(sampleObjModel_.get());
 
 	// 点光源
-	pointLight_ = std::make_unique<PointLight>();
-	pointLight_->Initialize();
-	pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
-	pointLightData_.position = { 0.0f, -1.0f, 0.0f };
-	pointLightData_.intencity = 1.0f;
-	pointLightData_.radius = 10.0f;
-	pointLightData_.decay = 10.0f;
-
 	pointLightManager_ = std::make_unique<PointLightManager>();
 	pointLightManager_->Initialize();
-
 	for (size_t i = 0; i < pointLightDatas_.size(); ++i) {
 		pointLightDatas_[i].color = { 1.0f,1.0f,1.0f,1.0f };
 		pointLightDatas_[i].position = { 0.0f, -1.0f, 0.0f };
@@ -147,7 +138,6 @@ void GameScene::Update() {
 	directionalLightData.intencity = intencity;
 	directionalLight_->Update(directionalLightData);
 
-	pointLight_->Update(pointLightData_);
 	pointLightManager_->Update(pointLightDatas_);
 	spotLight_->Update(spotLightData_);
 
@@ -201,9 +191,7 @@ void GameScene::Draw() {
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
-	pointLight_->Draw(dxCommon_->GetCommadList(), 5);
 	spotLight_->Draw(dxCommon_->GetCommadList(), 6);
-	//pointLightManager_->Draw(dxCommon_->GetCommadList(), 7);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -265,11 +253,6 @@ void GameScene::ImguiDraw(){
 	ImGui::Begin("Light");
 	ImGui::DragFloat3("direction", &direction.x, 0.1f);
 	ImGui::DragFloat("i", &intencity, 0.01f);
-
-	ImGui::DragFloat3("PointPosition", &pointLightData_.position.x, 0.1f);
-	ImGui::DragFloat("PointIntencity", &pointLightData_.intencity, 0.01f);
-	ImGui::DragFloat("PointRadius", &pointLightData_.radius, 0.01f);
-	ImGui::DragFloat("PointDecay", &pointLightData_.decay, 0.01f);
 
 	ImGui::DragFloat3("PointPosition0", &pointLightDatas_[0].position.x, 0.1f);
 	ImGui::DragFloat("PointIntencity0", &pointLightDatas_[0].intencity, 0.01f);

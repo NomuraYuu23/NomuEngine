@@ -296,6 +296,11 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
 
+	// ポイントライト
+	if (pointLightManager_) {
+		pointLightManager_->Draw(sCommandList, 5);
+	}
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 
@@ -326,9 +331,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
 
-	// お試し
+	// ポイントライト
 	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 7);
+		pointLightManager_->Draw(sCommandList, 5);
 	}
 
 	//描画
@@ -360,6 +365,11 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle);
+
+	// ポイントライト
+	if (pointLightManager_) {
+		pointLightManager_->Draw(sCommandList, 5);
+	}
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
