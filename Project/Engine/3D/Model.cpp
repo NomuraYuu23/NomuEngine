@@ -24,6 +24,8 @@ ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateN
 Matrix4x4Calc* Model::matrix4x4Calc = nullptr;
 // ポイントライトマネージャ
 PointLightManager* Model::pointLightManager_ = nullptr;
+//	スポットライトマネージャ
+SpotLightManager* Model::spotLightManager_ = nullptr;
 
 /// <summary>
 /// 静的初期化
@@ -51,7 +53,7 @@ void Model::StaticInitialize(ID3D12Device* device,
 /// 静的前処理
 /// </summary>
 /// <param name="cmdList">描画コマンドリスト</param>
-void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager) {
+void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager, SpotLightManager* spotLightManager) {
 
 	assert(sCommandList == nullptr);
 
@@ -65,6 +67,7 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* point
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	pointLightManager_ = pointLightManager;
+	spotLightManager_ = spotLightManager;
 
 }
 
@@ -116,6 +119,8 @@ void Model::PostDraw() {
 	sCommandList = nullptr;
 
 	pointLightManager_ = nullptr;
+	spotLightManager_ = nullptr;
+
 }
 
 /// <summary>
@@ -300,6 +305,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	if (pointLightManager_) {
 		pointLightManager_->Draw(sCommandList, 5);
 	}
+	// スポットライト
+	if (spotLightManager_) {
+		spotLightManager_->Draw(sCommandList, 7);
+	}
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
@@ -335,6 +344,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	if (pointLightManager_) {
 		pointLightManager_->Draw(sCommandList, 5);
 	}
+	// スポットライト
+	if (spotLightManager_) {
+		spotLightManager_->Draw(sCommandList, 7);
+	}
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
@@ -369,6 +382,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	// ポイントライト
 	if (pointLightManager_) {
 		pointLightManager_->Draw(sCommandList, 5);
+	}
+	// スポットライト
+	if (spotLightManager_) {
+		spotLightManager_->Draw(sCommandList, 7);
 	}
 
 	//描画

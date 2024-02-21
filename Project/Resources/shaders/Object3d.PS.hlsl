@@ -38,6 +38,7 @@ struct SpotLight {
 	float32_t decay; // 減衰率
 	float32_t cosAngle; // スポットライトの余弦
 	float32_t cosFalloffStart; // フォールオフ開始位置
+	bool used; // 使用している
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -49,6 +50,8 @@ ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<SpotLight> gSpotLight : register(b4);
 
 StructuredBuffer<PointLight> gPointLights : register(t1);
+
+StructuredBuffer<SpotLight> gSpotLights : register(t2);
 
 struct PointLightCalcData {
 	float32_t3 pointLightDirection;

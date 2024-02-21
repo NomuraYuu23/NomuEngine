@@ -104,6 +104,9 @@ void GameScene::Initialize() {
 	spotLightData_.cosAngle = 1.0f;
 	spotLightData_.cosFalloffStart = 1.0f;
 
+	spotLightManager_ = std::make_unique<SpotLightManager>();
+	spotLightManager_->Initialize();
+
 }
 
 /// <summary>
@@ -140,6 +143,7 @@ void GameScene::Update() {
 
 	pointLightManager_->Update(pointLightDatas_);
 	spotLight_->Update(spotLightData_);
+	//spotLightManager_->();
 
 	//Obj
 	sampleObj_->Update();
@@ -187,7 +191,7 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get());
+	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);

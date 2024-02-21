@@ -32,6 +32,8 @@
 #include "../base/ITextureHandleManager.h"
 #include "OutLineData.h"
 #include "../Light/PointLight/PointLightManager.h"
+#include "../Light/SpotLight/SpotLightManager.h"
+
 class Model
 {
 
@@ -60,7 +62,7 @@ public:
 	/// 静的前処理
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr);
+	static void PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr, SpotLightManager* spotLightManager = nullptr);
 
 	/// <summary>
 	/// 静的前処理
@@ -161,5 +163,7 @@ private:
 
 	// ポイントライトマネージャ
 	static PointLightManager* pointLightManager_;
+	//	スポットライトマネージャ
+	static SpotLightManager* spotLightManager_;
 
 };

@@ -49,6 +49,7 @@ void MyFramework::Initialize()
 	SpotLight::StaticInitialize(dxCommon->GetDevice());
 
 	PointLightManager::StaticInitialize(dxCommon->GetDevice());
+	SpotLightManager::StaticInitialize(dxCommon->GetDevice());
 
 	// パーティクル
 	ParticleManager::GetInstance()->Initialize();

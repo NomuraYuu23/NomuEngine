@@ -66,6 +66,12 @@ void RootParameterManager::RootParameterInitializeForModel()
 	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParameters[6].Descriptor.ShaderRegister = 4;
 
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexSpotLight].data();//Tableの中身の配列を指定
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexSpotLight].size());//Tableで利用する数
+
+
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexModel].push_back(rootParameters[i]);
 	}
@@ -181,5 +187,13 @@ void RootParameterManager::DescriptorRangeInitialize()
 	descriptorRangeForPointLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	descriptorRanges_[kDescriptorRangeIndexPointLight].push_back(descriptorRangeForPointLight[0]);
+
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForSpotLight[1] = {};
+	descriptorRangeForSpotLight[0].BaseShaderRegister = 2;//0から始まる
+	descriptorRangeForSpotLight[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeForSpotLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使う
+	descriptorRangeForSpotLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+	descriptorRanges_[kDescriptorRangeIndexSpotLight].push_back(descriptorRangeForSpotLight[0]);
 
 }

@@ -17,6 +17,7 @@
 #include "../../../Engine/Light/PointLight/PointLight.h" // 点光源
 #include "../../../Engine/Light/PointLight/PointLightManager.h" // 点光源
 #include "../../../Engine/Light/SpotLight/SpotLight.h" //
+#include "../../../Engine/Light/SpotLight/SpotLightManager.h" //
 
 class GameScene : public IScene
 {
@@ -120,5 +121,8 @@ private:
 	//SpotLight
 	std::unique_ptr<SpotLight> spotLight_;
 	SpotLightData spotLightData_;
+
+	std::unique_ptr<SpotLightManager> spotLightManager_;
+	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
 
 };
