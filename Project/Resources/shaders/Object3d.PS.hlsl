@@ -59,6 +59,12 @@ struct PointLightCalcData {
 	bool used;
 };
 
+struct SpotLightCalcData {
+	float32_t3 spotLightDirectionOnSuface;
+	float32_t spotFactor;
+	bool used;
+};
+
 struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
 };
@@ -209,7 +215,7 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 /// </summary>
 float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColor, float32_t3 toEye,
 	PointLightCalcData pointLightCalcDatas[256],
-	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
+	SpotLightCalcData spotLightCalcDatas[256]) {
 
 	float32_t4 color;
 
@@ -251,22 +257,31 @@ float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColo
 	}
 
 	// スポットライト
-	float spotLightNdotL = dot(normalize(input.normal), -spotLightDirectionOnSuface);
-	float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
-	float32_t3 spotLightHalfVector = normalize(-spotLightDirectionOnSuface + toEye);
-	float spotLightNDotH = dot(normalize(input.normal), spotLightHalfVector);
-	float spotLightSpecularPow = pow(saturate(spotLightNDotH), gMaterial.shininess);
 	// 拡散反射
-	float32_t3 spotLightDiffuse =
-		gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
-	//// 鏡面反射
-	float32_t3 spotLightSpecular =
-		gSpotLight.color.rgb * gSpotLight.intencity * spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
-
+	float32_t3 allSpotLightDiffuse = { 0.0,0.0,0.0 };
+	// 鏡面反射
+	float32_t3 allSpotLightSpecular = { 0.0,0.0,0.0 };
+	for (int j = 0; j < 256; j++) {
+		if (spotLightCalcDatas[j].used) {
+			float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
+			float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
+			float32_t3 spotLightHalfVector = normalize(-spotLightCalcDatas[j].spotLightDirectionOnSuface + toEye);
+			float spotLightNDotH = dot(normalize(input.normal), spotLightHalfVector);
+			float spotLightSpecularPow = pow(saturate(spotLightNDotH), gMaterial.shininess);
+			// 拡散反射
+			float32_t3 spotLightDiffuse =
+				gMaterial.color.rgb * textureColor.rgb * gSpotLights[j].color.rgb * spotLightCos * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor;
+			allSpotLightDiffuse += spotLightDiffuse;
+			// 鏡面反射
+			float32_t3 spotLightSpecular =
+				gSpotLights[j].color.rgb * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
+			allSpotLightSpecular += spotLightSpecular;
+		}
+	}
 
 	// 全てのライトデータを入れる
 	// 拡散反射+鏡面反射
-	color.rgb = directionalLightDiffuse + directionalLightSpecular + allPointLightDiffuse + allPointLightSpecular + spotLightDiffuse + spotLightSpecular;
+	color.rgb = directionalLightDiffuse + directionalLightSpecular + allPointLightDiffuse + allPointLightSpecular + allSpotLightDiffuse + allSpotLightSpecular;
 	// α
 	color.a = gMaterial.color.a * textureColor.a;
 
@@ -300,6 +315,42 @@ PointLightCalcData CreatePointLightCalcData(VertexShaderOutput input, int index)
 
 }
 
+SpotLightCalcData CreateSpotLightCalcData(VertexShaderOutput input, int index) {
+
+	SpotLightCalcData spotLightCalcData;
+	spotLightCalcData.spotLightDirectionOnSuface = float32_t3(0.0f, 0.0f, 0.0f);
+	spotLightCalcData.spotFactor = 0.0f;
+	spotLightCalcData.used = true;
+
+	if (!gSpotLights[index].used) {
+		spotLightCalcData.used = false;
+		return spotLightCalcData;
+	}
+
+	float32_t spotDistance = length(gSpotLights[index].position - input.worldPosition);
+	if (spotDistance > gSpotLights[index].distance) {
+		spotLightCalcData.used = false;
+		return spotLightCalcData;
+	}
+
+	spotLightCalcData.spotLightDirectionOnSuface = normalize(input.worldPosition - gSpotLights[index].position);
+
+	spotLightCalcData.spotFactor = pow(saturate(-spotDistance / gSpotLights[index].distance + 1.0), gSpotLights[index].decay);
+
+	float32_t cosAngle = dot(spotLightCalcData.spotLightDirectionOnSuface, gSpotLights[index].direction);
+	float32_t fallofFactor = 0;
+	if (gSpotLight.cosFalloffStart == 0.0) {
+		fallofFactor = saturate((cosAngle - gSpotLights[index].cosAngle) / (1.0 - gSpotLights[index].cosAngle));
+	}
+	else {
+		fallofFactor = saturate((cosAngle - gSpotLights[index].cosAngle) / (gSpotLights[index].cosFalloffStart - gSpotLights[index].cosAngle));
+	}
+	spotLightCalcData.spotFactor = spotLightCalcData.spotFactor * fallofFactor;
+
+	return spotLightCalcData;
+
+}
+
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
@@ -320,16 +371,19 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	//
 	float32_t cosAngle = dot(spotLightDirectionOnSuface, gSpotLight.direction);
 	float32_t fallofFactor = 0;
-
 	if (gSpotLight.cosFalloffStart == 0.0) {
 		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0 - gSpotLight.cosAngle));
 	}
 	else {
 		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFalloffStart - gSpotLight.cosAngle));
 	}
-
 	spotFactor = spotFactor * fallofFactor;
 
+	// スポットライト
+	SpotLightCalcData spotLightCalcDatas[256];
+	for (int j = 0; j < 256; j++) {
+		spotLightCalcDatas[j] = CreateSpotLightCalcData(input, j);
+	}
 
 	// ライティング無し
 	if (gMaterial.enableLighting == 0) {
@@ -349,7 +403,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	}
 	// ブリン鏡面反射
 	else if (gMaterial.enableLighting == 4) {
-		output.color = BlinnPhongReflection(input, textureColor, toEye, pointLightCalcDatas, spotLightDirectionOnSuface, spotFactor);
+		output.color = BlinnPhongReflection(input, textureColor, toEye, pointLightCalcDatas, spotLightCalcDatas);
 	}
 	// その他の数が入ってきた場合
 	else {
