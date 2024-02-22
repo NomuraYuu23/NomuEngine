@@ -47,8 +47,6 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
 ConstantBuffer<Camera> gCamera : register(b2);
 
-ConstantBuffer<SpotLight> gSpotLight : register(b4);
-
 StructuredBuffer<PointLight> gPointLights : register(t1);
 
 StructuredBuffer<SpotLight> gSpotLights : register(t2);
@@ -219,7 +217,7 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 			// 鏡面反射
 			float32_t3 spotLightSpecular =
 				gSpotLights[j].color.rgb * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
-			allSpotLightSpecular += allSpotLightSpecular;
+			allSpotLightSpecular += spotLightSpecular;
 		}
 	}
 
@@ -362,7 +360,7 @@ SpotLightCalcData CreateSpotLightCalcData(VertexShaderOutput input, int index) {
 
 	float32_t cosAngle = dot(spotLightCalcData.spotLightDirectionOnSuface, gSpotLights[index].direction);
 	float32_t fallofFactor = 0;
-	if (gSpotLight.cosFalloffStart == 0.0) {
+	if (gSpotLights[index].cosFalloffStart == 0.0) {
 		fallofFactor = saturate((cosAngle - gSpotLights[index].cosAngle) / (1.0 - gSpotLights[index].cosAngle));
 	}
 	else {
@@ -385,22 +383,6 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	for (int i = 0; i < 4; i++) {
 		pointLightCalcDatas[i] = CreatePointLightCalcData(input, i);
 	}
-
-	// スポットライト
-	float32_t3 spotLightDirectionOnSuface = normalize(input.worldPosition - gSpotLight.position);
-	//
-	float32_t spotDistance = length(gSpotLight.position - input.worldPosition);
-	float32_t spotFactor = pow(saturate(-spotDistance / gSpotLight.distance + 1.0), gSpotLight.decay);
-	//
-	float32_t cosAngle = dot(spotLightDirectionOnSuface, gSpotLight.direction);
-	float32_t fallofFactor = 0;
-	if (gSpotLight.cosFalloffStart == 0.0) {
-		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0 - gSpotLight.cosAngle));
-	}
-	else {
-		fallofFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFalloffStart - gSpotLight.cosAngle));
-	}
-	spotFactor = spotFactor * fallofFactor;
 
 	// スポットライト
 	SpotLightCalcData spotLightCalcDatas[4];

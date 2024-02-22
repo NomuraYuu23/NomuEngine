@@ -18,9 +18,7 @@
 #include "../3D/Model.h"
 #include "../3D/Material.h"
 #include "../Light/DirectionalLight/DirectionalLight.h"
-#include "../Light/PointLight/PointLight.h"
 #include "../Light/PointLight/PointLightManager.h"
-#include "../Light/SpotLight/SpotLight.h"
 #include "../Light/SpotLight/SpotLightManager.h"
 #include "../base/D3DResourceLeakChecker.h"
 

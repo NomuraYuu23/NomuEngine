@@ -118,10 +118,6 @@ private:
 	std::unique_ptr<PointLightManager> pointLightManager_;
 	std::array<PointLightData, PointLightManager::kNumInstanceMax_> pointLightDatas_;
 
-	//SpotLight
-	std::unique_ptr<SpotLight> spotLight_;
-	SpotLightData spotLightData_;
-
 	std::unique_ptr<SpotLightManager> spotLightManager_;
 	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
 

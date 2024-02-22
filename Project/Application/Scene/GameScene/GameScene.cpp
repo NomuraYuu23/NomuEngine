@@ -90,17 +90,6 @@ void GameScene::Initialize() {
 		pointLightDatas_[i].used = false;
 	}
 
-	spotLight_ = std::make_unique<SpotLight>();
-	spotLight_->Initialize();
-	spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
-	spotLightData_.position = { 0.0f, -1.0f, 0.0f };
-	spotLightData_.intencity = 1.0f;
-	spotLightData_.direction = { 0.0f, -1.0f, 0.0f };
-	spotLightData_.distance = 10.0f;
-	spotLightData_.decay = 10.0f;
-	spotLightData_.cosAngle = 1.0f;
-	spotLightData_.cosFalloffStart = 1.0f;
-
 	spotLightManager_ = std::make_unique<SpotLightManager>();
 	spotLightManager_->Initialize();
 	for (size_t i = 0; i < spotLightDatas_.size(); ++i) {
@@ -150,7 +139,6 @@ void GameScene::Update() {
 	directionalLight_->Update(directionalLightData);
 
 	pointLightManager_->Update(pointLightDatas_);
-	spotLight_->Update(spotLightData_);
 	spotLightManager_->Update(spotLightDatas_);
 
 	//Obj
@@ -203,7 +191,6 @@ void GameScene::Draw() {
 
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
-	spotLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
 	
 	//Obj

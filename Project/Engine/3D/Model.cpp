@@ -307,7 +307,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 7);
+		spotLightManager_->Draw(sCommandList, 6);
 	}
 
 	//描画
@@ -346,7 +346,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 7);
+		spotLightManager_->Draw(sCommandList, 6);
 	}
 
 	//描画
@@ -385,7 +385,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 7);
+		spotLightManager_->Draw(sCommandList, 6);
 	}
 
 	//描画
