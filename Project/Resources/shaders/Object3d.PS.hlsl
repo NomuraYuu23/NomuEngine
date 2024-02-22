@@ -73,7 +73,7 @@ struct PixelShaderOutput {
 /// ランバート
 /// </summary>
 float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
-	PointLightCalcData pointLightCalcDatas[256],
+	PointLightCalcData pointLightCalcDatas[4],
 	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
 
 	float32_t4 color;
@@ -84,7 +84,7 @@ float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
 
 	// ポイントライト
 	float32_t3 allPointLightColor = { 0.0,0.0,0.0 };
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (pointLightCalcDatas[i].used) {
 			float pointLightCos = saturate(dot(normalize(input.normal), -pointLightCalcDatas[i].pointLightDirection));
 			float32_t3 pointLightColor = gPointLights[i].color.rgb * pointLightCos * gPointLights[i].intencity * pointLightCalcDatas[i].pointFactor;
@@ -108,7 +108,7 @@ float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
 /// 半ランバート
 /// </summary>
 float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
-	PointLightCalcData pointLightCalcDatas[256],
+	PointLightCalcData pointLightCalcDatas[4],
 	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
 
 	float32_t4 color;
@@ -120,7 +120,7 @@ float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
 
 	// ポイントライト
 	float32_t3 allPointLightColor = { 0.0,0.0,0.0 };
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (pointLightCalcDatas[i].used) {
 			float pointLightNdotL = dot(normalize(input.normal), -pointLightCalcDatas[i].pointLightDirection);
 			float pointLightCos = pow(pointLightNdotL * 0.5f + 0.5f, 2.0f);
@@ -146,7 +146,7 @@ float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
 /// 鏡面反射
 /// </summary>
 float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, float32_t3 toEye,
-	PointLightCalcData pointLightCalcDatas[256],
+	PointLightCalcData pointLightCalcDatas[4],
 	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
 
 	float32_t4 color;
@@ -169,7 +169,7 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 	float32_t3 allPointLightDiffuse = { 0.0,0.0,0.0 };
 	// 鏡面反射
 	float32_t3 allPointLightSpecular = { 0.0,0.0,0.0 };
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (pointLightCalcDatas[i].used) {
 			float pointLightNdotL = dot(normalize(input.normal), -pointLightCalcDatas[i].pointLightDirection);
 			float pointLightCos = pow(pointLightNdotL * 0.5f + 0.5f, 2.0f);
@@ -214,8 +214,8 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 /// ブリン鏡面反射
 /// </summary>
 float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColor, float32_t3 toEye,
-	PointLightCalcData pointLightCalcDatas[256],
-	SpotLightCalcData spotLightCalcDatas[256]) {
+	PointLightCalcData pointLightCalcDatas[4],
+	SpotLightCalcData spotLightCalcDatas[4]) {
 
 	float32_t4 color;
 
@@ -238,7 +238,7 @@ float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColo
 	float32_t3 allPointLightDiffuse = { 0.0,0.0,0.0 };
 	// 鏡面反射
 	float32_t3 allPointLightSpecular = { 0.0,0.0,0.0 };
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (pointLightCalcDatas[i].used) {
 			float pointLightNdotL = dot(normalize(input.normal), -pointLightCalcDatas[i].pointLightDirection);
 			float pointLightCos = pow(pointLightNdotL * 0.5f + 0.5f, 2.0f);
@@ -261,7 +261,7 @@ float32_t4 BlinnPhongReflection(VertexShaderOutput input, float32_t4 textureColo
 	float32_t3 allSpotLightDiffuse = { 0.0,0.0,0.0 };
 	// 鏡面反射
 	float32_t3 allSpotLightSpecular = { 0.0,0.0,0.0 };
-	for (int j = 0; j < 256; j++) {
+	for (int j = 0; j < 4; j++) {
 		if (spotLightCalcDatas[j].used) {
 			float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
 			float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
@@ -358,8 +358,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
 
 	// ポイントライト
-	PointLightCalcData pointLightCalcDatas[256];
-	for (int i = 0; i < 256; i++) {
+	PointLightCalcData pointLightCalcDatas[4];
+	for (int i = 0; i < 4; i++) {
 		pointLightCalcDatas[i] = CreatePointLightCalcData(input, i);
 	}
 
@@ -380,8 +380,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	spotFactor = spotFactor * fallofFactor;
 
 	// スポットライト
-	SpotLightCalcData spotLightCalcDatas[256];
-	for (int j = 0; j < 256; j++) {
+	SpotLightCalcData spotLightCalcDatas[4];
+	for (int j = 0; j < 4; j++) {
 		spotLightCalcDatas[j] = CreateSpotLightCalcData(input, j);
 	}
 

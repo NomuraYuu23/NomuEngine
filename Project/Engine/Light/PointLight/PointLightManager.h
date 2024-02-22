@@ -11,7 +11,7 @@ class PointLightManager
 public: // 静的メンバ変数
 
 	// パーティクル最大数
-	static const uint32_t kNumInstanceMax_ = 256;
+	static const uint32_t kNumInstanceMax_ = 4;
 
 private:
 

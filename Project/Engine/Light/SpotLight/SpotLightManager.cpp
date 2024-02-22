@@ -76,12 +76,12 @@ void SpotLightManager::Update(const std::array<SpotLightData, SpotLightManager::
 		spotLightDataMap_[i].color = spotLightDatas[i].color;
 		spotLightDataMap_[i].position = spotLightDatas[i].position;
 		spotLightDataMap_[i].intencity = spotLightDatas[i].intencity;
-		spotLightDataMap_[i].direction = spotLightDatas[i].direction; // ライトの方向
-		spotLightDataMap_[i].distance = spotLightDatas[i].distance; // ライトの届く距離
-		spotLightDataMap_[i].decay = spotLightDatas[i].decay; // 減衰率
-		spotLightDataMap_[i].cosAngle = spotLightDatas[i].cosAngle; // スポットライトの余弦
-		spotLightDataMap_[i].cosFalloffStart = spotLightDatas[i].cosFalloffStart; // フォールオフ開始位置
-		spotLightDataMap_[i].used = spotLightDatas[i].used; // 使用している
+		spotLightDataMap_[i].direction = Vector3Calc::Normalize(spotLightDatas[i].direction);
+		spotLightDataMap_[i].distance = spotLightDatas[i].distance;
+		spotLightDataMap_[i].decay = spotLightDatas[i].decay; 
+		spotLightDataMap_[i].cosAngle = spotLightDatas[i].cosAngle; 
+		spotLightDataMap_[i].cosFalloffStart = spotLightDatas[i].cosFalloffStart; 
+		spotLightDataMap_[i].used = spotLightDatas[i].used;
 	}
 
 }
