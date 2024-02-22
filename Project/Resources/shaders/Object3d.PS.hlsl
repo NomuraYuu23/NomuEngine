@@ -109,7 +109,7 @@ float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
 /// </summary>
 float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
 	PointLightCalcData pointLightCalcDatas[4],
-	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
+	SpotLightCalcData spotLightCalcDatas[4]) {
 
 	float32_t4 color;
 
@@ -130,12 +130,16 @@ float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
 	}
 
 	// スポットライト
-	float spotLightNdotL = dot(normalize(input.normal), -spotLightDirectionOnSuface);
-	float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
-	float32_t3 spotLightColor = gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
-
+	float32_t3 allSpotLightColor = { 0.0,0.0,0.0 };
+	for (int j = 0; j < 4; j++) {
+		float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
+		float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
+		float32_t3 spotLightColor = gSpotLights[j].color.rgb * spotLightCos * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor;
+		allSpotLightColor += spotLightColor;
+	}
+	
 	// 全てのライトデータを入れる
-	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + allPointLightColor + spotLightColor);
+	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + allPointLightColor + allSpotLightColor);
 	color.a = gMaterial.color.a * textureColor.a;
 
 	return color;
@@ -187,25 +191,12 @@ float32_t4 PhongReflection(VertexShaderOutput input, float32_t4 textureColor, fl
 		}
 	}
 
-	// スポットライト
-	//float spotLightNdotL = dot(normalize(input.normal), -spotLightDirectionOnSuface);
-	//float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
-	//float32_t3 spotLightReflectLight = reflect(spotLightDirectionOnSuface, normalize(input.normal));
-	//float spotLightRdotE = dot(spotLightReflectLight, toEye);
-	//float spotLightSpecularPow = pow(saturate(spotLightRdotE), gMaterial.shininess);
-	//// 拡散反射
-	//float32_t3 spotLightDiffuse =
-	//	gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
-	////// 鏡面反射
-	//float32_t3 spotLightSpecular =
-	//	gSpotLight.color.rgb * gSpotLight.intencity * spotFactor * spotLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 
-		// スポットライト
+	// スポットライト
 	// 拡散反射
 	float32_t3 allSpotLightDiffuse = { 0.0,0.0,0.0 };
 	// 鏡面反射
 	float32_t3 allSpotLightSpecular = { 0.0,0.0,0.0 };
-	
 	for (int j = 0; j < 4; j++) {
 		if (spotLightCalcDatas[j].used) {
 			float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
@@ -419,7 +410,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	}
 	// ハーフランバート
 	else if (gMaterial.enableLighting == 2) {
-		output.color = HalfLambert(input, textureColor, pointLightCalcDatas, spotLightDirectionOnSuface, spotFactor);
+		output.color = HalfLambert(input, textureColor, pointLightCalcDatas, spotLightCalcDatas);
 	}
 	// 鏡面反射
 	else if (gMaterial.enableLighting == 3) {
