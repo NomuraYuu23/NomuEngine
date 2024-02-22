@@ -74,7 +74,7 @@ struct PixelShaderOutput {
 /// </summary>
 float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
 	PointLightCalcData pointLightCalcDatas[4],
-	float32_t3 spotLightDirectionOnSuface, float32_t spotFactor) {
+	SpotLightCalcData spotLightCalcDatas[4]) {
 
 	float32_t4 color;
 
@@ -93,11 +93,17 @@ float32_t4 Lambert(VertexShaderOutput input, float32_t4 textureColor,
 	}
 
 	// スポットライト
-	float spotLightCos = saturate(dot(normalize(input.normal), -spotLightDirectionOnSuface));
-	float32_t3 spotLightColor = gSpotLight.color.rgb * spotLightCos * gSpotLight.intencity * spotFactor;
+	float32_t3 allSpotLightColor = { 0.0,0.0,0.0 };
+	for (int j = 0; j < 4; j++) {
+		if (spotLightCalcDatas[j].used) {
+			float spotLightCos = saturate(dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface));
+			float32_t3 spotLightColor = gSpotLights[j].color.rgb * spotLightCos * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor;
+			allSpotLightColor += spotLightColor;
+		}
+	}
 
-	//// 全てのライトデータを入れる
-	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + allPointLightColor + spotLightColor);
+	// 全てのライトデータを入れる
+	color.rgb = gMaterial.color.rgb * textureColor.rgb * (directionalLightColor + allPointLightColor + allSpotLightColor);
 	color.a = gMaterial.color.a * textureColor.a;
 
 	return color;
@@ -132,10 +138,12 @@ float32_t4 HalfLambert(VertexShaderOutput input, float32_t4 textureColor,
 	// スポットライト
 	float32_t3 allSpotLightColor = { 0.0,0.0,0.0 };
 	for (int j = 0; j < 4; j++) {
-		float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
-		float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
-		float32_t3 spotLightColor = gSpotLights[j].color.rgb * spotLightCos * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor;
-		allSpotLightColor += spotLightColor;
+		if (spotLightCalcDatas[j].used) {
+			float spotLightNdotL = dot(normalize(input.normal), -spotLightCalcDatas[j].spotLightDirectionOnSuface);
+			float spotLightCos = pow(spotLightNdotL * 0.5f + 0.5f, 2.0f);
+			float32_t3 spotLightColor = gSpotLights[j].color.rgb * spotLightCos * gSpotLights[j].intencity * spotLightCalcDatas[j].spotFactor;
+			allSpotLightColor += spotLightColor;
+		}
 	}
 	
 	// 全てのライトデータを入れる
@@ -406,7 +414,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	}
 	// ランバート
 	else if (gMaterial.enableLighting == 1) {
-		output.color = Lambert(input, textureColor, pointLightCalcDatas, spotLightDirectionOnSuface, spotFactor);
+		output.color = Lambert(input, textureColor, pointLightCalcDatas, spotLightCalcDatas);
 	}
 	// ハーフランバート
 	else if (gMaterial.enableLighting == 2) {
