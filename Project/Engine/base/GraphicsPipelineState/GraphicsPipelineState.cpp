@@ -154,7 +154,7 @@ void GraphicsPipelineState::CreateForParticle()
 	createPSODesc.inputLayoutDesc = InputLayoutSetting(
 		kInputLayoutIndexNormal);
 
-	createPSODesc.blendDesc = BlendStateSetting(kBlendStateIndexNormal);
+	createPSODesc.blendDesc = BlendStateSetting(kBlendStateIndexAdd);
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 
