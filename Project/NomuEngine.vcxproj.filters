@@ -127,6 +127,9 @@
     <Filter Include="Engine\Light\SpotLight">
       <UniqueIdentifier>{d5e9efe7-d1ab-4ead-b769-1f4daac54dd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\3D\Model">
+      <UniqueIdentifier>{8b136702-1927-41e2-86ea-a1a8ecbf5733}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -157,9 +160,6 @@
       <Filter>Engine\2D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Material.cpp">
-      <Filter>Engine\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Model.cpp">
       <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\WorldTransform.cpp">
@@ -379,6 +379,15 @@
     <ClCompile Include="Engine\Light\SpotLight\SpotLightManager.cpp">
       <Filter>Engine\Light\SpotLight</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\Model.cpp">
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\ModelLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Mesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -412,9 +421,6 @@
       <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\MaterialData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Model.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\TransformationMatrix.h">
@@ -707,6 +713,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Light\SpotLight\SpotLightManager.h">
       <Filter>Engine\Light\SpotLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Model.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\ModelLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Mesh.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

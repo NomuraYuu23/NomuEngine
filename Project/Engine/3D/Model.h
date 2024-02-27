@@ -34,6 +34,8 @@
 #include "../Light/PointLight/PointLightManager.h"
 #include "../Light/SpotLight/SpotLightManager.h"
 
+#include "Mesh.h"
+
 class Model
 {
 
@@ -101,6 +103,10 @@ private:
 	static ID3D12PipelineState* sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 	//計算
 	static Matrix4x4Calc* matrix4x4Calc;
+	// ポイントライトマネージャ
+	static PointLightManager* pointLightManager_;
+	//	スポットライトマネージャ
+	static SpotLightManager* spotLightManager_;
 
 public:
 
@@ -124,46 +130,27 @@ public:
 	void OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera,OutLineData& outLineData);
 
 	/// <summary>
-	/// メッシュデータ生成
-	/// </summary>
-	void CreateMesh(const std::string& directoryPath, const std::string& filename);
-
-	Model::MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
-
-	//objファイルを読む
-	Model::ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
-
-
-	/// <summary>
 	/// テクスチャハンドルの設定
 	/// </summary>
 	/// <param name="textureHandle"></param>
 	void SetTextureHandle(uint32_t textureHandle);
-
-	uint32_t GetTevtureHandle() { return textureHandle_; }
+	uint32_t GetTextureHandle() { return textureHandle_; }
 
 private:
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	// 頂点バッファマップ
-	VertexData* vertMap = nullptr;
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
 	//モデル読み込み
-	Model::ModelData modelData;
+	Model::ModelData modelData_;
+
+	// メッシュ
+	std::unique_ptr<Mesh> mesh_;
 
 	//テクスチャ番号
 	UINT textureHandle_ = 0;
+
 	// リソース設定
 	D3D12_RESOURCE_DESC resourceDesc_;
 
 	// デフォルトマテリアル
 	std::unique_ptr<Material> defaultMaterial_;
-
-	// ポイントライトマネージャ
-	static PointLightManager* pointLightManager_;
-	//	スポットライトマネージャ
-	static SpotLightManager* spotLightManager_;
 
 };
