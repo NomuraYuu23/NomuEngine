@@ -52,7 +52,7 @@ public:
 	/// マッピング
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	ParticleForGPU Map(const Matrix4x4& viewProjectionMatrix);
+	ParticleForGPU Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
 
 	/// <summary>
 	/// 時間経過

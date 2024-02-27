@@ -76,17 +76,20 @@ void IParticle::UpdateMatrix(const Matrix4x4& billBoardMatrix)
 	else {
 		worldMatrix_ = matrix4x4Calc->MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	}
+
+	//worldMatrix_ = matrix4x4Calc->MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+
 }
 
-ParticleForGPU IParticle::Map(const Matrix4x4& viewProjectionMatrix)
+ParticleForGPU IParticle::Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix)
 {
 
 	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 	ParticleManager* particleManager = ParticleManager::GetInstance();
 
 	ParticleForGPU particleForGPU;
-	particleForGPU.World = worldMatrix_;
-	particleForGPU.WVP = matrix4x4Calc->Multiply(worldMatrix_, viewProjectionMatrix);
+	particleForGPU.World = matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_);
+	particleForGPU.WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_), viewProjectionMatrix);
 	particleForGPU.color = color_;
 
 	return particleForGPU;

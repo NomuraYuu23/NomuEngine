@@ -98,9 +98,9 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4&
 
 	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 
-	transformationMatrixMap_->World = matrix4x4Calc->Multiply(worldMatrix_, modelLocalMatrix);
-	transformationMatrixMap_->WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(worldMatrix_, modelLocalMatrix), viewProjectionMatrix);
-	transformationMatrixMap_->WorldInverseTranspose = matrix4x4Calc->Inverse(matrix4x4Calc->Multiply(worldMatrix_, modelLocalMatrix));
+	transformationMatrixMap_->World = matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_);
+	transformationMatrixMap_->WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_), viewProjectionMatrix);
+	transformationMatrixMap_->WorldInverseTranspose = matrix4x4Calc->Inverse(matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_));
 
 	transformationMatrixMap_->ScaleInverse = matrix4x4Calc->Inverse(matrix4x4Calc->MakeScaleMatrix(transform_.scale)); // objファイルのみ対応
 

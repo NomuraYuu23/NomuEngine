@@ -142,6 +142,11 @@ public:
 	void SetTextureHandle(uint32_t textureHandle);
 	uint32_t GetTextureHandle() { return textureHandle_; }
 
+	/// <summary>
+	/// ローカルマトリックス取得
+	/// </summary>
+	Matrix4x4 GetRootNodeLocalMatrix() { return modelData_.rootNode.localMatrix; }
+
 private:
 
 	//モデル読み込み

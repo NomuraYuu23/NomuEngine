@@ -106,7 +106,7 @@ void GameScene::Initialize() {
 		spotLightDatas_[i].decay = 2.0f; // 減衰率
 		spotLightDatas_[i].cosAngle = 2.0f; // スポットライトの余弦
 		spotLightDatas_[i].cosFalloffStart = 1.0f; // フォールオフ開始位置
-		spotLightDatas_[i].used = true; // 使用している
+		spotLightDatas_[i].used = false; // 使用している
 	}
 
 }
@@ -351,7 +351,7 @@ void GameScene::ModelCreate()
 {
 
 	// パーティクル
-	particleUvcheckerModel_.reset(Model::Create("Resources/default/", "plane.obj", dxCommon_, textureHandleManager_.get()));
+	particleUvcheckerModel_.reset(Model::Create("Resources/default/", "plane.gltf", dxCommon_, textureHandleManager_.get()));
 	particleCircleModel_.reset(Model::Create("Resources/Particle/", "plane.obj", dxCommon_, textureHandleManager_.get()));
 
 	// スカイドーム

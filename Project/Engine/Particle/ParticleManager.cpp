@@ -100,7 +100,7 @@ void ParticleManager::Map(const Matrix4x4& viewProjectionMatrix)
 		std::list<IParticle*>::iterator itr = particleDatas_[i].particles_.begin();
 		for (; itr != particleDatas_[i].particles_.end(); ++itr) {
 			IParticle* particle = *itr;
-			particleForGPUMap_[instanceIndex] = particle->Map(viewProjectionMatrix);
+			particleForGPUMap_[instanceIndex] = particle->Map(viewProjectionMatrix, particleDatas_[i].model_->GetRootNodeLocalMatrix());
 			instanceIndex++;
 		}
 	}
