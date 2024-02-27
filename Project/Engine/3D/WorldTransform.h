@@ -41,7 +41,7 @@ struct WorldTransform
 
 	void UpdateMatrix();
 
-	void Map(const Matrix4x4& viewProjectionMatrix);
+	void Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
 
 	void MapSprite();
 

@@ -149,7 +149,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	assert(sDevice);
 
 	// モデル読み込み
-	modelData_ = ModelLoader::LoadObjFile(directoryPath, filename);
+	modelData_ = ModelLoader::LoadModelFile(directoryPath, filename);
 
 	//メッシュ生成
 	mesh_ = std::make_unique<Mesh>();
@@ -182,7 +182,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -221,7 +221,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -260,7 +260,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -322,7 +322,7 @@ void Model::OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera, OutL
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
 	//wvp用のCBufferの場所を設定
