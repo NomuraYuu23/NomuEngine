@@ -48,6 +48,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				// aiProcess_MakeLeftHandedはx*=-1で、右手->左手に変換するので手動で対処
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
+				//vertex.meshNum = meshIndex;
 				modelData.vertices.push_back(vertex);
 			}
 
@@ -70,10 +71,10 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 }
 
-Model::Node ModelLoader::ReadNode(aiNode* node)
+ModelNode ModelLoader::ReadNode(aiNode* node)
 {
 
-	Model::Node result;
+	ModelNode result;
 
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation; // nodeのlocalMatrixを取得
 	aiLocalMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
@@ -88,6 +89,13 @@ Model::Node ModelLoader::ReadNode(aiNode* node)
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
 		// 再帰的に読んで階層構造を作る
 		result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
+	}
+
+	if (node->mMeshes) {
+		result.meshNum = *node->mMeshes;
+	}
+	else {
+		result.meshNum = -1;
 	}
 
 	return result;

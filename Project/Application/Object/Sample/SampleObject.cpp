@@ -9,7 +9,7 @@ void SampleObject::Initialize(Model* model)
 
 	material_.reset(Material::Create());
 
-	worldtransform_.Initialize();
+	worldtransform_.Initialize(model_->GetRootNode());
 
 	enableLighting_ = 0;
 

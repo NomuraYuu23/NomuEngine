@@ -59,7 +59,7 @@ void ParticleManager::SRVCreate()
 	instancingSrvDesc.Buffer.FirstElement = 0;
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstanceMax_;
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
 	DescriptorHerpManager::NextIndexDescriptorHeapChange();

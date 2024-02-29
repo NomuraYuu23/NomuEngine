@@ -5,9 +5,34 @@
 #include "TransformationMatrix.h"
 #include <wrl.h>
 #include <d3d12.h>
+#include "ModelNode.h"
 
-struct WorldTransform
+class WorldTransform
 {
+
+public:
+
+	struct NodeData
+	{
+		Matrix4x4 localMatrix;
+		uint32_t meshNum;
+	};
+
+public:
+
+	void Initialize();
+
+	void UpdateMatrix();
+
+	void Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
+
+	void MapSprite();
+
+	Vector3 GetWorldPosition();
+
+	void SetParent(WorldTransform* parent) { parent_ = parent; }
+
+public:
 
 	//トランスフォーム
 	TransformStructure transform_{ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
@@ -36,17 +61,35 @@ struct WorldTransform
 	//書き込むためのアドレスを取得
 	TransformationMatrix* transformationMatrixMap_{};
 
+public: // お試し
 
-	void Initialize();
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* sCommandList;
 
-	void UpdateMatrix();
+	//WVP用のリソースを作る。Matrix4x4
+	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixesBuff_;
+	//書き込むためのアドレスを取得
+	TransformationMatrix* transformationMatrixesMap_{};
 
-	void Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
 
-	void MapSprite();
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
-	Vector3 GetWorldPosition();
+	//ModelNode modelNode_;
 
-	void SetParent(WorldTransform* parent) { parent_ = parent; }
+	std::vector<NodeData> nodeDatas_;
+
+	void Initialize(const ModelNode& modelNode);
+	
+	void TmpMap(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
+	
+	/// <summary>
+	/// SRVを作る
+	/// </summary>
+	void SRVCreate();
+
+	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
+
+	void SetNodeDatas(const ModelNode& modelNode);
 
 };

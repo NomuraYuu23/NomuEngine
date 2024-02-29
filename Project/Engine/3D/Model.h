@@ -35,6 +35,7 @@
 #include "../Light/SpotLight/SpotLightManager.h"
 
 #include "Mesh.h"
+#include "ModelNode.h"
 
 class Model
 {
@@ -45,17 +46,11 @@ public:
 		std::string textureFilePath;
 	};
 
-	struct Node {
-		Matrix4x4 localMatrix;
-		std::string name;
-		std::vector<Node> children;
-	};
-
 	struct ModelData {
 
 		std::vector<VertexData> vertices;
 		MaterialData material;
-		Node rootNode;
+		ModelNode rootNode;
 	};
 
 	/// <summary>
@@ -146,6 +141,11 @@ public:
 	/// ローカルマトリックス取得
 	/// </summary>
 	Matrix4x4 GetRootNodeLocalMatrix() { return modelData_.rootNode.localMatrix; }
+
+	/// <summary>
+	/// ローカルマトリックス取得
+	/// </summary>
+	ModelNode GetRootNode() { return modelData_.rootNode; }
 
 private:
 

@@ -246,6 +246,8 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 		spotLightManager_->Draw(sCommandList, 6);
 	}
 
+	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 7);
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
