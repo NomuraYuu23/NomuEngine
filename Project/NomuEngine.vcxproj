@@ -214,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\UI\UI.h" />
     <ClInclude Include="Application\UI\UIManager.h" />
     <ClInclude Include="Engine\2D\ImGuiManager.h" />
+    <ClInclude Include="Engine\2D\SpriteForGPU.h" />
     <ClInclude Include="Engine\3D\Mesh.h" />
     <ClInclude Include="Engine\3D\MeshNumManager.h" />
     <ClInclude Include="Engine\3D\ModelLoader.h" />

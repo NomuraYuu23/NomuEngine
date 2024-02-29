@@ -131,8 +131,14 @@ Sprite::Sprite(
 
 	textureHandle_ = textureHandle;
 
-	// ワールドトランスフォーム
-	worldTransform_.Initialize();
+	//WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
+	spriteForGPUBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), (sizeof(SpriteForGPU) + 0xff) & ~0xff);
+	//書き込むためのアドレスを取得
+	spriteForGPUBuff_->Map(0, nullptr, reinterpret_cast<void**>(&spriteForGPUMap_));
+
+	spriteForGPUMap_->World = matrix4x4Calc->MakeIdentity4x4();
+	spriteForGPUMap_->WVP = matrix4x4Calc->MakeIdentity4x4();
+	transformMatrix_ = matrix4x4Calc->MakeIdentity4x4();
 
 	// 位置
 	SetPosition(position);
@@ -249,11 +255,16 @@ void Sprite::Draw() {
 	sCommandList->IASetVertexBuffers(0, 1, &vbView_);
 	//IBVを設定
 	sCommandList->IASetIndexBuffer(&ibView_);
-
-	worldTransform_.MapSprite();
+	
+	//Sprite用のWorldViewProjectionMatrixを作る
+	Matrix4x4 viewMatrixSprite = matrix4x4Calc->MakeIdentity4x4();
+	Matrix4x4 projectionMatrixSprite = matrix4x4Calc->MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrixSprite = matrix4x4Calc->Multiply(transformMatrix_, matrix4x4Calc->Multiply(viewMatrixSprite, projectionMatrixSprite));
+	spriteForGPUMap_->WVP = worldViewProjectionMatrixSprite;
+	spriteForGPUMap_->World = transformMatrix_;
 
 	//TransformationMatrixCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform_.transformationMatrixBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(1, spriteForGPUBuff_->GetGPUVirtualAddress());
 
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, material_->GetMaterialBuff()->GetGPUVirtualAddress());
@@ -278,14 +289,30 @@ void Sprite::SetTextureRange()
 	material_->Update(uvTransform_, color_, enableLighting_, 0.0f);
 }
 
+void Sprite::TransformMatrixUpdate()
+{
+
+	//拡大縮小行列
+	Matrix4x4 scaleMatrix = matrix4x4Calc->MakeScaleMatrix(Vector3{ 1.0f, 1.0f, 1.0f });
+	// 回転行列
+
+	Matrix4x4 rotateMatrix = matrix4x4Calc->MakeRotateZMatrix(rotate_);
+
+
+	//平行移動行列
+	Matrix4x4 translateMatrix = matrix4x4Calc->MakeTranslateMatrix(Vector3{ position_.x, position_.y, 0.0f });
+
+	// 行列
+	transformMatrix_ = matrix4x4Calc->Multiply(scaleMatrix, matrix4x4Calc->Multiply(rotateMatrix, translateMatrix));
+
+}
+
 void Sprite::SetPosition(const Vector2& position)
 {
 
 	position_ = position;
 
-	worldTransform_.transform_.translate.x = position_.x;
-	worldTransform_.transform_.translate.y = position_.y;
-	worldTransform_.UpdateMatrix();
+	TransformMatrixUpdate();
 
 }
 
@@ -293,8 +320,8 @@ void Sprite::SetRotate(float rotate)
 {
 
 	rotate_ = rotate;
-	worldTransform_.transform_.rotate.z = rotate_;
-	worldTransform_.UpdateMatrix();
+
+	TransformMatrixUpdate();
 
 }
 

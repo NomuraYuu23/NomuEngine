@@ -21,7 +21,7 @@
 #include "../3D/TransformStructure.h"
 
 #include "../3D/Material.h"
-#include "../3D/WorldTransform.h"
+#include "SpriteForGPU.h"
 
 /// <summary>
 /// スプライト
@@ -115,6 +115,11 @@ public:
 	/// テクスチャの範囲
 	/// </summary>
 	void SetTextureRange();
+	
+	/// <summary>
+	/// トランスフォームマトリックス更新
+	/// </summary>
+	void TransformMatrixUpdate();
 
 private:
 	// 頂点バッファ
@@ -188,8 +193,14 @@ private: // メンバ変数(ワールドトランスフォーム)
 	float rotate_;
 	// サイズ
 	Vector2 size_;
-	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
+
+	//WVP用のリソースを作る。
+	Microsoft::WRL::ComPtr<ID3D12Resource> spriteForGPUBuff_;
+	//書き込むためのアドレスを取得
+	SpriteForGPU* spriteForGPUMap_{};
+
+	// ワールド行列
+	Matrix4x4 transformMatrix_;
 
 	// アンカーポイント
 	Vector2 anchorPoint_;
