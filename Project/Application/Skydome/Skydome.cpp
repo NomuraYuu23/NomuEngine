@@ -3,6 +3,13 @@
 #include "../../Engine/2D/ImguiManager.h"
 #include <numbers>
 
+Skydome::~Skydome()
+{
+
+	worldTransform_.Finalize();
+
+}
+
 /// <summary>
 /// 初期化
 /// </summary>
@@ -17,7 +24,7 @@ void Skydome::Initialize(Model* model) {
 	material_.reset(Material::Create());
 
 	// ワールド変換データの初期化
-	worldTransform_.Initialize();
+	worldTransform_.Initialize(model_->GetRootNode());
 }
 
 /// <summary>

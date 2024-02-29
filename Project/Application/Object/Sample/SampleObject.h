@@ -6,6 +6,8 @@ class SampleObject
 
 public:
 
+	~SampleObject();
+
 	void Initialize(Model* model);
 
 	void Update();

@@ -2,6 +2,13 @@
 #include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../../Engine/2D/ImguiManager.h"
 
+SampleObject::~SampleObject()
+{
+
+	worldtransform_.Finalize();
+
+}
+
 void SampleObject::Initialize(Model* model)
 {
 

@@ -52,6 +52,8 @@ public: // 静的関数
 	
 	static void DescriptorHeapsMakeNull(uint32_t index);
 
+	static uint32_t GetNextIndexDescriptorHeap() { return nextIndexDescriptorHeap_; }
+
 private: // シングルトン
 
 	DescriptorHerpManager() = default;

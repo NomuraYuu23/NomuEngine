@@ -6,7 +6,6 @@ struct TransformationMatrix {
 	float32_t4x4 WorldInverseTranspose;
 	float32_t4x4 ScaleInverse;
 };
-ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 
 StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t0);
 
@@ -14,7 +13,7 @@ struct MeshNumData {
 	uint32_t incrementMeshNum[32];
 	uint32_t incrementMeshNumMax;
 };
-ConstantBuffer<MeshNumData> gMeshNumData : register(b1);
+ConstantBuffer<MeshNumData> gMeshNumData : register(b0);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;

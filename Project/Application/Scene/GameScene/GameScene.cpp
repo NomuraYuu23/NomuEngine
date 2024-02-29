@@ -72,8 +72,8 @@ void GameScene::Initialize() {
 	outline_.color_ = { 0.8f,0.4f,0.1f,1.0f };
 
 	//影
-	shadowManager_ = std::make_unique<ShadowManager>();
-	shadowManager_->Initialize(shadowModel_.get());
+	//shadowManager_ = std::make_unique<ShadowManager>();
+	//shadowManager_->Initialize(shadowModel_.get());
 
 	// 平行光源
 	directionalLight_ = std::make_unique<DirectionalLight>();
@@ -398,7 +398,7 @@ void GameScene::ShadowUpdate()
 {
 
 	// リストクリア
-	shadowManager_->ListClear();
+	//shadowManager_->ListClear();
 
 	// リスト登録（影を発生させる物）
 	//shadowManager_->CastsShadowObjListRegister();
@@ -407,6 +407,6 @@ void GameScene::ShadowUpdate()
 	//shadowManager_->ShadowAppearsObjListRegister();
 
 	// 影が出るか
-	shadowManager_->SeeShadow();
+	//shadowManager_->SeeShadow();
 
 }

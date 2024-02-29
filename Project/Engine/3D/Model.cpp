@@ -186,9 +186,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
-	//wvp用のCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
-
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
 
@@ -196,7 +193,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
@@ -209,6 +206,8 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 6);
 	}
+
+	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -228,9 +227,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
-	//wvp用のCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
-
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
 
@@ -238,7 +234,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
@@ -252,7 +248,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 		spotLightManager_->Draw(sCommandList, 6);
 	}
 
-	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 7);
+	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -272,9 +268,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
-	//wvp用のCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
-
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
 
@@ -282,7 +275,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle);
@@ -295,6 +288,8 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 6);
 	}
+
+	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);

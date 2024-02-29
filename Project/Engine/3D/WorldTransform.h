@@ -75,6 +75,8 @@ public: // お試し
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
+	uint32_t indexDescriptorHeap_ = 0;
+
 	std::vector<NodeData> nodeDatas_;
 
 	void Initialize(const ModelNode& modelNode);
@@ -89,5 +91,7 @@ public: // お試し
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
 
 	void SetNodeDatas(const ModelNode& modelNode);
+
+	void Finalize();
 
 };

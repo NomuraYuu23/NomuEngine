@@ -201,6 +201,7 @@ void WorldTransform::SRVCreate()
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
 	DescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(transformationMatrixesBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 
@@ -235,6 +236,13 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode)
 		// 再帰的に読んで階層構造を作る
 		SetNodeDatas(modelNode.children[childIndex]);
 	}
+
+}
+
+void WorldTransform::Finalize()
+{
+
+	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 
 }
 
