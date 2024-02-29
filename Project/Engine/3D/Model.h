@@ -36,6 +36,7 @@
 
 #include "Mesh.h"
 #include "ModelNode.h"
+#include "MeshNumManager.h"
 
 class Model
 {
@@ -51,6 +52,7 @@ public:
 		std::vector<VertexData> vertices;
 		MaterialData material;
 		ModelNode rootNode;
+		MeshNumManager meshNumManager;
 	};
 
 	/// <summary>

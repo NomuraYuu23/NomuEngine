@@ -75,8 +75,6 @@ public: // お試し
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
-	//ModelNode modelNode_;
-
 	std::vector<NodeData> nodeDatas_;
 
 	void Initialize(const ModelNode& modelNode);

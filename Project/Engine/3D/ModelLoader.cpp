@@ -24,6 +24,9 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	// ノード解析
 	modelData.rootNode = ReadNode(scene->mRootNode);
 
+	uint32_t vertexCount = 0;
+	modelData.meshNumManager.Initialize();
+
 	// メッシュ解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
@@ -48,11 +51,17 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				// aiProcess_MakeLeftHandedはx*=-1で、右手->左手に変換するので手動で対処
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
-				//vertex.meshNum = meshIndex;
 				modelData.vertices.push_back(vertex);
+
+				vertexCount++;
+
 			}
 
 		}
+
+		// メッシュ番号
+		modelData.meshNumManager.meshNumDataMap_->incrementMeshNum[meshIndex] = vertexCount;
+		modelData.meshNumManager.meshNumDataMap_->incrementMeshNumMax++;
 
 	}
 

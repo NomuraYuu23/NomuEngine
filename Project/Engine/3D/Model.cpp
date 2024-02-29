@@ -195,6 +195,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
+	// メッシュ番号
+	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
 
@@ -233,6 +236,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+
+	// メッシュ番号
+	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
@@ -274,6 +280,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+
+	// メッシュ番号
+	sCommandList->SetGraphicsRootConstantBufferView(8, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle);

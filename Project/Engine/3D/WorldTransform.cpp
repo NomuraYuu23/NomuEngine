@@ -164,9 +164,9 @@ void WorldTransform::TmpMap(const Matrix4x4& viewProjectionMatrix, const Matrix4
 	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 
 	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_);
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_), viewProjectionMatrix);
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = matrix4x4Calc->Multiply(modelLocalMatrix, matrix4x4Calc->Inverse(worldMatrix_));
+		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = matrix4x4Calc->Multiply(nodeDatas_[i].localMatrix, worldMatrix_);
+		transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(nodeDatas_[i].localMatrix, worldMatrix_), viewProjectionMatrix);
+		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = matrix4x4Calc->Multiply(nodeDatas_[i].localMatrix, matrix4x4Calc->Inverse(worldMatrix_));
 
 		transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = matrix4x4Calc->Inverse(matrix4x4Calc->MakeScaleMatrix(transform_.scale)); // objファイルのみ対応
 	}
@@ -190,7 +190,14 @@ void WorldTransform::SRVCreate()
 	instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	instancingSrvDesc.Buffer.FirstElement = 0;
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	instancingSrvDesc.Buffer.NumElements = 1;
+
+	if (nodeDatas_.size() == 0){
+		instancingSrvDesc.Buffer.NumElements = 1;
+	}
+	else {
+		instancingSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
+	}
+
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
