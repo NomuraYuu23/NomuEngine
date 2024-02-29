@@ -21,6 +21,9 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes()); // メッシュがないのは対応しない
 
+	// ノード解析
+	modelData.rootNode = ReadNode(scene->mRootNode);
+
 	// メッシュ解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
@@ -42,7 +45,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				vertex.position = { position.x, position.y, position.z, 1.0f };
 				vertex.normal = { normal.x, normal.y, normal.z };
 				vertex.texcoord = { texcoord.x, texcoord.y };
-				// aiProcess_MakeLeftHandedはz*=-1で、右手->左手に変換するので手動で対処
+				// aiProcess_MakeLeftHandedはx*=-1で、右手->左手に変換するので手動で対処
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
 				modelData.vertices.push_back(vertex);
@@ -62,9 +65,6 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 			modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
 		}
 	}
-
-	// ノード解析
-	modelData.rootNode = ReadNode(scene->mRootNode);
 
 	return modelData;
 
