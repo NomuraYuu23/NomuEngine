@@ -5,8 +5,6 @@
 SampleObject::~SampleObject()
 {
 
-	//worldtransform_.Finalize();
-
 }
 
 void SampleObject::Initialize(Model* model)
