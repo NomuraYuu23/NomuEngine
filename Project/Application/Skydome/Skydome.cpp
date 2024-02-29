@@ -6,7 +6,7 @@
 Skydome::~Skydome()
 {
 
-	worldTransform_.Finalize();
+	//worldTransform_.Finalize();
 
 }
 

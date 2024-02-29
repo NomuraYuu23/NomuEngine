@@ -182,7 +182,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
+	worldTransform.Map(camera.GetViewProjectionMatrix());
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -223,7 +223,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
+	worldTransform.Map(camera.GetViewProjectionMatrix());
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -264,7 +264,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
+	worldTransform.Map(camera.GetViewProjectionMatrix());
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -327,12 +327,13 @@ void Model::OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera, OutL
 	// nullptrチェック
 	assert(sDevice);
 	assert(sCommandList);
+	assert(0);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix(), modelData_.rootNode.localMatrix);
+	worldTransform.Map(camera.GetViewProjectionMatrix());
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
 	//wvp用のCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
+	//sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
 
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, outLineData.forPSResource_->GetGPUVirtualAddress());

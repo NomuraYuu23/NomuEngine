@@ -14,7 +14,7 @@ void IBone::Initialize(Model* model, const std::string& objectName, const std::s
 
 	partName_ = partName;
 
-	worldTransform_.Initialize();
+	worldTransform_.Initialize(model_->GetRootNode());
 
 	PreRegistrationAnimationFile();
 

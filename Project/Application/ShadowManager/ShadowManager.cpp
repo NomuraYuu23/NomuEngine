@@ -13,7 +13,7 @@ void ShadowManager::Initialize(Model* model)
 	// ワールドトランスフォーム,マテリアル
 	Vector4 color = { 1.0f,1.0f,1.0f, 0.5f };
 	for (uint32_t i = 0; i < worldTransforms_.size(); ++i) {
-		worldTransforms_[i].Initialize();
+		worldTransforms_[i].Initialize(model_->GetRootNode());
 		materials_[i].reset(Material::Create());
 		materials_[i]->SetColor(color);
 	}

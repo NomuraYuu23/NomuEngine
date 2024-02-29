@@ -5,7 +5,7 @@
 SampleObject::~SampleObject()
 {
 
-	worldtransform_.Finalize();
+	//worldtransform_.Finalize();
 
 }
 

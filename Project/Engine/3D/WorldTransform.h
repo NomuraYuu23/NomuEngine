@@ -12,24 +12,77 @@ class WorldTransform
 
 public:
 
+	/// <summary>
+	/// ノードデータ
+	/// </summary>
 	struct NodeData
 	{
-		Matrix4x4 localMatrix;
-		uint32_t meshNum;
+		Matrix4x4 localMatrix; // ローカル行列
+		uint32_t meshNum; // メッシュ番号
 	};
 
 public:
 
-	void Initialize();
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* sCommandList;
 
+public:
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~WorldTransform();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="modelNode"></param>
+	void Initialize(const ModelNode& modelNode);
+
+	/// <summary>
+	/// 行列更新
+	/// </summary>
 	void UpdateMatrix();
 
-	void Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
+	/// <summary>
+	/// マップ
+	/// </summary>
+	/// <param name="viewProjectionMatrix">ビュープロジェクション</param>
+	void Map(const Matrix4x4& viewProjectionMatrix);
 
-	void MapSprite();
+	/// <summary>
+	/// SRVを作る
+	/// </summary>
+	void SRVCreate();
 
+	/// <summary>
+	/// GPUに送る
+	/// </summary>
+	/// <param name="cmdList">コマンドリスト</param>
+	/// <param name="rootParameterIndex">ルートパラメータインデックス</param>
+	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
+
+	/// <summary>
+	/// ノードデータ設定
+	/// </summary>
+	/// <param name="modelNode">モデルのノード</param>
+	void SetNodeDatas(const ModelNode& modelNode);
+
+	/// <summary>
+	/// 消す前に行う処理
+	/// </summary>
+	void Finalize();
+
+	/// <summary>
+	/// ワールドポジション取得
+	/// </summary>
+	/// <returns></returns>
 	Vector3 GetWorldPosition();
 
+	/// <summary>
+	/// 親設定
+	/// </summary>
+	/// <param name="parent"></param>
 	void SetParent(WorldTransform* parent) { parent_ = parent; }
 
 public:
@@ -55,43 +108,22 @@ public:
 	//親
 	WorldTransform* parent_ = nullptr;
 
-
-	//WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixBuff_;
-	//書き込むためのアドレスを取得
-	TransformationMatrix* transformationMatrixMap_{};
-
-public: // お試し
-
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* sCommandList;
-
-	//WVP用のリソースを作る。Matrix4x4
+	//WVP用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixesBuff_;
+	
 	//書き込むためのアドレスを取得
 	TransformationMatrix* transformationMatrixesMap_{};
 
+	// CPUハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
 
+	// GPUハンドル
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
+	// ディスクリプタヒープの位置
 	uint32_t indexDescriptorHeap_ = 0;
 
+	// ノードデータ
 	std::vector<NodeData> nodeDatas_;
-
-	void Initialize(const ModelNode& modelNode);
-	
-	void TmpMap(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix);
-	
-	/// <summary>
-	/// SRVを作る
-	/// </summary>
-	void SRVCreate();
-
-	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
-
-	void SetNodeDatas(const ModelNode& modelNode);
-
-	void Finalize();
 
 };
