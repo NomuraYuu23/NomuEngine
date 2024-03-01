@@ -316,9 +316,6 @@
     <ClCompile Include="Application\AudioManager\GameAudioManager.cpp">
       <Filter>Application\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
-      <Filter>Application\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Application\UI\UI.cpp">
       <Filter>Application\UI</Filter>
     </ClCompile>
@@ -382,17 +379,20 @@
     <ClCompile Include="Engine\3D\Model.cpp">
       <Filter>Engine\3D\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\ModelLoader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\ModelNode.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\MeshNumManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\ModelLoader.cpp">
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\ModelNode.cpp">
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
+      <Filter>Application\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -639,9 +639,6 @@
     <ClInclude Include="Application\AudioManager\GameAudioManager.h">
       <Filter>Application\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
-      <Filter>Application\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionData.h">
       <Filter>Engine\Collision</Filter>
     </ClInclude>
@@ -723,20 +720,23 @@
     <ClInclude Include="Engine\3D\Model.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\ModelLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\ModelNode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\MeshNumManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\SpriteForGPU.h">
       <Filter>Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Mesh.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\MeshNumManager.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\ModelLoader.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\ModelNode.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
+      <Filter>Application\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
