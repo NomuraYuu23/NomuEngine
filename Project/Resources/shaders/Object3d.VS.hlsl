@@ -10,7 +10,7 @@ struct TransformationMatrix {
 StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t0);
 
 struct MeshNumData {
-	uint32_t incrementMeshNum[32];
+	vector <uint, 4> incrementMeshNum;
 	uint32_t incrementMeshNumMax;
 };
 ConstantBuffer<MeshNumData> gMeshNumData : register(b0);
@@ -25,16 +25,12 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 	
 	uint32_t meshNum = 0;
 
-	for (int i = 0; i < 32; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		
 		if (vertexId >= gMeshNumData.incrementMeshNum[i]) {
 			meshNum++;
 		}
 		else {
-			break;
-		}
-
-		if (i == gMeshNumData.incrementMeshNumMax) {
 			break;
 		}
 	}

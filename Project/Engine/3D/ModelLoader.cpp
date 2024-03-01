@@ -27,6 +27,9 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	uint32_t vertexCount = 0;
 	modelData.meshNumManager.Initialize();
 
+	// メッシュ多いよ
+	assert(scene->mNumMeshes < 4);
+
 	// メッシュ解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];

@@ -10,7 +10,7 @@ public:
 
 	struct MeshNumData{
 
-		uint32_t incrementMeshNum[32];
+		uint32_t incrementMeshNum[4];
 		uint32_t incrementMeshNumMax;
 		uint32_t padding[3];
 	};
