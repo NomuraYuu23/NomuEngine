@@ -34,6 +34,11 @@ public:
 	~WorldTransform();
 
 	/// <summary>
+	/// 初期化(モデル表示で使わない)
+	/// </summary>
+	void Initialize();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="modelNode"></param>

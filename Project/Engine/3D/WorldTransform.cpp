@@ -15,6 +15,24 @@ WorldTransform::~WorldTransform()
 
 }
 
+void WorldTransform::Initialize()
+{
+
+	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
+
+	// 回転行列
+	rotateMatrix_ = matrix4x4Calc->MakeRotateXYZMatrix(transform_.rotate);
+
+	// 方向ベクトルで回転行列
+	usedDirection_ = false;
+
+	// スケールを考えない
+	parentMatrix_ = matrix4x4Calc->MakeAffineMatrix(Vector3{ 1.0f,1.0f,1.0f }, transform_.rotate, transform_.translate);
+
+	UpdateMatrix();
+
+}
+
 void WorldTransform::Initialize(const ModelNode& modelNode)
 {
 
@@ -114,7 +132,7 @@ void WorldTransform::SRVCreate()
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 	if (nodeDatas_.size() == 0){
-		instancingSrvDesc.Buffer.NumElements = 1;
+		assert(0);
 	}
 	else {
 		instancingSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
@@ -133,6 +151,7 @@ void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 {
 
 	assert(sCommandList == nullptr);
+	assert(nodeDatas_.size() > 0);
 
 	sCommandList = cmdList;
 
@@ -163,8 +182,9 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode)
 
 void WorldTransform::Finalize()
 {
-
-	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+	if (nodeDatas_.size() > 0) {
+		DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+	}
 
 }
 
