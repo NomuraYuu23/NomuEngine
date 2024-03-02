@@ -28,13 +28,11 @@ void BaseCamera::Initialize()
 void BaseCamera::Update()
 {
 
-	Matrix4x4Calc* calc = Matrix4x4Calc::GetInstance();
+	transformMatrix_ = Matrix4x4::MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	viewMatrix_ = Matrix4x4::Inverse(transformMatrix_);
+	projectionMatrix_ = Matrix4x4::MakePerspectiveFovMatrix(fovY_, aspectRatio_, nearClip_, farClip_);
 
-	transformMatrix_ = calc->MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	viewMatrix_ = calc->Inverse(transformMatrix_);
-	projectionMatrix_ = calc->MakePerspectiveFovMatrix(fovY_, aspectRatio_, nearClip_, farClip_);
-
-	viewProjectionMatrix_ = calc->Multiply(viewMatrix_, projectionMatrix_);
+	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
 
 	worldPositionMap_->worldPosition = { transformMatrix_.m[3][0],transformMatrix_.m[3][1], transformMatrix_.m[3][2] };
 

@@ -127,7 +127,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 
 	for (int i = 0; i < 8; i++) {
 
-		obbVertex[i] = Matrix4x4Calc::Transform(obbVertex[i], obbRotateMatrix);
+		obbVertex[i] = Matrix4x4::Transform(obbVertex[i], obbRotateMatrix);
 		obbVertex[i] = Vector3::Add(obbVertex[i], obb.center_);
 
 	}
@@ -182,7 +182,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 
 	for (int i = 0; i < 8; i++) {
 
-		obb2Vertex[i] = Matrix4x4Calc::Transform(obb2Vertex[i], obb2RotateMatrix);
+		obb2Vertex[i] = Matrix4x4::Transform(obb2Vertex[i], obb2RotateMatrix);
 		obb2Vertex[i] = Vector3::Add(obb2Vertex[i], obb2.center_);
 
 	}
@@ -285,9 +285,9 @@ bool Collision::IsCollision(const OBB& obb, const Sphere& sphere, Vector3& p1, V
 	obb.otientatuons_[0].z,obb.otientatuons_[1].z, obb.otientatuons_[2].z, 0,
 	obb.center_.x, obb.center_.y, obb.center_.z, 1 };
 
-	Matrix4x4 obbWorldMatrixInverse = Matrix4x4Calc::Inverse(obbWorldMatrix);
+	Matrix4x4 obbWorldMatrixInverse = Matrix4x4::Inverse(obbWorldMatrix);
 
-	Vector3 centerInOBBLocalSpace = Matrix4x4Calc::Transform(sphere.center_, obbWorldMatrixInverse);
+	Vector3 centerInOBBLocalSpace = Matrix4x4::Transform(sphere.center_, obbWorldMatrixInverse);
 
 	AABB aabbOBBLocal;
 	aabbOBBLocal.Initialize(Vector3{ -obb.size_.x,-obb.size_.y, -obb.size_.z }, obb.size_, static_cast<Player*>(nullptr));
@@ -423,10 +423,10 @@ bool Collision::IsCollision(const Capsule& capsule, const OBB& obb, Vector3& p1,
 	obb.otientatuons_[0].z,obb.otientatuons_[1].z, obb.otientatuons_[2].z, 0,
 	obb.center_.x, obb.center_.y, obb.center_.z, 1 };
 
-	Matrix4x4 obbWorldMatrixInverse = Matrix4x4Calc::Inverse(obbWorldMatrix);
+	Matrix4x4 obbWorldMatrixInverse = Matrix4x4::Inverse(obbWorldMatrix);
 
-	Vector3 localorigin_ = Matrix4x4Calc::Transform(capsule.segment_.origin_, obbWorldMatrixInverse);
-	Vector3 localEnd = Matrix4x4Calc::Transform(Vector3::Add(capsule.segment_.origin_, capsule.segment_.diff_), obbWorldMatrixInverse);
+	Vector3 localorigin_ = Matrix4x4::Transform(capsule.segment_.origin_, obbWorldMatrixInverse);
+	Vector3 localEnd = Matrix4x4::Transform(Vector3::Add(capsule.segment_.origin_, capsule.segment_.diff_), obbWorldMatrixInverse);
 
 	Capsule localCapsule = {};
 	localCapsule.radius_ = capsule.radius_;
@@ -441,7 +441,7 @@ bool Collision::IsCollision(const Capsule& capsule, const OBB& obb, Vector3& p1,
 
 	bool result = IsCollision(localCapsule, localAABB, p1, p2, t1, t2, pushBackDist);
 
-	p1 = Matrix4x4Calc::Transform(p1, obbWorldMatrix);
+	p1 = Matrix4x4::Transform(p1, obbWorldMatrix);
 
 	return result;
 

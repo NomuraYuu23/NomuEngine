@@ -17,8 +17,6 @@ ID3D12GraphicsCommandList* Sprite::sCommandList = nullptr;
 ComPtr<ID3D12RootSignature> Sprite::sRootSignature;
 // パイプラインステートオブジェクト
 ComPtr<ID3D12PipelineState> Sprite::sPipelineState;
-//計算
-Matrix4x4Calc* Sprite::matrix4x4Calc = nullptr;
 
 /// <summary>
 /// 静的初期化
@@ -34,8 +32,6 @@ void Sprite::StaticInitialize(
 	sDevice = device;
 
 	sDescriptorHandleIncrementSize = sDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	matrix4x4Calc = Matrix4x4Calc::GetInstance();
 
 	sRootSignature = rootSignature;
 	sPipelineState = pipelineState;
@@ -136,9 +132,9 @@ Sprite::Sprite(
 	//書き込むためのアドレスを取得
 	spriteForGPUBuff_->Map(0, nullptr, reinterpret_cast<void**>(&spriteForGPUMap_));
 
-	spriteForGPUMap_->World = matrix4x4Calc->MakeIdentity4x4();
-	spriteForGPUMap_->WVP = matrix4x4Calc->MakeIdentity4x4();
-	transformMatrix_ = matrix4x4Calc->MakeIdentity4x4();
+	spriteForGPUMap_->World = Matrix4x4::MakeIdentity4x4();
+	spriteForGPUMap_->WVP = Matrix4x4::MakeIdentity4x4();
+	transformMatrix_ = Matrix4x4::MakeIdentity4x4();
 
 	// 位置
 	SetPosition(position);
@@ -257,9 +253,9 @@ void Sprite::Draw() {
 	sCommandList->IASetIndexBuffer(&ibView_);
 	
 	//Sprite用のWorldViewProjectionMatrixを作る
-	Matrix4x4 viewMatrixSprite = matrix4x4Calc->MakeIdentity4x4();
-	Matrix4x4 projectionMatrixSprite = matrix4x4Calc->MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrixSprite = matrix4x4Calc->Multiply(transformMatrix_, matrix4x4Calc->Multiply(viewMatrixSprite, projectionMatrixSprite));
+	Matrix4x4 viewMatrixSprite = Matrix4x4::MakeIdentity4x4();
+	Matrix4x4 projectionMatrixSprite = Matrix4x4::MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4::Multiply(transformMatrix_, Matrix4x4::Multiply(viewMatrixSprite, projectionMatrixSprite));
 	spriteForGPUMap_->WVP = worldViewProjectionMatrixSprite;
 	spriteForGPUMap_->World = transformMatrix_;
 
@@ -293,17 +289,17 @@ void Sprite::TransformMatrixUpdate()
 {
 
 	//拡大縮小行列
-	Matrix4x4 scaleMatrix = matrix4x4Calc->MakeScaleMatrix(Vector3{ 1.0f, 1.0f, 1.0f });
+	Matrix4x4 scaleMatrix = Matrix4x4::MakeScaleMatrix(Vector3{ 1.0f, 1.0f, 1.0f });
 	// 回転行列
 
-	Matrix4x4 rotateMatrix = matrix4x4Calc->MakeRotateZMatrix(rotate_);
+	Matrix4x4 rotateMatrix = Matrix4x4::MakeRotateZMatrix(rotate_);
 
 
 	//平行移動行列
-	Matrix4x4 translateMatrix = matrix4x4Calc->MakeTranslateMatrix(Vector3{ position_.x, position_.y, 0.0f });
+	Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(Vector3{ position_.x, position_.y, 0.0f });
 
 	// 行列
-	transformMatrix_ = matrix4x4Calc->Multiply(scaleMatrix, matrix4x4Calc->Multiply(rotateMatrix, translateMatrix));
+	transformMatrix_ = Matrix4x4::Multiply(scaleMatrix, Matrix4x4::Multiply(rotateMatrix, translateMatrix));
 
 }
 

@@ -136,6 +136,9 @@
     <Filter Include="Engine\Math\vector3">
       <UniqueIdentifier>{f2ea7e92-ccfe-402b-a773-59564c924aac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Math\Matrix4x4">
+      <UniqueIdentifier>{358fa42c-da60-4ac5-9e6b-cf5c70c0bda9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -218,9 +221,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Input\Input.cpp">
       <Filter>Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\Matrix4x4.cpp">
-      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Math\Ease.cpp">
       <Filter>Engine\Math</Filter>
@@ -403,6 +403,9 @@
     <ClCompile Include="Engine\Math\Vector3.cpp">
       <Filter>Engine\Math\vector3</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Math\Matrix4x4.cpp">
+      <Filter>Engine\Math\Matrix4x4</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -517,9 +520,6 @@
       <Filter>Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\Vector4.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Matrix4x4.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\DeltaTime.h">
@@ -746,6 +746,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Math\Vector3.h">
       <Filter>Engine\Math\vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Matrix4x4.h">
+      <Filter>Engine\Math\Matrix4x4</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -191,13 +191,11 @@ Vector3 Vector3::operator+(const Vector3& v)
 void Vector3::operator+=(const Vector3& v)
 {
 
-	Vector3 result = { x, y, z };
+	Vector3 result = *this;
 
 	result = Add(result, v);
 
-	x = result.x;
-	y = result.y;
-	z = result.z;
+	*this = result;
 
 }
 

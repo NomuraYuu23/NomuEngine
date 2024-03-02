@@ -1,22 +1,14 @@
 #pragma once
 #include "Vector3.h"
 
-//行列4x4
-struct Matrix4x4 {
-
-	float m[4][4];
-
-};
-
-class Matrix4x4Calc
+class Matrix4x4
 {
-public:
 
-    /// <summary>
-    /// シングルトンインスタンスの取得
-    /// </summary>
-    /// <returns></returns>
-    static Matrix4x4Calc* GetInstance();
+public: // 変数
+
+    float m[4][4];
+
+public: // 関数
 
     //加算
     static Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -26,6 +18,7 @@ public:
     static Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
     // スカラー積
     static Matrix4x4 Multiply(float scalar, const Matrix4x4& m);
+    static Matrix4x4 Multiply(const Matrix4x4& m, float scalar);
     //逆行列
     static Matrix4x4 Inverse(const Matrix4x4& m);
     //転置行列
@@ -66,15 +59,63 @@ public:
         float left, float top, float width, float height, float minDepth, float maxDepth);
 
     // 任意軸回転行列の作成関数
-    Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+    static Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
     // atan2みたいなもの
     static Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
-private:
-    Matrix4x4Calc() = default;
-    ~Matrix4x4Calc() = default;
-    Matrix4x4Calc(const Matrix4x4Calc&) = delete;
-    Matrix4x4Calc& operator=(const Matrix4x4Calc&) = delete;
+public: // オーバーロード
+
+    /// <summary>
+    /// +
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Matrix4x4 operator+(const Matrix4x4& v);
+
+    /// <summary>
+    /// +=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator+=(const Matrix4x4& v);
+
+    /// <summary>
+    /// -
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Matrix4x4 operator-(const Matrix4x4& v);
+
+    /// <summary>
+    /// -=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator-=(const Matrix4x4& v);
+
+    /// <summary>
+    /// *
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Matrix4x4 operator*(float v);
+
+    /// <summary>
+    /// *=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator*=(float v);
+
+    /// <summary>
+    /// *
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Matrix4x4 operator*(const Matrix4x4& v);
+
+    /// <summary>
+    /// *=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator*=(const Matrix4x4& v);
 
 };

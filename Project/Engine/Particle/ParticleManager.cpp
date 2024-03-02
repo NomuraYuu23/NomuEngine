@@ -18,25 +18,23 @@ ParticleManager* ParticleManager::GetInstance()
 void ParticleManager::Initialize()
 {
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
-
 	//WVP用のリソースを作る。
 	particleForGPUBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(ParticleForGPU) + 0xff) & ~0xff) * kNumInstanceMax_);
 	//書き込むためのアドレスを取得
 	particleForGPUBuff_->Map(0, nullptr, reinterpret_cast<void**>(&particleForGPUMap_));
 
 	for (size_t i = 0; i < kNumInstanceMax_; i++) {
-		particleForGPUMap_[i].World = matrix4x4Calc->MakeIdentity4x4();
-		particleForGPUMap_[i].WVP = matrix4x4Calc->MakeIdentity4x4();
+		particleForGPUMap_[i].World = Matrix4x4::MakeIdentity4x4();
+		particleForGPUMap_[i].WVP = Matrix4x4::MakeIdentity4x4();
 		particleForGPUMap_[i].color = {1.0f,1.0f,1.0f,1.0f};
 	}
 
 	SRVCreate();
 
-	billBoardMatrix_ = matrix4x4Calc->MakeIdentity4x4();
-	billBoardMatrixX_ = matrix4x4Calc->MakeIdentity4x4();
-	billBoardMatrixY_ = matrix4x4Calc->MakeIdentity4x4();
-	billBoardMatrixZ_ = matrix4x4Calc->MakeIdentity4x4();
+	billBoardMatrix_ = Matrix4x4::MakeIdentity4x4();
+	billBoardMatrixX_ = Matrix4x4::MakeIdentity4x4();
+	billBoardMatrixY_ = Matrix4x4::MakeIdentity4x4();
+	billBoardMatrixZ_ = Matrix4x4::MakeIdentity4x4();
 
 	for (size_t i = 0; i < particleDatas_.size(); i++) {
 		particleDatas_[i].instanceIndex_ = 0;
@@ -121,10 +119,9 @@ void ParticleManager::Finalize()
 		return true;
 	});
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 	for (size_t i = 0; i < kNumInstanceMax_; i++) {
-		particleForGPUMap_[i].World = matrix4x4Calc->MakeIdentity4x4();
-		particleForGPUMap_[i].WVP = matrix4x4Calc->MakeIdentity4x4();
+		particleForGPUMap_[i].World = Matrix4x4::MakeIdentity4x4();
+		particleForGPUMap_[i].WVP = Matrix4x4::MakeIdentity4x4();
 		particleForGPUMap_[i].color = { 1.0f,1.0f,1.0f,1.0f };
 	}
 
@@ -142,41 +139,39 @@ void ParticleManager::ModelCreate(std::array<Model*, kCountofParticleModelIndex>
 void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 {
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
-
 	// 全軸
-	Matrix4x4 backToFrontMatrix = matrix4x4Calc->MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
-	billBoardMatrix_ = matrix4x4Calc->Multiply(backToFrontMatrix, camera.GetTransformMatrix());
+	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
+	billBoardMatrix_ = Matrix4x4::Multiply(backToFrontMatrix, camera.GetTransformMatrix());
 	billBoardMatrix_.m[3][0] = 0.0f;
 	billBoardMatrix_.m[3][1] = 0.0f;
 	billBoardMatrix_.m[3][2] = 0.0f;
 
 	// X
-	Matrix4x4 cameraTransformMatrix = matrix4x4Calc->MakeAffineMatrix(
+	Matrix4x4 cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
 		{ camera.GetRotate().x, 0.0f, 0.0f },
 		camera.GetTransform());
-	billBoardMatrixX_ = matrix4x4Calc->Multiply(backToFrontMatrix, cameraTransformMatrix);
+	billBoardMatrixX_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixX_.m[3][0] = 0.0f;
 	billBoardMatrixX_.m[3][1] = 0.0f;
 	billBoardMatrixX_.m[3][2] = 0.0f;
 
 	// Y
-	cameraTransformMatrix = matrix4x4Calc->MakeAffineMatrix(
+	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, camera.GetRotate().y, 0.0f},
 		camera.GetTransform());
-	billBoardMatrixY_ = matrix4x4Calc->Multiply(backToFrontMatrix, cameraTransformMatrix);
+	billBoardMatrixY_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixY_.m[3][0] = 0.0f;
 	billBoardMatrixY_.m[3][1] = 0.0f;
 	billBoardMatrixY_.m[3][2] = 0.0f;
 
 	// Z
-	cameraTransformMatrix = matrix4x4Calc->MakeAffineMatrix(
+	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f, camera.GetRotate().z },
 		camera.GetTransform());
-	billBoardMatrixZ_ = matrix4x4Calc->Multiply(backToFrontMatrix, cameraTransformMatrix);
+	billBoardMatrixZ_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixZ_.m[3][0] = 0.0f;
 	billBoardMatrixZ_.m[3][1] = 0.0f;
 	billBoardMatrixZ_.m[3][2] = 0.0f;

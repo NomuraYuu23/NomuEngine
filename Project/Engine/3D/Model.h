@@ -104,8 +104,6 @@ private:
 	static ID3D12RootSignature* sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 	// パイプラインステートオブジェクト
 	static ID3D12PipelineState* sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
-	//計算
-	static Matrix4x4Calc* matrix4x4Calc;
 	// ポイントライトマネージャ
 	static PointLightManager* pointLightManager_;
 	//	スポットライトマネージャ

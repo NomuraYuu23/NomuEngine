@@ -21,8 +21,6 @@ ID3D12GraphicsCommandList* Model::sCommandList = nullptr;
 ID3D12RootSignature* Model::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
 ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
-//計算
-Matrix4x4Calc* Model::matrix4x4Calc = nullptr;
 // ポイントライトマネージャ
 PointLightManager* Model::pointLightManager_ = nullptr;
 //	スポットライトマネージャ
@@ -39,8 +37,6 @@ void Model::StaticInitialize(ID3D12Device* device,
 	assert(device);
 
 	sDevice = device;
-
-	matrix4x4Calc = Matrix4x4Calc::GetInstance();
 
 	// グラフィックパイプライン生成
 	for (uint32_t i = 0u; i < GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount; i++) {

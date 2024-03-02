@@ -63,7 +63,7 @@ void Material::Initialize() {
 	materialMap_->color = color_;
 	//SpriteはLightingしないのでfalseを設定する
 	materialMap_->enableLighting = enableLighting_;	//UVTransfome初期化
-	materialMap_->uvTransform = Matrix4x4Calc::GetInstance()->MakeAffineMatrix(uvTransform_.scale,uvTransform_.rotate, uvTransform_.translate);
+	materialMap_->uvTransform = Matrix4x4::MakeAffineMatrix(uvTransform_.scale,uvTransform_.rotate, uvTransform_.translate);
 	materialMap_->shininess = shininess_;
 
 }
@@ -79,7 +79,7 @@ void Material::Update(const TransformStructure& uvTransform, const Vector4& colo
 	shininess_ = shininess;
 
 	//UVTransfome用
-	materialMap_->uvTransform = Matrix4x4Calc::GetInstance()->MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
+	materialMap_->uvTransform = Matrix4x4::MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
 
 	materialMap_->color = color_;
 
@@ -93,7 +93,7 @@ void Material::SetUvTransform(const TransformStructure& uvTransform)
 {
 	
 	uvTransform_ = uvTransform;
-	materialMap_->uvTransform = Matrix4x4Calc::GetInstance()->MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
+	materialMap_->uvTransform = Matrix4x4::MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
 
 }
 

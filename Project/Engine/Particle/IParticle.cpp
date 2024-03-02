@@ -13,7 +13,6 @@ IParticle::~IParticle(){}
 void IParticle::Initialize(const Vector3& position, const Vector3& size)
 {
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
@@ -33,7 +32,7 @@ void IParticle::Initialize(const Vector3& position, const Vector3& size)
 	transform_.rotate = { 0.0f,0.0f,0.0f };
 	transform_.translate = { distributionX(randomEngine), distributionY(randomEngine), distributionZ(randomEngine) };
 
-	worldMatrix_ = matrix4x4Calc->MakeIdentity4x4();
+	worldMatrix_ = Matrix4x4::MakeIdentity4x4();
 
 	color_ = { distColor(randomEngine),distColor(randomEngine),distColor(randomEngine), 1.0f };
 
@@ -45,7 +44,7 @@ void IParticle::Initialize(const Vector3& position, const Vector3& size)
 
 	billBoardName_ = kBillBoardNameIndexAllAxis;
 
-	UpdateMatrix(matrix4x4Calc->MakeIdentity4x4());
+	UpdateMatrix(Matrix4x4::MakeIdentity4x4());
 
 	isDead_ = false;
 
@@ -65,30 +64,27 @@ void IParticle::Update(const Matrix4x4& billBoardMatrix)
 void IParticle::UpdateMatrix(const Matrix4x4& billBoardMatrix)
 {
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
-
 	if (useBillBoard_) {
-		Matrix4x4 scaleMatrix = matrix4x4Calc->MakeScaleMatrix(transform_.scale);
-		Matrix4x4 translateMatrix = matrix4x4Calc->MakeTranslateMatrix(transform_.translate);
-		worldMatrix_ = matrix4x4Calc->Multiply(scaleMatrix, matrix4x4Calc->Multiply(billBoardMatrix, translateMatrix));
+		Matrix4x4 scaleMatrix = Matrix4x4::MakeScaleMatrix(transform_.scale);
+		Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(transform_.translate);
+		worldMatrix_ = Matrix4x4::Multiply(scaleMatrix, Matrix4x4::Multiply(billBoardMatrix, translateMatrix));
 	}
 	else {
-		worldMatrix_ = matrix4x4Calc->MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+		worldMatrix_ = Matrix4x4::MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	}
 
-	//worldMatrix_ = matrix4x4Calc->MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	//worldMatrix_ = Matrix4x4::MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
 }
 
 ParticleForGPU IParticle::Map(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& modelLocalMatrix)
 {
 
-	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 	ParticleManager* particleManager = ParticleManager::GetInstance();
 
 	ParticleForGPU particleForGPU;
-	particleForGPU.World = matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_);
-	particleForGPU.WVP = matrix4x4Calc->Multiply(matrix4x4Calc->Multiply(modelLocalMatrix, worldMatrix_), viewProjectionMatrix);
+	particleForGPU.World = Matrix4x4::Multiply(modelLocalMatrix, worldMatrix_);
+	particleForGPU.WVP = Matrix4x4::Multiply(Matrix4x4::Multiply(modelLocalMatrix, worldMatrix_), viewProjectionMatrix);
 	particleForGPU.color = color_;
 
 	return particleForGPU;
