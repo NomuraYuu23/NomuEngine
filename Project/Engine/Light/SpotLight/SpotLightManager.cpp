@@ -76,7 +76,7 @@ void SpotLightManager::Update(const std::array<SpotLightData, SpotLightManager::
 		spotLightDataMap_[i].color = spotLightDatas[i].color;
 		spotLightDataMap_[i].position = spotLightDatas[i].position;
 		spotLightDataMap_[i].intencity = spotLightDatas[i].intencity;
-		spotLightDataMap_[i].direction = Vector3Calc::Normalize(spotLightDatas[i].direction);
+		spotLightDataMap_[i].direction = Vector3::Normalize(spotLightDatas[i].direction);
 		spotLightDataMap_[i].distance = spotLightDatas[i].distance;
 		spotLightDataMap_[i].decay = spotLightDatas[i].decay; 
 		spotLightDataMap_[i].cosAngle = spotLightDatas[i].cosAngle; 

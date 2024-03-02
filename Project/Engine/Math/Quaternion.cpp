@@ -24,16 +24,15 @@ Quaternion QuaternionCalc::Multiply(const Quaternion& lhs, const Quaternion& rhs
 {
 
 	Quaternion result = {};
-	Vector3Calc* v3Calc = Vector3Calc::GetInstance();
 
 	Vector3 q = { lhs.x, lhs.y, lhs.z, };
 	Vector3 r = { rhs.x, rhs.y, rhs.z, };
-	Vector3 resultVector = v3Calc->Add(v3Calc->Cross(q, r), v3Calc->Add(v3Calc->Multiply(rhs.w, q), v3Calc->Multiply(lhs.w, r)));
+	Vector3 resultVector = Vector3::Add(Vector3::Cross(q, r), Vector3::Add(Vector3::Multiply(rhs.w, q), Vector3::Multiply(lhs.w, r)));
 
 	result.x = resultVector.x;
 	result.y = resultVector.y;
 	result.z = resultVector.z;
-	result.w = lhs.w * rhs.w - v3Calc->Dot(q, r);
+	result.w = lhs.w * rhs.w - Vector3::Dot(q, r);
 
 	return result;
 }
@@ -136,7 +135,7 @@ Quaternion QuaternionCalc::MakeRotateAxisAngleQuaternion(const Vector3& axis, fl
 {
 
 	Quaternion result = { };
-	Vector3 vector = Vector3Calc::GetInstance()->Multiply(std::sinf(angle / 2.0f), axis);
+	Vector3 vector = Vector3::Multiply(std::sinf(angle / 2.0f), axis);
 	result = { vector.x, vector.y, vector.z, std::cosf(angle / 2.0f) };
 
 	return result;

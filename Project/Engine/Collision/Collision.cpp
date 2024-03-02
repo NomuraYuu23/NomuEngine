@@ -14,7 +14,7 @@ bool Collision::IsCollision(const Sphere& sphere1, const Sphere& sphere2, Vector
 	pushBackDist;
 
 	//2つの球の中心点間の距離を求める
-	float distance = Vector3Calc::Length(Vector3Calc::Subtract(sphere1.center_, sphere2.center_));
+	float distance = Vector3::Length(Vector3::Subtract(sphere1.center_, sphere2.center_));
 	//半径の合計よりも短ければ衝突
 	if (distance <= sphere1.radius_ + sphere2.radius_) {
 		return true;
@@ -64,15 +64,15 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 	axis[5] = obb2.otientatuons_[2];
 
 	//クロス積
-	axis[6] = Vector3Calc::Cross(obb.otientatuons_[0], obb2.otientatuons_[0]);
-	axis[7] = Vector3Calc::Cross(obb.otientatuons_[0], obb2.otientatuons_[1]);
-	axis[8] = Vector3Calc::Cross(obb.otientatuons_[0], obb2.otientatuons_[2]);
-	axis[9] = Vector3Calc::Cross(obb.otientatuons_[1], obb2.otientatuons_[0]);
-	axis[10] = Vector3Calc::Cross(obb.otientatuons_[1], obb2.otientatuons_[1]);
-	axis[11] = Vector3Calc::Cross(obb.otientatuons_[1], obb2.otientatuons_[2]);
-	axis[12] = Vector3Calc::Cross(obb.otientatuons_[2], obb2.otientatuons_[0]);
-	axis[13] = Vector3Calc::Cross(obb.otientatuons_[2], obb2.otientatuons_[1]);
-	axis[14] = Vector3Calc::Cross(obb.otientatuons_[2], obb2.otientatuons_[2]);
+	axis[6] = Vector3::Cross(obb.otientatuons_[0], obb2.otientatuons_[0]);
+	axis[7] = Vector3::Cross(obb.otientatuons_[0], obb2.otientatuons_[1]);
+	axis[8] = Vector3::Cross(obb.otientatuons_[0], obb2.otientatuons_[2]);
+	axis[9] = Vector3::Cross(obb.otientatuons_[1], obb2.otientatuons_[0]);
+	axis[10] = Vector3::Cross(obb.otientatuons_[1], obb2.otientatuons_[1]);
+	axis[11] = Vector3::Cross(obb.otientatuons_[1], obb2.otientatuons_[2]);
+	axis[12] = Vector3::Cross(obb.otientatuons_[2], obb2.otientatuons_[0]);
+	axis[13] = Vector3::Cross(obb.otientatuons_[2], obb2.otientatuons_[1]);
+	axis[14] = Vector3::Cross(obb.otientatuons_[2], obb2.otientatuons_[2]);
 
 	//頂点
 
@@ -128,7 +128,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 	for (int i = 0; i < 8; i++) {
 
 		obbVertex[i] = Matrix4x4Calc::Transform(obbVertex[i], obbRotateMatrix);
-		obbVertex[i] = Vector3Calc::Add(obbVertex[i], obb.center_);
+		obbVertex[i] = Vector3::Add(obbVertex[i], obb.center_);
 
 	}
 
@@ -183,7 +183,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 	for (int i = 0; i < 8; i++) {
 
 		obb2Vertex[i] = Matrix4x4Calc::Transform(obb2Vertex[i], obb2RotateMatrix);
-		obb2Vertex[i] = Vector3Calc::Add(obb2Vertex[i], obb2.center_);
+		obb2Vertex[i] = Vector3::Add(obb2Vertex[i], obb2.center_);
 
 	}
 
@@ -198,7 +198,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 			//一時保存
 			float tmp = 0.0f;
 			//obb
-			tmp = Vector3Calc::Dot(Vector3Calc::Normalize(axis[a]), obbVertex[v]);
+			tmp = Vector3::Dot(Vector3::Normalize(axis[a]), obbVertex[v]);
 			//2.射影した点の最大値と最小値を求める
 			if (v == 0 || min1 > tmp) {
 				min1 = tmp;
@@ -208,7 +208,7 @@ bool Collision::IsCollision(const OBB& obb, const OBB& obb2, Vector3& p1, Vector
 			}
 
 			//obb2
-			tmp = Vector3Calc::Dot(Vector3Calc::Normalize(axis[a]), obb2Vertex[v]);
+			tmp = Vector3::Dot(Vector3::Normalize(axis[a]), obb2Vertex[v]);
 			//2.射影した点の最大値と最小値を求める
 			if (v == 0 || min2 > tmp) {
 				min2 = tmp;
@@ -261,7 +261,7 @@ bool Collision::IsCollision(const AABB& aabb, const Sphere& sphere, Vector3& p1,
 		std::clamp(sphere.center_.z, aabb.min_.z, aabb.max_.z) };
 
 	//最近接点と球の中心との距離を求める
-	float distance = Vector3Calc::Length(Vector3Calc::Subtract(closestPoint, sphere.center_));
+	float distance = Vector3::Length(Vector3::Subtract(closestPoint, sphere.center_));
 	//距離が半径よりも小さければ衝突
 	if (distance <= sphere.radius_) {
 		return true;
@@ -348,7 +348,7 @@ bool Collision::IsCollision(const Capsule& capsule, const AABB& aabb, Vector3& p
 
 	// 計算用
 	Vector3 start = capsule.segment_.origin_;
-	Vector3 end = Vector3Calc::Add(capsule.segment_.origin_, capsule.segment_.diff_);
+	Vector3 end = Vector3::Add(capsule.segment_.origin_, capsule.segment_.diff_);
 
 	// 線分確認
 	Vector3 tMin = {
@@ -376,7 +376,7 @@ bool Collision::IsCollision(const Capsule& capsule, const AABB& aabb, Vector3& p
 
 		if (tMin_ < 1.0f && tMax_ > 0.0f) {
 			t1 = tMin_;
-			p1 = Vector3Calc::Add(Vector3Calc::Multiply(1.0f - tMin_, start), Vector3Calc::Multiply(tMin_, end));
+			p1 = Vector3::Add(Vector3::Multiply(1.0f - tMin_, start), Vector3::Multiply(tMin_, end));
 			pushBackDist = capsule.radius_;
 			return true;
 		}
@@ -389,7 +389,7 @@ bool Collision::IsCollision(const Capsule& capsule, const AABB& aabb, Vector3& p
 	Sphere sphere;
 	sphere.Initialize({ 0.0f,0.0f,0.0f }, 0.0f, static_cast<Player*>(nullptr));
 
-	sphere.center_ = Vector3Calc::Add(Vector3Calc::Multiply(1.0f - tMin_, start), Vector3Calc::Multiply(tMin_, end));
+	sphere.center_ = Vector3::Add(Vector3::Multiply(1.0f - tMin_, start), Vector3::Multiply(tMin_, end));
 	sphere.radius_ = capsule.radius_ ;
 	if (IsCollision(aabb, sphere, p1, p2, t1, t2, pushBackDist)) {
 		t1 = tMin_;
@@ -397,7 +397,7 @@ bool Collision::IsCollision(const Capsule& capsule, const AABB& aabb, Vector3& p
 		return true;
 	}
 
-	sphere.center_ = Vector3Calc::Add(Vector3Calc::Multiply(1.0f - tMax_, start), Vector3Calc::Multiply(tMax_, end));
+	sphere.center_ = Vector3::Add(Vector3::Multiply(1.0f - tMax_, start), Vector3::Multiply(tMax_, end));
 	sphere.radius_ = capsule.radius_;
 	if (IsCollision(aabb, sphere, p1, p2, t1, t2, pushBackDist)) {
 		t1 = tMax_;
@@ -426,12 +426,12 @@ bool Collision::IsCollision(const Capsule& capsule, const OBB& obb, Vector3& p1,
 	Matrix4x4 obbWorldMatrixInverse = Matrix4x4Calc::Inverse(obbWorldMatrix);
 
 	Vector3 localorigin_ = Matrix4x4Calc::Transform(capsule.segment_.origin_, obbWorldMatrixInverse);
-	Vector3 localEnd = Matrix4x4Calc::Transform(Vector3Calc::Add(capsule.segment_.origin_, capsule.segment_.diff_), obbWorldMatrixInverse);
+	Vector3 localEnd = Matrix4x4Calc::Transform(Vector3::Add(capsule.segment_.origin_, capsule.segment_.diff_), obbWorldMatrixInverse);
 
 	Capsule localCapsule = {};
 	localCapsule.radius_ = capsule.radius_;
 	localCapsule.segment_.origin_ = localorigin_;
-	localCapsule.segment_.diff_ = Vector3Calc::Subtract(localEnd, localorigin_);
+	localCapsule.segment_.diff_ = Vector3::Subtract(localEnd, localorigin_);
 
 	AABB localAABB;
 	localAABB.Initialize(

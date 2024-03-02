@@ -1,17 +1,8 @@
 #include "Vector3.h"
 #include <cmath>
 
-/// <summary>
-/// シングルトンインスタンスの取得
-/// </summary>
-/// <returns></returns>
-Vector3Calc* Vector3Calc::GetInstance() {
-	static Vector3Calc instance;
-	return &instance;
-}
-
 //加算
-Vector3 Vector3Calc::Add(const Vector3& v1, const Vector3& v2) {
+Vector3 Vector3::Add(const Vector3& v1, const Vector3& v2) {
 
 	Vector3 result;
 
@@ -22,7 +13,7 @@ Vector3 Vector3Calc::Add(const Vector3& v1, const Vector3& v2) {
 }
 
 //減算
-Vector3 Vector3Calc::Subtract(const Vector3& v1, const Vector3& v2) {
+Vector3 Vector3::Subtract(const Vector3& v1, const Vector3& v2) {
 
 	Vector3 result;
 
@@ -33,7 +24,7 @@ Vector3 Vector3Calc::Subtract(const Vector3& v1, const Vector3& v2) {
 }
 
 //スカラー倍
-Vector3 Vector3Calc::Multiply(float scalar, const Vector3& v) {
+Vector3 Vector3::Multiply(const Vector3& v, float scalar) {
 
 	Vector3 result;
 
@@ -43,8 +34,13 @@ Vector3 Vector3Calc::Multiply(float scalar, const Vector3& v) {
 
 }
 
+Vector3 Vector3::Multiply(float scalar, const Vector3& v)
+{
+	return Multiply(v, scalar);
+}
+
 //内積
-float Vector3Calc::Dot(const Vector3& v1, const Vector3& v2) {
+float Vector3::Dot(const Vector3& v1, const Vector3& v2) {
 
 	float result;
 
@@ -55,7 +51,7 @@ float Vector3Calc::Dot(const Vector3& v1, const Vector3& v2) {
 }
 
 //長さ（ノルム）
-float Vector3Calc::Length(const Vector3& v) {
+float Vector3::Length(const Vector3& v) {
 
 	float result;
 
@@ -67,7 +63,7 @@ float Vector3Calc::Length(const Vector3& v) {
 
 
 //正規化
-Vector3 Vector3Calc::Normalize(const Vector3& v) {
+Vector3 Vector3::Normalize(const Vector3& v) {
 
 	Vector3 result;
 	float norm;
@@ -101,7 +97,7 @@ Vector3 Vector3Calc::Normalize(const Vector3& v) {
 }
 
 //クロス積
-Vector3 Vector3Calc::Cross(const Vector3& v1, const Vector3& v2) {
+Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {
 
 	Vector3 result = { v1.y * v2.z - v1.z * v2.y,v1.z * v2.x - v1.x * v2.z,v1.x * v2.y - v1.y * v2.x, };
 
@@ -110,15 +106,15 @@ Vector3 Vector3Calc::Cross(const Vector3& v1, const Vector3& v2) {
 }
 
 // 線形補間
-Vector3 Vector3Calc::Lerp(const Vector3& v1, const Vector3& v2, float t) {
+Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	Vector3 result = Add(v1, Multiply(t, Subtract(v2, v1)));
+	Vector3 result = Add(v1, Multiply(Subtract(v2, v1), t));
 
 	return result;
 }
 
 // 3次スプライン曲線
-Vector3 Vector3Calc::CatmullRomSpline(
+Vector3 Vector3::CatmullRomSpline(
 	const std::vector<Vector3>& controlPoints, const float& t) {
 
 	Vector3 result;
@@ -175,8 +171,80 @@ Vector3 Vector3Calc::CatmullRomSpline(
 }
 
 // 反射ベクトル
-Vector3 Vector3Calc::Reflect(const Vector3& input, const Vector3& normal) {
+Vector3 Vector3::Reflect(const Vector3& input, const Vector3& normal) {
 
-	return Subtract(input, Multiply(2.0f * Dot(input, normal), normal));
+	return Subtract(input, Multiply(normal, 2.0f * Dot(input, normal)));
+
+}
+
+Vector3 Vector3::operator+(const Vector3& v)
+{
+
+	Vector3 result = { x, y, z };
+
+	result = Add(result, v);
+
+	return result;
+
+}
+
+void Vector3::operator+=(const Vector3& v)
+{
+
+	Vector3 result = { x, y, z };
+
+	result = Add(result, v);
+
+	x = result.x;
+	y = result.y;
+	z = result.z;
+
+}
+
+Vector3 Vector3::operator-(const Vector3& v)
+{
+
+	Vector3 result = { x, y, z };
+
+	result = Subtract(result, v);
+
+	return result;
+
+}
+
+void Vector3::operator-=(const Vector3& v)
+{
+	
+	Vector3 result = { x, y, z };
+	
+	result = Subtract(result, v);
+
+	x = result.x;
+	y = result.y;
+	z = result.z;
+
+}
+
+Vector3 Vector3::operator*(float v)
+{
+
+	Vector3 result = { x, y, z };
+
+	result = Multiply(result, v);
+
+	return result;
+
+}
+
+void Vector3::operator*=(float v)
+{
+
+	Vector3 result = { x, y, z };
+
+	result = Multiply(result, v);
+
+	x = result.x;
+	y = result.y;
+	z = result.z;
 
 }

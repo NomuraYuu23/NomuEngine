@@ -139,7 +139,7 @@ void GameScene::Update() {
 	//光源
 	DirectionalLightData directionalLightData;
 	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
-	directionalLightData.direction = Vector3Calc::Normalize(direction);
+	directionalLightData.direction = Vector3::Normalize(direction);
 	directionalLightData.intencity = intencity;
 	directionalLight_->Update(directionalLightData);
 

@@ -570,18 +570,16 @@ Matrix4x4 Matrix4x4Calc::MakeRotateAxisAngle(const Vector3& axis, float angle)
 Matrix4x4 Matrix4x4Calc::DirectionToDirection(const Vector3& from, const Vector3& to)
 {
 
-	Vector3Calc* v3Calc = Vector3Calc::GetInstance();
+	Vector3 nFrom = Vector3::Normalize(from);
+	Vector3 nTo = Vector3::Normalize(to);
 
-	Vector3 nFrom = v3Calc->Normalize(from);
-	Vector3 nTo = v3Calc->Normalize(to);
+	Vector3 n = Vector3::Normalize(Vector3::Cross(nFrom, nTo));
 
-	Vector3 n = v3Calc->Normalize(v3Calc->Cross(nFrom, nTo));
-
-	float cosTheta = v3Calc->Dot(nFrom, nTo);
-	float sinTheta = v3Calc->Length(v3Calc->Cross(nFrom, nTo));
+	float cosTheta = Vector3::Dot(nFrom, nTo);
+	float sinTheta = Vector3::Length(Vector3::Cross(nFrom, nTo));
 
 	//確認用
-	Vector3 minusTo = v3Calc->Multiply(-1.0f, nTo);
+	Vector3 minusTo = Vector3::Multiply(-1.0f, nTo);
 
 	Matrix4x4 result = Matrix4x4Calc::GetInstance()->MakeIdentity4x4();
 

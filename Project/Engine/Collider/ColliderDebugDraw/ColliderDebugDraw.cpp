@@ -61,8 +61,6 @@ void ColliderDebugDraw::Draw(BaseCamera& camera)
 		return;
 	}
 
-	Vector3Calc* v3Calc = Vector3Calc::GetInstance();
-
 	// 球
 	for (Sphere* sphere : spheres_) {
 		models_[static_cast<size_t>(ModelNo::kSphere)]->Draw(sphere->worldTransform_, camera, material_);

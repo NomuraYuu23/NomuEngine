@@ -2,12 +2,138 @@
 #include <vector>
 #include "../../externals/nlohmann/json.hpp"
 
-//3次元ベクトル
-struct Vector3
+class Vector3
 {
+
+public: // 変数
+
 	float x;
 	float y;
 	float z;
+
+public: // 関数
+
+	/// <summary>
+	/// 加算
+	/// </summary>
+	/// <param name="v1">一個目の値</param>
+	/// <param name="v2">二個目の値</param>
+	/// <returns></returns>
+	static Vector3 Add(const Vector3& v1, const Vector3& v2);
+	
+	/// <summary>
+	/// 減算
+	/// </summary>
+	/// <param name="v1">引かれる値</param>
+	/// <param name="v2">引く値</param>
+	/// <returns></returns>
+	static Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+	
+	/// <summary>
+	/// スカラー倍
+	/// </summary>
+	/// <param name="v">掛けられる値</param>
+	/// <param name="scalar">掛ける値</param>
+	/// <returns></returns>
+	static Vector3 Multiply(const Vector3& v, float scalar);
+	static Vector3 Multiply(float scalar, const Vector3& v);
+	
+	/// <summary>
+	/// 内積
+	/// </summary>
+	/// <param name="v1">一個目の値</param>
+	/// <param name="v2">二個目の値</param>
+	/// <returns></returns>
+	static float Dot(const Vector3& v1, const Vector3& v2);
+	
+	/// <summary>
+	/// 長さ（ノルム）
+	/// </summary>
+	/// <param name="v">値</param>
+	/// <returns></returns>
+	static float Length(const Vector3& v);
+	
+	/// <summary>
+	/// 正規化
+	/// </summary>
+	/// <param name="v">値</param>
+	/// <returns></returns>
+	static Vector3 Normalize(const Vector3& v);
+	
+	/// <summary>
+	/// クロス積
+	/// </summary>
+	/// <param name="v1">一個目の値</param>
+	/// <param name="v2">二個目の値</param>
+	/// <returns></returns>
+	static Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
+	/// <summary>
+	/// 線形補間
+	/// </summary>
+	/// <param name="v1">一個目の値</param>
+	/// <param name="v2">二個目の値</param>
+	/// <param name="t">補間係数</param>
+	/// <returns></returns>
+	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+	/// <summary>
+	/// 3次スプライン曲線
+	/// </summary>
+	/// <param name="controlPoints">制御点</param>
+	/// <param name="t">補間係数</param>
+	/// <returns></returns>
+	static Vector3 CatmullRomSpline(
+		const std::vector<Vector3>& controlPoints, const float& t);
+
+	/// <summary>
+	/// 反射ベクトル
+	/// </summary>
+	/// <param name="input">入力</param>
+	/// <param name="normal">法線</param>
+	/// <returns></returns>
+	static Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
+public: // オーバーロード
+
+	/// <summary>
+	/// +
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	Vector3 operator+(const Vector3& v);
+
+	/// <summary>
+	/// +=
+	/// </summary>
+	/// <param name="v"></param>
+	void operator+=(const Vector3& v);
+
+	/// <summary>
+	/// -
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	Vector3 operator-(const Vector3& v);
+
+	/// <summary>
+	/// -=
+	/// </summary>
+	/// <param name="v"></param>
+	void operator-=(const Vector3& v);
+
+	/// <summary>
+	/// *
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	Vector3 operator*(float v);
+
+	/// <summary>
+	/// *=
+	/// </summary>
+	/// <param name="v"></param>
+	void operator*=(float v);
 
 };
 
@@ -21,46 +147,3 @@ inline void from_json(const nlohmann::json& json, Vector3& value) {
 		value = { json.at(0), json.at(1), json.at(2) };
 	}
 }
-
-class Vector3Calc
-{
-public:
-
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static Vector3Calc* GetInstance();
-
-	//加算
-	static Vector3 Add(const Vector3& v1, const Vector3& v2);
-	//減算
-	static Vector3 Subtract(const Vector3& v1, const Vector3& v2);
-	//スカラー倍
-	static Vector3 Multiply(float scalar, const Vector3& v);
-	//内積
-	static float Dot(const Vector3& v1, const Vector3& v2);
-	//長さ（ノルム）
-	static float Length(const Vector3& v);
-	//正規化
-	static Vector3 Normalize(const Vector3& v);
-	//クロス積
-	static Vector3 Cross(const Vector3& v1, const Vector3& v2);
-
-	// 線形補間
-	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
-
-	// 3次スプライン曲線
-	static Vector3 CatmullRomSpline(
-		const std::vector<Vector3>& controlPoints, const float& t);
-
-	// 反射ベクトル
-	static Vector3 Reflect(const Vector3& input, const Vector3& normal);
-
-private:
-	Vector3Calc() = default;
-	~Vector3Calc() = default;
-	Vector3Calc(const Vector3Calc&) = delete;
-	Vector3Calc& operator=(const Vector3Calc&) = delete;
-
-};

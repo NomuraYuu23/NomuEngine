@@ -87,6 +87,7 @@ Vector2 Vector2::operator+(const Vector2& v)
 	result = Add(result, v);
 
 	return result;
+
 }
 
 void Vector2::operator+=(const Vector2& v)

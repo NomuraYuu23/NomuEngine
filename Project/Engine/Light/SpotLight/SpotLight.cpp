@@ -64,7 +64,7 @@ void SpotLight::Update(const SpotLightData& spotLightData)
 
 	spotLightMap->color = spotLightData.color;
 	spotLightMap->position = spotLightData.position;
-	spotLightMap->direction = Vector3Calc::Normalize(spotLightData.direction);
+	spotLightMap->direction = Vector3::Normalize(spotLightData.direction);
 	spotLightMap->distance = spotLightData.distance;
 	spotLightMap->decay = spotLightData.decay;
 	spotLightMap->cosAngle = spotLightData.cosAngle;

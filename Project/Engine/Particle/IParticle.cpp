@@ -13,7 +13,6 @@ IParticle::~IParticle(){}
 void IParticle::Initialize(const Vector3& position, const Vector3& size)
 {
 
-	Vector3Calc* vector3Calc = Vector3Calc::GetInstance();
 	Matrix4x4Calc* matrix4x4Calc = Matrix4x4Calc::GetInstance();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
