@@ -145,6 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Line\Segment.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Math\ShortestDistance.cpp" />
+    <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Particle\IEmitter.cpp" />
     <ClCompile Include="Engine\Particle\IParticle.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />

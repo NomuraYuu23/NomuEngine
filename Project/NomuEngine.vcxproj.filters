@@ -130,6 +130,12 @@
     <Filter Include="Engine\3D\Model">
       <UniqueIdentifier>{8b136702-1927-41e2-86ea-a1a8ecbf5733}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Math\Vector2">
+      <UniqueIdentifier>{86e847a6-2027-4659-adc8-699d634e6985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Math\vector3">
+      <UniqueIdentifier>{f2ea7e92-ccfe-402b-a773-59564c924aac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -212,9 +218,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Input\Input.cpp">
       <Filter>Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\Vector3.cpp">
-      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Math\Matrix4x4.cpp">
       <Filter>Engine\Math</Filter>
@@ -394,6 +397,12 @@
     <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
       <Filter>Application\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Math\Vector2.cpp">
+      <Filter>Engine\Math\Vector2</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Vector3.cpp">
+      <Filter>Engine\Math\vector3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -511,12 +520,6 @@
       <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\Matrix4x4.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector2.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector3.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\DeltaTime.h">
@@ -737,6 +740,12 @@
     </ClInclude>
     <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
       <Filter>Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Vector2.h">
+      <Filter>Engine\Math\Vector2</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Vector3.h">
+      <Filter>Engine\Math\vector3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
