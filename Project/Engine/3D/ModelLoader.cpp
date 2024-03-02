@@ -75,7 +75,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+			modelData.material.textureFilePaths.push_back(directoryPath + "/" + textureFilePath.C_Str());
 		}
 	}
 

@@ -24,11 +24,13 @@ struct VertexShaderInput {
 VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID) {
 	
 	uint32_t meshNum = 0;
+	float32_t2 texcoordAdd = { 0.0f, 0.0f };
 
 	for (int i = 0; i < 4; ++i) {
 		
 		if (vertexId >= gMeshNumData.incrementMeshNum[i]) {
 			meshNum++;
+			texcoordAdd.x += 2.0f;
 		}
 		else {
 			break;
@@ -37,7 +39,7 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 
 	VertexShaderOutput output;
 	output.position = mul(input.position, gTransformationMatrixes[meshNum].WVP);
-	output.texcoord = input.texcoord;
+	output.texcoord = input.texcoord + texcoordAdd;
 	output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrixes[meshNum].WorldInverseTranspose));
 	output.worldPosition = mul(input.position, gTransformationMatrixes[meshNum].World).xyz;
 	return output;

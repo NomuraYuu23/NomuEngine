@@ -44,7 +44,7 @@ class Model
 public:
 
 	struct MaterialData {
-		std::string textureFilePath;
+		std::vector<std::string> textureFilePaths;
 	};
 
 	struct ModelData {
@@ -134,8 +134,8 @@ public:
 	/// テクスチャハンドルの設定
 	/// </summary>
 	/// <param name="textureHandle"></param>
-	void SetTextureHandle(uint32_t textureHandle);
-	uint32_t GetTextureHandle() { return textureHandle_; }
+	void SetTextureHandle(uint32_t textureHandle, uint32_t index);
+	std::vector<UINT> GetTextureHandle() { return textureHandles_; }
 
 	/// <summary>
 	/// ローカルマトリックス取得
@@ -156,10 +156,10 @@ private:
 	std::unique_ptr<Mesh> mesh_;
 
 	//テクスチャ番号
-	UINT textureHandle_ = 0;
+	std::vector<UINT> textureHandles_;
 
 	// リソース設定
-	D3D12_RESOURCE_DESC resourceDesc_;
+	std::vector<D3D12_RESOURCE_DESC> resourceDescs_;
 
 	// デフォルトマテリアル
 	std::unique_ptr<Material> defaultMaterial_;

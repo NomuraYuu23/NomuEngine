@@ -12,7 +12,10 @@
 /// ディスクリプタレンジの名前
 /// </summary>
 enum DescriptorRangeIndex {
-	kDescriptorRangeIndexTexture,
+	kDescriptorRangeIndexTexture0,
+	kDescriptorRangeIndexTexture1,
+	kDescriptorRangeIndexTexture2,
+	kDescriptorRangeIndexTexture3,
 	kDescriptorRangeIndexInstancing,
 	kDescriptorRangeIndexPointLight,
 	kDescriptorRangeIndexSpotLight,

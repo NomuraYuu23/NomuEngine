@@ -151,11 +151,12 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	mesh_ = std::make_unique<Mesh>();
 	mesh_->CreateMesh(sDevice,modelData_.vertices);
 
-	// テクスチャハンドル
-	textureHandle_ = TextureManager::Load(modelData_.material.textureFilePath, dxCommon, textureHandleManager);
-
-	// リソース
-	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
+	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
+		// テクスチャハンドル
+		textureHandles_.push_back(TextureManager::Load(modelData_.material.textureFilePaths[i], dxCommon, textureHandleManager));
+		// リソース
+		resourceDescs_.push_back(TextureManager::GetInstance()->GetResourceDesc(textureHandles_[i]));
+	}
 
 	// マテリアル
 	defaultMaterial_.reset(Material::Create());
@@ -186,21 +187,23 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
 
 	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(10, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
+	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), textureHandles_[i]);
+	}
 
 	// ポイントライト
 	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 5);
+		pointLightManager_->Draw(sCommandList, 8);
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 6);
+		spotLightManager_->Draw(sCommandList, 9);
 	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
@@ -227,21 +230,23 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
 
 	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(10, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
+	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), textureHandles_[i]);
+	}
 
 	// ポイントライト
 	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 5);
+		pointLightManager_->Draw(sCommandList, 8);
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 6);
+		spotLightManager_->Draw(sCommandList, 9);
 	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
@@ -268,21 +273,21 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
 
 	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 	// メッシュ番号
-	sCommandList->SetGraphicsRootConstantBufferView(7, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(10, modelData_.meshNumManager.meshNumDataBuff_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle);
 
 	// ポイントライト
 	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 5);
+		pointLightManager_->Draw(sCommandList, 8);
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 6);
+		spotLightManager_->Draw(sCommandList, 9);
 	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
@@ -310,7 +315,9 @@ void Model::ParticleDraw()
 	sCommandList->SetGraphicsRootConstantBufferView(4, particleManager->GetCurrentStartInstanceIdBuff()->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);
+	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandles_[i]);
+	}
 
 	sCommandList->SetGraphicsRootDescriptorTable(1, particleManager->GetInstancingSrvHandleGPU());
 
@@ -350,10 +357,10 @@ void Model::OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera, OutL
 /// テクスチャハンドルの設定
 /// </summary>
 /// <param name="textureHandle"></param>
-void Model::SetTextureHandle(uint32_t textureHandle) {
+void Model::SetTextureHandle(uint32_t textureHandle, uint32_t index) {
 
-	textureHandle_ = textureHandle;
-	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
+	textureHandles_[index] = textureHandle;
+	resourceDescs_[index] = TextureManager::GetInstance()->GetResourceDesc(textureHandles_[index]);
 
 }
 

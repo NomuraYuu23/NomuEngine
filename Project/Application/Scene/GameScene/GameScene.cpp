@@ -195,7 +195,7 @@ void GameScene::Draw() {
 	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
 
 	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
+	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
 	
 	//Obj
@@ -224,7 +224,7 @@ void GameScene::Draw() {
 	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
 
 	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList(), 3);
+	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
 
 	// パーティクルはここ
 	particleManager_->Draw();
@@ -358,7 +358,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/default/", "multiMesh.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "multiMaterial.gltf", dxCommon_, textureHandleManager_.get()));
 
 }
 
