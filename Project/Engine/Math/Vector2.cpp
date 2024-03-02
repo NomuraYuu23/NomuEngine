@@ -82,7 +82,7 @@ float Vector2::Cross(const Vector2& v1, const Vector2& v2)
 Vector2 Vector2::operator+(const Vector2& v)
 {
 
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Add(result, v);
 
@@ -93,19 +93,18 @@ Vector2 Vector2::operator+(const Vector2& v)
 void Vector2::operator+=(const Vector2& v)
 {
 	
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Add(result, v);
 
-	x = result.x;
-	y = result.y;
+	*this = result;
 
 }
 
 Vector2 Vector2::operator-(const Vector2& v)
 {
 
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Subtract(result, v);
 
@@ -116,19 +115,18 @@ Vector2 Vector2::operator-(const Vector2& v)
 void Vector2::operator-=(const Vector2& v)
 {
 
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Subtract(result, v);
 
-	x = result.x;
-	y = result.y;
+	*this = result;
 
 }
 
 Vector2 Vector2::operator*(float v)
 {
 
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Multiply(result, v);
 
@@ -139,11 +137,10 @@ Vector2 Vector2::operator*(float v)
 void Vector2::operator*=(float v)
 {
 
-	Vector2 result = { x, y };
+	Vector2 result = *this;
 
 	result = Multiply(result, v);
 
-	x = result.x;
-	y = result.y;
+	*this = result;
 
 }
