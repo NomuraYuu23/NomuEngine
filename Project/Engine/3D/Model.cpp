@@ -18,9 +18,9 @@ UINT Model::sDescriptorHandleIncrementSize;
 // コマンドリスト
 ID3D12GraphicsCommandList* Model::sCommandList = nullptr;
 // ルートシグネチャ
-ID3D12RootSignature* Model::sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
+ID3D12RootSignature* Model::sRootSignature[PipelineStateName::kPipelineStateNameOfCount];
 // パイプラインステートオブジェクト
-ID3D12PipelineState* Model::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
+ID3D12PipelineState* Model::sPipelineState[PipelineStateName::kPipelineStateNameOfCount];
 // ポイントライトマネージャ
 PointLightManager* Model::pointLightManager_ = nullptr;
 //	スポットライトマネージャ
@@ -31,15 +31,15 @@ SpotLightManager* Model::spotLightManager_ = nullptr;
 /// </summary>
 /// <param name="device">デバイス</param>
 void Model::StaticInitialize(ID3D12Device* device,
-	const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
-	const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& pipelineState) {
+	const std::array<ID3D12RootSignature*, PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
+	const std::array<ID3D12PipelineState*, PipelineStateName::kPipelineStateNameOfCount>& pipelineState) {
 
 	assert(device);
 
 	sDevice = device;
 
 	// グラフィックパイプライン生成
-	for (uint32_t i = 0u; i < GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount; i++) {
+	for (uint32_t i = 0u; i < PipelineStateName::kPipelineStateNameOfCount; i++) {
 		sRootSignature[i] = rootSignature[i];
 		sPipelineState[i] = pipelineState[i];
 	}
@@ -57,8 +57,8 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* point
 	sCommandList = cmdList;
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameModel]);
+	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameModel]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -76,8 +76,8 @@ void Model::PreParticleDraw(ID3D12GraphicsCommandList* cmdList, const Matrix4x4&
 	sCommandList = cmdList;
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameParticle]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameParticle]);
+	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameParticle]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameParticle]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -97,11 +97,11 @@ void Model::PreDrawOutLine(ID3D12GraphicsCommandList* cmdList) {
 
 	sCommandList = cmdList;
 
-	assert(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);
+	assert(sPipelineState[PipelineStateName::kPipelineStateNameOutLine]);
 
 	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOutLine]);
+	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameOutLine]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameOutLine]);
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

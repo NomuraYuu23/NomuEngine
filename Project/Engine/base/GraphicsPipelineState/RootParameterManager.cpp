@@ -27,6 +27,8 @@ void RootParameterManager::Initialize()
 	RootParameterInitializeForParticle();
 	// アウトライン
 	RootParameterInitializeForOutLine();
+	// コライダーデバッグ2D
+	RootParameterInitializeForCollision2DDebugDraw();
 
 }
 
@@ -122,11 +124,6 @@ void RootParameterManager::RootParameterInitializeForSprite()
 void RootParameterManager::RootParameterInitializeForParticle()
 {
 
-	//RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootsignature{};
-	descriptionRootsignature.Flags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
 	//RootParameter作成。複数設定できるので配列。今回は1つだけなので長さ1の配列
 	D3D12_ROOT_PARAMETER rootParameters[5] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
@@ -174,6 +171,38 @@ void RootParameterManager::RootParameterInitializeForOutLine()
 	for (uint32_t i = 0; i < 3; ++i) {
 		rootParameters_[kRootParameterIndexOutLine].push_back(rootParameters[i]);
 	}
+
+}
+
+void RootParameterManager::RootParameterInitializeForCollision2DDebugDraw()
+{
+
+	//RootParameter作成。複数設定できるので配列。
+	D3D12_ROOT_PARAMETER rootParameters[4] = {};
+	// マテリアル
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[0].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
+	// Collider2DDebugDrawForGPU
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDexcriptorRangeIndexCollider2DDebugDrawForGPU].data();//Tableの中身の配列を指定
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDexcriptorRangeIndexCollider2DDebugDrawForGPU].size());//Tableで利用する数
+	// テクスチャ
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexTexture0].data();//Tableの中身の配列を指定
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexTexture0].size());//Tableで利用する数
+
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexTexture1].data();//Tableの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexTexture1].size());//Tableで利用する数
+
+	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
+		rootParameters_[kRootParameterIndexCollision2DDebugDraw].push_back(rootParameters[i]);
+	}
+
 
 }
 
@@ -243,5 +272,13 @@ void RootParameterManager::DescriptorRangeInitialize()
 	descriptorRangeForTransformMatrix[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	descriptorRanges_[kDescriptorRangeIndexTransformMatrix].push_back(descriptorRangeForTransformMatrix[0]);
+
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[1] = {};
+	descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[0].BaseShaderRegister = 0;//0から始まる
+	descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使う
+	descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+	descriptorRanges_[kDexcriptorRangeIndexCollider2DDebugDrawForGPU].push_back(descriptorRangeForDexcriptorRangeIndexCollider2DDebugDrawForGPU[0]);
 
 }

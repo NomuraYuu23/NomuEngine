@@ -55,13 +55,20 @@ public:
 		MeshNumManager meshNumManager;
 	};
 
+	enum PipelineStateName {
+		kPipelineStateNameModel,
+		kPipelineStateNameParticle,
+		kPipelineStateNameOutLine,
+		kPipelineStateNameOfCount
+	};
+
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	static void StaticInitialize(ID3D12Device* device,
-		const std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
-		const std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount>& pipelineState);
+		const std::array<ID3D12RootSignature*, PipelineStateName::kPipelineStateNameOfCount>& rootSignature,
+		const std::array<ID3D12PipelineState*, PipelineStateName::kPipelineStateNameOfCount>& pipelineState);
 
 	/// <summary>
 	/// 静的前処理
@@ -101,9 +108,9 @@ private:
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList;
 	// ルートシグネチャ
-	static ID3D12RootSignature* sRootSignature[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
+	static ID3D12RootSignature* sRootSignature[PipelineStateName::kPipelineStateNameOfCount];
 	// パイプラインステートオブジェクト
-	static ID3D12PipelineState* sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
+	static ID3D12PipelineState* sPipelineState[PipelineStateName::kPipelineStateNameOfCount];
 	// ポイントライトマネージャ
 	static PointLightManager* pointLightManager_;
 	//	スポットライトマネージャ

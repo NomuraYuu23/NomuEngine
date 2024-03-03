@@ -109,6 +109,17 @@ void GameScene::Initialize() {
 		spotLightDatas_[i].used = false; // 使用している
 	}
 
+	collision2DManager_ = std::make_unique<Collision2DManager>();
+	collision2DManager_->Initialize();
+
+	collision2DDebugDraw_ = std::make_unique<Collision2DDebugDraw>();
+	collision2DDebugDraw_->Initialize(dxCommon_->GetDevice(), collision2DDebugDrawTextures_,
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameCollision2DDebugDraw].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameCollision2DDebugDraw].Get());
+
+	box_ = std::make_unique<Box>();
+	box_->Initialize(Vector2{640.0f,360.0f}, 16.0f, 16.0f, nullptr);
+
 }
 
 /// <summary>
@@ -153,6 +164,12 @@ void GameScene::Update() {
 	collisionManager_->ListClear();
 	//collisionManager_->ListRegister();
 	collisionManager_->CheakAllCollision();
+
+	collision2DManager_->ListClear();
+	collision2DManager_->ListRegister(box_.get());
+	collision2DManager_->CheakAllCollision();
+
+	collision2DDebugDraw_->Update(box_.get());
 	
 	// 影
 	ShadowUpdate();
@@ -232,6 +249,15 @@ void GameScene::Draw() {
 	Model::PostDraw();
 
 #pragma endregion
+
+#ifdef _DEBUG
+#pragma region コライダー2d描画
+
+	collision2DDebugDraw_->Draw(dxCommon_->GetCommadList());
+
+#pragma endregion
+#endif // DEBUG_
+
 
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
@@ -364,6 +390,11 @@ void GameScene::ModelCreate()
 
 void GameScene::TextureLoad()
 {
+
+	collision2DDebugDrawTextures_ = {
+		TextureManager::Load("Resources/Debug/Box.png", DirectXCommon::GetInstance(), textureHandleManager_.get()),
+		TextureManager::Load("Resources/Debug/Circle.png", DirectXCommon::GetInstance(), textureHandleManager_.get())
+	};
 
 	//uiTextureHandles_ = {
 

@@ -75,17 +75,6 @@ void Sprite::PostDraw() {
 /// <param name="isFlipX">左右反転</param>
 /// <param name="isFlipY">上下反転</param>
 /// <returns>生成されたスプライト</returns>
-
-/// <summary>
-/// スプライト生成
-/// </summary>
-/// <param name="textureHandle">テクスチャハンドル</param>
-/// <param name="position">座標</param>
-/// <param name="color">色</param>
-/// <param name="anchorpoint">アンカーポイント</param>
-/// <param name="isFlipX">左右反転</param>
-/// <param name="isFlipY">上下反転</param>
-/// <returns>生成されたスプライト</returns>
 Sprite* Sprite::Create(
 	uint32_t textureHandle, const Vector2& position, const Vector4& color) {
 

@@ -28,14 +28,12 @@ void MyFramework::Initialize()
 	Sprite::StaticInitialize(dxCommon->GetDevice(), GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite], GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite]);
 
 	// モデル静的初期化
-	std::array<ID3D12RootSignature*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount> rootSignature = {
+	std::array<ID3D12RootSignature*, Model::PipelineStateName::kPipelineStateNameOfCount> rootSignature = {
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameModel].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite].Get(),
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameOutLine].Get() };
-	std::array<ID3D12PipelineState*, GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount> pipelineState = {
+	std::array<ID3D12PipelineState*, Model::PipelineStateName::kPipelineStateNameOfCount> pipelineState = {
 	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameModel].Get(),
-	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite].Get(),
 	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
 	GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameOutLine].Get() };
 	Model::StaticInitialize(dxCommon->GetDevice(), rootSignature, pipelineState);

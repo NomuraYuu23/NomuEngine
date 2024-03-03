@@ -37,6 +37,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	CreateForParticle();
 
 	CreateForOutLine();
+
+	CreateForCollision2DDebugDraw();
 }
 
 void GraphicsPipelineState::CreateForModel()
@@ -208,6 +210,53 @@ void GraphicsPipelineState::CreateForOutLine()
 	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/OutLine3D.vs.hlsl",
 		L"vs_6_0");
 	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/OutLine3D.PS.hlsl",
+		L"ps_6_0");
+
+	//書き込むRTVの情報
+	createPSODesc.numRenderTargets = 1;
+	createPSODesc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//利用するトポロジ(形状)のタイプ。
+	createPSODesc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	//どのように画面に色を打ち込むのかの設定
+	createPSODesc.sampleDescCount = 1;
+	createPSODesc.sampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+	//DepthStencilの設定
+	createPSODesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	CreatePSO(createPSODesc);
+
+}
+
+void GraphicsPipelineState::CreateForCollision2DDebugDraw()
+{
+
+	CreatePSODesc createPSODesc;
+
+	RootsignatureSetting(
+		kPipelineStateNameCollision2DDebugDraw,
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
+		kRootParameterIndexCollision2DDebugDraw,
+		kSamplerIndexNormal);
+
+	createPSODesc.pipelineStateName = kPipelineStateNameCollision2DDebugDraw;
+
+	createPSODesc.depthStencilState = DepthStencilStateSetting(
+		true,
+		D3D12_DEPTH_WRITE_MASK_ZERO,
+		D3D12_COMPARISON_FUNC_LESS_EQUAL);
+
+	createPSODesc.inputLayoutDesc = InputLayoutSetting(
+		kInputLayoutIndexNormal);
+
+	createPSODesc.blendDesc = BlendStateSetting(kBlendStateIndexAdd);
+
+	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+
+	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Collider2DDebug.VS.hlsl",
+		L"vs_6_0");
+	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Collider2DDebug.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
