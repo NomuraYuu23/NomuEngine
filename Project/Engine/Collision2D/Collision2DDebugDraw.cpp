@@ -2,6 +2,13 @@
 #include "../base/BufferResource.h"
 #include "../base/TextureManager.h"
 
+Collision2DDebugDraw::~Collision2DDebugDraw()
+{
+
+	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+
+}
+
 void Collision2DDebugDraw::Initialize(ID3D12Device* device,
 	const std::array<UINT, kTexutureNameOfCount>& textureHandles,
 	ID3D12RootSignature* rootSignature,
@@ -102,7 +109,14 @@ void Collision2DDebugDraw::Initialize(ID3D12Device* device,
 
 }
 
-void Collision2DDebugDraw::Update(ColliderShape2D collider)
+void Collision2DDebugDraw::Clear()
+{
+
+	collider2DDebugDrawForGPUNumCount_ = 0;
+
+}
+
+void Collision2DDebugDraw::Register(ColliderShape2D collider)
 {
 
 	Vector3 traslate = {};
@@ -111,8 +125,6 @@ void Collision2DDebugDraw::Update(ColliderShape2D collider)
 
 	Matrix4x4 viewMatrixSprite = Matrix4x4::MakeIdentity4x4();
 	Matrix4x4 projectionMatrixSprite = Matrix4x4::MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
-
-	collider2DDebugDrawForGPUNumCount_ = 0;
 
 	if (std::holds_alternative<Box*>(collider)) {
 		

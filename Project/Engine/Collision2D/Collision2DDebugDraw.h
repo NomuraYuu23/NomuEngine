@@ -32,14 +32,40 @@ public:
 
 public:
 
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Collision2DDebugDraw();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="textureHandles">テクスチャ</param>
+	/// <param name="rootSignature">ルートシグネチャ</param>
+	/// <param name="pipelineState">パイプライン</param>
 	void Initialize(ID3D12Device* device,
 		const std::array<UINT, kTexutureNameOfCount>& textureHandles,
 		ID3D12RootSignature* rootSignature,
 		ID3D12PipelineState* pipelineState);
 
-	void Update(ColliderShape2D collider);
+	/// <summary>
+	/// クリア
+	/// </summary>
+	void Clear();
 
+	/// <summary>
+	/// 登録
+	/// </summary>
+	void Register(ColliderShape2D collider);
+
+	/// <summary>
+	/// コマンドリスト
+	/// </summary>
+	/// <param name="cmdList"></param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+
+private:
 
 	/// <summary>
 	/// SRVを作る

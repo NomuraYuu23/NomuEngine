@@ -169,7 +169,8 @@ void GameScene::Update() {
 	collision2DManager_->ListRegister(box_.get());
 	collision2DManager_->CheakAllCollision();
 
-	collision2DDebugDraw_->Update(box_.get());
+	collision2DDebugDraw_->Clear();
+	collision2DDebugDraw_->Register(box_.get());
 	
 	// 影
 	ShadowUpdate();
