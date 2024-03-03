@@ -3,4 +3,4 @@
 #include "Circle.h"
 #include "Box.h"
 
-using ColliderShape2D = std::variant<Circle*, Box*>;
+using ColliderShape2D = std::variant<Box*, Circle*>;

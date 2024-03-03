@@ -62,8 +62,13 @@ public:
 	/// <summary>
 	/// コマンドリスト
 	/// </summary>
-	/// <param name="cmdList"></param>
+	/// <param name="cmdList">コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+
+	/// <summary>
+	/// ImGui描画
+	/// </summary>
+	void ImGuiDraw();
 
 private:
 
@@ -84,6 +89,11 @@ private:
 	ID3D12PipelineState* pipelineState_;
 	// 非表示
 	bool isInvisible_;
+
+	// ビュー行列
+	Matrix4x4 viewMatrix_;
+	// プロジェクション行列
+	Matrix4x4 projectionMatrix_;
 
 private: // 頂点
 

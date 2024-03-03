@@ -1,6 +1,7 @@
 #include "Collision2DDebugDraw.h"
 #include "../base/BufferResource.h"
 #include "../base/TextureManager.h"
+#include "../2D/ImguiManager.h"
 
 Collision2DDebugDraw::~Collision2DDebugDraw()
 {
@@ -20,6 +21,9 @@ void Collision2DDebugDraw::Initialize(ID3D12Device* device,
 	pipelineState_ = pipelineState;
 
 	isInvisible_ = false;
+
+	viewMatrix_ = Matrix4x4::MakeIdentity4x4();
+	projectionMatrix_ = Matrix4x4::MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
 
 	// 頂点
 	//Sprite用の頂点リソースを作る
@@ -49,10 +53,10 @@ void Collision2DDebugDraw::Initialize(ID3D12Device* device,
 	//インデックスリソースにデータを書き込む
 	indexBuff_->Map(0, nullptr, reinterpret_cast<void**>(&indexMap));
 
-	float left = 0.0f;
-	float right = textureScale.x;
-	float top = 0.0f;
-	float bottom = textureScale.y;
+	float left = -0.5f * textureScale.x;
+	float right = 0.5f * textureScale.x;
+	float top = -0.5f * textureScale.y;
+	float bottom = 0.5f * textureScale.y;
 
 	//一枚目の三角形
 	vertMap[0].position = { left, bottom, 0.0f, 1.0f };//左下
@@ -123,9 +127,6 @@ void Collision2DDebugDraw::Register(ColliderShape2D collider)
 	Vector3 roate = {};
 	Vector3 scale = { 1.0f, 1.0f, 1.0f };
 
-	Matrix4x4 viewMatrixSprite = Matrix4x4::MakeIdentity4x4();
-	Matrix4x4 projectionMatrixSprite = Matrix4x4::MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kWindowWidth), float(WinApp::kWindowHeight), 0.0f, 100.0f);
-
 	if (std::holds_alternative<Box*>(collider)) {
 		
 		Box* obj = std::get<Box*>(collider);
@@ -151,14 +152,13 @@ void Collision2DDebugDraw::Register(ColliderShape2D collider)
 		scale.x = obj->scale_.x / textureScale.x;
 		scale.y = obj->scale_.y / textureScale.y;
 
-
 		collider2DDebugDrawForGPUMap_[collider2DDebugDrawForGPUNumCount_].textureNum = 1;
 		
 	}
 
 	Matrix4x4 transformMatrix = Matrix4x4::MakeAffineMatrix(scale, roate, traslate);
 
-	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4::Multiply(transformMatrix, Matrix4x4::Multiply(viewMatrixSprite, projectionMatrixSprite));
+	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4::Multiply(transformMatrix, Matrix4x4::Multiply(viewMatrix_, projectionMatrix_));
 
 	collider2DDebugDrawForGPUMap_[collider2DDebugDrawForGPUNumCount_].World = transformMatrix;
 	collider2DDebugDrawForGPUMap_[collider2DDebugDrawForGPUNumCount_].WVP = worldViewProjectionMatrixSprite;
@@ -205,6 +205,15 @@ void Collision2DDebugDraw::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	//コマンドリストを解除
 	commandList_ = nullptr;
+
+}
+
+void Collision2DDebugDraw::ImGuiDraw()
+{
+
+	ImGui::Begin("Collision2DDebug");
+	ImGui::Checkbox("表示しない", &isInvisible_);
+	ImGui::End();
 
 }
 

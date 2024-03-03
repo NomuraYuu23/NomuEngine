@@ -117,8 +117,25 @@ void GameScene::Initialize() {
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameCollision2DDebugDraw].Get(),
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameCollision2DDebugDraw].Get());
 
+	boxCenter_ = { 640.0f,360.0f };
+	
+	box1Center_ = { 0.0f,0.0f };
+
+	circleCenter_ = { 0.0f,360.0f };
+
+	circle1Center_ = { 640.0f,0.0f };
+
 	box_ = std::make_unique<Box>();
-	box_->Initialize(Vector2{640.0f,360.0f}, 16.0f, 16.0f, nullptr);
+	box_->Initialize(boxCenter_, 160.0f, 160.0f, nullptr);
+
+	box1_ = std::make_unique<Box>();
+	box1_->Initialize(box1Center_, 160.0f, 160.0f, nullptr);
+
+	circle_ = std::make_unique<Circle>();
+	circle_->Initialize(circleCenter_, 160.0f, nullptr);
+
+	circle1_ = std::make_unique<Circle>();
+	circle1_->Initialize(circle1Center_, 160.0f, nullptr);
 
 }
 
@@ -165,12 +182,25 @@ void GameScene::Update() {
 	//collisionManager_->ListRegister();
 	collisionManager_->CheakAllCollision();
 
+	float radius = 160.0f;
+
+	box_->Update(boxCenter_, radius, radius);
+	box1_->Update(box1Center_, radius, radius);
+	circle_->Update(circleCenter_, radius);
+	circle1_->Update(circle1Center_, radius);
+
 	collision2DManager_->ListClear();
 	collision2DManager_->ListRegister(box_.get());
+	collision2DManager_->ListRegister(box1_.get());
+	collision2DManager_->ListRegister(circle_.get());
+	collision2DManager_->ListRegister(circle1_.get());
 	collision2DManager_->CheakAllCollision();
 
 	collision2DDebugDraw_->Clear();
 	collision2DDebugDraw_->Register(box_.get());
+	collision2DDebugDraw_->Register(box1_.get());
+	collision2DDebugDraw_->Register(circle_.get());
+	collision2DDebugDraw_->Register(circle1_.get());
 	
 	// 影
 	ShadowUpdate();
@@ -300,38 +330,43 @@ void GameScene::ImguiDraw(){
 	//ImGui::DragFloat("PointRadius2", &pointLightDatas_[2].radius, 0.01f);
 	//ImGui::DragFloat("PointDecay2", &pointLightDatas_[2].decay, 0.01f);
 
-	ImGui::DragFloat3("SpotPosition0", &spotLightDatas_[0].position.x, 0.1f);
-	ImGui::DragFloat("SpotIntencity0", &spotLightDatas_[0].intencity, 0.01f);
-	ImGui::DragFloat3("SpotDirection0", &spotLightDatas_[0].direction.x, 0.1f);
-	ImGui::DragFloat("SpotDistance0", &spotLightDatas_[0].distance, 0.01f);
-	ImGui::DragFloat("SpotDecay0", &spotLightDatas_[0].decay, 0.01f);
-	ImGui::DragFloat("SpotCosAngle0", &spotLightDatas_[0].cosAngle, 0.01f);
-	ImGui::DragFloat("SpotCosFalloffStart0", &spotLightDatas_[0].cosFalloffStart, 0.01f);
+	//ImGui::DragFloat3("SpotPosition0", &spotLightDatas_[0].position.x, 0.1f);
+	//ImGui::DragFloat("SpotIntencity0", &spotLightDatas_[0].intencity, 0.01f);
+	//ImGui::DragFloat3("SpotDirection0", &spotLightDatas_[0].direction.x, 0.1f);
+	//ImGui::DragFloat("SpotDistance0", &spotLightDatas_[0].distance, 0.01f);
+	//ImGui::DragFloat("SpotDecay0", &spotLightDatas_[0].decay, 0.01f);
+	//ImGui::DragFloat("SpotCosAngle0", &spotLightDatas_[0].cosAngle, 0.01f);
+	//ImGui::DragFloat("SpotCosFalloffStart0", &spotLightDatas_[0].cosFalloffStart, 0.01f);
 
-	ImGui::DragFloat3("SpotPosition1", &spotLightDatas_[1].position.x, 0.1f);
-	ImGui::DragFloat("SpotIntencity1", &spotLightDatas_[1].intencity, 0.01f);
-	ImGui::DragFloat3("SpotDirection1", &spotLightDatas_[1].direction.x, 0.1f);
-	ImGui::DragFloat("SpotDistance1", &spotLightDatas_[1].distance, 0.01f);
-	ImGui::DragFloat("SpotDecay1", &spotLightDatas_[1].decay, 0.01f);
-	ImGui::DragFloat("SpotCosAngle1", &spotLightDatas_[1].cosAngle, 0.01f);
-	ImGui::DragFloat("SpotCosFalloffStart1", &spotLightDatas_[1].cosFalloffStart, 0.01f);
+	//ImGui::DragFloat3("SpotPosition1", &spotLightDatas_[1].position.x, 0.1f);
+	//ImGui::DragFloat("SpotIntencity1", &spotLightDatas_[1].intencity, 0.01f);
+	//ImGui::DragFloat3("SpotDirection1", &spotLightDatas_[1].direction.x, 0.1f);
+	//ImGui::DragFloat("SpotDistance1", &spotLightDatas_[1].distance, 0.01f);
+	//ImGui::DragFloat("SpotDecay1", &spotLightDatas_[1].decay, 0.01f);
+	//ImGui::DragFloat("SpotCosAngle1", &spotLightDatas_[1].cosAngle, 0.01f);
+	//ImGui::DragFloat("SpotCosFalloffStart1", &spotLightDatas_[1].cosFalloffStart, 0.01f);
 
-	ImGui::DragFloat3("SpotPosition2", &spotLightDatas_[2].position.x, 0.1f);
-	ImGui::DragFloat("SpotIntencity2", &spotLightDatas_[2].intencity, 0.01f);
-	ImGui::DragFloat3("SpotDirection2", &spotLightDatas_[2].direction.x, 0.1f);
-	ImGui::DragFloat("SpotDistance2", &spotLightDatas_[2].distance, 0.01f);
-	ImGui::DragFloat("SpotDecay2", &spotLightDatas_[2].decay, 0.01f);
-	ImGui::DragFloat("SpotCosAngle2", &spotLightDatas_[2].cosAngle, 0.01f);
-	ImGui::DragFloat("SpotCosFalloffStart2", &spotLightDatas_[2].cosFalloffStart, 0.01f);
+	//ImGui::DragFloat3("SpotPosition2", &spotLightDatas_[2].position.x, 0.1f);
+	//ImGui::DragFloat("SpotIntencity2", &spotLightDatas_[2].intencity, 0.01f);
+	//ImGui::DragFloat3("SpotDirection2", &spotLightDatas_[2].direction.x, 0.1f);
+	//ImGui::DragFloat("SpotDistance2", &spotLightDatas_[2].distance, 0.01f);
+	//ImGui::DragFloat("SpotDecay2", &spotLightDatas_[2].decay, 0.01f);
+	//ImGui::DragFloat("SpotCosAngle2", &spotLightDatas_[2].cosAngle, 0.01f);
+	//ImGui::DragFloat("SpotCosFalloffStart2", &spotLightDatas_[2].cosFalloffStart, 0.01f);
 
-	ImGui::DragFloat3("SpotPosition3", &spotLightDatas_[3].position.x, 0.1f);
-	ImGui::DragFloat("SpotIntencity3", &spotLightDatas_[3].intencity, 0.01f);
-	ImGui::DragFloat3("SpotDirection3", &spotLightDatas_[3].direction.x, 0.1f);
-	ImGui::DragFloat("SpotDistance3", &spotLightDatas_[3].distance, 0.01f);
-	ImGui::DragFloat("SpotDecay3", &spotLightDatas_[3].decay, 0.01f);
-	ImGui::DragFloat("SpotCosAngle3", &spotLightDatas_[3].cosAngle, 0.01f);
-	ImGui::DragFloat("SpotCosFalloffStart3", &spotLightDatas_[3].cosFalloffStart, 0.01f);
+	//ImGui::DragFloat3("SpotPosition3", &spotLightDatas_[3].position.x, 0.1f);
+	//ImGui::DragFloat("SpotIntencity3", &spotLightDatas_[3].intencity, 0.01f);
+	//ImGui::DragFloat3("SpotDirection3", &spotLightDatas_[3].direction.x, 0.1f);
+	//ImGui::DragFloat("SpotDistance3", &spotLightDatas_[3].distance, 0.01f);
+	//ImGui::DragFloat("SpotDecay3", &spotLightDatas_[3].decay, 0.01f);
+	//ImGui::DragFloat("SpotCosAngle3", &spotLightDatas_[3].cosAngle, 0.01f);
+	//ImGui::DragFloat("SpotCosFalloffStart3", &spotLightDatas_[3].cosFalloffStart, 0.01f);
 
+
+	ImGui::DragFloat2("box_", &boxCenter_.x, 0.1f);
+	ImGui::DragFloat2("box1_", &box1Center_.x, 0.1f);
+	ImGui::DragFloat2("circle_", &circleCenter_.x, 0.1f);
+	ImGui::DragFloat2("circle1_", &circle1Center_.x, 0.1f);
 
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -343,6 +378,8 @@ void GameScene::ImguiDraw(){
 	skydome_->ImGuiDraw();
 
 	debugCamera_->ImGuiDraw();
+
+	collision2DDebugDraw_->ImGuiDraw();
 
 #endif // _DEBUG
 

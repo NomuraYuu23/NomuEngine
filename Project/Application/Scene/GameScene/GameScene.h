@@ -130,5 +130,12 @@ private:
 	std::array<uint32_t, Collision2DDebugDraw::kTexutureNameOfCount> collision2DDebugDrawTextures_;
 
 	std::unique_ptr<Box> box_;
-
+	Vector2 boxCenter_;
+	std::unique_ptr<Box> box1_;
+	Vector2 box1Center_;
+	std::unique_ptr<Circle> circle_;
+	Vector2 circleCenter_;
+	std::unique_ptr<Circle> circle1_;
+	Vector2 circle1Center_;
+	
 };
