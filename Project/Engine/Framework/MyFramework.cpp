@@ -25,7 +25,7 @@ void MyFramework::Initialize()
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
 
 	// スプライト静的初期化
-	Sprite::StaticInitialize(dxCommon->GetDevice(), GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite], GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite]);
+	Sprite::StaticInitialize(dxCommon->GetDevice(), GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite].Get(), GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite].Get());
 
 	// モデル静的初期化
 	std::array<ID3D12RootSignature*, Model::PipelineStateName::kPipelineStateNameOfCount> rootSignature = {

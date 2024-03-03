@@ -37,8 +37,8 @@ public:
 	/// <param name="device">デバイス</param>
 	static void StaticInitialize(
 		ID3D12Device* device,
-		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature,
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState);
+		ID3D12RootSignature* rootSignature,
+		ID3D12PipelineState* pipelineState);
 
 	/// <summary>
 	/// 静的前処理
@@ -71,9 +71,9 @@ private:
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList;
 	// ルートシグネチャ
-	static Microsoft::WRL::ComPtr<ID3D12RootSignature> sRootSignature;
+	static ID3D12RootSignature* sRootSignature;
 	// パイプラインステートオブジェクト
-	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState;
+	static ID3D12PipelineState* sPipelineState;
 
 public:
 	/// <summary>
