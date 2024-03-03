@@ -11,18 +11,19 @@ ID3D12Device* PointLightManager::sDevice = nullptr;
 // コマンドリスト
 ID3D12GraphicsCommandList* PointLightManager::sCommandList = nullptr;
 
-PointLightManager* PointLightManager::GetInstance()
-{
-	static PointLightManager instance;
-	return &instance;
-}
-
 void PointLightManager::StaticInitialize(ID3D12Device* device)
 {
 
 	assert(device);
 
 	sDevice = device;
+
+}
+
+PointLightManager::~PointLightManager()
+{
+
+	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 
 }
 
@@ -61,6 +62,7 @@ void PointLightManager::SRVCreate()
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(PointLightData);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
 	DescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(pointLightDataBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 

@@ -11,18 +11,19 @@ ID3D12Device* SpotLightManager::sDevice = nullptr;
 // コマンドリスト
 ID3D12GraphicsCommandList* SpotLightManager::sCommandList = nullptr;
 
-SpotLightManager* SpotLightManager::GetInstance()
-{
-	static SpotLightManager instance;
-	return &instance;
-}
-
 void SpotLightManager::StaticInitialize(ID3D12Device* device)
 {
 
 	assert(device);
 
 	sDevice = device;
+
+}
+
+SpotLightManager::~SpotLightManager()
+{
+
+	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 
 }
 
@@ -64,6 +65,7 @@ void SpotLightManager::SRVCreate()
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(SpotLightData);
 	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
 	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
 	DescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(spotLightDataBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 

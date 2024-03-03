@@ -23,16 +23,15 @@ private:
 public: // メンバ関数
 
 	/// <summary>
-	/// インスタンス取得
-	/// </summary>
-	/// <returns></returns>
-	static PointLightManager* GetInstance();
-
-	/// <summary>
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	static void StaticInitialize(ID3D12Device* device);
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~PointLightManager();
 
 	/// <summary>
 	/// 初期化
@@ -65,6 +64,9 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
+
+	// ディスクリプタヒープの位置
+	uint32_t indexDescriptorHeap_ = 0;
 
 };
 
