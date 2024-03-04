@@ -69,7 +69,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	}
 
 
-	// マテリアル解析 (最後に見つかったものを使う)
+	// マテリアル解析
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
 		aiMaterial* material = scene->mMaterials[materialIndex];
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
@@ -77,6 +77,22 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 			modelData.material.textureFilePaths.push_back(directoryPath + "/" + textureFilePath.C_Str());
 		}
+	}
+
+	// ノードアニメーション解析
+	if (scene->HasAnimations()) {
+		// アニメーション配列一個目のみ確認
+		aiAnimation** animation = scene->mAnimations;
+		for (uint32_t i = 0; i < animation[0]->mNumChannels; ++i) {
+			NodeAnimationData nodeAnimationData;
+			assert(animation[0]->mChannels[i]);
+			nodeAnimationData.Initialize(*animation[0]->mChannels[i]);
+			modelData.nodeAnimations.push_back(nodeAnimationData);
+		}
+		modelData.nodeAnimationNum = static_cast<uint32_t>(modelData.nodeAnimations.size());
+	}
+	else {
+		modelData.nodeAnimationNum = 0;
 	}
 
 	return modelData;

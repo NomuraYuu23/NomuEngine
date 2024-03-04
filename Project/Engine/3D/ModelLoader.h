@@ -15,12 +15,9 @@ public:
 	static Model::ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
 
 	/// <summary>
-	/// 
+	/// ノード読み込み
 	/// </summary>
 	static ModelNode ReadNode(aiNode* node);
-
-	//gltfファイルを読む
-	//static Model::ModelData LoadGlTFFile(const std::string& directoryPath, const std::string& filename);
 
 };
 

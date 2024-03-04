@@ -139,6 +139,15 @@
     <Filter Include="Engine\Math\Matrix4x4">
       <UniqueIdentifier>{358fa42c-da60-4ac5-9e6b-cf5c70c0bda9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Collider2D">
+      <UniqueIdentifier>{9ac58789-fc1d-4653-9fe5-d73a64de3881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Collider2D">
+      <UniqueIdentifier>{803ed6ba-ffb7-4b13-bd75-ec906b55bd5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Collision2D">
+      <UniqueIdentifier>{95aa401e-56dd-44f1-a91e-f8697ec6cffb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -406,23 +415,26 @@
     <ClCompile Include="Engine\Math\Matrix4x4.cpp">
       <Filter>Engine\Math\Matrix4x4</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collider2D\Collider2D.cpp">
+    <ClCompile Include="Engine\3D\NodeAnimationData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collider2D\Box.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Collider2D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collider2D\Circle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Collider2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\Collider2D\Collider2D.cpp">
+      <Filter>Engine\Collider2D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collision2D\Collision2D.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Collision2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp">
+      <Filter>Engine\Collision2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp">
+      <Filter>Engine\Collision2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -768,38 +780,41 @@
     <ClInclude Include="Engine\Math\Matrix4x4.h">
       <Filter>Engine\Math\Matrix4x4</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collider2D\Collider2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Collider2D\CollisionConfig2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Collider2D\ColliderParentObject2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider2D\Box.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider2D\Circle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider2D\ColliderShape2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collision2D\Collision2DManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collision2D\Collision2DDebugDraw.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider2D\Collider2DDebugDrawForGPU.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collision2D\Collision2D.h">
+    <ClInclude Include="Engine\3D\NodeAnimationData.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Collider2D\CollisionConfig2D.h">
+      <Filter>Application\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Collider2D\ColliderParentObject2D.h">
+      <Filter>Application\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\Box.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\Circle.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\Collider2D.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\ColliderShape2D.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\Collider2DDebugDrawForGPU.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision2D\Collision2DDebugDraw.h">
+      <Filter>Engine\Collision2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision2D\Collision2DManager.h">
+      <Filter>Engine\Collision2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision2D\Collision2D.h">
+      <Filter>Engine\Collision2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

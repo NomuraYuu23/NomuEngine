@@ -19,6 +19,7 @@ public:
 	{
 		Matrix4x4 localMatrix; // ローカル行列
 		uint32_t meshNum; // メッシュ番号
+		std::string name; // 名前
 	};
 
 public:

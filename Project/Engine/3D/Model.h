@@ -37,6 +37,7 @@
 #include "Mesh.h"
 #include "ModelNode.h"
 #include "MeshNumManager.h"
+#include "NodeAnimationData.h"
 
 class Model
 {
@@ -49,10 +50,19 @@ public:
 
 	struct ModelData {
 
+		// 頂点
 		std::vector<VertexData> vertices;
+		// マテリアル
 		MaterialData material;
+		// ノード
 		ModelNode rootNode;
+		// メッシュ番号管理
 		MeshNumManager meshNumManager;
+		// ノードアニメーション
+		std::vector<NodeAnimationData> nodeAnimations;
+		// ノードアニメーション数
+		uint32_t nodeAnimationNum;
+
 	};
 
 	enum PipelineStateName {

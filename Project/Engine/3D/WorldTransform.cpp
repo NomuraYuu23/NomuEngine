@@ -161,6 +161,7 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode)
 
 	nodeData.localMatrix = modelNode.localMatrix;
 	nodeData.meshNum = modelNode.meshNum;
+	nodeData.name = modelNode.name;
 	if(nodeData.meshNum != -1){
 		nodeDatas_.push_back(nodeData);
 	}
