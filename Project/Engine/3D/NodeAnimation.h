@@ -19,10 +19,16 @@ public:
 		Quaternion rotation; // 回転
 		Vector3 scaling; // 大きさ
 
+		//bool isChangePosition; // 位置変わっているか
+		//bool isChangeRotation; // 回転変わっているか
+		//bool isChangeScaling; // 大きさ変わっているか
+
 		bool isLoop; // ループか
 		bool isFinished; // 終了したか
 
 	};
+
+
 
 public:
 
@@ -30,10 +36,14 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="nodeAnimationDatas">アニメーションデータ</param>
-	/// <param name="initMatrix">初期行列(ノード数)</param>
+	/// <param name="initPositions">初期位置(ノード数)</param>
+ 	/// <param name="initRotations_">初期回転(ノード数)</param>
+ 	/// <param name="initScalings">初期大きさ(ノード数)</param>
 	void Initialize(
 		const std::vector<NodeAnimationData>& nodeAnimationDatas,
-		const std::vector<Matrix4x4>& initMatrix);
+		const std::vector<Vector3>& initPositions,
+		const std::vector<Quaternion>& initRotations_,
+		const std::vector<Vector3>& initScalings );
 
 	/// <summary>
 	/// アニメーション
@@ -66,8 +76,8 @@ private:
 	// ノードアニメーション数
 	uint32_t nodeAnimationCalcDataNum_;
 
-	// 初期データ
-	std::vector<Matrix4x4> initMatrix_;
+	// ノード数
+	uint32_t nodeNum_;
 
 	// 位置 初期行列と同じ分だけ
 	std::vector <Vector3> positions_;
@@ -75,6 +85,20 @@ private:
 	std::vector <Quaternion> rotations_;
 	// 大きさ 初期行列と同じ分だけ
 	std::vector <Vector3> scalings_;
+
+	// 強制的にすべてのアニメーションが止まった場合
+	// 位置 初期行列と同じ分だけ
+	std::vector <Vector3> initPositions_;
+	// 回転 初期行列と同じ分だけ
+	std::vector <Quaternion> initRotations_;
+	// 大きさ 初期行列と同じ分だけ
+	std::vector <Vector3> initScalings_;
+
+	// 何かアニメーションしているか
+	bool isAnimation_;
+
+	// アニメーション速度
+	double animationSpeed_;
 
 };
 

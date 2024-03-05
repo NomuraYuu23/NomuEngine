@@ -36,7 +36,7 @@ public: // 読み込み
 	// 初期化
 	void Initialize(const aiNodeAnim& nodeAnim);
 
-private: // 読み込みデータ
+public: // 読み込みデータ
 
 	// 位置
 	std::vector<AnimationVector3Key> positions_;
