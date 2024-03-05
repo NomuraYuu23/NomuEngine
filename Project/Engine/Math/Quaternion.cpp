@@ -1,13 +1,7 @@
 #include "Quaternion.h"
 #include <cmath>
 
-QuaternionCalc* QuaternionCalc::GetInstance()
-{
-	static QuaternionCalc instance;
-	return &instance;
-}
-
-Quaternion QuaternionCalc::Add(const Quaternion& q0, const Quaternion& q1)
+Quaternion Quaternion::Add(const Quaternion& q0, const Quaternion& q1)
 {
 
 	Quaternion result = {};
@@ -20,7 +14,21 @@ Quaternion QuaternionCalc::Add(const Quaternion& q0, const Quaternion& q1)
 	return result;
 }
 
-Quaternion QuaternionCalc::Multiply(const Quaternion& lhs, const Quaternion& rhs)
+Quaternion Quaternion::Subtract(const Quaternion& q0, const Quaternion& q1)
+{
+
+	Quaternion result = {};
+
+	result.x = q0.x - q1.x;
+	result.y = q0.y - q1.y;
+	result.z = q0.z - q1.z;
+	result.w = q0.w - q1.w;
+
+	return result;
+
+}
+
+Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs)
 {
 
 	Quaternion result = {};
@@ -37,7 +45,7 @@ Quaternion QuaternionCalc::Multiply(const Quaternion& lhs, const Quaternion& rhs
 	return result;
 }
 
-Quaternion QuaternionCalc::Multiply(const Quaternion& q, float s)
+Quaternion Quaternion::Multiply(const Quaternion& q, float s)
 {
 
 	Quaternion result = {};
@@ -49,24 +57,24 @@ Quaternion QuaternionCalc::Multiply(const Quaternion& q, float s)
 	return result;
 }
 
-Quaternion QuaternionCalc::Multiply(float s, const Quaternion& q)
+Quaternion Quaternion::Multiply(float s, const Quaternion& q)
 {
 	return Multiply(q, s);
 }
 
-Quaternion QuaternionCalc::IdentityQuaternion()
+Quaternion Quaternion::IdentityQuaternion()
 {
 	Quaternion result = { 0.0f,0.0f,0.0f,1.0f };
 	return result;
 }
 
-Quaternion QuaternionCalc::Conjugate(const Quaternion& quaternion)
+Quaternion Quaternion::Conjugate(const Quaternion& quaternion)
 {
 	Quaternion result = { -quaternion.x, -quaternion.y, -quaternion.z, quaternion.w };
 	return result;
 }
 
-float QuaternionCalc::Norm(const Quaternion& quaternion)
+float Quaternion::Norm(const Quaternion& quaternion)
 {
 	float result = sqrtf(quaternion.x * quaternion.x +
 		quaternion.y * quaternion.y +
@@ -76,7 +84,7 @@ float QuaternionCalc::Norm(const Quaternion& quaternion)
 	return result;
 }
 
-Quaternion QuaternionCalc::Normalize(const Quaternion& quaternion)
+Quaternion Quaternion::Normalize(const Quaternion& quaternion)
 {
 	Quaternion result = {};
 	float norm = Norm(quaternion);
@@ -113,7 +121,7 @@ Quaternion QuaternionCalc::Normalize(const Quaternion& quaternion)
 
 }
 
-Quaternion QuaternionCalc::Inverse(const Quaternion& quaternion)
+Quaternion Quaternion::Inverse(const Quaternion& quaternion)
 {
 
 	Quaternion result = {};
@@ -131,7 +139,7 @@ Quaternion QuaternionCalc::Inverse(const Quaternion& quaternion)
 	return result;
 }
 
-Quaternion QuaternionCalc::MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle)
+Quaternion Quaternion::MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle)
 {
 
 	Quaternion result = { };
@@ -142,7 +150,7 @@ Quaternion QuaternionCalc::MakeRotateAxisAngleQuaternion(const Vector3& axis, fl
 
 }
 
-Vector3 QuaternionCalc::RotateVector(const Vector3& vector, const Quaternion& quaternion)
+Vector3 Quaternion::RotateVector(const Vector3& vector, const Quaternion& quaternion)
 {
 
 	Vector3 result = {};
@@ -158,7 +166,7 @@ Vector3 QuaternionCalc::RotateVector(const Vector3& vector, const Quaternion& qu
 	return result;
 }
 
-Matrix4x4 QuaternionCalc::MakeRotateMatrix(const Quaternion& quaternion)
+Matrix4x4 Quaternion::MakeRotateMatrix(const Quaternion& quaternion)
 {
 
 	Matrix4x4 result = {};
@@ -188,7 +196,7 @@ Matrix4x4 QuaternionCalc::MakeRotateMatrix(const Quaternion& quaternion)
 
 }
 
-Quaternion QuaternionCalc::Slerp(const Quaternion& q0, const Quaternion& q1, float t)
+Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t)
 {
 
 	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w; // q0とq1の内積
@@ -210,5 +218,93 @@ Quaternion QuaternionCalc::Slerp(const Quaternion& q0, const Quaternion& q1, flo
 	Quaternion result = Add(Multiply(use_q0, scale0), Multiply(q1, scale1));
 
 	return result;
+
+}
+
+Quaternion Quaternion::operator+(const Quaternion& v)
+{
+
+	Quaternion result = *this;
+
+	result = Add(result, v);
+
+	return result;
+
+}
+
+void Quaternion::operator+=(const Quaternion& v)
+{
+
+	Quaternion result = *this;
+
+	result = Add(result, v);
+
+	*this = result;
+
+}
+
+Quaternion Quaternion::operator-(const Quaternion& v)
+{
+	
+	Quaternion result = *this;
+
+	result = Subtract(result, v);
+
+	return result;
+
+}
+
+void Quaternion::operator-=(const Quaternion& v)
+{
+
+	Quaternion result = *this;
+
+	result = Subtract(result, v);
+
+	*this = result;
+
+}
+
+Quaternion Quaternion::operator*(float v)
+{
+
+	Quaternion result = *this;
+
+	result = Multiply(result, v);
+
+	return result;
+
+}
+
+void Quaternion::operator*=(float v)
+{
+
+	Quaternion result = *this;
+
+	result = Multiply(result, v);
+
+	*this = result;
+
+}
+
+Quaternion Quaternion::operator*(const Quaternion& v)
+{
+
+	Quaternion result = *this;
+
+	result = Multiply(result, v);
+
+	return result;
+
+}
+
+void Quaternion::operator*=(const Quaternion& v)
+{
+
+	Quaternion result = *this;
+
+	result = Multiply(result, v);
+
+	*this = result;
 
 }

@@ -2,26 +2,21 @@
 #include "Vector3.h"
 #include "Matrix4x4.h"
 
-struct Quaternion
+class Quaternion
 {
+
+public:
+
 	float x;
 	float y;
 	float z;
 	float w;
 
-};
-
-class QuaternionCalc
-{
 public:
 
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static QuaternionCalc* GetInstance();
-
 	static Quaternion Add(const Quaternion& q0, const Quaternion& q1);
+
+    static Quaternion Subtract(const Quaternion& q0, const Quaternion& q1);
 
 	static Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
 
@@ -47,10 +42,58 @@ public:
 
 	static Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
 
-private:
-	QuaternionCalc() = default;
-	~QuaternionCalc() = default;
-	QuaternionCalc(const QuaternionCalc&) = delete;
-	QuaternionCalc& operator=(const QuaternionCalc&) = delete;
+public: // オーバーロード
+
+    /// <summary>
+    /// +
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Quaternion operator+(const Quaternion& v);
+
+    /// <summary>
+    /// +=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator+=(const Quaternion& v);
+
+    /// <summary>
+    /// -
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Quaternion operator-(const Quaternion& v);
+
+    /// <summary>
+    /// -=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator-=(const Quaternion& v);
+
+    /// <summary>
+    /// *
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Quaternion operator*(float v);
+
+    /// <summary>
+    /// *=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator*=(float v);
+
+    /// <summary>
+    /// *
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    Quaternion operator*(const Quaternion& v);
+
+    /// <summary>
+    /// *=
+    /// </summary>
+    /// <param name="v"></param>
+    void operator*=(const Quaternion& v);
 
 };
