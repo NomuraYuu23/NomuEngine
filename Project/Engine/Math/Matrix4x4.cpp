@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "Vector3.h"
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 #include <cmath>
 
 //加算
@@ -459,6 +460,21 @@ Matrix4x4 Matrix4x4::MakeAffineMatrix(const Vector3& scale, const Vector3& rotat
 	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
 	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
 	Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+
+	Matrix4x4 result = Multiply(scaleMatrix, Multiply(rotateXYZMatrix, translateMatrix));
+
+	return result;
+
+}
+
+Matrix4x4 Matrix4x4::MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate)
+{
+
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+
+	Matrix4x4 rotateXYZMatrix = Quaternion::MakeRotateMatrix(rotate);
 
 	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
 

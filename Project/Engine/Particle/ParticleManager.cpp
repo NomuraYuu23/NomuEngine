@@ -149,7 +149,7 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 	// X
 	Matrix4x4 cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
-		{ camera.GetRotate().x, 0.0f, 0.0f },
+		Vector3{ camera.GetRotate().x, 0.0f, 0.0f },
 		camera.GetTransform());
 	billBoardMatrixX_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixX_.m[3][0] = 0.0f;
@@ -159,7 +159,7 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 	// Y
 	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
-		{ 0.0f, camera.GetRotate().y, 0.0f},
+		Vector3{ 0.0f, camera.GetRotate().y, 0.0f},
 		camera.GetTransform());
 	billBoardMatrixY_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixY_.m[3][0] = 0.0f;
@@ -169,7 +169,7 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 	// Z
 	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
 		{ 1.0f, 1.0f, 1.0f },
-		{ 0.0f, 0.0f, camera.GetRotate().z },
+		Vector3{ 0.0f, 0.0f, camera.GetRotate().z },
 		camera.GetTransform());
 	billBoardMatrixZ_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
 	billBoardMatrixZ_.m[3][0] = 0.0f;

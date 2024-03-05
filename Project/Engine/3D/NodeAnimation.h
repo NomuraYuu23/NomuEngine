@@ -19,10 +19,6 @@ public:
 		Quaternion rotation; // 回転
 		Vector3 scaling; // 大きさ
 
-		//bool isChangePosition; // 位置変わっているか
-		//bool isChangeRotation; // 回転変わっているか
-		//bool isChangeScaling; // 大きさ変わっているか
-
 		bool isLoop; // ループか
 		bool isFinished; // 終了したか
 
@@ -55,7 +51,7 @@ public:
 	/// アニメーションを開始させる
 	/// </summary>
 	/// <param name="animationNum">アニメーション番号</param>
-	void startAnimation(uint32_t animationNum);
+	void startAnimation(uint32_t animationNum, bool isLoop);
 
 	/// <summary>
 	/// アニメーションを停止させる(リセット)
@@ -93,9 +89,6 @@ private:
 	std::vector <Quaternion> initRotations_;
 	// 大きさ 初期行列と同じ分だけ
 	std::vector <Vector3> initScalings_;
-
-	// 何かアニメーションしているか
-	bool isAnimation_;
 
 	// アニメーション速度
 	double animationSpeed_;

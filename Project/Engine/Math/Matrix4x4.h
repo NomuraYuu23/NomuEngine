@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector3.h"
 
+class Quaternion;
+
 class Matrix4x4
 {
 
@@ -46,6 +48,7 @@ public: // 関数
 
     //3次元アフィン変換行列
     static Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+    static Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
     // 正射影行列
     static Matrix4x4 MakeOrthographicMatrix(
