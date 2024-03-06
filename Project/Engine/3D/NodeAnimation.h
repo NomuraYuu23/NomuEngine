@@ -38,8 +38,9 @@ public:
 	void Initialize(
 		const std::vector<NodeAnimationData>& nodeAnimationDatas,
 		const std::vector<Vector3>& initPositions,
-		const std::vector<Quaternion>& initRotations_,
-		const std::vector<Vector3>& initScalings );
+		const std::vector<Quaternion>& initRotations,
+		const std::vector<Vector3>& initScalings,
+		const std::vector<std::string>& nodeNames);
 
 	/// <summary>
 	/// アニメーション
@@ -92,6 +93,9 @@ private:
 
 	// アニメーション速度
 	double animationSpeed_;
+
+	// ノードの名前
+	std::vector<std::string> nodeNames_;
 
 };
 

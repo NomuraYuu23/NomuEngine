@@ -6,7 +6,8 @@ void NodeAnimation::Initialize(
 	const std::vector<NodeAnimationData>& nodeAnimationDatas,
 	const std::vector<Vector3>& initPositions,
 	const std::vector<Quaternion>& initRotations,
-	const std::vector<Vector3>& initScalings)
+	const std::vector<Vector3>& initScalings,
+	const std::vector<std::string>& nodeNames)
 {
 
 	// アニメーションデータ
@@ -44,6 +45,7 @@ void NodeAnimation::Initialize(
 
 	// その他
 	animationSpeed_ = static_cast<double>(kDeltaTime_);
+	nodeNames_ = nodeNames;
 
 }
 
@@ -114,6 +116,11 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 
 						// ノードの名前がヒット
 						uint32_t name = 0;
+						for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+							if (nodeNames_[k] == nodeAnimationCalcDatas_[i].nodeAnimation.nodeName_) {
+								name = k;
+							}
+						}
 						targetPositions[name] += nodeAnimationCalcDatas_[i].position;
 						positionAddCount[name]++;
 						break;
@@ -139,6 +146,11 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 
 						// ノードの名前がヒット
 						uint32_t name = 0;
+						for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+							if (nodeNames_[k] == nodeAnimationCalcDatas_[i].nodeAnimation.nodeName_) {
+								name = k;
+							}
+						}
 						targetRotations[name] *= nodeAnimationCalcDatas_[i].rotation;
 						rotationAddCount[name]++;
 						break;
@@ -166,6 +178,11 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 						
 						// ノードの名前がヒット
 						uint32_t name = 0;
+						for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+							if (nodeNames_[k] == nodeAnimationCalcDatas_[i].nodeAnimation.nodeName_) {
+								name = k;
+							}
+						}
 						targetScalings[name] += nodeAnimationCalcDatas_[i].scaling;
 						scalingAddCount[name]++;
 						break;
