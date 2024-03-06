@@ -16,6 +16,28 @@ void SampleObject::Initialize(Model* model)
 
 	worldtransform_.Initialize(model_->GetRootNode());
 
+	// 初期ローカル座標
+	std::vector<Vector3> initPositions;
+	initPositions.resize(worldtransform_.GetNodeDatas().size());
+	initPositions[0] = { -0.1f, 0.0f, 0.0f };
+
+	std::vector<Quaternion> initRotations;
+	initRotations.resize(worldtransform_.GetNodeDatas().size());
+	initRotations[0] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	std::vector<Vector3> initScalings;
+	initScalings.resize(worldtransform_.GetNodeDatas().size());
+	initScalings[0] = { 1.0f, 1.0f, 1.0f };
+
+	nodeAnimation_.Initialize(
+		model_->GetNodeAnimationData(),
+		initPositions,
+		initRotations,
+		initScalings,
+		worldtransform_.GetNodeNames());
+
+	nodeAnimation_.startAnimation(0, true);
+
 	enableLighting_ = 0;
 
 	shininess_ = 100.0f;
@@ -30,6 +52,8 @@ void SampleObject::Update()
 {
 
 	ApplyGlobalVariables();
+
+	worldtransform_.SetNodeLocalMatrix(nodeAnimation_.Animation());
 
 	worldtransform_.UpdateMatrix();
 

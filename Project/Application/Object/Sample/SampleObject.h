@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Engine/3D/Model.h"
+#include "../../../Engine/3D/NodeAnimation.h"
 
 class SampleObject
 {
@@ -41,6 +42,9 @@ private:
 	int32_t enableLighting_;
 
 	float shininess_;
+
+	//ノードアニメーション
+	NodeAnimation nodeAnimation_;
 
 };
 

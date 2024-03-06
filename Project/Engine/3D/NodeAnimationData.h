@@ -31,6 +31,10 @@ struct AnimationQuaternionKey
 class NodeAnimationData
 {
 
+public:
+
+	static const double kSecondsConversion;
+
 public: // 読み込み
 
 	// 初期化

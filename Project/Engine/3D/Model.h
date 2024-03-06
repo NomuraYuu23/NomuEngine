@@ -164,6 +164,12 @@ public:
 	/// </summary>
 	ModelNode GetRootNode() { return modelData_.rootNode; }
 
+	/// <summary>
+	/// ノードアニメーションデータ取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<NodeAnimationData> GetNodeAnimationData() { return modelData_.nodeAnimations; }
+
 private:
 
 	//モデル読み込み

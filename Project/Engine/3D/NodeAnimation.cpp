@@ -59,14 +59,17 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 	std::vector<Vector3> targetPositions;
 	targetPositions.resize(nodeNum_);
 	std::vector<uint32_t> positionAddCount;
+	positionAddCount.resize(nodeNum_);
 	// 回転 初期行列と同じ分だけ
 	std::vector<Quaternion> targetRotations;
 	targetRotations.resize(nodeNum_);
 	std::vector<uint32_t> rotationAddCount;
+	rotationAddCount.resize(nodeNum_);
 	// 大きさ 初期行列と同じ分だけ
 	std::vector<Vector3> targetScalings;
 	targetScalings.resize(nodeNum_);
 	std::vector<uint32_t> scalingAddCount;
+	scalingAddCount.resize(nodeNum_);
 
 	for (uint32_t i = 0; i < nodeNum_; ++i) {
 		positionAddCount[i] = 0;
@@ -99,7 +102,7 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 
 				// どのデータを持ってくるか
 				// 位置
-				for (uint32_t j = 0; i < nodeAnimationCalcDatas_[i].nodeAnimation.positionKeyNum_; ++j) {
+				for (uint32_t j = 1; j < nodeAnimationCalcDatas_[i].nodeAnimation.positionKeyNum_; ++j) {
 					if (nodeAnimationCalcDatas_[i].nodeAnimation.positions_[j].time_ > nodeAnimationCalcDatas_[i].timer) {
 						// 補間係数
 						float t = static_cast<float>(
@@ -128,7 +131,7 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 				}
 
 				// 回転
-				for (uint32_t j = 0; i < nodeAnimationCalcDatas_[i].nodeAnimation.rotationKeyNum_; ++j) {
+				for (uint32_t j = 1; j < nodeAnimationCalcDatas_[i].nodeAnimation.rotationKeyNum_; ++j) {
 					if (nodeAnimationCalcDatas_[i].nodeAnimation.rotations_[j].time_ > nodeAnimationCalcDatas_[i].timer) {
 						nodeAnimationCalcDatas_[i].rotation = nodeAnimationCalcDatas_[i].nodeAnimation.rotations_[j].value_;
 						// 補間係数
@@ -151,14 +154,20 @@ std::vector<Matrix4x4> NodeAnimation::Animation()
 								name = k;
 							}
 						}
-						targetRotations[name] *= nodeAnimationCalcDatas_[i].rotation;
+
+						if (rotationAddCount[name] == 0) {
+							targetRotations[name] = nodeAnimationCalcDatas_[i].rotation;
+						}
+						else {
+							targetRotations[name] *= nodeAnimationCalcDatas_[i].rotation;
+						}
 						rotationAddCount[name]++;
 						break;
 					}
 				}
 
 				// 大きさ
-				for (uint32_t j = 0; i < nodeAnimationCalcDatas_[i].nodeAnimation.scalingKeyNum_; ++j) {
+				for (uint32_t j = 1; j < nodeAnimationCalcDatas_[i].nodeAnimation.scalingKeyNum_; ++j) {
 					if (nodeAnimationCalcDatas_[i].nodeAnimation.scalings_[j].time_ > nodeAnimationCalcDatas_[i].timer) {
 						nodeAnimationCalcDatas_[i].scaling = nodeAnimationCalcDatas_[i].nodeAnimation.scalings_[j].value_;
 

@@ -193,3 +193,27 @@ Vector3 WorldTransform::GetWorldPosition()
 	return position;
 
 }
+
+std::vector<std::string> WorldTransform::GetNodeNames()
+{
+
+	std::vector<std::string> result;
+
+	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
+		result.push_back(nodeDatas_[i].name);
+	}
+
+
+	return result;
+}
+
+void WorldTransform::SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix)
+{
+
+	assert(matrix.size() == nodeDatas_.size());
+
+	for (uint32_t i = 0; i < matrix.size(); ++i) {
+		nodeDatas_[i].localMatrix = matrix[i];
+	}
+
+}

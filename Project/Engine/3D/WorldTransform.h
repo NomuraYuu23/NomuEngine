@@ -91,6 +91,23 @@ public:
 	/// <param name="parent"></param>
 	void SetParent(WorldTransform* parent) { parent_ = parent; }
 
+	/// <summary>
+	/// ノードデータ取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<NodeData> GetNodeDatas() { return nodeDatas_; }
+
+	/// <summary>
+	/// ノード名前
+	/// </summary>
+	/// <returns></returns>
+	std::vector<std::string> GetNodeNames();
+
+	/// <summary>
+	/// ローカル行列設定
+	/// </summary>
+	void SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix);
+
 public:
 
 	//トランスフォーム
