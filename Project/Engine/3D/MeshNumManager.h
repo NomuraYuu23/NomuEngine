@@ -12,7 +12,7 @@ public:
 
 		uint32_t incrementMeshNum[4];
 		uint32_t incrementMeshNumMax;
-		uint32_t padding[3];
+		//uint32_t padding[3];
 	};
 
 public:

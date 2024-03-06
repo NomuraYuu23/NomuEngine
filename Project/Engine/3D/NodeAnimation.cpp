@@ -248,6 +248,11 @@ void NodeAnimation::startAnimation(uint32_t animationNum, bool isLoop)
 
 	// ノードの名前がヒット
 	uint32_t name = 0;
+	for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+		if (nodeNames_[k] == nodeAnimationCalcDatas_[animationNum].nodeAnimation.nodeName_) {
+			name = k;
+		}
+	}
 
 	nodeAnimationCalcDatas_[animationNum].isRun = true;
 	nodeAnimationCalcDatas_[animationNum].position = initPositions_[name];
