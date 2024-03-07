@@ -1,7 +1,16 @@
 #pragma once
 #include "../Math/Vector3.h"
-class massPoint
+
+class MassPoint
 {
+
+public: // 変数
+
+	Vector3 force; // 力
+	float mass; // 質量
+	Vector3 position; // 位置
+	Vector3 velocity; // 速度
+	Vector3 acceleration; // 加速度
 
 public: // 関数
 

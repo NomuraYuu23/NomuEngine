@@ -151,7 +151,10 @@
     <Filter Include="Engine\Physics">
       <UniqueIdentifier>{f9fdb36f-4499-44e1-923b-1561a4be810b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Physics\massPoint">
+    <Filter Include="Engine\Physics\RigidBody">
+      <UniqueIdentifier>{13edc2a6-19f7-423f-b819-2a54d5a8b20f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Physics\MassPoint">
       <UniqueIdentifier>{a2de3946-99d7-46d5-9e96-78cad556a4e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -439,14 +442,20 @@
     <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp">
       <Filter>Engine\Collision2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Physics\massPoint.cpp">
-      <Filter>Engine\Physics\massPoint</Filter>
+    <ClCompile Include="Engine\Physics\MassPoint.cpp">
+      <Filter>Engine\Physics\MassPoint</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\NodeAnimation.cpp">
       <Filter>Engine\3D\Model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\NodeAnimationData.cpp">
       <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Physics\RigidBody.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Physics\InertiaTensor.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -825,14 +834,20 @@
     <ClInclude Include="Engine\Collision2D\Collision2D.h">
       <Filter>Engine\Collision2D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Physics\massPoint.h">
-      <Filter>Engine\Physics\massPoint</Filter>
+    <ClInclude Include="Engine\Physics\MassPoint.h">
+      <Filter>Engine\Physics\MassPoint</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\NodeAnimation.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\NodeAnimationData.h">
       <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Physics\RigidBody.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Physics\InertiaTensor.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

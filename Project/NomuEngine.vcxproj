@@ -168,7 +168,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Engine\Math\Ease.cpp" />
     <ClCompile Include="Engine\Math\Math.cpp" />
-    <ClCompile Include="Engine\Physics\massPoint.cpp" />
+    <ClCompile Include="Engine\Physics\InertiaTensor.cpp" />
+    <ClCompile Include="Engine\Physics\MassPoint.cpp" />
+    <ClCompile Include="Engine\Physics\RigidBody.cpp" />
     <ClCompile Include="Engine\SceneTransition\ISceneTransition\ISceneTransition.cpp" />
     <ClCompile Include="Application\SceneTransition\SceneTransitionBlackOut\SceneTransitionBlackOut.cpp" />
     <ClCompile Include="Application\SceneTransition\SceneTransitionFactory\SceneTransitionFactory.cpp" />
@@ -286,7 +288,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Math\Ease.h" />
     <ClInclude Include="Engine\Math\Math.h" />
     <ClInclude Include="Application\SceneTransition\SceneTransitionBlackOut\SceneTransitionBlackOut.h" />
-    <ClInclude Include="Engine\Physics\massPoint.h" />
+    <ClInclude Include="Engine\Physics\InertiaTensor.h" />
+    <ClInclude Include="Engine\Physics\MassPoint.h" />
+    <ClInclude Include="Engine\Physics\RigidBody.h" />
     <ClInclude Include="Engine\SceneTransition\SceneTransitionFactory\AbstractSceneTransitionFactory.h" />
     <ClInclude Include="Engine\SceneTransition\ISceneTransition\ISceneTransition.h" />
     <ClInclude Include="Application\SceneTransition\SceneTransitionFactory\SceneTransitionFactory.h" />

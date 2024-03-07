@@ -1,6 +1,6 @@
-#include "massPoint.h"
+#include "MassPoint.h"
 
-Vector3 massPoint::AccelerationCalc(
+Vector3 MassPoint::AccelerationCalc(
 	const Vector3& force,
 	float mass)
 {
@@ -11,7 +11,7 @@ Vector3 massPoint::AccelerationCalc(
 
 }
 
-Vector3 massPoint::VelocityCalc(
+Vector3 MassPoint::VelocityCalc(
 	const Vector3& velocity, 
 	const Vector3& acceleration, 
 	float time)
@@ -23,7 +23,7 @@ Vector3 massPoint::VelocityCalc(
 
 }
 
-Vector3 massPoint::PositionCalc(
+Vector3 MassPoint::PositionCalc(
 	const Vector3& position, 
 	const Vector3& velocity, 
 	float time)
