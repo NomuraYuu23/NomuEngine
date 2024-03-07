@@ -51,6 +51,11 @@ public:
 	void UpdateMatrix();
 
 	/// <summary>
+	/// 行列更新
+	/// </summary>
+	void UpdateMatrix(const Matrix4x4& r);
+
+	/// <summary>
 	/// マップ
 	/// </summary>
 	/// <param name="viewProjectionMatrix">ビュープロジェクション</param>

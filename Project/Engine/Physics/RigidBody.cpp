@@ -37,9 +37,9 @@ Matrix4x4 RigidBody::PostureCalc(
 	Vector3 postureY = { postureMatrix.m[0][1],postureMatrix.m[1][1], postureMatrix.m[2][1] };
 	Vector3 postureZ = { postureMatrix.m[0][2],postureMatrix.m[1][2], postureMatrix.m[2][2] };
 
-	postureX = Vector3::Cross(angularVelocity, postureX);
-	postureY = Vector3::Cross(angularVelocity, postureY);
-	postureZ = Vector3::Cross(angularVelocity, postureZ);
+	postureX = Vector3::Normalize(Vector3::Cross(angularVelocity, postureX) + postureX);
+	postureY = Vector3::Normalize(Vector3::Cross(angularVelocity, postureY) + postureY);
+	postureZ = Vector3::Normalize(Vector3::Cross(angularVelocity, postureZ) + postureZ);
 
 	Matrix4x4 result;
 	result.m[0][0] = postureX.x;
@@ -62,7 +62,7 @@ Matrix4x4 RigidBody::PostureCalc(
 	result.m[3][2] = 0.0f;
 	result.m[3][3] = 1.0f;
 
-	result = Matrix4x4::Add(result, postureMatrix);
+	//result = Matrix4x4::Add(result, postureMatrix);
 
 	return result;
 

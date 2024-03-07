@@ -422,8 +422,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	//sampleObjModel_.reset(Model::Create("Resources/default/assimp/Animation_NodeMisc/", "Animation_NodeMisc_04.gltf", dxCommon_, textureHandleManager_.get()));
-	sampleObjModel_.reset(Model::Create("Resources/default/", "multiMaterial.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 }
 

@@ -16,7 +16,6 @@ public: // 変数
 	Matrix4x4 basicPostureInertiaTensor; // 基本姿勢での慣性テンソル
 	
 	Matrix4x4 postureMatrix; // 姿勢行列
-	Vector3 posture; // 姿勢
 
 	Vector3 angularVelocity; // 角速度
 	//Quaternion angularAcceleration; // 角加速度

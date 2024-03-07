@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../Engine/3D/Model.h"
 #include "../../../Engine/3D/NodeAnimation.h"
+#include "../../../Engine/Physics/RigidBody.h"
 
 class SampleObject
 {
@@ -45,6 +46,8 @@ private:
 
 	//ノードアニメーション
 	NodeAnimation nodeAnimation_;
+
+	RigidBody rigidBody_;
 
 };
 

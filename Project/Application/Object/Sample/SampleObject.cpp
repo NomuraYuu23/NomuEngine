@@ -1,6 +1,8 @@
 #include "SampleObject.h"
 #include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../../Engine/2D/ImguiManager.h"
+#include "../../../Engine/Physics/InertiaTensor.h"
+#include "../../../Engine/Math/DeltaTime.h"
 
 SampleObject::~SampleObject()
 {
@@ -20,17 +22,17 @@ void SampleObject::Initialize(Model* model)
 	std::vector<Vector3> initPositions;
 	initPositions.resize(worldtransform_.GetNodeDatas().size());
 	initPositions[0] = { 0.0f, 0.0f, 0.0f };
-	initPositions[1] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[1] = { 0.0f, 0.0f, 0.0f };
 
 	std::vector<Quaternion> initRotations;
 	initRotations.resize(worldtransform_.GetNodeDatas().size());
 	initRotations[0] = { 0.707107f, 0.0f, 0.0f, 0.707107f };
-	initRotations[1] = { 0.707107f, 0.0f, 0.0f, 0.707107f };
+	//initRotations[1] = { 0.707107f, 0.0f, 0.0f, 0.707107f };
 
 	std::vector<Vector3> initScalings;
 	initScalings.resize(worldtransform_.GetNodeDatas().size());
 	initScalings[0] = { 1.0f, 1.0f, 1.0f };
-	initScalings[1] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[1] = { 1.0f, 1.0f, 1.0f };
 
 	nodeAnimation_.Initialize(
 		model_->GetNodeAnimationData(),
@@ -39,8 +41,8 @@ void SampleObject::Initialize(Model* model)
 		initScalings,
 		worldtransform_.GetNodeNames());
 
-	nodeAnimation_.startAnimation(0, true);
-	nodeAnimation_.startAnimation(1, true);
+	//nodeAnimation_.startAnimation(0, true);
+	//nodeAnimation_.startAnimation(1, true);
 
 	enableLighting_ = 0;
 
@@ -50,6 +52,25 @@ void SampleObject::Initialize(Model* model)
 
 	ApplyGlobalVariables();
 
+
+
+	//rigidBody_.massPoint;
+
+	const Vector3 centerOfGravity = {0.0f,0.0f,0.0f};
+	const Vector3 pointOfAction = { 0.0f,1.0f,0.0f };
+	const Vector3 force = { 1.0f,0.0f,0.0f };;
+
+	rigidBody_.torque = RigidBody::TorqueCalc(centerOfGravity, pointOfAction, force);
+
+	rigidBody_.inertiaTensor  = InertiaTensor::CreateRectangular(10.0f, Vector3{ 2.0f, 2.0f, 2.0f}); // 慣性テンソル
+	rigidBody_.basicPostureInertiaTensor = InertiaTensor::CreateRectangular(10.0f, Vector3{ 2.0f, 2.0f, 2.0f }); // 基本姿勢での慣性テンソル
+
+	rigidBody_.postureMatrix = Matrix4x4::MakeRotateXYZMatrix({0.0f,0.0f,0.0f}); // 姿勢行列
+
+	rigidBody_.angularVelocity = { 0.0f,0.0f,0.0f }; // 角速度
+	//Quaternion angularAcceleration; // 角加速度
+	rigidBody_.angularMomentum = { 0.0f,0.0f,0.0f }; // 角運動量
+
 }
 
 void SampleObject::Update()
@@ -57,9 +78,17 @@ void SampleObject::Update()
 
 	ApplyGlobalVariables();
 
-	worldtransform_.SetNodeLocalMatrix(nodeAnimation_.Animation());
+	//worldtransform_.SetNodeLocalMatrix(nodeAnimation_.Animation());
 
-	worldtransform_.UpdateMatrix();
+	rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
+
+	rigidBody_.inertiaTensor = RigidBody::InertiaTensorCalc(rigidBody_.postureMatrix, rigidBody_.basicPostureInertiaTensor);
+
+	rigidBody_.angularMomentum = RigidBody::AngularMomentumCalc(rigidBody_.angularMomentum, rigidBody_.torque, kDeltaTime_);
+
+	rigidBody_.angularVelocity = RigidBody::AngularVelocityCalc(rigidBody_.inertiaTensor, rigidBody_.angularMomentum);
+
+	worldtransform_.UpdateMatrix(rigidBody_.postureMatrix);
 
 	material_->SetEnableLighting(enableLighting_);
 	material_->SetShininess(shininess_);
