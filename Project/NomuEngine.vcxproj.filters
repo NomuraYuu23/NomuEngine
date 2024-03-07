@@ -148,6 +148,12 @@
     <Filter Include="Engine\Collision2D">
       <UniqueIdentifier>{95aa401e-56dd-44f1-a91e-f8697ec6cffb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Physics">
+      <UniqueIdentifier>{f9fdb36f-4499-44e1-923b-1561a4be810b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Physics\massPoint">
+      <UniqueIdentifier>{a2de3946-99d7-46d5-9e96-78cad556a4e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -415,9 +421,6 @@
     <ClCompile Include="Engine\Math\Matrix4x4.cpp">
       <Filter>Engine\Math\Matrix4x4</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\NodeAnimationData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collider2D\Box.cpp">
       <Filter>Engine\Collider2D</Filter>
     </ClCompile>
@@ -436,8 +439,14 @@
     <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp">
       <Filter>Engine\Collision2D</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Physics\massPoint.cpp">
+      <Filter>Engine\Physics\massPoint</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\3D\NodeAnimation.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\NodeAnimationData.cpp">
+      <Filter>Engine\3D\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -786,9 +795,6 @@
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\NodeAnimationData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Collider2D\CollisionConfig2D.h">
       <Filter>Application\Collider2D</Filter>
     </ClInclude>
@@ -819,8 +825,14 @@
     <ClInclude Include="Engine\Collision2D\Collision2D.h">
       <Filter>Engine\Collision2D</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Physics\massPoint.h">
+      <Filter>Engine\Physics\massPoint</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\3D\NodeAnimation.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\NodeAnimationData.h">
+      <Filter>Engine\3D\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
