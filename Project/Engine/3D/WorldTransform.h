@@ -53,7 +53,8 @@ public:
 	/// <summary>
 	/// 行列更新
 	/// </summary>
-	void UpdateMatrix(const Matrix4x4& r);
+	/// <param name="rotateMatrix">回転行列</param>
+	void UpdateMatrix(const Matrix4x4& rotateMatrix);
 
 	/// <summary>
 	/// マップ

@@ -100,13 +100,14 @@ void WorldTransform::UpdateMatrix() {
 
 }
 
-void WorldTransform::UpdateMatrix(const Matrix4x4& r)
+void WorldTransform::UpdateMatrix(const Matrix4x4& rotateMatrix)
 {
 
 	//拡大縮小行列
 	Matrix4x4 scaleMatrix = Matrix4x4::MakeScaleMatrix(transform_.scale);
 
-	rotateMatrix_ = r;
+	// 回転行列
+	rotateMatrix_ = rotateMatrix;
 
 	//平行移動行列
 	Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(transform_.translate);
