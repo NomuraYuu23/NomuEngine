@@ -33,9 +33,9 @@ Matrix4x4 RigidBody::PostureCalc(
 	float time)
 {
 
-	Vector3 postureX = { postureMatrix.m[0][0],postureMatrix.m[1][0], postureMatrix.m[2][0] };
-	Vector3 postureY = { postureMatrix.m[0][1],postureMatrix.m[1][1], postureMatrix.m[2][1] };
-	Vector3 postureZ = { postureMatrix.m[0][2],postureMatrix.m[1][2], postureMatrix.m[2][2] };
+	Vector3 postureX = { postureMatrix.m[0][0],postureMatrix.m[0][1], postureMatrix.m[0][2] };
+	Vector3 postureY = { postureMatrix.m[1][0],postureMatrix.m[1][1], postureMatrix.m[1][2] };
+	Vector3 postureZ = { postureMatrix.m[2][0],postureMatrix.m[2][1], postureMatrix.m[2][2] };
 
 	postureX = Vector3::Normalize(Vector3::Cross(angularVelocity, postureX) + postureX);
 	postureY = Vector3::Normalize(Vector3::Cross(angularVelocity, postureY) + postureY);
@@ -43,17 +43,17 @@ Matrix4x4 RigidBody::PostureCalc(
 
 	Matrix4x4 result;
 	result.m[0][0] = postureX.x;
-	result.m[0][1] = postureY.x;
-	result.m[0][2] = postureZ.x;
+	result.m[0][1] = postureX.y;
+	result.m[0][2] = postureX.z;
 	result.m[0][3] = 0.0f;
 
-	result.m[1][0] = postureX.y;
+	result.m[1][0] = postureY.x;
 	result.m[1][1] = postureY.y;
-	result.m[1][2] = postureZ.y;
+	result.m[1][2] = postureY.z;
 	result.m[1][3] = 0.0f;
 
-	result.m[2][0] = postureX.z;
-	result.m[2][1] = postureY.z;
+	result.m[2][0] = postureZ.x;
+	result.m[2][1] = postureZ.y;
 	result.m[2][2] = postureZ.z;
 	result.m[2][3] = 0.0f;
 
@@ -61,8 +61,6 @@ Matrix4x4 RigidBody::PostureCalc(
 	result.m[3][1] = 0.0f;
 	result.m[3][2] = 0.0f;
 	result.m[3][3] = 1.0f;
-
-	//result = Matrix4x4::Add(result, postureMatrix);
 
 	return result;
 

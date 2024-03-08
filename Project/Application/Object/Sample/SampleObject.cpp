@@ -58,7 +58,7 @@ void SampleObject::Initialize(Model* model)
 
 	const Vector3 centerOfGravity = {0.0f,0.0f,0.0f};
 	const Vector3 pointOfAction = { 0.0f,1.0f,0.0f };
-	const Vector3 force = { 1.0f,0.0f,0.0f };;
+	const Vector3 force = { 1.0f,0.0f,1.0f };;
 
 	rigidBody_.torque = RigidBody::TorqueCalc(centerOfGravity, pointOfAction, force);
 
@@ -87,6 +87,8 @@ void SampleObject::Update()
 	rigidBody_.angularMomentum = RigidBody::AngularMomentumCalc(rigidBody_.angularMomentum, rigidBody_.torque, kDeltaTime_);
 
 	rigidBody_.angularVelocity = RigidBody::AngularVelocityCalc(rigidBody_.inertiaTensor, rigidBody_.angularMomentum);
+
+	rigidBody_.torque = { 0.0f,0.0f,0.0f };
 
 	worldtransform_.UpdateMatrix(rigidBody_.postureMatrix);
 
