@@ -36,6 +36,43 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 		assert(mesh->HasNormals()); // 法線がないMeshは今回は非対応
 		assert(mesh->HasTextureCoords(0)); // TexcoordがないMeshは今回は非対応
 
+		// ボーン解析
+		std::vector<std::vector<std::pair<uint32_t, float>>> boneDatas;
+
+		if (mesh->HasBones()) {
+			aiBone** bone = mesh->mBones;
+			boneDatas.resize(mesh->mNumBones);
+			for (uint32_t i = 0; i < mesh->mNumBones; ++i) {
+
+				aiVertexWeight* weights = bone[i]->mWeights;
+				for (uint32_t j = 0; j < bone[i]->mNumWeights; ++j) {
+					
+					std::pair<uint32_t, float> boneData;
+					boneData.first = weights[j].mVertexId;
+					boneData.second = weights[j].mWeight;
+					boneDatas[i].push_back(boneData);
+
+				}
+
+				//SkinBone skinBone;
+				//aiMatrix4x4 aiOffsetMatrix = bone[i]->mOffsetMatrix; // nodeのlocalMatrixを取得
+				//aiOffsetMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
+				//for (uint32_t y = 0; y < 4; ++y) {
+				//	for (uint32_t x = 0; x < 4; ++x) {
+				//		skinBone.offsetMatrix_.m[y][x] = aiOffsetMatrix[y][x];
+				//		skinBone.initMatrix_.m[y][x] = aiOffsetMatrix[y][x];
+				//	}
+				//}
+			
+				//skinBone.boneMatrix_; // ノード
+				//skinBone.children_; // ノード
+				//skinBone.childNum_; // 
+				//skinBone.combMatrixArray_ = nullptr;
+				//modelData.skinBones.push_back(skinBone);
+
+			}
+		}
+
 		// フェイス解析
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
 			aiFace& face = mesh->mFaces[faceIndex];
@@ -47,6 +84,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				aiVector3D& position = mesh->mVertices[vertexIndex];
 				aiVector3D& normal = mesh->mNormals[vertexIndex];
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+
 				VertexData vertex;
 				vertex.position = { position.x, position.y, position.z, 1.0f };
 				vertex.normal = { normal.x, normal.y, normal.z };
@@ -54,6 +92,25 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				// aiProcess_MakeLeftHandedはx*=-1で、右手->左手に変換するので手動で対処
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
+
+				// 重みデータ
+				for (uint32_t i = 0; i < boneDatas.size(); ++i) {
+					for (uint32_t j = 0; j < boneDatas[i].size(); ++j) {
+						if (boneDatas[i][j].first == vertexIndex) {
+							// 空いている場所
+							for (uint32_t k = 0; k < 4; ++k) {
+								if (!vertex.matrixIndex[k]) {
+									vertex.matrixIndex[k] = i;
+									if (k < 3) {
+										vertex.wegihts[k] = boneDatas[i][j].second;
+									}
+									break;
+								}
+							}
+						}
+					}
+				}
+
 				modelData.vertices.push_back(vertex);
 
 				vertexCount++;

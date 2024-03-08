@@ -34,7 +34,7 @@ void WorldTransform::Initialize()
 void WorldTransform::Initialize(const ModelNode& modelNode)
 {
 
-	SetNodeDatas(modelNode);
+	SetNodeDatas(modelNode, nullptr);
 
 	// 回転行列
 	rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
@@ -182,7 +182,7 @@ void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 
 }
 
-void WorldTransform::SetNodeDatas(const ModelNode& modelNode)
+void WorldTransform::SetNodeDatas(const ModelNode& modelNode, NodeData* parent)
 {
 
 	NodeData nodeData;
@@ -190,13 +190,22 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode)
 	nodeData.localMatrix = modelNode.localMatrix;
 	nodeData.meshNum = modelNode.meshNum;
 	nodeData.name = modelNode.name;
+	nodeData.parent = parent;
 	if(nodeData.meshNum != -1){
 		nodeDatas_.push_back(nodeData);
 	}
 
+	size_t parentIndex = nodeDatas_.size() - 1;
+
 	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
 		// 再帰的に読んで階層構造を作る
-		SetNodeDatas(modelNode.children[childIndex]);
+		if (parentIndex == -1) {
+			SetNodeDatas(modelNode.children[childIndex], nullptr);
+		}
+		else {
+			SetNodeDatas(modelNode.children[childIndex], &nodeDatas_[parentIndex]);
+		}
+
 	}
 
 }

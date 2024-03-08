@@ -21,6 +21,10 @@ struct VertexShaderInput {
 	float32_t3 normal : NORMAL0;
 };
 
+struct S {
+	uint32_t a : BLENDINDICES0;
+};
+
 VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID) {
 	
 	uint32_t meshNum = 0;

@@ -451,10 +451,13 @@
     <ClCompile Include="Engine\3D\NodeAnimationData.cpp">
       <Filter>Engine\3D\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Physics\RigidBody.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Physics\InertiaTensor.cpp">
+      <Filter>Engine\Physics\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Physics\RigidBody.cpp">
+      <Filter>Engine\Physics\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\SkinBone.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -844,9 +847,12 @@
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Physics\RigidBody.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Physics\RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Physics\InertiaTensor.h">
+      <Filter>Engine\Physics\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\SkinBone.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

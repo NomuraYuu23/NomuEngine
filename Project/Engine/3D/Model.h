@@ -38,6 +38,7 @@
 #include "ModelNode.h"
 #include "MeshNumManager.h"
 #include "NodeAnimationData.h"
+#include "SkinBone.h"
 
 class Model
 {
@@ -62,6 +63,9 @@ public:
 		std::vector<NodeAnimationData> nodeAnimations;
 		// ノードアニメーション数
 		uint32_t nodeAnimationNum;
+
+		// ボーン
+		std::vector<SkinBone> skinBones;
 
 	};
 
