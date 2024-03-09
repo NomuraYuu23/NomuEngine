@@ -166,6 +166,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	if (scene->HasAnimations()) {
 		// アニメーション配列一個目のみ確認
 		aiAnimation** animation = scene->mAnimations;
+
 		for (uint32_t i = 0; i < animation[0]->mNumChannels; ++i) {
 			NodeAnimationData nodeAnimationData;
 			assert(animation[0]->mChannels[i]);
