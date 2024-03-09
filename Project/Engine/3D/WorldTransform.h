@@ -20,7 +20,9 @@ public:
 		Matrix4x4 localMatrix; // ローカル行列
 		uint32_t meshNum; // メッシュ番号
 		std::string name; // 名前
-		NodeData* parent; // 親
+		WorldTransform::NodeData* parent; // 親
+		int32_t parentIndex;
+		Matrix4x4 matrix;
 	};
 
 public:
@@ -79,7 +81,7 @@ public:
 	/// ノードデータ設定
 	/// </summary>
 	/// <param name="modelNode">モデルのノード</param>
-	void SetNodeDatas(const ModelNode& modelNode, NodeData* parent);
+	void SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex);
 
 	/// <summary>
 	/// 消す前に行う処理

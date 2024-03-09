@@ -4,6 +4,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include "CameraForGPU.h"
+#include "ViewProjectionMatrix.h"
 
 class BaseCamera
 {
@@ -24,7 +25,7 @@ public:
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix_; }
+	Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix_->matrix; }
 
 	/// <summary>
 	/// 
@@ -53,6 +54,8 @@ public:
 
 	ID3D12Resource* GetWorldPositionBuff() { return worldPositionBuff_.Get(); }
 
+	ID3D12Resource* GetViewProjectionMatriBuff() { return viewProjectionMatrixBuff_.Get(); }
+
 
 
 protected:
@@ -67,7 +70,10 @@ protected:
 
 	float farClip_;
 
-	Matrix4x4 viewProjectionMatrix_;
+	//WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
+	Microsoft::WRL::ComPtr<ID3D12Resource> viewProjectionMatrixBuff_;
+
+	ViewProjectionMatrix* viewProjectionMatrix_;
 
 	Matrix4x4 transformMatrix_;
 	Matrix4x4 viewMatrix_;

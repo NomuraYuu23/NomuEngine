@@ -34,7 +34,7 @@ void WorldTransform::Initialize()
 void WorldTransform::Initialize(const ModelNode& modelNode)
 {
 
-	SetNodeDatas(modelNode, nullptr);
+	SetNodeDatas(modelNode, -1);
 
 	// 回転行列
 	rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
@@ -56,9 +56,9 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 
 	for (uint32_t i = 0; i < nodeCount; ++i) {
 		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = Matrix4x4::MakeIdentity4x4();
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::MakeIdentity4x4();
+		//transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::MakeIdentity4x4();
 		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::MakeIdentity4x4();
+		//transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::MakeIdentity4x4();
 	}
 
 	UpdateMatrix();
@@ -132,11 +132,21 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 {
 
 	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = Matrix4x4::Multiply(nodeDatas_[i].localMatrix, worldMatrix_);
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::Multiply(Matrix4x4::Multiply(nodeDatas_[i].localMatrix, worldMatrix_), viewProjectionMatrix);
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].localMatrix, Matrix4x4::Inverse(worldMatrix_));
 
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::Inverse(Matrix4x4::MakeScaleMatrix(transform_.scale)); // objファイルのみ対応
+		if (nodeDatas_[i].parentIndex >= 0) {
+			nodeDatas_[i].matrix = Matrix4x4::Multiply(
+				nodeDatas_[i].localMatrix ,
+				nodeDatas_[nodeDatas_[i].parentIndex].matrix);
+		}
+		else {
+			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
+		}
+
+		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_);
+		//transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::Multiply(Matrix4x4::Multiply(nodeDatas_[i].localMatrix, worldMatrix_), viewProjectionMatrix);
+		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].matrix, Matrix4x4::Inverse(worldMatrix_));
+
+		//transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::Inverse(Matrix4x4::MakeScaleMatrix(transform_.scale)); // objファイルのみ対応
 	}
 
 }
@@ -182,30 +192,30 @@ void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 
 }
 
-void WorldTransform::SetNodeDatas(const ModelNode& modelNode, NodeData* parent)
+void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex)
 {
 
-	NodeData nodeData;
+	WorldTransform::NodeData nodeData;
 
 	nodeData.localMatrix = modelNode.localMatrix;
 	nodeData.meshNum = modelNode.meshNum;
 	nodeData.name = modelNode.name;
-	nodeData.parent = parent;
-	if(nodeData.meshNum != -1){
-		nodeDatas_.push_back(nodeData);
-	}
+	nodeData.parentIndex = parentIndex;
+	nodeDatas_.push_back(std::move(nodeData));
 
-	size_t parentIndex = nodeDatas_.size() - 1;
+
+
+	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
 
 	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
 		// 再帰的に読んで階層構造を作る
-		if (parentIndex == -1) {
-			SetNodeDatas(modelNode.children[childIndex], nullptr);
-		}
-		else {
-			SetNodeDatas(modelNode.children[childIndex], &nodeDatas_[parentIndex]);
-		}
-
+		//if (parentIndex) {
+		//	SetNodeDatas(modelNode.children[childIndex], nullptr);
+		//}
+		//else {
+		//	SetNodeDatas(modelNode.children[childIndex], &nodeDatas_[parentIndex]);
+		//}
+		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
 	}
 
 }

@@ -60,7 +60,7 @@ void GraphicsPipelineState::CreateForModel()
 		D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
 	createPSODesc.inputLayoutDesc = InputLayoutSetting(
-		kInputLayoutIndexNormal);
+		kInputLayoutIndexModel);
 
 	createPSODesc.blendDesc = BlendStateSetting(kBlendStateIndexNormal);
 

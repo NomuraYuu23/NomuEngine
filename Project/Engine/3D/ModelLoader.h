@@ -19,5 +19,7 @@ public:
 	/// </summary>
 	static ModelNode ReadNode(aiNode* node);
 
+	static std::vector<std::pair<std::string, Matrix4x4>> boneOffsetMatrixes_;
+
 };
 

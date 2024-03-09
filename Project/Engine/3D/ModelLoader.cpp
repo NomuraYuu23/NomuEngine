@@ -8,6 +8,8 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
+std::vector<std::pair<std::string, Matrix4x4>> ModelLoader::boneOffsetMatrixes_;
+
 //objファイルを読む
 Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, const std::string& filename) {
 
@@ -20,9 +22,6 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	// 読み込み時のオプション
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes()); // メッシュがないのは対応しない
-
-	// ノード解析
-	modelData.rootNode = ReadNode(scene->mRootNode);
 
 	uint32_t vertexCount = 0;
 	modelData.meshNumManager.Initialize();
@@ -38,7 +37,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 		// ボーン解析
 		std::vector<std::vector<std::pair<uint32_t, float>>> boneDatas;
-
+		boneOffsetMatrixes_.clear();
 		if (mesh->HasBones()) {
 			aiBone** bone = mesh->mBones;
 			boneDatas.resize(mesh->mNumBones);
@@ -53,22 +52,18 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 					boneDatas[i].push_back(boneData);
 
 				}
+				aiString name = bone[i]->mName;
+				aiMatrix4x4 aiMatrix = bone[i]->mOffsetMatrix;
+				aiMatrix.Transpose();
 
-				//SkinBone skinBone;
-				//aiMatrix4x4 aiOffsetMatrix = bone[i]->mOffsetMatrix; // nodeのlocalMatrixを取得
-				//aiOffsetMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
-				//for (uint32_t y = 0; y < 4; ++y) {
-				//	for (uint32_t x = 0; x < 4; ++x) {
-				//		skinBone.offsetMatrix_.m[y][x] = aiOffsetMatrix[y][x];
-				//		skinBone.initMatrix_.m[y][x] = aiOffsetMatrix[y][x];
-				//	}
-				//}
-			
-				//skinBone.boneMatrix_; // ノード
-				//skinBone.children_; // ノード
-				//skinBone.childNum_; // 
-				//skinBone.combMatrixArray_ = nullptr;
-				//modelData.skinBones.push_back(skinBone);
+				std::pair<std::string, Matrix4x4> boneOffsetMatrix;
+				boneOffsetMatrix.first = name.C_Str();
+				for (uint32_t y = 0; y < 4; ++y) {
+					for (uint32_t x = 0; x < 4; ++x) {
+						boneOffsetMatrix.second.m[y][x] = aiMatrix[y][x];
+					}
+				}
+				boneOffsetMatrixes_.push_back(boneOffsetMatrix);
 
 			}
 		}
@@ -93,22 +88,51 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
 
-				// 重みデータ
-				for (uint32_t i = 0; i < boneDatas.size(); ++i) {
-					for (uint32_t j = 0; j < boneDatas[i].size(); ++j) {
-						if (boneDatas[i][j].first == vertexIndex) {
-							// 空いている場所
-							for (uint32_t k = 0; k < 4; ++k) {
-								if (!vertex.matrixIndex[k]) {
-									vertex.matrixIndex[k] = i;
-									if (k < 3) {
-										vertex.wegihts[k] = boneDatas[i][j].second;
-									}
+				// ボーン情報取得
+				if (mesh->HasBones()) {
+					vertex.wegiht0 = 0.0f;
+					vertex.wegiht1 = 0.0f;
+					vertex.wegiht2 = 0.0f;
+					vertex.matrixIndex0 = 1000;
+					vertex.matrixIndex1 = 1000;
+					vertex.matrixIndex2 = 1000;
+					vertex.matrixIndex3 = 1000;
+					// 重みデータ
+					for (uint32_t i = 0; i < boneDatas.size(); ++i) {
+						for (uint32_t j = 0; j < boneDatas[i].size(); ++j) {
+							if (boneDatas[i][j].first == vertexIndex) {
+								// 空いている場所
+								if (vertex.matrixIndex0 == 1000) {
+									vertex.matrixIndex0 = i + 2;
+									vertex.wegiht0 = boneDatas[i][j].second;
+									break;
+								}
+								else if (vertex.matrixIndex1 == 1000) {
+									vertex.matrixIndex1 = i + 2;
+									vertex.wegiht1 = boneDatas[i][j].second;
+									break;
+								}
+								else if (vertex.matrixIndex2 == 1000) {
+									vertex.matrixIndex2 = i + 2;
+									vertex.wegiht2 = boneDatas[i][j].second;
+									break;
+								}
+								else if (vertex.matrixIndex3 == 1000) {
+									vertex.matrixIndex3 = i + 2;
 									break;
 								}
 							}
 						}
 					}
+				}
+				else {
+					vertex.wegiht0 = 1.0f;
+					vertex.wegiht1 = 0.0f;
+					vertex.wegiht2 = 0.0f;
+					vertex.matrixIndex0 = 0;
+					vertex.matrixIndex1 = 1000;
+					vertex.matrixIndex2 = 1000;
+					vertex.matrixIndex3 = 1000;
 				}
 
 				modelData.vertices.push_back(vertex);
@@ -125,6 +149,8 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 	}
 
+	// ノード解析
+	modelData.rootNode = ReadNode(scene->mRootNode);
 
 	// マテリアル解析
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
@@ -169,6 +195,14 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 		}
 	}
 
+	if (!boneOffsetMatrixes_.empty()) {
+		for (uint32_t i = 0; i < boneOffsetMatrixes_.size(); ++i) {
+			if (boneOffsetMatrixes_[i].first == node->mName.C_Str()) {
+				result.localMatrix *= boneOffsetMatrixes_[i].second;
+			}
+		}
+	}
+
 	result.name = node->mName.C_Str(); // Node名を格納
 	result.children.resize(node->mNumChildren); // 子供の数だけ確保
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
@@ -180,7 +214,7 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 		result.meshNum = *node->mMeshes;
 	}
 	else {
-		result.meshNum = -1;
+		result.meshNum = 0;
 	}
 
 	return result;
