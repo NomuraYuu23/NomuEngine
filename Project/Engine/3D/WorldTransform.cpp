@@ -142,7 +142,7 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
 		}
 
-		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_);
+		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_));
 		//transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::Multiply(Matrix4x4::Multiply(nodeDatas_[i].localMatrix, worldMatrix_), viewProjectionMatrix);
 		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].matrix, Matrix4x4::Inverse(worldMatrix_));
 
@@ -201,6 +201,7 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentInde
 	nodeData.meshNum = modelNode.meshNum;
 	nodeData.name = modelNode.name;
 	nodeData.parentIndex = parentIndex;
+	nodeData.offsetMatrix = modelNode.offsetMatrix;
 	nodeDatas_.push_back(std::move(nodeData));
 
 

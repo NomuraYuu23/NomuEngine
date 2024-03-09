@@ -195,10 +195,11 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 		}
 	}
 
+	result.offsetMatrix = Matrix4x4::MakeIdentity4x4();
 	if (!boneOffsetMatrixes_.empty()) {
 		for (uint32_t i = 0; i < boneOffsetMatrixes_.size(); ++i) {
 			if (boneOffsetMatrixes_[i].first == node->mName.C_Str()) {
-				result.localMatrix *= boneOffsetMatrixes_[i].second;
+				result.offsetMatrix = boneOffsetMatrixes_[i].second/* * Matrix4x4::Inverse(boneOffsetMatrixes_[i].second)*/;
 			}
 		}
 	}

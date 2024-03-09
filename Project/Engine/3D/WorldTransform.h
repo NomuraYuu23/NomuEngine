@@ -22,7 +22,8 @@ public:
 		std::string name; // 名前
 		WorldTransform::NodeData* parent; // 親
 		int32_t parentIndex;
-		Matrix4x4 matrix;
+		Matrix4x4 matrix; //最終的なワールド行列
+		Matrix4x4 offsetMatrix; //
 	};
 
 public:

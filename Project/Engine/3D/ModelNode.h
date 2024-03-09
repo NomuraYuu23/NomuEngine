@@ -9,6 +9,7 @@ class ModelNode
 public:
 
 	Matrix4x4 localMatrix;
+	Matrix4x4 offsetMatrix;
 	std::string name;
 	std::vector<ModelNode> children;
 	uint32_t meshNum;
