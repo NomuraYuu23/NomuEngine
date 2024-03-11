@@ -171,16 +171,25 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 	// ノードアニメーション解析
 	if (scene->HasAnimations()) {
-		// アニメーション配列一個目のみ確認
+		// アニメーション配列確認
 		aiAnimation** animation = scene->mAnimations;
 
-		for (uint32_t i = 0; i < animation[0]->mNumChannels; ++i) {
-			NodeAnimationData nodeAnimationData;
-			assert(animation[0]->mChannels[i]);
-			nodeAnimationData.Initialize(*animation[0]->mChannels[i]);
-			modelData.nodeAnimations.push_back(nodeAnimationData);
+		modelData.animations.resize(scene->mNumAnimations);
+		for (uint32_t i = 0; i < scene->mNumAnimations; ++i) {
+			modelData.animations[i].endTime_ = 0;
+			for (uint32_t j = 0; j < animation[i]->mNumChannels; ++j) {
+				NodeAnimationData nodeAnimationData;
+				assert(animation[i]->mChannels[j]);
+				nodeAnimationData.Initialize(*animation[i]->mChannels[j]);
+				
+				if (modelData.animations[i].endTime_ < nodeAnimationData.endTime_) {
+					modelData.animations[i].endTime_ = nodeAnimationData.endTime_;
+				}
+
+				modelData.animations[i].nodeAnimationDatas_.push_back(nodeAnimationData);
+			}
+			modelData.animations[i].nodeAnimationNum_ = static_cast<uint32_t>(modelData.animations[i].nodeAnimationDatas_.size());
 		}
-		modelData.nodeAnimationNum = static_cast<uint32_t>(modelData.nodeAnimations.size());
 	}
 	else {
 		modelData.nodeAnimationNum = 0;

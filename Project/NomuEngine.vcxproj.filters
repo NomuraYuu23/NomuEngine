@@ -322,15 +322,6 @@
     <ClCompile Include="Engine\base\ITextureHandleManager.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\AnimationFile.cpp">
-      <Filter>Engine\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Animation\IBone.cpp">
-      <Filter>Engine\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\SampleBone\SampleBone.cpp">
-      <Filter>Application\SampleBone</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Audio\AudioManager.cpp">
       <Filter>Engine\Audio</Filter>
     </ClCompile>
@@ -457,7 +448,10 @@
     <ClCompile Include="Engine\Physics\RigidBody.cpp">
       <Filter>Engine\Physics\RigidBody</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\SkinBone.cpp">
+    <ClCompile Include="Engine\Animation\Animation.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Animation\AnimationData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -672,18 +666,6 @@
     <ClInclude Include="Engine\base\ITextureHandleManager.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\AnimationFile.h">
-      <Filter>Engine\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Animation\IBone.h">
-      <Filter>Engine\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Animation\BoneData.h">
-      <Filter>Engine\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\SampleBone\SampleBone.h">
-      <Filter>Application\SampleBone</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Collider\ColliderParentObject.h">
       <Filter>Application\Collider</Filter>
     </ClInclude>
@@ -852,11 +834,14 @@
     <ClInclude Include="Engine\Physics\InertiaTensor.h">
       <Filter>Engine\Physics\RigidBody</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\SkinBone.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Camera\ViewProjectionMatrix.h">
       <Filter>Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\Animation.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\AnimationData.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@
 #include "ModelNode.h"
 #include "MeshNumManager.h"
 #include "NodeAnimationData.h"
-#include "SkinBone.h"
+#include "../Animation/AnimationData.h"
 
 class Model
 {
@@ -60,12 +60,9 @@ public:
 		// メッシュ番号管理
 		MeshNumManager meshNumManager;
 		// ノードアニメーション
-		std::vector<NodeAnimationData> nodeAnimations;
+		std::vector<AnimationData> animations;
 		// ノードアニメーション数
 		uint32_t nodeAnimationNum;
-
-		// ボーン
-		std::vector<SkinBone> skinBones;
 
 	};
 
@@ -172,7 +169,7 @@ public:
 	/// ノードアニメーションデータ取得
 	/// </summary>
 	/// <returns></returns>
-	std::vector<NodeAnimationData> GetNodeAnimationData() { return modelData_.nodeAnimations; }
+	std::vector<AnimationData> GetNodeAnimationData() { return modelData_.animations; }
 
 private:
 

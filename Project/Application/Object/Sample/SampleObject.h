@@ -2,6 +2,7 @@
 #include "../../../Engine/3D/Model.h"
 #include "../../../Engine/3D/NodeAnimation.h"
 #include "../../../Engine/Physics/RigidBody.h"
+#include "../../../Engine/Animation/Animation.h"
 
 class SampleObject
 {
@@ -45,7 +46,7 @@ private:
 	float shininess_;
 
 	//ノードアニメーション
-	NodeAnimation nodeAnimation_;
+	Animation animation_;
 
 	RigidBody rigidBody_;
 

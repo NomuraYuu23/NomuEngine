@@ -43,9 +43,6 @@
 // パーティクル
 #include "../Particle/ParticleManager.h"
 
-// アニメーション
-#include "../Animation/AnimationFile.h"
-
 // ディスクリプタヒープ
 #include ".../../../base/DescriptorHerpManager.h"
 

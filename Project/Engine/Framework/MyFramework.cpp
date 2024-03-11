@@ -60,9 +60,6 @@ void MyFramework::Initialize()
 	//グローバル変数ファイル読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
 
-	// アニメーションファイル読み込み
-	AnimationFile::GetInstance()->LoadFiles();
-
 	endRequst_ = false;
 
 }
@@ -106,9 +103,6 @@ void MyFramework::Update()
 	//ImGui::ShowDemoWindow();
 	// グローバル変数の更新
 	GlobalVariables::GetInstance()->Update();
-	
-	// アニメーション変数の更新
-	AnimationFile::GetInstance()->Update();
 
 }
 
