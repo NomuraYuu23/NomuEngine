@@ -381,25 +381,25 @@ float32_t4 SetTextureColor(VertexShaderOutput input) {
 	float32_t4 transformedUV;
 	float32_t4 textureColor;
 
-	if (input.texcoord.x < 1.0f) {
+	if (input.texcoord.x <= 1.0f) {
 		texcoord = input.texcoord;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 	}
-	else if(input.texcoord.x < 3.0f){
+	else if(input.texcoord.x <= 3.0f){
 		texcoord.x = input.texcoord.x - 2.0f;
 		texcoord.y = input.texcoord.y;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture1.Sample(gSampler, transformedUV.xy);
 	}
-	else if (input.texcoord.x < 4.0f) {
-		texcoord = input.texcoord - 4.0f;
+	else if (input.texcoord.x <= 5.0f) {
+		texcoord = input.texcoord.x - 4.0f;
 		texcoord.y = input.texcoord.y;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture2.Sample(gSampler, transformedUV.xy);
 	}
 	else {
-		texcoord = input.texcoord - 6.0f;
+		texcoord = input.texcoord.x - 6.0f;
 		texcoord.y = input.texcoord.y;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture3.Sample(gSampler, transformedUV.xy);

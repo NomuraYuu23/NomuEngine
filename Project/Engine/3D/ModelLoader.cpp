@@ -23,14 +23,11 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes()); // メッシュがないのは対応しない
 
-	uint32_t vertexCount = 0;
-	modelData.meshNumManager.Initialize();
-
-	// メッシュ多いよ
-	assert(scene->mNumMeshes <= 4);
-
 	// オフセット用配列をクリア
 	boneOffsetMatrixes_.clear();
+	
+	// ファイルを識別
+	bool thisObj = filename.find(".obj") != -1;
 
 	// メッシュ解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
@@ -90,6 +87,14 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
 
+				// テクスチャを移動
+				if (thisObj) {
+					vertex.texcoord.x += (mesh->mMaterialIndex - 1) * 2.0f;
+				}
+				else {
+					vertex.texcoord.x += mesh->mMaterialIndex * 2.0f;
+				}
+
 				// ボーン情報取得
 				if (mesh->HasBones()) {
 					vertex.wegiht0 = 0.0f;
@@ -144,15 +149,9 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 				modelData.vertices.push_back(vertex);
 
-				vertexCount++;
-
 			}
 
 		}
-
-		// メッシュ番号
-		modelData.meshNumManager.meshNumDataMap_->incrementMeshNum[meshIndex] = vertexCount;
-		modelData.meshNumManager.meshNumDataMap_->incrementMeshNumMax++;
 
 	}
 

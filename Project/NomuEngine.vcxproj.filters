@@ -394,9 +394,6 @@
     <ClCompile Include="Engine\3D\Mesh.cpp">
       <Filter>Engine\3D\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\MeshNumManager.cpp">
-      <Filter>Engine\3D\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\ModelLoader.cpp">
       <Filter>Engine\3D\Model</Filter>
     </ClCompile>
@@ -760,9 +757,6 @@
       <Filter>Engine\2D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Mesh.h">
-      <Filter>Engine\3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\MeshNumManager.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ModelLoader.h">

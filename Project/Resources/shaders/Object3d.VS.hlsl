@@ -1,12 +1,5 @@
 #include "Object3d.hlsli"
 
-//struct TransformationMatrix {
-//	float32_t4x4 WVP;
-//	float32_t4x4 World;
-//	float32_t4x4 WorldInverseTranspose;
-//	float32_t4x4 ScaleInverse;
-//};
-
 struct TransformationMatrix {
 	float32_t4x4 World;
 	float32_t4x4 WorldInverseTranspose;
@@ -14,17 +7,11 @@ struct TransformationMatrix {
 
 StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t0);
 
-struct MeshNumData {
-	vector <uint, 4> incrementMeshNum;
-	uint32_t incrementMeshNumMax;
-};
-ConstantBuffer<MeshNumData> gMeshNumData : register(b0);
-
 struct ViewProjectionMatrix {
 	float32_t4x4 Matrix;
 };
 
-ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b1);
+ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b0);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;
@@ -37,29 +24,13 @@ struct VertexShaderInput {
 	uint32_t idx1 : BLENDINDICES1;
 	uint32_t idx2 : BLENDINDICES2;
 	uint32_t idx3 : BLENDINDICES3;
-	//float32_t3 blend : BLENDWEIGHT;
-	//uint32_t4 idx : BLENDINDICES;
 };
 
 VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID) {
-	
-	uint32_t meshNum = 0;
-	float32_t2 texcoordAdd = { 0.0f, 0.0f };
-
-	for (int i = 0; i < 4; ++i) {
-		
-		if (vertexId >= gMeshNumData.incrementMeshNum[i]) {
-			meshNum++;
-			texcoordAdd.x += 2.0f;
-		}
-		else {
-			break;
-		}
-	}
 
 	VertexShaderOutput output;
 	// texcoord
-	output.texcoord = input.texcoord + texcoordAdd;
+	output.texcoord = input.texcoord;
 
 	// comb
 	float32_t w[3] = { input.blend0, input.blend1, input.blend2 };
@@ -67,7 +38,7 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 	float32_t4x4 comb = (float32_t4x4)0;
 	float32_t4x4 combInverseTranspose = (float32_t4x4)0;
 
-	for (i = 0; i < 3; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		comb += gTransformationMatrixes[id[i]].World * w[i];
 		combInverseTranspose += gTransformationMatrixes[id[i]].WorldInverseTranspose * w[i];
 	}

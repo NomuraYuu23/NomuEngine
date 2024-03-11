@@ -36,7 +36,6 @@
 
 #include "Mesh.h"
 #include "ModelNode.h"
-#include "MeshNumManager.h"
 #include "../Animation/NodeAnimationData.h"
 #include "../Animation/AnimationData.h"
 
@@ -57,8 +56,6 @@ public:
 		MaterialData material;
 		// ノード
 		ModelNode rootNode;
-		// メッシュ番号管理
-		MeshNumManager meshNumManager;
 		// ノードアニメーション
 		std::vector<AnimationData> animations;
 		// ノードアニメーション数
