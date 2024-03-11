@@ -141,7 +141,7 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 		}
 
 		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_));
-		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, Matrix4x4::Inverse(worldMatrix_)));
+		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Inverse(Matrix4x4::Transpose(transformationMatrixesMap_[i].World));
 
 	}
 
