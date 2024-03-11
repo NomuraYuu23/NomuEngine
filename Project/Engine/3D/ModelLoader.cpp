@@ -29,6 +29,9 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 	// メッシュ多いよ
 	assert(scene->mNumMeshes <= 4);
 
+	// オフセット用配列をクリア
+	boneOffsetMatrixes_.clear();
+
 	// メッシュ解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
@@ -37,7 +40,6 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 
 		// ボーン解析
 		std::vector<std::vector<std::pair<uint32_t, float>>> boneDatas;
-		boneOffsetMatrixes_.clear();
 		if (mesh->HasBones()) {
 			aiBone** bone = mesh->mBones;
 			boneDatas.resize(mesh->mNumBones);
@@ -103,22 +105,22 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 							if (boneDatas[i][j].first == vertexIndex) {
 								// 空いている場所
 								if (vertex.matrixIndex0 == 1000) {
-									vertex.matrixIndex0 = i + 2;
+									vertex.matrixIndex0 = i + scene->mNumMeshes + 1;
 									vertex.wegiht0 = boneDatas[i][j].second;
 									break;
 								}
 								else if (vertex.matrixIndex1 == 1000) {
-									vertex.matrixIndex1 = i + 2;
+									vertex.matrixIndex1 = i + scene->mNumMeshes + 1;
 									vertex.wegiht1 = boneDatas[i][j].second;
 									break;
 								}
 								else if (vertex.matrixIndex2 == 1000) {
-									vertex.matrixIndex2 = i + 2;
+									vertex.matrixIndex2 = i + scene->mNumMeshes + 1;
 									vertex.wegiht2 = boneDatas[i][j].second;
 									break;
 								}
 								else if (vertex.matrixIndex3 == 1000) {
-									vertex.matrixIndex3 = i + 2;
+									vertex.matrixIndex3 = i + scene->mNumMeshes + 1;
 									break;
 								}
 							}

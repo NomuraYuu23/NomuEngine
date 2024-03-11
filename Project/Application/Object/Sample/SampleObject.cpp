@@ -23,10 +23,11 @@ void SampleObject::Initialize(Model* model)
 	initPositions.resize(worldtransform_.GetNodeDatas().size());
 	initPositions[0] = { 0.0f, 0.0f, 0.0f };
 	initPositions[1] = { 0.0f, 0.0f, 0.0f };
-	initPositions[2] = { 0.0f, 0.0f, 0.0f };
+	initPositions[2] = { 2.67f, 0.0f, 0.0f };
 	initPositions[3] = { 0.0f, 0.0f, 0.0f };
 	initPositions[4] = { 0.0f, 0.0f, 0.0f };
 	initPositions[5] = { 0.0f, 0.0f, 0.0f };
+	initPositions[6] = { 0.0f, 0.0f, 0.0f };
 
 	std::vector<Quaternion> initRotations;
 	initRotations.resize(worldtransform_.GetNodeDatas().size());
@@ -36,6 +37,7 @@ void SampleObject::Initialize(Model* model)
 	initRotations[3] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	initRotations[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	initRotations[5] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	initRotations[6] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	std::vector<Vector3> initScalings;
 	initScalings.resize(worldtransform_.GetNodeDatas().size());
@@ -45,6 +47,7 @@ void SampleObject::Initialize(Model* model)
 	initScalings[3] = { 1.0f, 1.0f, 1.0f };
 	initScalings[4] = { 1.0f, 1.0f, 1.0f };
 	initScalings[5] = { 1.0f, 1.0f, 1.0f };
+	initScalings[6] = { 1.0f, 1.0f, 1.0f };
 
 	nodeAnimation_.Initialize(
 		model_->GetNodeAnimationData(),
