@@ -131,7 +131,12 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 					vertex.wegiht0 = 1.0f;
 					vertex.wegiht1 = 0.0f;
 					vertex.wegiht2 = 0.0f;
-					vertex.matrixIndex0 = meshIndex + 1; // 親ノード分＋1
+					if (scene->mNumMeshes == 1) {
+						vertex.matrixIndex0 = meshIndex; // 親ノード分＋1
+					}
+					else {
+						vertex.matrixIndex0 = meshIndex + 1; // 親ノード分＋1
+					}
 					vertex.matrixIndex1 = 1000;
 					vertex.matrixIndex2 = 1000;
 					vertex.matrixIndex3 = 1000;

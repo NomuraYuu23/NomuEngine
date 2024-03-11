@@ -56,9 +56,7 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 
 	for (uint32_t i = 0; i < nodeCount; ++i) {
 		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = Matrix4x4::MakeIdentity4x4();
-		//transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::MakeIdentity4x4();
 		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
-		//transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::MakeIdentity4x4();
 	}
 
 	UpdateMatrix();
@@ -143,10 +141,8 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 		}
 
 		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_));
-		//transformationMatrixesMap_[nodeDatas_[i].meshNum].WVP = Matrix4x4::Multiply(Matrix4x4::Multiply(nodeDatas_[i].localMatrix, worldMatrix_), viewProjectionMatrix);
-		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].matrix, Matrix4x4::Inverse(worldMatrix_));
+		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, Matrix4x4::Inverse(worldMatrix_)));
 
-		//transformationMatrixesMap_[nodeDatas_[i].meshNum].ScaleInverse = Matrix4x4::Inverse(Matrix4x4::MakeScaleMatrix(transform_.scale)); // objファイルのみ対応
 	}
 
 }
@@ -204,18 +200,9 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentInde
 	nodeData.offsetMatrix = modelNode.offsetMatrix;
 	nodeDatas_.push_back(std::move(nodeData));
 
-
-
 	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
 
 	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
-		// 再帰的に読んで階層構造を作る
-		//if (parentIndex) {
-		//	SetNodeDatas(modelNode.children[childIndex], nullptr);
-		//}
-		//else {
-		//	SetNodeDatas(modelNode.children[childIndex], &nodeDatas_[parentIndex]);
-		//}
 		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
 	}
 
@@ -223,6 +210,7 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentInde
 
 void WorldTransform::Finalize()
 {
+
 	if (nodeDatas_.size() > 0) {
 		DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 	}
@@ -251,8 +239,8 @@ std::vector<std::string> WorldTransform::GetNodeNames()
 		result.push_back(nodeDatas_[i].name);
 	}
 
-
 	return result;
+
 }
 
 void WorldTransform::SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix)

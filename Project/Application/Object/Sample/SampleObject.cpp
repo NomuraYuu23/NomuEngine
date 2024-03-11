@@ -22,32 +22,32 @@ void SampleObject::Initialize(Model* model)
 	std::vector<Vector3> initPositions;
 	initPositions.resize(worldtransform_.GetNodeDatas().size());
 	initPositions[0] = { 0.0f, 0.0f, 0.0f };
-	initPositions[1] = { 0.0f, 0.0f, 0.0f };
-	initPositions[2] = { 2.67f, 0.0f, 0.0f };
-	initPositions[3] = { 0.0f, 0.0f, 0.0f };
-	initPositions[4] = { 0.0f, 0.0f, 0.0f };
-	initPositions[5] = { 0.0f, 0.0f, 0.0f };
-	initPositions[6] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[1] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[2] = { 2.67f, 0.0f, 0.0f };
+	//initPositions[3] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[4] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[5] = { 0.0f, 0.0f, 0.0f };
+	//initPositions[6] = { 0.0f, 0.0f, 0.0f };
 
 	std::vector<Quaternion> initRotations;
 	initRotations.resize(worldtransform_.GetNodeDatas().size());
 	initRotations[0] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[1] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[2] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[3] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[5] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[6] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[1] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[2] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[3] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[5] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//initRotations[6] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	std::vector<Vector3> initScalings;
 	initScalings.resize(worldtransform_.GetNodeDatas().size());
 	initScalings[0] = { 1.0f, 1.0f, 1.0f };
-	initScalings[1] = { 1.0f, 1.0f, 1.0f };
-	initScalings[2] = { 1.0f, 1.0f, 1.0f };
-	initScalings[3] = { 1.0f, 1.0f, 1.0f };
-	initScalings[4] = { 1.0f, 1.0f, 1.0f };
-	initScalings[5] = { 1.0f, 1.0f, 1.0f };
-	initScalings[6] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[1] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[2] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[3] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[4] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[5] = { 1.0f, 1.0f, 1.0f };
+	//initScalings[6] = { 1.0f, 1.0f, 1.0f };
 
 	nodeAnimation_.Initialize(
 		model_->GetNodeAnimationData(),
@@ -56,10 +56,10 @@ void SampleObject::Initialize(Model* model)
 		initScalings,
 		worldtransform_.GetNodeNames());
 
-	nodeAnimation_.startAnimation(0, true);
-	nodeAnimation_.startAnimation(1, true);
-	nodeAnimation_.startAnimation(2, true);
-	nodeAnimation_.startAnimation(3, true);
+	//nodeAnimation_.startAnimation(0, true);
+	//nodeAnimation_.startAnimation(1, true);
+	//nodeAnimation_.startAnimation(2, true);
+	//nodeAnimation_.startAnimation(3, true);
 
 	enableLighting_ = 0;
 
@@ -95,7 +95,7 @@ void SampleObject::Update()
 
 	ApplyGlobalVariables();
 
-	worldtransform_.SetNodeLocalMatrix(nodeAnimation_.Animation());
+	//worldtransform_.SetNodeLocalMatrix(nodeAnimation_.Animation());
 
 	//rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
 
@@ -107,7 +107,7 @@ void SampleObject::Update()
 
 	rigidBody_.torque = { 0.0f,0.0f,0.0f };
 
-	worldtransform_.UpdateMatrix(rigidBody_.postureMatrix);
+	worldtransform_.UpdateMatrix();
 
 	material_->SetEnableLighting(enableLighting_);
 	material_->SetShininess(shininess_);
