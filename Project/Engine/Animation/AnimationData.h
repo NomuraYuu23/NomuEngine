@@ -1,5 +1,5 @@
 #pragma once
-#include "../3D/NodeAnimationData.h"
+#include "NodeAnimationData.h"
 
 class AnimationData
 {

@@ -37,7 +37,7 @@
 #include "Mesh.h"
 #include "ModelNode.h"
 #include "MeshNumManager.h"
-#include "NodeAnimationData.h"
+#include "../Animation/NodeAnimationData.h"
 #include "../Animation/AnimationData.h"
 
 class Model
