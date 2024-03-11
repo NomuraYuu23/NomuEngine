@@ -3,6 +3,7 @@
 #include "../../../Engine/2D/ImguiManager.h"
 #include "../../../Engine/Physics/InertiaTensor.h"
 #include "../../../Engine/Math/DeltaTime.h"
+#include "../../../Engine/Input/Input.h"
 
 SampleObject::~SampleObject()
 {
@@ -21,33 +22,22 @@ void SampleObject::Initialize(Model* model)
 	// 初期ローカル座標
 	std::vector<Vector3> initPositions;
 	initPositions.resize(worldtransform_.GetNodeDatas().size());
-	initPositions[0] = { 0.0f, 0.0f, 0.0f };
-	initPositions[1] = { 0.0f, 0.0f, 0.0f };
-	initPositions[2] = { 2.67f, 0.0f, 0.0f };
-	initPositions[3] = { 0.0f, 0.0f, 0.0f };
-	initPositions[4] = { 0.0f, 0.0f, 0.0f };
-	initPositions[5] = { 0.0f, 0.0f, 0.0f };
-	initPositions[6] = { 0.0f, 0.0f, 0.0f };
+	for (uint32_t i = 0; i < initPositions.size(); ++i) {
+		initPositions[i] = { 0.0f, 0.0f, 0.0f };
+	}
+	//initPositions[2] = { 20.0f, 0.0f, 0.0f };
 
 	std::vector<Quaternion> initRotations;
 	initRotations.resize(worldtransform_.GetNodeDatas().size());
-	initRotations[0] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[1] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[2] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[3] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[5] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	initRotations[6] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	for (uint32_t i = 0; i < initRotations.size(); ++i) {
+		initRotations[i] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	}
 
 	std::vector<Vector3> initScalings;
 	initScalings.resize(worldtransform_.GetNodeDatas().size());
-	initScalings[0] = { 1.0f, 1.0f, 1.0f };
-	initScalings[1] = { 1.0f, 1.0f, 1.0f };
-	initScalings[2] = { 1.0f, 1.0f, 1.0f };
-	initScalings[3] = { 1.0f, 1.0f, 1.0f };
-	initScalings[4] = { 1.0f, 1.0f, 1.0f };
-	initScalings[5] = { 1.0f, 1.0f, 1.0f };
-	initScalings[6] = { 1.0f, 1.0f, 1.0f };
+	for (uint32_t i = 0; i < initScalings.size(); ++i) {
+		initScalings[i] = { 1.0f, 1.0f, 1.0f };
+	}
 
 	animation_.Initialize(
 		model_->GetNodeAnimationData(),
@@ -57,7 +47,7 @@ void SampleObject::Initialize(Model* model)
 		worldtransform_.GetNodeNames());
 
 	animation_.startAnimation(0, true);
-	//nodeAnimation_.startAnimation(1, true);
+	animation_.startAnimation(1, true);
 	//nodeAnimation_.startAnimation(2, true);
 	//nodeAnimation_.startAnimation(3, true);
 
@@ -68,10 +58,6 @@ void SampleObject::Initialize(Model* model)
 	RegisteringGlobalVariables();
 
 	ApplyGlobalVariables();
-
-
-
-	//rigidBody_.massPoint;
 
 	const Vector3 centerOfGravity = {0.0f,0.0f,0.0f};
 	const Vector3 pointOfAction = { 0.0f,1.0f,0.0f };
@@ -104,6 +90,10 @@ void SampleObject::Update()
 	//rigidBody_.angularMomentum = RigidBody::AngularMomentumCalc(rigidBody_.angularMomentum, rigidBody_.torque, kDeltaTime_);
 
 	//rigidBody_.angularVelocity = RigidBody::AngularVelocityCalc(rigidBody_.inertiaTensor, rigidBody_.angularMomentum);
+
+	if (Input::GetInstance()->TriggerKey(DIK_0)) {
+		animation_.stopAnimation(1);
+	}
 
 	rigidBody_.torque = { 0.0f,0.0f,0.0f };
 

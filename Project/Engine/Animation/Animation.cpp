@@ -45,6 +45,9 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 
 	std::vector<Matrix4x4> result;
 	result.resize(nodeNum_);
+	for (uint32_t i = 0; i < nodeNum_; ++i) {
+		result[i] = Matrix4x4::MakeIdentity4x4();
+	}
 
 	// 位置 初期行列と同じ分だけ
 	targetPositions_.clear();

@@ -199,6 +199,7 @@ Matrix4x4 Quaternion::MakeRotateMatrix(const Quaternion& quaternion)
 Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t)
 {
 
+	const float kEpsilon = 0.0005f;
 	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w; // q0とq1の内積
 
 	Quaternion use_q0 = q0;
@@ -206,6 +207,11 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 	if (dot < 0.0f) {
 		use_q0 = Multiply(q0, -1.0f);
 		dot = -dot;
+	}
+
+	if (dot >= 1.0f - kEpsilon) {
+		Quaternion result = Add(Multiply(use_q0, 1.0f - t), Multiply(q1, t));
+		return result;
 	}
 
 	// なす角を求める
