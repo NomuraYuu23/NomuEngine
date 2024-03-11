@@ -129,7 +129,7 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 					vertex.wegiht0 = 1.0f;
 					vertex.wegiht1 = 0.0f;
 					vertex.wegiht2 = 0.0f;
-					vertex.matrixIndex0 = 0;
+					vertex.matrixIndex0 = meshIndex + 1; // 親ノード分＋1
 					vertex.matrixIndex1 = 1000;
 					vertex.matrixIndex2 = 1000;
 					vertex.matrixIndex3 = 1000;
@@ -200,7 +200,7 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 	if (!boneOffsetMatrixes_.empty()) {
 		for (uint32_t i = 0; i < boneOffsetMatrixes_.size(); ++i) {
 			if (boneOffsetMatrixes_[i].first == node->mName.C_Str()) {
-				result.offsetMatrix = boneOffsetMatrixes_[i].second/* * Matrix4x4::Inverse(boneOffsetMatrixes_[i].second)*/;
+				result.offsetMatrix = boneOffsetMatrixes_[i].second;
 			}
 		}
 	}
