@@ -60,6 +60,12 @@ public:
 	/// <returns></returns>
 	std::vector<bool> FinishedAnimations();
 
+	/// <summary>
+	/// 移動補間係数セット
+	/// </summary>
+	/// <param name="moveT"></param>
+	void SetMoveT(float moveT) { moveT_ = moveT; }
+
 private:
 
 	void NodeAnimationUpdate(uint32_t index, double timer);
@@ -104,6 +110,9 @@ private:
 	// 目指す大きさ 初期行列と同じ分だけ
 	std::vector<Vector3> targetScalings_;
 	std::vector<uint32_t> scalingAddCount_;
+
+	// 移動補間係数
+	float moveT_ = 0.2f;
 
 };
 
