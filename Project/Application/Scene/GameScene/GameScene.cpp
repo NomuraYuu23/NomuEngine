@@ -184,8 +184,8 @@ void GameScene::Update() {
 
 	float radius = 160.0f;
 
-	box_->Update(boxCenter_, radius, radius, 30.0f);
-	box1_->Update(box1Center_, radius, radius, 0.0f);
+	box_->Update(boxCenter_, radius, radius, 60.0f);
+	box1_->Update(box1Center_, radius, radius, 45.0f);
 	circle_->Update(circleCenter_, radius);
 	circle1_->Update(circle1Center_, radius);
 
