@@ -2,6 +2,7 @@
 #include "../base/BufferResource.h"
 #include "../base/TextureManager.h"
 #include "../2D/ImguiManager.h"
+#include <numbers>
 
 Collision2DDebugDraw::~Collision2DDebugDraw()
 {
@@ -134,6 +135,8 @@ void Collision2DDebugDraw::Register(ColliderShape2D collider)
 		// 位置
 		traslate.x = obj->position_.x;
 		traslate.y = obj->position_.y;
+		// 回転
+		roate.z = obj->rotation_ * static_cast<float>(std::numbers::pi) / 180.0f;
 		// スケール
 		scale.x = obj->scale_.x / textureScale.x;
 		scale.y = obj->scale_.y / textureScale.y;

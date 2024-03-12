@@ -13,7 +13,7 @@ public: // メンバ関数
 	/// <param name="width">幅(直径)</param>
 	/// <param name="height">高さ(直径)</param>
 	/// <param name="parentObject">親オブジェクト</param>
-	void Initialize(const Vector2& center, float width, float height, ColliderParentObject2D parentObject);
+	void Initialize(const Vector2& center, float width, float height, float rotation, ColliderParentObject2D parentObject);
 
 	/// <summary>
 	/// 簡単更新
@@ -21,14 +21,12 @@ public: // メンバ関数
 	/// <param name="center">中心</param>
 	/// <param name="width">幅(直径)</param>
 	/// <param name="height">高さ(直径)</param>
-	void Update(const Vector2& center,float width, float height);
+	void Update(const Vector2& center,float width, float height, float rotation);
 
 public: // メンバ変数
 
-	float left_;
-	float top_;
-	float right_;
-	float bottom_;
+	// 回転
+	float rotation_; // ディグリー
 
 };
 

@@ -148,6 +148,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Light\SpotLight\SpotLightManager.cpp" />
     <ClCompile Include="Engine\Line\Line.cpp" />
     <ClCompile Include="Engine\Line\Segment.cpp" />
+    <ClCompile Include="Engine\Math\Matrix3x3.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Math\ShortestDistance.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
@@ -259,6 +260,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Light\SpotLight\SpotLightManager.h" />
     <ClInclude Include="Engine\Line\Line.h" />
     <ClInclude Include="Engine\Line\Segment.h" />
+    <ClInclude Include="Engine\Math\Matrix3x3.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\RandomEngine.h" />
     <ClInclude Include="Engine\Math\ShortestDistance.h" />

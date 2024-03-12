@@ -157,6 +157,9 @@
     <Filter Include="Engine\Physics\MassPoint">
       <UniqueIdentifier>{a2de3946-99d7-46d5-9e96-78cad556a4e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Math\Matrix3x3">
+      <UniqueIdentifier>{7f7d088f-e420-4dd5-8ae3-748e04aa8d24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -447,6 +450,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Animation\AnimationData.cpp">
       <Filter>Engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Matrix3x3.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -830,6 +836,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Animation\Animation.h">
       <Filter>Engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Matrix3x3.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

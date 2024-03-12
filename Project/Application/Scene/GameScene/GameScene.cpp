@@ -126,10 +126,10 @@ void GameScene::Initialize() {
 	circle1Center_ = { 640.0f,0.0f };
 
 	box_ = std::make_unique<Box>();
-	box_->Initialize(boxCenter_, 160.0f, 160.0f, nullptr);
+	box_->Initialize(boxCenter_, 160.0f, 160.0f, 0.0f, nullptr);
 
 	box1_ = std::make_unique<Box>();
-	box1_->Initialize(box1Center_, 160.0f, 160.0f, nullptr);
+	box1_->Initialize(box1Center_, 160.0f, 160.0f, 0.0f, nullptr);
 
 	circle_ = std::make_unique<Circle>();
 	circle_->Initialize(circleCenter_, 160.0f, nullptr);
@@ -184,8 +184,8 @@ void GameScene::Update() {
 
 	float radius = 160.0f;
 
-	box_->Update(boxCenter_, radius, radius);
-	box1_->Update(box1Center_, radius, radius);
+	box_->Update(boxCenter_, radius, radius, 30.0f);
+	box1_->Update(box1Center_, radius, radius, 0.0f);
 	circle_->Update(circleCenter_, radius);
 	circle1_->Update(circle1Center_, radius);
 
