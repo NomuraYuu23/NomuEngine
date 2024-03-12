@@ -451,11 +451,11 @@
     <ClCompile Include="Engine\Animation\AnimationData.cpp">
       <Filter>Engine\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\DrawLine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Math\Matrix3x3.cpp">
       <Filter>Engine\Math\Matrix3x3</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\DrawLine.cpp">
+      <Filter>Engine\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -840,13 +840,13 @@
     <ClInclude Include="Engine\Animation\Animation.h">
       <Filter>Engine\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\DrawLine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Math\Matrix3x3.h">
       <Filter>Engine\Math\Matrix3x3</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\ColorVertexData.h">
+      <Filter>Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\DrawLine.h">
       <Filter>Engine\2D</Filter>
     </ClInclude>
   </ItemGroup>
