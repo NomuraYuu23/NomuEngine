@@ -33,6 +33,7 @@ enum RootParameterIndex {
 	kRootParameterIndexParticle,
 	kRootParameterIndexOutLine,
 	kRootParameterIndexCollision2DDebugDraw,
+	kRootParameterIndexLine,
 	kRootParameterIndexOfCount,
 };
 
@@ -78,6 +79,11 @@ private: // 関数
 	/// コライダーデバッグ2D
 	/// </summary>
 	static void RootParameterInitializeForCollision2DDebugDraw();
+
+	/// <summary>
+	/// 線
+	/// </summary>
+	static void RootParameterInitializeForLine();
 
 	/// <summary>
 	/// ディスクリプタレンジの初期化

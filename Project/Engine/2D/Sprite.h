@@ -66,8 +66,6 @@ private:
 	static const int kVertNum = 6;
 	// デバイス
 	static ID3D12Device* sDevice;
-	// ディスクリプタサイズ
-	static UINT sDescriptorHandleIncrementSize;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList;
 	// ルートシグネチャ

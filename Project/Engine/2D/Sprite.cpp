@@ -9,8 +9,6 @@ using namespace Microsoft::WRL;
 
 // デバイス
 ID3D12Device* Sprite::sDevice = nullptr;
-// ディスクリプタサイズ
-UINT Sprite::sDescriptorHandleIncrementSize;
 // コマンドリスト
 ID3D12GraphicsCommandList* Sprite::sCommandList = nullptr;
 // ルートシグネチャ
@@ -30,8 +28,6 @@ void Sprite::StaticInitialize(
 	assert(device);
 	
 	sDevice = device;
-
-	sDescriptorHandleIncrementSize = sDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	sRootSignature = rootSignature;
 	sPipelineState = pipelineState;

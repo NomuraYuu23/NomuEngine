@@ -24,6 +24,7 @@ public: // 変数
 		kPipelineStateNameParticle, // パーティクル
 		kPipelineStateNameOutLine, //アウトライン
 		kPipelineStateNameCollision2DDebugDraw, // コライダーデバッグ2D
+		kPipelineStateNameLine, // 線
 		kPipelineStateNameOfCount // 使わない
 	};
 
@@ -62,6 +63,10 @@ private: // グラフィックスパイプライン作成関数
 	/// コライダーデバッグ2D
 	/// </summary>
 	static void CreateForCollision2DDebugDraw();
+	/// <summary>
+	/// 線
+	/// </summary>
+	static void CreateForLine();
 
 private: // 以下パイプラインの変数やenum
 

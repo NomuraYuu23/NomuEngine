@@ -21,6 +21,7 @@
 #include "../Light/PointLight/PointLightManager.h"
 #include "../Light/SpotLight/SpotLightManager.h"
 #include "../base/D3DResourceLeakChecker.h"
+#include "../2D/DrawLine.h"
 
 // サウンド再生
 #include "../Audio/Audio.h"
