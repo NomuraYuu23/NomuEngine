@@ -212,15 +212,11 @@ void RootParameterManager::RootParameterInitializeForLine()
 {
 
 	//RootParameter作成。複数設定できるので配列。
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
-	// WVP0
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	// VP
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//PixelShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
-	// WVP1
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-	rootParameters[1].Descriptor.ShaderRegister = 1;                   //レジスタ番号1とバインド
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexLine].push_back(rootParameters[i]);

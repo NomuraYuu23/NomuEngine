@@ -5,23 +5,19 @@ struct VertexShaderInput {
 	float32_t4 color : COLOR0;
 };
 
-struct WVP {
+struct VP {
 	float32_t4x4 m;
 };
 
-ConstantBuffer<WVP> gWVP0 : register(b0);
-ConstantBuffer<WVP> gWVP1 : register(b1);
+ConstantBuffer<VP> gVP : register(b0);
 
-VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID)
+
+VertexShaderOutput main(VertexShaderInput input)
 {
 
 	VertexShaderOutput output;
 
-	WVP wvp[2];
-	wvp[0] = gWVP0;
-	wvp[1] = gWVP1;
-
-	output.position = mul(input.position, wvp[vertexId].m);
+	output.position = mul(input.position, gVP.m);
 	output.color = input.color;
 
 	return output;

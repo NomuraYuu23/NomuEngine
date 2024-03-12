@@ -10,6 +10,7 @@
 #include "../../3D/Model.h"
 #include "../../3D/Material.h"
 #include "../../Particle/ParticleManager.h"
+#include "../../2D/DrawLine.h"
 
 #include "../../../Application/Scene/SceneName.h"
 #include "../../base/ITextureHandleManager.h"

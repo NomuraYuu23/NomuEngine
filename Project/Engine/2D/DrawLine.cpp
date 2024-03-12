@@ -78,16 +78,6 @@ bool DrawLine::Initialize()
 {
 	assert(sDevice);
 
-	// 一個目の頂点のWVP
-	WVP0Buff_ = BufferResource::CreateBufferResource(sDevice, (sizeof(WVP) + 0xff) & ~0xff);
-	WVP0Buff_->Map(0, nullptr, reinterpret_cast<void**>(&WVPMap0_));
-	WVPMap0_->matrix = Matrix4x4::MakeIdentity4x4();
-
-	// 二個目の頂点のWVP
-	WVP1Buff_ = BufferResource::CreateBufferResource(sDevice, (sizeof(WVP) + 0xff) & ~0xff);
-	WVP1Buff_->Map(0, nullptr, reinterpret_cast<void**>(&WVPMap1_));
-	WVPMap1_->matrix = Matrix4x4::MakeIdentity4x4();
-
 	//Sprite用の頂点リソースを作る
 	vertBuff_ = BufferResource::CreateBufferResource(sDevice, sizeof(ColorVertexData) * kVertNum);
 
@@ -102,9 +92,9 @@ bool DrawLine::Initialize()
 	vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap));
 
 	vertMap[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	vertMap[0].positon = { 0.0f, 0.0f, 0.0f};
+	vertMap[0].positon = { 0.0f, 0.0f, 0.0f, 1.0f};
 	vertMap[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	vertMap[1].positon = { 0.0f, 0.0f, 0.0f };
+	vertMap[1].positon = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	return true;
 
@@ -120,17 +110,14 @@ void DrawLine::Draw(
 
 	vertMap[0].color = color0;
 	vertMap[1].color = color1;
-
-	Vector3 scale = { 1.0f,1.0f,1.0f };
-	Vector3 rotation = { 1.0f,1.0f,1.0f };
-
-	WVPMap0_->matrix = Matrix4x4::Multiply(Matrix4x4::MakeAffineMatrix(scale, rotation, position0), camera.GetViewProjectionMatrix());
-	WVPMap1_->matrix = Matrix4x4::Multiply(Matrix4x4::MakeAffineMatrix(scale, rotation, position1), camera.GetViewProjectionMatrix());
+	vertMap[0].positon = { position0.x, position0.y, position0.z, 1.0f };
+	vertMap[1].positon = { position1.x, position1.y, position1.z, 1.0f };
 	
+	// 頂点バッファの設定
+	sCommandList->IASetVertexBuffers(0, 1, &vbView_);
 
-	//WVP CBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, WVP0Buff_->GetGPUVirtualAddress());
-	sCommandList->SetGraphicsRootConstantBufferView(1, WVP1Buff_->GetGPUVirtualAddress());
+	//VP CBufferの場所を設定
+	sCommandList->SetGraphicsRootConstantBufferView(0, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(kVertNum, 1, 0, 0);

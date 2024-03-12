@@ -18,13 +18,6 @@ class DrawLine
 
 public:
 
-	struct WVP
-	{
-		Matrix4x4 matrix;
-	};
-
-public:
-
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
@@ -102,14 +95,6 @@ private:
 	ColorVertexData* vertMap = nullptr;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-
-	// 一個目の頂点のWVP
-	Microsoft::WRL::ComPtr<ID3D12Resource> WVP0Buff_;
-	WVP* WVPMap0_;
-
-	// 二個目の頂点のWVP
-	Microsoft::WRL::ComPtr<ID3D12Resource> WVP1Buff_;
-	WVP* WVPMap1_;
 
 };
 

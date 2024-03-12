@@ -137,6 +137,8 @@ void GameScene::Initialize() {
 	circle1_ = std::make_unique<Circle>();
 	circle1_->Initialize(circle1Center_, 160.0f, nullptr);
 
+	line_.reset(DrawLine::Create());
+
 }
 
 /// <summary>
@@ -245,7 +247,7 @@ void GameScene::Draw() {
 	//光源
 	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
-	
+
 	//Obj
 	sampleObj_->Draw(camera_);
 
@@ -260,6 +262,20 @@ void GameScene::Draw() {
 #endif // _DEBUG
 
 	Model::PostDraw();
+
+#pragma region 線描画
+	// 前景スプライト描画前処理
+	DrawLine::PreDraw(dxCommon_->GetCommadList());
+
+	line_->Draw(linePos0_, linePos1_, 
+		Vector4{ 1.0f, 1.0f, 1.0f, 1.0f},
+		Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
+		camera_);
+
+	// 前景スプライト描画後処理
+	DrawLine::PostDraw();
+
+#pragma endregion
 	
 #pragma region アウトライン描画
 	Model::PreDrawOutLine(dxCommon_->GetCommadList());
