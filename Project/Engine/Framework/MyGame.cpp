@@ -45,12 +45,12 @@ void MyGame::Draw()
 
 	imGuiManager->End();
 
-	if (imGuiDraw) {
-		// シェーダーリソースビューをセット
-		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(dxCommon->GetCommadList(), 2, 0);
-		//実際のcommandListのImGuiの描画コマンドを積む
-		imGuiManager->Draw();
-	}
+	//if (imGuiDraw) {
+	//	// シェーダーリソースビューをセット
+	//	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(dxCommon->GetCommadList(), 2, 0);
+	//	//実際のcommandListのImGuiの描画コマンドを積む
+	//	imGuiManager->Draw();
+	//}
 
 	//描画後処理
 	dxCommon->PostDraw();

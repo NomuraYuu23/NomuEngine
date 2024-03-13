@@ -361,9 +361,6 @@
     <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
-      <Filter>Engine\Base\GraphicsPipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\GraphicsPipelineState\InputLayoutManager.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
@@ -456,6 +453,12 @@
     </ClCompile>
     <ClCompile Include="Engine\2D\DrawLine.cpp">
       <Filter>Engine\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RenderTargetView.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
+      <Filter>Engine\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -723,9 +726,6 @@
     <ClInclude Include="Engine\base\GraphicsPipelineState\BlendStateManager.h">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DescriptorHerpManager.h">
-      <Filter>Engine\Base\GraphicsPipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\GraphicsPipelineState\InputLayoutManager.h">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
@@ -849,6 +849,15 @@
     <ClInclude Include="Engine\2D\DrawLine.h">
       <Filter>Engine\2D</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\RenderTargetView.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DescriptorHerpManager.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\SpriteVertex.h">
+      <Filter>Engine\2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -871,6 +880,9 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="Resources\shaders\Line.hlsli">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
@@ -909,6 +921,12 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Line.PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffect.PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffect.VS.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

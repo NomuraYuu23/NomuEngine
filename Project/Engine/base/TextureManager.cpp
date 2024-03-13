@@ -313,9 +313,6 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
-	//DescriptorSizeを取得しておく
-	const uint32_t desriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 	//SRVを作成するDescriptorHeapの場所を決める
 	texture.cpuDescHandleSRV = DescriptorHerpManager::GetCPUDescriptorHandle();
 	texture.gpuDescHandleSRV = DescriptorHerpManager::GetGPUDescriptorHandle();

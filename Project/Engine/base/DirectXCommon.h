@@ -10,6 +10,8 @@
 
 #include "WinApp.h"
 
+#include "../2D/SpriteVertex.h"
+
 /// <summary>
 /// DirectX汎用
 /// </summary>
@@ -99,6 +101,36 @@ private:
 	// 記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
+public: // マルチパスレンダリング
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> rtvTmp_;
+	// シェーダーリソースビューのハンドル(CPU)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandleSRV;
+	// シェーダーリソースビューのハンドル(GPU)
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandleSRV;
+	//  DSVのインデックス
+	uint32_t indexDescriptorHeapSRV;
+
+	// ルートシグネチャ
+	ID3D12RootSignature* postRootSignature_;
+	// パイプラインステートオブジェクト
+	ID3D12PipelineState* postPipelineState_;
+
+	// 頂点バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
+	// 頂点バッファマップ
+	SpriteVertex* vertMap = nullptr;
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
+
+	//インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView_{};
+
+	//インデックスリソースにデータを書き込む
+	uint32_t* indexMap = nullptr;
+
 private:
 	DirectXCommon() = default;
 	~DirectXCommon() = default;
@@ -148,11 +180,6 @@ private:
 	void Initializecommand();
 
 	/// <summary>
-	/// レンダーターゲット生成
-	/// </summary>
-	void CreateFinalRenderTarget();
-
-	/// <summary>
 	/// 深度バッファ生成
 	/// </summary>
 	void CreateDepthBuffer();
@@ -171,6 +198,18 @@ private:
 	/// FPS固定更新
 	/// </summary>
 	void UpdateFixFPS();
+
+public:
+
+	/// <summary>
+	/// レンダーターゲット生成
+	/// </summary>
+	void CreateFinalRenderTarget();
+
+	void PostEffectInitialize(ID3D12RootSignature* postRootSignature,
+		ID3D12PipelineState* postPipelineState);
+
+	void PostEffect();
 
 };
 

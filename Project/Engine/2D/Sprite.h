@@ -16,7 +16,7 @@
 #include "../Math/Vector4.h"
 #include "../Math/Matrix4x4.h"
 
-#include "../3D/VertexData.h"
+#include "../2D/SpriteVertex.h"
 #include "../3D/TransformationMatrix.h"
 #include "../3D/TransformStructure.h"
 
@@ -121,7 +121,7 @@ private:
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
 	// 頂点バッファマップ
-	VertexData* vertMap = nullptr;
+	SpriteVertex* vertMap = nullptr;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 

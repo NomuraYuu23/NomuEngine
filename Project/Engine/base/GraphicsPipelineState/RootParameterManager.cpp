@@ -31,6 +31,8 @@ void RootParameterManager::Initialize()
 	RootParameterInitializeForCollision2DDebugDraw();
 	// 線
 	RootParameterInitializeForLine();
+	// ポストエフェクト
+	RootParameterInitializeForPostEffect();
 
 }
 
@@ -220,6 +222,24 @@ void RootParameterManager::RootParameterInitializeForLine()
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexLine].push_back(rootParameters[i]);
+	}
+
+}
+
+void RootParameterManager::RootParameterInitializeForPostEffect()
+{
+
+	//RootParameter作成。複数設定できるので配列。
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	// テクスチャ
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexTexture0].data();//Tableの中身の配列を指定
+	rootParameters[0].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexTexture0].size());//Tableで利用する数
+
+
+	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
+		rootParameters_[kRootParameterIndexPostEffect].push_back(rootParameters[i]);
 	}
 
 }
