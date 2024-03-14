@@ -96,28 +96,6 @@ private:
 
 	std::unique_ptr<RenderTargetTexture> renderTargetTexture_;
 
-public: // マルチパスレンダリング
-
-	// ルートシグネチャ
-	ID3D12RootSignature* postRootSignature_;
-	// パイプラインステートオブジェクト
-	ID3D12PipelineState* postPipelineState_;
-
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	// 頂点バッファマップ
-	SpriteVertex* vertMap = nullptr;
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
-
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView_{};
-
-	//インデックスリソースにデータを書き込む
-	uint32_t* indexMap = nullptr;
-
 private: // シングルトン
 	DirectXCommon() = default;
 	~DirectXCommon() = default;
@@ -140,13 +118,6 @@ private: // 関数
 	/// FPS固定更新
 	/// </summary>
 	void UpdateFixFPS();
-
-public:
-
-	void PostEffectInitialize(ID3D12RootSignature* postRootSignature,
-		ID3D12PipelineState* postPipelineState);
-
-	void PostEffect();
 
 };
 

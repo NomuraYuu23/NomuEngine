@@ -15,8 +15,6 @@ void MyFramework::Initialize()
 	input = Input::GetInstance();
 	input->Initialize(win->GetHInstance(), win->GetHwnd());
 
-	GraphicsPipelineState::Initialize(dxCommon->GetDevice());
-
 	//テクスチャマネージャー
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
 
@@ -59,10 +57,6 @@ void MyFramework::Initialize()
 	// ImGuiマネージャー
 	imGuiManager = ImGuiManager::GetInstance();
 	imGuiManager->Initialize(win, dxCommon);
-
-	dxCommon->PostEffectInitialize(
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNamePostEffect].Get(),
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNamePostEffect].Get());
 
 	//グローバル変数ファイル読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
