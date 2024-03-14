@@ -141,6 +141,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp" />
     <ClCompile Include="Engine\base\ITextureHandleManager.cpp" />
     <ClCompile Include="Engine\base\RenderTargetView.cpp" />
+    <ClCompile Include="Engine\base\SwapChain.cpp" />
     <ClCompile Include="Engine\Collider2D\Circle.cpp" />
     <ClCompile Include="Engine\Collider2D\Collider2D.cpp" />
     <ClCompile Include="Engine\Collider2D\Box.cpp" />
@@ -254,6 +255,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\GraphicsPipelineState\SamplerManager.h" />
     <ClInclude Include="Engine\base\ITextureHandleManager.h" />
     <ClInclude Include="Engine\base\RenderTargetView.h" />
+    <ClInclude Include="Engine\base\SwapChain.h" />
     <ClInclude Include="Engine\Camera\CameraForGPU.h" />
     <ClInclude Include="Engine\Collider2D\Circle.h" />
     <ClInclude Include="Engine\Collider2D\Collider2D.h" />

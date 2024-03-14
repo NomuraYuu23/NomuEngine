@@ -11,10 +11,6 @@ void MyFramework::Initialize()
 	dxCommon = DirectXCommon::GetInstance();
 	dxCommon->Initialize(win);
 
-	// ディスクリプタヒープ
-	descriptorHerpManager = SRVDescriptorHerpManager::GetInstance();
-	descriptorHerpManager->Initialize(dxCommon);
-
 	//入力デバイス
 	input = Input::GetInstance();
 	input->Initialize(win->GetHInstance(), win->GetHwnd());

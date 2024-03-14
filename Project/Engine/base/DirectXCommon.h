@@ -14,6 +14,7 @@
 
 // クラス
 #include "DXGIDevice.h"
+#include "SwapChain.h"
 
 /// <summary>
 /// DirectX汎用
@@ -84,18 +85,15 @@ private:
 	WinApp* winApp_;
 
 	//Direct3D関連
-	//Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
-	//Microsoft::WRL::ComPtr<ID3D12Device> device_;
-
 	DXGIDevice* dxgiDevice_;
+
+	SwapChain* swapChain_;
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandListLoad_;
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocatorLoad_;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResources[2];
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_;
@@ -151,16 +149,6 @@ private:
 		Microsoft::WRL::ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_TYPE& heapType, UINT numDescriptors, bool shaderVisible);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, int32_t width, int32_t height);
-
-	/// <summary>
-	/// DXGIデバイス初期化
-	/// </summary>
-	//void InitializeDXGIDevice();
-
-	/// <summary>
-	/// スワップチェーンの生成
-	/// </summary>
-	void CreateSwapChain();
 
 	/// <summary>
 	/// コマンド関連初期化

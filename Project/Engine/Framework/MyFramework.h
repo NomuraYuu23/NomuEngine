@@ -81,7 +81,6 @@ protected: // メンバ変数
 
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
-	SRVDescriptorHerpManager* descriptorHerpManager = nullptr;
 
 	Audio* audio = nullptr;
 	Input* input = nullptr;

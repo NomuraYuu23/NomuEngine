@@ -41,8 +41,8 @@ public: // 静的関数
 	/// <summary>
 	///  初期化
 	/// </summary>
-	/// <param name="dxCommon"></param>
-	static void Initialize(DirectXCommon* dxCommon);
+	/// <param name="device"></param>
+	static void Initialize(ID3D12Device* device);
 
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle();
 

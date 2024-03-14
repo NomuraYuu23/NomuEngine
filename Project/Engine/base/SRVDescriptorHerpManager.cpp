@@ -15,12 +15,12 @@ SRVDescriptorHerpManager* SRVDescriptorHerpManager::GetInstance()
 	return &instance;
 }
 
-void SRVDescriptorHerpManager::Initialize(DirectXCommon* dxCommon)
+void SRVDescriptorHerpManager::Initialize(ID3D12Device* device)
 {
 
 	HRESULT result = S_FALSE;
 
-	device_ = dxCommon->GetDevice();
+	device_ = device;
 
 	// ディスクリプタヒープを生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
