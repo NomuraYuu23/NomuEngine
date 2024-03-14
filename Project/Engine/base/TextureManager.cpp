@@ -2,6 +2,7 @@
 #include <cassert>
 #include "../../externals/imgui/imgui_impl_dx12.h"
 #include "BufferResource.h"
+#include "DxCommand.h"
 
 using namespace DirectX;
 
@@ -280,13 +281,13 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 	assert(SUCCEEDED(hr));
 
 	ID3D12CommandList* commandLists[] = { dxCommon->GetCommadListLoad() };
-	dxCommon->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
+	DxCommand::GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 
 	//実行待ち
 	//Fenceの値を更新
 	dxCommon->SetFenceVal(dxCommon->GetFenceVal() + 1);
 	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	dxCommon->GetCommandQueue()->Signal(dxCommon->GetFence(), dxCommon->GetFenceVal());
+	DxCommand::GetCommandQueue()->Signal(dxCommon->GetFence(), dxCommon->GetFenceVal());
 
 	//Fenceの値が指定したSignal値にたどり着いているが確認する
 	//GetCompletedValueの初期値はFence作成時に渡した初期値

@@ -51,7 +51,11 @@ void DirectXCommon::Initialize(
 	DSVDescriptorHerpManager::Initialize(dxgiDevice_->GetDevice());
 
 	// コマンド関連初期化
-	Initializecommand();
+	DxCommand::StaticInitialize(dxgiDevice_->GetDevice());
+	command_ = std::make_unique<DxCommand>();
+	command_->Initialize();
+	loadCommand_ = std::make_unique<DxCommand>();
+	loadCommand_->Initialize();
 
 	// スワップチェーンの生成
 	swapChain_ = SwapChain::GetInstance();
@@ -59,7 +63,7 @@ void DirectXCommon::Initialize(
 		backBufferWidth_,
 		backBufferHeight_,
 		dxgiDevice_,
-		commandQueue_.Get(),
+		DxCommand::GetCommandQueue(),
 		winApp_);
 
 	// 深度バッファ生成
@@ -86,7 +90,7 @@ void DirectXCommon::PreDraw() {
 	//遷移後のResoureState
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier);
+	command_->GetCommadList()->ResourceBarrier(1, &barrier);
 
 	//DescriptorSizeを取得しておく
 	const uint32_t desriptorSizeRTV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -102,7 +106,7 @@ void DirectXCommon::PreDraw() {
 
 	//描画先のDSVとRTVを設定する
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
-	commandList_->OMSetRenderTargets(1, &rtvStartHandle, false, &dsvHandle);
+	command_->GetCommadList()->OMSetRenderTargets(1, &rtvStartHandle, false, &dsvHandle);
 
 	// 全画面クリア
 	ClearRenderTarget();
@@ -119,7 +123,7 @@ void DirectXCommon::PreDraw() {
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
-	commandList_->RSSetViewports(1, &viewport);//Viewportを設定
+	command_->GetCommadList()->RSSetViewports(1, &viewport);//Viewportを設定
 
 	//シザー矩形
 	D3D12_RECT scissorRect{};
@@ -128,7 +132,7 @@ void DirectXCommon::PreDraw() {
 	scissorRect.right = winApp_->kWindowWidth;
 	scissorRect.top = 0;
 	scissorRect.bottom = winApp_->kWindowHeight;
-	commandList_->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
+	command_->GetCommadList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
 }
 // 描画後処理
@@ -148,7 +152,7 @@ void DirectXCommon::PostDraw() {
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier);
+	command_->GetCommadList()->ResourceBarrier(1, &barrier);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +161,7 @@ void DirectXCommon::PostDraw() {
 	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
 
-	swapChain_->PreDraw(commandList_.Get(), dsvHandle);
+	swapChain_->PreDraw(command_->GetCommadList(), dsvHandle);
 
 	//ポストエフェクト
 	PostEffect();
@@ -170,19 +174,19 @@ void DirectXCommon::PostDraw() {
 
 
 	//コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseすること
-	HRESULT hr = commandList_->Close();
+	HRESULT hr = command_->GetCommadList()->Close();
 	assert(SUCCEEDED(hr));
 
 	//GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { commandList_.Get() };
-	commandQueue_->ExecuteCommandLists(1, commandLists);
+	ID3D12CommandList* commandLists[] = { command_->GetCommadList() };
+	DxCommand::GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うように通知する
 	swapChain_->Present();
 
 	//Fenceの値を更新
 	fenceVal_++;
 	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	commandQueue_->Signal(fence_.Get(), fenceVal_);
+	DxCommand::GetCommandQueue()->Signal(fence_.Get(), fenceVal_);
 
 	//Fenceの値が指定したSignal値にたどり着いているが確認する
 	//GetCompletedValueの初期値はFence作成時に渡した初期値
@@ -200,9 +204,9 @@ void DirectXCommon::PostDraw() {
 	UpdateFixFPS();
 
 	//次のフレーム用のコマンドリストを準備
-	hr = commandAllocator_->Reset();
+	hr = command_->GetCommandAllocator()->Reset();
 	assert(SUCCEEDED(hr));
-	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
+	hr = command_->GetCommadList()->Reset(command_->GetCommandAllocator(), nullptr);
 	assert(SUCCEEDED(hr));
 
 }
@@ -220,7 +224,7 @@ void DirectXCommon::ClearRenderTarget() {
 	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
 
 	// rtvTmp
-	commandList_->ClearRenderTargetView(rtvStartHandle, clearColor, 0, nullptr);
+	command_->GetCommadList()->ClearRenderTargetView(rtvStartHandle, clearColor, 0, nullptr);
 
 }
 // 深度バッファのクリア
@@ -233,7 +237,7 @@ void DirectXCommon::ClearDepthBuffer() {
 	//描画先のDSVとRTVを設定する
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
 	//指定した深度で画面全体をクリアする
-	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	command_->GetCommadList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 }
 
@@ -309,38 +313,38 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencilTextureR
 }
 
 // コマンド関連初期化
-void DirectXCommon::Initializecommand() {
-
-	//コマンドキューを生成する
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-	HRESULT hr = dxgiDevice_->GetDevice()->CreateCommandQueue(&commandQueueDesc,
-		IID_PPV_ARGS(&commandQueue_));
-	//コマンドキューの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	//コマンドアロケータを生成する
-	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
-	//コマンドアロケータの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	//コマンドリストを生成する
-	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr,
-		IID_PPV_ARGS(&commandList_));
-	//コマンドリストの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	//コマンドアロケータを生成する
-	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocatorLoad_));
-	//コマンドアロケータの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	//コマンドリストを生成する
-	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocatorLoad_.Get(), nullptr,
-		IID_PPV_ARGS(&commandListLoad_));
-	//コマンドリストの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-}
+//void DirectXCommon::Initializecommand() {
+//
+//	//コマンドキューを生成する
+//	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+//	HRESULT hr = dxgiDevice_->GetDevice()->CreateCommandQueue(&commandQueueDesc,
+//		IID_PPV_ARGS(&commandQueue_));
+//	//コマンドキューの生成がうまくいかなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//	//コマンドアロケータを生成する
+//	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
+//	//コマンドアロケータの生成がうまくいかなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//	//コマンドリストを生成する
+//	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr,
+//		IID_PPV_ARGS(&commandList_));
+//	//コマンドリストの生成がうまくいかなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//	//コマンドアロケータを生成する
+//	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocatorLoad_));
+//	//コマンドアロケータの生成がうまくいかなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//	//コマンドリストを生成する
+//	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocatorLoad_.Get(), nullptr,
+//		IID_PPV_ARGS(&commandListLoad_));
+//	//コマンドリストの生成がうまくいかなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//}
 
 // レンダーターゲット生成
 void DirectXCommon::CreateFinalRenderTarget() {
@@ -551,23 +555,23 @@ void DirectXCommon::PostEffect()
 {
 
 	//RootSignatureを設定。
-	commandList_->SetPipelineState(postPipelineState_);//PS0を設定
-	commandList_->SetGraphicsRootSignature(postRootSignature_);
+	command_->GetCommadList()->SetPipelineState(postPipelineState_);//PS0を設定
+	command_->GetCommadList()->SetGraphicsRootSignature(postRootSignature_);
 	//形状を設定。PS0に設定しているものとは別。
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	command_->GetCommadList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 頂点バッファの設定
-	commandList_->IASetVertexBuffers(0, 1, &vbView_);
+	command_->GetCommadList()->IASetVertexBuffers(0, 1, &vbView_);
 	//IBVを設定
-	commandList_->IASetIndexBuffer(&ibView_);
+	command_->GetCommadList()->IASetIndexBuffer(&ibView_);
 
 	//ID3D12DescriptorHeap* ppHeaps[] = { DescriptorHerpManager::descriptorHeap_.Get() };
 	//commandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	//シェーダーリソースビューをセット
-	commandList_->SetGraphicsRootDescriptorTable(0, gpuHandleSRV);
+	command_->GetCommadList()->SetGraphicsRootDescriptorTable(0, gpuHandleSRV);
 
 	//描画
-	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	command_->GetCommadList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
 }
