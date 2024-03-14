@@ -34,7 +34,7 @@ enum RootParameterIndex {
 	kRootParameterIndexOutLine,
 	kRootParameterIndexCollision2DDebugDraw,
 	kRootParameterIndexLine,
-	kRootParameterIndexPostEffect,
+	kRootParameterIndexSwapChain,
 	kRootParameterIndexOfCount,
 };
 
@@ -89,7 +89,7 @@ private: // 関数
 	/// <summary>
 	/// ポストエフェクト
 	/// </summary>
-	static void RootParameterInitializeForPostEffect();
+	static void RootParameterInitializeForSwapChain();
 
 	/// <summary>
 	/// ディスクリプタレンジの初期化

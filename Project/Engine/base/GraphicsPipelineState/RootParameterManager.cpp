@@ -31,8 +31,8 @@ void RootParameterManager::Initialize()
 	RootParameterInitializeForCollision2DDebugDraw();
 	// 線
 	RootParameterInitializeForLine();
-	// ポストエフェクト
-	RootParameterInitializeForPostEffect();
+	// スワップチェーン
+	RootParameterInitializeForSwapChain();
 
 }
 
@@ -226,7 +226,7 @@ void RootParameterManager::RootParameterInitializeForLine()
 
 }
 
-void RootParameterManager::RootParameterInitializeForPostEffect()
+void RootParameterManager::RootParameterInitializeForSwapChain()
 {
 
 	//RootParameter作成。複数設定できるので配列。
@@ -239,7 +239,7 @@ void RootParameterManager::RootParameterInitializeForPostEffect()
 
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
-		rootParameters_[kRootParameterIndexPostEffect].push_back(rootParameters[i]);
+		rootParameters_[kRootParameterIndexSwapChain].push_back(rootParameters[i]);
 	}
 
 }

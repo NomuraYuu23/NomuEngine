@@ -4,6 +4,8 @@
 #include "DSVDescriptorHerpManager.h"
 #include "../Math/Matrix4x4.h"
 #include "BufferResource.h"
+#include "TextureManager.h"
+#include "../2D/ImguiManager.h"
 
 SwapChain* SwapChain::GetInstance()
 {
@@ -216,6 +218,11 @@ void SwapChain::Draw(ID3D12GraphicsCommandList* commandList,
 	//描画
 	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
+#ifdef _DEBUG
+	//実際のcommandListのImGuiの描画コマンドを積む
+	ImGuiManager::GetInstance()->Draw();
+#endif // _DEBUG
+
 	PostDraw();
 
 }
@@ -224,8 +231,8 @@ void SwapChain::DrawInitialize(
 	ID3D12Device* device)
 {
 
-	postRootSignature_ = GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNamePostEffect].Get();
-	postPipelineState_ = GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNamePostEffect].Get();
+	postRootSignature_ = GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSwapChain].Get();
+	postPipelineState_ = GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSwapChain].Get();
 
 	//Sprite用の頂点リソースを作る
 	vertBuff_ = BufferResource::CreateBufferResource(device, sizeof(SpriteVertex) * 6);

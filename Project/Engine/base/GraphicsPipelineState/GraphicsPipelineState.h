@@ -25,7 +25,7 @@ public: // 変数
 		kPipelineStateNameOutLine, //アウトライン
 		kPipelineStateNameCollision2DDebugDraw, // コライダーデバッグ2D
 		kPipelineStateNameLine, // 線
-		kPipelineStateNamePostEffect, // ポストエフェクト
+		kPipelineStateNameSwapChain, // スワップチェーン
 		kPipelineStateNameOfCount // 使わない
 	};
 
@@ -72,7 +72,7 @@ private: // グラフィックスパイプライン作成関数
 	/// <summary>
 	/// ポストエフェクト
 	/// </summary>
-	static void CreateForPostEffect();
+	static void CreateForSwapChain();
 
 private: // 以下パイプラインの変数やenum
 

@@ -81,8 +81,5 @@ private: // メンバ変数
 	// 最初か
 	bool isFirstLoad_;
 
-public:
-
-	bool GetInitializing() { return sceneInitializing_; };
 };
 

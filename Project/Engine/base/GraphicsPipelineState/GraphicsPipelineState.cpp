@@ -42,7 +42,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 
 	CreateForLine();
 
-	CreateForPostEffect();
+	CreateForSwapChain();
 
 }
 
@@ -328,18 +328,18 @@ void GraphicsPipelineState::CreateForLine()
 
 }
 
-void GraphicsPipelineState::CreateForPostEffect()
+void GraphicsPipelineState::CreateForSwapChain()
 {
 
 	CreatePSODesc createPSODesc;
 
 	RootsignatureSetting(
-		kPipelineStateNamePostEffect,
+		kPipelineStateNameSwapChain,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
-		kRootParameterIndexPostEffect,
+		kRootParameterIndexSwapChain,
 		kSamplerIndexNormal);
 
-	createPSODesc.pipelineStateName = kPipelineStateNamePostEffect;
+	createPSODesc.pipelineStateName = kPipelineStateNameSwapChain;
 
 	createPSODesc.depthStencilState = DepthStencilStateSetting(
 		true,
@@ -353,9 +353,9 @@ void GraphicsPipelineState::CreateForPostEffect()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/PostEffect.VS.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/SwapChain.VS.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/PostEffect.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/SwapChain.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
