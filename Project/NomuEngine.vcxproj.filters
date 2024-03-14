@@ -163,6 +163,9 @@
     <Filter Include="Engine\Base\DescriptorHerpManager">
       <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Base\DxCommon">
+      <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -202,9 +205,6 @@
       <Filter>Engine\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\BufferResource.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\TextureManager.cpp">
@@ -457,29 +457,32 @@
     <ClCompile Include="Engine\2D\DrawLine.cpp">
       <Filter>Engine\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp">
       <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RTVDescriptorHerpManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\DSVDescriptorHerpManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DXGIDevice.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\base\RTVDescriptorHerpManager.cpp">
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\Log.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\SwapChain.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+      <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DxCommand.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DXGIDevice.cpp">
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\Log.cpp">
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\SwapChain.cpp">
+      <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,9 +538,6 @@
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\D3DResourceLeakChecker.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
@@ -870,32 +870,35 @@
     <ClInclude Include="Engine\2D\DrawLine.h">
       <Filter>Engine\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RenderTargetTexture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\SpriteVertex.h">
       <Filter>Engine\2D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SRVDescriptorHerpManager.h">
       <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RTVDescriptorHerpManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\DSVDescriptorHerpManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DXGIDevice.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\base\RTVDescriptorHerpManager.h">
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\Log.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\base\DirectXCommon.h">
+      <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\SwapChain.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\base\RenderTargetTexture.h">
+      <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DxCommand.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DXGIDevice.h">
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Log.h">
+      <Filter>Engine\Base\DxCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\SwapChain.h">
+      <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
