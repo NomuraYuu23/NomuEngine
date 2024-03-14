@@ -1,5 +1,5 @@
 #include "ImGuiManager.h"
-#include "../base/DescriptorHerpManager.h"
+#include "../base/SRVDescriptorHerpManager.h"
 
 ImGuiManager* ImGuiManager::GetInstance()
 {
@@ -21,10 +21,10 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
 		2,								 // ダブルバッファ
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, // SRGB
-		DescriptorHerpManager::descriptorHeap_.Get(),
-		DescriptorHerpManager::GetCPUDescriptorHandle(),
-		DescriptorHerpManager::GetGPUDescriptorHandle());
-	DescriptorHerpManager::NextIndexDescriptorHeapChange();
+		SRVDescriptorHerpManager::descriptorHeap_.Get(),
+		SRVDescriptorHerpManager::GetCPUDescriptorHandle(),
+		SRVDescriptorHerpManager::GetGPUDescriptorHandle());
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 
 	static const ImWchar glyphRangesJapanese[] = {
 	0x0020, 0x007E, 0x00A2, 0x00A3, 0x00A7, 0x00A8, 0x00AC, 0x00AC, 0x00B0, 0x00B1, 0x00B4, 0x00B4, 0x00B6, 0x00B6, 0x00D7, 0x00D7,

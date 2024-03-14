@@ -100,7 +100,7 @@ void TextureManager::ResetTexture(const std::vector<uint32_t>& handles)
 		textures_[handles[i]].gpuDescHandleSRV.ptr = 0;
 		textures_[handles[i]].name.clear();
 		textures_[handles[i]].used = false;
-		DescriptorHerpManager::DescriptorHeapsMakeNull(textures_[handles[i]].indexDescriptorHeap);
+		SRVDescriptorHerpManager::DescriptorHeapsMakeNull(textures_[handles[i]].indexDescriptorHeap);
 	}
 
 }
@@ -127,7 +127,7 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle) {
 
 	assert(textureHandle < textures_.size());
-	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorHerpManager::descriptorHeap_.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	
 	//シェーダーリソースビューをセット
@@ -261,7 +261,7 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 		}
 	}
 
-	assert(indexNextDescriptorHeap < DescriptorHerpManager::kNumDescriptors);
+	assert(indexNextDescriptorHeap < SRVDescriptorHerpManager::kNumDescriptors);
 	uint32_t handle = indexNextDescriptorHeap;
 
 	Texture& texture = textures_.at(handle);
@@ -314,10 +314,10 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName, DirectXCommon
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	texture.cpuDescHandleSRV = DescriptorHerpManager::GetCPUDescriptorHandle();
-	texture.gpuDescHandleSRV = DescriptorHerpManager::GetGPUDescriptorHandle();
-	texture.indexDescriptorHeap = DescriptorHerpManager::GetNextIndexDescriptorHeap();
-	DescriptorHerpManager::NextIndexDescriptorHeapChange();
+	texture.cpuDescHandleSRV = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	texture.gpuDescHandleSRV = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	texture.indexDescriptorHeap = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 	//SRVの生成
 	device_->CreateShaderResourceView(texture.resource.Get(), &srvDesc, texture.cpuDescHandleSRV);
 

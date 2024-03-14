@@ -1,5 +1,5 @@
 #include "SpotLightManager.h"
-#include "../../base/DescriptorHerpManager.h"
+#include "../../base/SRVDescriptorHerpManager.h"
 #include "../../3D/TransformationMatrix.h"
 #include "../../base/BufferResource.h"
 
@@ -23,7 +23,7 @@ void SpotLightManager::StaticInitialize(ID3D12Device* device)
 SpotLightManager::~SpotLightManager()
 {
 
-	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 
 }
 
@@ -63,10 +63,10 @@ void SpotLightManager::SRVCreate()
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstanceMax_;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(SpotLightData);
-	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
-	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
-	DescriptorHerpManager::NextIndexDescriptorHeapChange();
+	instancingSrvHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	instancingSrvHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(spotLightDataBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 
 }

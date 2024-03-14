@@ -160,6 +160,9 @@
     <Filter Include="Engine\Math\Matrix3x3">
       <UniqueIdentifier>{7f7d088f-e420-4dd5-8ae3-748e04aa8d24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Base\DescriptorHerpManager">
+      <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -457,8 +460,20 @@
     <ClCompile Include="Engine\base\RenderTargetView.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DescriptorHerpManager.cpp">
-      <Filter>Engine\Base</Filter>
+    <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp">
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RTVDescriptorHerpManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DSVDescriptorHerpManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DXGIDevice.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\Log.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -852,11 +867,23 @@
     <ClInclude Include="Engine\base\RenderTargetView.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DescriptorHerpManager.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\SpriteVertex.h">
       <Filter>Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\SRVDescriptorHerpManager.h">
+      <Filter>Engine\Base\DescriptorHerpManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\RTVDescriptorHerpManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DSVDescriptorHerpManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DXGIDevice.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Log.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

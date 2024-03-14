@@ -3,7 +3,7 @@
 #include "../base/BufferResource.h"
 #include "../base/WinApp.h"
 #include "../base/DirectXCommon.h"
-#include "../base/DescriptorHerpManager.h"
+#include "../base/SRVDescriptorHerpManager.h"
 
 // コマンドリスト
 ID3D12GraphicsCommandList* WorldTransform::sCommandList = nullptr;
@@ -165,10 +165,10 @@ void WorldTransform::SRVCreate()
 	}
 
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
-	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
-	DescriptorHerpManager::NextIndexDescriptorHeapChange();
+	instancingSrvHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	instancingSrvHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(transformationMatrixesBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 
 }
@@ -212,7 +212,7 @@ void WorldTransform::Finalize()
 {
 
 	if (nodeDatas_.size() > 0) {
-		DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+		SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 	}
 
 }

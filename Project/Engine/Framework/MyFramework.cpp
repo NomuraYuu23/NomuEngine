@@ -12,7 +12,7 @@ void MyFramework::Initialize()
 	dxCommon->Initialize(win);
 
 	// ディスクリプタヒープ
-	descriptorHerpManager = DescriptorHerpManager::GetInstance();
+	descriptorHerpManager = SRVDescriptorHerpManager::GetInstance();
 	descriptorHerpManager->Initialize(dxCommon);
 
 	//入力デバイス

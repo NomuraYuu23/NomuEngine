@@ -45,7 +45,7 @@
 #include "../Particle/ParticleManager.h"
 
 // ディスクリプタヒープ
-#include ".../../../base/DescriptorHerpManager.h"
+#include ".../../../base/SRVDescriptorHerpManager.h"
 
 class MyFramework
 {
@@ -81,7 +81,7 @@ protected: // メンバ変数
 
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
-	DescriptorHerpManager* descriptorHerpManager = nullptr;
+	SRVDescriptorHerpManager* descriptorHerpManager = nullptr;
 
 	Audio* audio = nullptr;
 	Input* input = nullptr;

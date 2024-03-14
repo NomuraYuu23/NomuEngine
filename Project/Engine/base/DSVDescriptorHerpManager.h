@@ -11,13 +11,13 @@
 
 using namespace DirectX;
 
-class DescriptorHerpManager
+class DSVDescriptorHerpManager
 {
 
 public: // 静的変数
 
 	//ディスクリプタの数
-	static const size_t kNumDescriptors = 256;
+	static const size_t kNumDescriptors = 16;
 	// ディスクリプタヒープ
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
 
@@ -36,7 +36,7 @@ public: // 静的関数
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns></returns>
-	static DescriptorHerpManager* GetInstance();
+	static DSVDescriptorHerpManager* GetInstance();
 
 	/// <summary>
 	///  初期化
@@ -46,20 +46,18 @@ public: // 静的関数
 
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle();
 
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle();
-
 	static void NextIndexDescriptorHeapChange();
-	
+
 	static void DescriptorHeapsMakeNull(uint32_t index);
 
 	static uint32_t GetNextIndexDescriptorHeap() { return nextIndexDescriptorHeap_; }
 
 private: // シングルトン
 
-	DescriptorHerpManager() = default;
-	~DescriptorHerpManager() = default;
-	DescriptorHerpManager(const DescriptorHerpManager&) = delete;
-	DescriptorHerpManager& operator=(const DescriptorHerpManager&) = delete;
+	DSVDescriptorHerpManager() = default;
+	~DSVDescriptorHerpManager() = default;
+	DSVDescriptorHerpManager(const DSVDescriptorHerpManager&) = delete;
+	DSVDescriptorHerpManager& operator=(const DSVDescriptorHerpManager&) = delete;
 
 };
 

@@ -7,7 +7,7 @@
 Collision2DDebugDraw::~Collision2DDebugDraw()
 {
 
-	DescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 
 }
 
@@ -231,10 +231,10 @@ void Collision2DDebugDraw::SRVCreate()
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = static_cast<UINT>(kCollider2DDebugDrawForGPUNumMax_);
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(Collider2DDebugDrawForGPU);
-	instancingSrvHandleCPU_ = DescriptorHerpManager::GetCPUDescriptorHandle();
-	instancingSrvHandleGPU_ = DescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeap_ = DescriptorHerpManager::GetNextIndexDescriptorHeap();
-	DescriptorHerpManager::NextIndexDescriptorHeapChange();
+	instancingSrvHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	instancingSrvHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(collider2DDebugDrawForGPUBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 
 }

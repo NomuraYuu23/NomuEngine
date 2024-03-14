@@ -12,6 +12,9 @@
 
 #include "../2D/SpriteVertex.h"
 
+// クラス
+#include "DXGIDevice.h"
+
 /// <summary>
 /// DirectX汎用
 /// </summary>
@@ -54,7 +57,7 @@ public:
 	/// </summary>
 	void ClearDepthBuffer();
 
-	ID3D12Device* GetDevice() const { return device_.Get(); }
+	ID3D12Device* GetDevice() const { return dxgiDevice_->GetDevice(); }
 
 	ID3D12GraphicsCommandList* GetCommadList() const { return commandList_.Get(); }
 
@@ -81,8 +84,11 @@ private:
 	WinApp* winApp_;
 
 	//Direct3D関連
-	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	//Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
+	//Microsoft::WRL::ComPtr<ID3D12Device> device_;
+
+	DXGIDevice* dxgiDevice_;
+
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandListLoad_;
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
@@ -137,24 +143,6 @@ private:
 	DirectXCommon(const DirectXCommon&) = delete;
 	const DirectXCommon& operator=(const DirectXCommon&) = delete;
 
-	/// <summary>
-	/// ログ
-	/// </summary>
-	/// <param name="message"></param>
-	void Log(const std::string& message);
-
-	/// <summary>
-	/// コンバートストリング
-	/// </summary>
-	/// <param name="message"></param>
-	std::wstring ConvertString(const std::string& str);
-
-	/// <summary>
-	/// コンバートストリング
-	/// </summary>
-	/// <param name="message"></param>
-	std::string ConvertString(const std::wstring& str);
-
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
@@ -167,7 +155,7 @@ private:
 	/// <summary>
 	/// DXGIデバイス初期化
 	/// </summary>
-	void InitializeDXGIDevice();
+	//void InitializeDXGIDevice();
 
 	/// <summary>
 	/// スワップチェーンの生成

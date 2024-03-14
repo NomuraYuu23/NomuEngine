@@ -10,7 +10,7 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "ITextureHandleManager.h"
-#include "DescriptorHerpManager.h"
+#include "SRVDescriptorHerpManager.h"
 
 using namespace DirectX;
 
@@ -96,7 +96,7 @@ private:
 	//ディレクトリパス
 	std::string directoryPath_;
 	//テクスチャコンテナ
-	std::array<Texture, DescriptorHerpManager::kNumDescriptors> textures_;
+	std::array<Texture, SRVDescriptorHerpManager::kNumDescriptors> textures_;
 
 	//コンバートストリング
 	std::wstring ConvertString(const std::string& str);

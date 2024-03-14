@@ -1,21 +1,21 @@
-#include "DescriptorHerpManager.h"
+#include "SRVDescriptorHerpManager.h"
 
 // ディスクリプタヒープ
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DescriptorHerpManager::descriptorHeap_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> SRVDescriptorHerpManager::descriptorHeap_ = nullptr;
 // デバイス
-ID3D12Device* DescriptorHerpManager::device_ = nullptr;
+ID3D12Device* SRVDescriptorHerpManager::device_ = nullptr;
 // 次のディスクリプタヒープの場所
-uint32_t DescriptorHerpManager::nextIndexDescriptorHeap_ = 0u;
+uint32_t SRVDescriptorHerpManager::nextIndexDescriptorHeap_ = 0u;
 // ディスクリプタヒープのどこが空いているか
-std::array<bool, DescriptorHerpManager::kNumDescriptors> DescriptorHerpManager::isNullDescriptorHeaps_;
+std::array<bool, SRVDescriptorHerpManager::kNumDescriptors> SRVDescriptorHerpManager::isNullDescriptorHeaps_;
 
-DescriptorHerpManager* DescriptorHerpManager::GetInstance()
+SRVDescriptorHerpManager* SRVDescriptorHerpManager::GetInstance()
 {
-	static DescriptorHerpManager instance;
+	static SRVDescriptorHerpManager instance;
 	return &instance;
 }
 
-void DescriptorHerpManager::Initialize(DirectXCommon* dxCommon)
+void SRVDescriptorHerpManager::Initialize(DirectXCommon* dxCommon)
 {
 
 	HRESULT result = S_FALSE;
@@ -36,29 +36,29 @@ void DescriptorHerpManager::Initialize(DirectXCommon* dxCommon)
 
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHerpManager::GetCPUDescriptorHandle()
+D3D12_CPU_DESCRIPTOR_HANDLE SRVDescriptorHerpManager::GetCPUDescriptorHandle()
 {
 
 	uint32_t descriptorSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * nextIndexDescriptorHeap_);
+	handleCPU.ptr += (static_cast<unsigned long long>(descriptorSize) * nextIndexDescriptorHeap_);
 	return handleCPU;
 
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHerpManager::GetGPUDescriptorHandle()
+D3D12_GPU_DESCRIPTOR_HANDLE SRVDescriptorHerpManager::GetGPUDescriptorHandle()
 {
 
 	uint32_t descriptorSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * nextIndexDescriptorHeap_);
+	handleGPU.ptr += (static_cast<unsigned long long>(descriptorSize) * nextIndexDescriptorHeap_);
 	return handleGPU;
 
 }
 
-void DescriptorHerpManager::NextIndexDescriptorHeapChange()
+void SRVDescriptorHerpManager::NextIndexDescriptorHeapChange()
 {
 
 	isNullDescriptorHeaps_[nextIndexDescriptorHeap_] = false;
@@ -72,7 +72,7 @@ void DescriptorHerpManager::NextIndexDescriptorHeapChange()
 
 }
 
-void DescriptorHerpManager::DescriptorHeapsMakeNull(uint32_t index)
+void SRVDescriptorHerpManager::DescriptorHeapsMakeNull(uint32_t index)
 {
 
 	isNullDescriptorHeaps_[index] = true;
