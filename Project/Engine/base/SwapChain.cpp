@@ -211,7 +211,7 @@ void SwapChain::Draw(ID3D12GraphicsCommandList* commandList,
 	//commandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	//シェーダーリソースビューをセット
-	renderTargetTexture->SetGraphicsRootDescriptorTable(commandList_, 0);
+	renderTargetTexture->SetGraphicsRootDescriptorTable(commandList_, 0, 0);
 
 	//描画
 	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
