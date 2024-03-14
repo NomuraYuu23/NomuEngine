@@ -19,7 +19,9 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	void Initialize(ID3D12Device* device);
+	void Initialize(ID3D12Device* device,
+		int32_t backBufferWidth,
+		int32_t backBufferHeight);
 
 	/// <summary>
 	/// 描画前処理
@@ -31,6 +33,16 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
+
+	/// <summary>
+	/// レンダーターゲットをクリア
+	/// </summary>
+	void ClearRenderTarget();
+
+	/// <summary>
+	/// 深度値クリア
+	/// </summary>
+	void ClearDepthBuffer();
 
 	/// <summary>
 	/// GPUに送る

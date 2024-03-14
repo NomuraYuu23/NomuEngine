@@ -16,6 +16,7 @@
 #include "DXGIDevice.h"
 #include "SwapChain.h"
 #include "DxCommand.h"
+#include "RenderTargetTexture.h"
 
 /// <summary>
 /// DirectX汎用
@@ -48,11 +49,6 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
-
-	/// <summary>
-	/// レンダーターゲットのクリア
-	/// </summary>
-	void ClearRenderTarget();
 
 	/// <summary>
 	/// 深度バッファのクリア
@@ -90,9 +86,6 @@ private:
 	std::unique_ptr<DxCommand> command_; // コマンド
 	std::unique_ptr<DxCommand> loadCommand_; // 読み込み用コマンド
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_;
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	UINT64 fenceVal_ = 0;
 	int32_t backBufferWidth_ = 0;
@@ -101,15 +94,9 @@ private:
 	// 記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-public: // マルチパスレンダリング
+	std::unique_ptr<RenderTargetTexture> renderTargetTexture_;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> rtvTmp_;
-	// シェーダーリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandleSRV;
-	// シェーダーリソースビューのハンドル(GPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandleSRV;
-	//  DSVのインデックス
-	uint32_t indexDescriptorHeapSRV;
+public: // マルチパスレンダリング
 
 	// ルートシグネチャ
 	ID3D12RootSignature* postRootSignature_;
@@ -139,20 +126,6 @@ private: // シングルトン
 
 private: // 関数
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
-		Microsoft::WRL::ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_TYPE& heapType, UINT numDescriptors, bool shaderVisible);
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, int32_t width, int32_t height);
-
-	/// <summary>
-	/// 深度バッファ生成
-	/// </summary>
-	void CreateDepthBuffer();
-
 	/// <summary>
 	/// フェンス生成
 	/// </summary>
@@ -169,11 +142,6 @@ private: // 関数
 	void UpdateFixFPS();
 
 public:
-
-	/// <summary>
-	/// レンダーターゲット生成
-	/// </summary>
-	void CreateFinalRenderTarget();
 
 	void PostEffectInitialize(ID3D12RootSignature* postRootSignature,
 		ID3D12PipelineState* postPipelineState);

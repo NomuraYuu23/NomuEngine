@@ -3,10 +3,61 @@
 #include "RTVDescriptorHerpManager.h"
 #include "SRVDescriptorHerpManager.h"
 
-void RenderTargetTexture::Initialize(ID3D12Device* device)
+void RenderTargetTexture::Initialize(
+	ID3D12Device* device,
+	int32_t backBufferWidth,
+	int32_t backBufferHeight)
 {
 
 	HRESULT hr;
+
+	assert(device);
+
+	backBufferWidth_ = backBufferWidth;
+	backBufferHeight_ = backBufferHeight;
+
+	//利用するHeapの設定
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //デフォルト
+
+	// DSVリソース
+	//DepthStencilTextureをウィンドウのサイズで作成
+	D3D12_RESOURCE_DESC dsvResourceDesc{};
+	dsvResourceDesc.Width = backBufferWidth_;
+	dsvResourceDesc.Height = backBufferHeight_;
+	dsvResourceDesc.MipLevels = 1;
+	dsvResourceDesc.DepthOrArraySize = 1;
+	dsvResourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvResourceDesc.SampleDesc.Count = 1;
+	dsvResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	dsvResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	//深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	//Resoureの生成
+	dsvResource_ = nullptr;
+	hr = device->CreateCommittedResource(
+		&heapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&dsvResourceDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&dsvResource_));
+	assert(SUCCEEDED(hr));
+
+	//DSVの設定
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	//DSVを作成するDescriptorHeapの場所を決める
+	dsvHandle_ = DSVDescriptorHerpManager::GetCPUDescriptorHandle();
+	dsvIndexDescriptorHeap_ = DSVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	DSVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+	//DSVの生成
+	device->CreateDepthStencilView(dsvResource_.Get(), &dsvDesc, dsvHandle_);
 
 	// RTVリソース
 	D3D12_RESOURCE_DESC rtvResouceDesc;
@@ -22,10 +73,6 @@ void RenderTargetTexture::Initialize(ID3D12Device* device)
 	rtvResouceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	rtvResouceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
-	//利用するHeapの設定
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //デフォルト
-
 	//Resoureの生成
 	hr = device->CreateCommittedResource(
 		&heapProperties, //Heapの設定
@@ -34,6 +81,7 @@ void RenderTargetTexture::Initialize(ID3D12Device* device)
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, //データ転送される設定
 		nullptr, //Clear最適値。使わないのでnullptr
 		IID_PPV_ARGS(&resource_)); //作成するResourceポインタへのポインタ
+	assert(SUCCEEDED(hr));
 
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
@@ -59,47 +107,6 @@ void RenderTargetTexture::Initialize(ID3D12Device* device)
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 	//SRVの生成
 	device->CreateShaderResourceView(resource_.Get(), &srvDesc, cpuHandleSRV);
-
-	// DSVリソース
-	//DepthStencilTextureをウィンドウのサイズで作成
-	D3D12_RESOURCE_DESC dsvResourceDesc{};
-	dsvResourceDesc.Width = backBufferWidth_;
-	dsvResourceDesc.Height = backBufferHeight_;
-	dsvResourceDesc.MipLevels = 1;
-	dsvResourceDesc.DepthOrArraySize = 1;
-	dsvResourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvResourceDesc.SampleDesc.Count = 1;
-	dsvResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	dsvResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-	//深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue{};
-	depthClearValue.DepthStencil.Depth = 1.0f;
-	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	//Resoureの生成
-	hr = device->CreateCommittedResource(
-		&heapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&dsvResourceDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&depthClearValue,
-		IID_PPV_ARGS(&dsvResource_));
-	assert(SUCCEEDED(hr));
-
-	//DSVの設定
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	//DSVを作成するDescriptorHeapの場所を決める
-	dsvHandle_ = DSVDescriptorHerpManager::GetCPUDescriptorHandle();
-	dsvIndexDescriptorHeap_ = DSVDescriptorHerpManager::GetNextIndexDescriptorHeap();
-	DSVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	//DSVの生成
-	device->CreateDepthStencilView(dsvResource_.Get(), &dsvDesc, dsvHandle_);
-
-
-
 
 }
 
@@ -128,13 +135,10 @@ void RenderTargetTexture::PreDraw(ID3D12GraphicsCommandList* commandList)
 	commandList_->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle_);
 
 	// 全画面クリア
-	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
-	commandList_->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
+	ClearRenderTarget();
 
 	// 深度値クリア
-	//指定した深度で画面全体をクリアする
-	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	ClearDepthBuffer();
 
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
@@ -179,6 +183,23 @@ void RenderTargetTexture::PostDraw()
 	commandList_->ResourceBarrier(1, &barrier);
 
 	commandList_ = nullptr;
+
+}
+
+void RenderTargetTexture::ClearRenderTarget()
+{
+
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
+	commandList_->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
+
+}
+
+void RenderTargetTexture::ClearDepthBuffer()
+{
+
+	//指定した深度で画面全体をクリアする
+	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 }
 

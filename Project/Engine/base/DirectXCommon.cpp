@@ -66,8 +66,11 @@ void DirectXCommon::Initialize(
 		DxCommand::GetCommandQueue(),
 		winApp_);
 
-	// 深度バッファ生成
-	CreateDepthBuffer();
+	renderTargetTexture_ = std::make_unique<RenderTargetTexture>();
+	renderTargetTexture_->Initialize(
+		dxgiDevice_->GetDevice(), 
+		backBufferWidth_, 
+		backBufferHeight_);
 
 	// フェンス生成
 	CreateFence();
@@ -77,89 +80,17 @@ void DirectXCommon::Initialize(
 // 描画前処理
 void DirectXCommon::PreDraw() {
 
-	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = rtvTmp_.Get();
-	//遷移前（現在）のResouceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//遷移後のResoureState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	command_->GetCommadList()->ResourceBarrier(1, &barrier);
-
-	//DescriptorSizeを取得しておく
-	const uint32_t desriptorSizeRTV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-	//RTVの設定
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2dのテクスチャとして書き込む
-
-	//ディスクリプタの先頭を取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = GetCPUDescriptorHandle(rtvHeap_.Get(), desriptorSizeRTV, 0);
-
-	//描画先のDSVとRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
-	command_->GetCommadList()->OMSetRenderTargets(1, &rtvStartHandle, false, &dsvHandle);
-
-	// 全画面クリア
-	ClearRenderTarget();
-
-	// 深度バッファクリア
-	ClearDepthBuffer();
-
-	//ビューポート
-	D3D12_VIEWPORT viewport{};
-	//クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = winApp_->kWindowWidth;
-	viewport.Height = winApp_->kWindowHeight;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	command_->GetCommadList()->RSSetViewports(1, &viewport);//Viewportを設定
-
-	//シザー矩形
-	D3D12_RECT scissorRect{};
-	//基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect.left = 0;
-	scissorRect.right = winApp_->kWindowWidth;
-	scissorRect.top = 0;
-	scissorRect.bottom = winApp_->kWindowHeight;
-	command_->GetCommadList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
+	renderTargetTexture_->PreDraw(command_->GetCommadList());
 
 }
 // 描画後処理
 void DirectXCommon::PostDraw() {
 
-	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = rtvTmp_.Get();
-
-	//画面に描く処理はすべて終わり、画面に映すので、状態を遷移
-	//今回はRenderTargetからPresentにする
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//TransitionBarrierを張る
-	command_->GetCommadList()->ResourceBarrier(1, &barrier);
+	renderTargetTexture_->PostDraw();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
 
 	swapChain_->PreDraw(command_->GetCommadList());
 
@@ -211,212 +142,10 @@ void DirectXCommon::PostDraw() {
 
 }
 
-// レンダーターゲットのクリア
-void DirectXCommon::ClearRenderTarget() {
-
-	//DescriptorSizeを取得しておく
-	const uint32_t desriptorSizeRTV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	//ディスクリプタの先頭を取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = GetCPUDescriptorHandle(rtvHeap_.Get(), desriptorSizeRTV, 0);;
-
-	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
-
-	// rtvTmp
-	command_->GetCommadList()->ClearRenderTargetView(rtvStartHandle, clearColor, 0, nullptr);
-
-}
 // 深度バッファのクリア
 void DirectXCommon::ClearDepthBuffer() {
 
-	//DescriptorSizeを取得しておく
-	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-	//描画先のDSVとRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
-	//指定した深度で画面全体をクリアする
-	command_->GetCommadList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
-
-}
-
-//ディスクリプトヒープ関数
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(
-	Microsoft::WRL::ComPtr<ID3D12Device> device, const D3D12_DESCRIPTOR_HEAP_TYPE& heapType, UINT numDescriptors, bool shaderVisible) {
-
-	//ディスクリプタヒープの生成
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;//レンダーターゲットビュー用
-	descriptorHeapDesc.NumDescriptors = numDescriptors;//ダブルバッファ用に2つ。多くても構わない
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-	//ディスクリプタヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
-	return descriptorHeap;
-
-}
-
-//DepthStencilTextureを作る
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencilTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, int32_t width, int32_t height) {
-
-	//生成するResourceの設定
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = width;
-	resourceDesc.Height = height;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-	//利用するHeapの設定
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-	//深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue{};
-	depthClearValue.DepthStencil.Depth = 1.0f;
-	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	//Resoureの生成
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(
-		&heapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&depthClearValue,
-		IID_PPV_ARGS(&resource));
-	assert(SUCCEEDED(hr));
-
-	return resource;
-
-}
-
-// コマンド関連初期化
-//void DirectXCommon::Initializecommand() {
-//
-//	//コマンドキューを生成する
-//	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-//	HRESULT hr = dxgiDevice_->GetDevice()->CreateCommandQueue(&commandQueueDesc,
-//		IID_PPV_ARGS(&commandQueue_));
-//	//コマンドキューの生成がうまくいかなかったので起動できない
-//	assert(SUCCEEDED(hr));
-//
-//	//コマンドアロケータを生成する
-//	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
-//	//コマンドアロケータの生成がうまくいかなかったので起動できない
-//	assert(SUCCEEDED(hr));
-//
-//	//コマンドリストを生成する
-//	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr,
-//		IID_PPV_ARGS(&commandList_));
-//	//コマンドリストの生成がうまくいかなかったので起動できない
-//	assert(SUCCEEDED(hr));
-//
-//	//コマンドアロケータを生成する
-//	hr = dxgiDevice_->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocatorLoad_));
-//	//コマンドアロケータの生成がうまくいかなかったので起動できない
-//	assert(SUCCEEDED(hr));
-//
-//	//コマンドリストを生成する
-//	hr = dxgiDevice_->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocatorLoad_.Get(), nullptr,
-//		IID_PPV_ARGS(&commandListLoad_));
-//	//コマンドリストの生成がうまくいかなかったので起動できない
-//	assert(SUCCEEDED(hr));
-//
-//}
-
-// レンダーターゲット生成
-void DirectXCommon::CreateFinalRenderTarget() {
-
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2dのテクスチャとして書き込む
-	rtvHeap_ = CreateDescriptorHeap(dxgiDevice_->GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1, false);
-	const uint32_t desriptorSizeRTV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	HRESULT hr;
-	//rtvTmp_
-	D3D12_RESOURCE_DESC desc;
-	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	desc.Alignment = 0;
-	desc.Width = backBufferWidth_;
-	desc.Height = backBufferHeight_;
-	desc.DepthOrArraySize = 1;
-	desc.MipLevels = 0;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //デフォルト
-
-	hr = dxgiDevice_->GetDevice()->CreateCommittedResource(
-		&heapProperties, //Heapの設定
-		D3D12_HEAP_FLAG_NONE, //Heapの特殊な設定。特になし。
-		&desc, //Resourceの設定
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, //データ転送される設定
-		nullptr, //Clear最適値。使わないのでnullptr
-		IID_PPV_ARGS(&rtvTmp_)); //作成するResourceポインタへのポインタ
-
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = GetCPUDescriptorHandle(rtvHeap_.Get(), desriptorSizeRTV, 0);
-
-	dxgiDevice_->GetDevice()->CreateRenderTargetView(rtvTmp_.Get(), &rtvDesc, rtvStartHandle);
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;
-
-	//SRVを作成するDescriptorHeapの場所を決める
-	cpuHandleSRV = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
-	gpuHandleSRV = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeapSRV = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
-	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	//SRVの生成
-	dxgiDevice_->GetDevice()->CreateShaderResourceView(rtvTmp_.Get(), &srvDesc, cpuHandleSRV);
-
-}
-
-// 深度バッファ生成
-void DirectXCommon::CreateDepthBuffer() {
-
-
-	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-	//DepthStencilTextureをウィンドウのサイズで作成
-	depthStencilResource = CreateDepthStencilTextureResource(dxgiDevice_->GetDevice(), backBufferWidth_, backBufferHeight_);
-
-	//DSV用のヒープ
-	dsvHeap_ = CreateDescriptorHeap(dxgiDevice_->GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
-
-	//DSVの設定
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	//DSVHeapの先頭にDSVをつくる
-	dxgiDevice_->GetDevice()->CreateDepthStencilView(depthStencilResource.Get(), &dsvDesc, GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0));
+	renderTargetTexture_->ClearDepthBuffer();
 
 }
 
@@ -568,7 +297,7 @@ void DirectXCommon::PostEffect()
 	//commandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	//シェーダーリソースビューをセット
-	command_->GetCommadList()->SetGraphicsRootDescriptorTable(0, gpuHandleSRV);
+	renderTargetTexture_->SetGraphicsRootDescriptorTable(command_->GetCommadList(), 0);
 
 	//描画
 	command_->GetCommadList()->DrawIndexedInstanced(6, 1, 0, 0, 0);

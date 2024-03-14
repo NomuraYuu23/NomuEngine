@@ -63,7 +63,6 @@ void MyFramework::Initialize()
 	dxCommon->PostEffectInitialize(
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNamePostEffect].Get(),
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNamePostEffect].Get());
-	dxCommon->CreateFinalRenderTarget();
 
 	//グローバル変数ファイル読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
