@@ -457,7 +457,7 @@
     <ClCompile Include="Engine\2D\DrawLine.cpp">
       <Filter>Engine\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RenderTargetView.cpp">
+    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp">
@@ -870,7 +870,7 @@
     <ClInclude Include="Engine\2D\DrawLine.h">
       <Filter>Engine\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RenderTargetView.h">
+    <ClInclude Include="Engine\base\RenderTargetTexture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\SpriteVertex.h">

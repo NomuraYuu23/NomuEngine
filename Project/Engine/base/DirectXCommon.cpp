@@ -161,7 +161,7 @@ void DirectXCommon::PostDraw() {
 	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(dsvHeap_.Get(), desriptorSizeDSV, 0);
 
-	swapChain_->PreDraw(command_->GetCommadList(), dsvHandle);
+	swapChain_->PreDraw(command_->GetCommadList());
 
 	//ポストエフェクト
 	PostEffect();
@@ -231,7 +231,6 @@ void DirectXCommon::ClearRenderTarget() {
 void DirectXCommon::ClearDepthBuffer() {
 
 	//DescriptorSizeを取得しておく
-	const uint32_t desriptorSizeRTV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	const uint32_t desriptorSizeDSV = dxgiDevice_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	//描画先のDSVとRTVを設定する

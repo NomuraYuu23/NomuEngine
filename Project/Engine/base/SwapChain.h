@@ -43,16 +43,22 @@ public: // 関数
 	/// </summary>
 	/// <param name="index">インデックス</param>
 	/// <returns></returns>
-	ID3D12Resource* GetResource(uint32_t index) { resources_[index].Get(); }
+	ID3D12Resource* GetRTVResource(uint32_t index) { rtvResources_[index].Get(); }
 	
 	/// <summary>
 	/// GPUとOSに画面の交換を行うように通知する
 	/// </summary>
 	void Present() { swapChain_->Present(1, 0); }
 
-	void PreDraw(ID3D12GraphicsCommandList* commandList,
-		const D3D12_CPU_DESCRIPTOR_HANDLE& dsvHandle);
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	void PreDraw(ID3D12GraphicsCommandList* commandList);
 
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
 	void PostDraw();
 
 private: // 変数
@@ -60,14 +66,26 @@ private: // 変数
 	// スワップチェーンの数
 	static const uint32_t kSwapChainNum_ = 2;
 
+	// 幅
+	int32_t backBufferWidth_;
+	// 高さ
+	int32_t backBufferHeight_;
+
 	// スワップチェーン
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
-	// リソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> resources_[kSwapChainNum_];
+	// RTVリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> rtvResources_[kSwapChainNum_];
 	// RTVハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[kSwapChainNum_];
 	// RTVのIndex
-	uint32_t indexDescriptorHeaps_[kSwapChainNum_];
+	uint32_t rtvIndexDescriptorHeaps_[kSwapChainNum_];
+	
+	// DSVリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> dsvResource_;
+	// DSVハンドル
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_;
+	// DSVのIndex
+	uint32_t dsvIndexDescriptorHeap_;
 
 	// コマンドリスト
 	ID3D12GraphicsCommandList* commandList_;
