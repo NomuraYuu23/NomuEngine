@@ -337,7 +337,7 @@ void GraphicsPipelineState::CreateForSwapChain()
 		kPipelineStateNameSwapChain,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
 		kRootParameterIndexSwapChain,
-		kSamplerIndexNormal);
+		kSamplerIndexPostEffect);
 
 	createPSODesc.pipelineStateName = kPipelineStateNameSwapChain;
 

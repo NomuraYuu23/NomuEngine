@@ -166,6 +166,30 @@
     <Filter Include="Engine\Base\DxCommon">
       <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\Object3d">
+      <UniqueIdentifier>{e8b1b387-3420-407b-b41a-60165565e62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Collider2DDebug">
+      <UniqueIdentifier>{ed0acce8-727f-4826-820e-5ee61a8e7f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Line">
+      <UniqueIdentifier>{d0b2d68d-ef6e-4a33-aab1-23dd984656c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\OutLine">
+      <UniqueIdentifier>{93bb0985-6574-4a4b-ad28-c695d75abd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Patrticle">
+      <UniqueIdentifier>{8a770c6d-962d-4bbb-a0cf-609fc3c270e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Sprite">
+      <UniqueIdentifier>{bcd03177-6322-4dc5-96fb-0dfe0a3f1def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\SwapChain">
+      <UniqueIdentifier>{30140878-4e83-4bd0-aeca-3a4709ae9343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\PostEffect">
+      <UniqueIdentifier>{bb8c5e74-1d42-431a-a81b-b1a379c467cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -908,68 +932,68 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="resources\shaders\Object3d.hlsli">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="Resources\shaders\Particle.hlsli">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="Resources\shaders\Sprite.hlsli">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="NomuEngine.vcxproj.user" />
+    <None Include="resources\shaders\Object3d.hlsli">
+      <Filter>shaders\Object3d</Filter>
+    </None>
     <None Include="Resources\shaders\Collider2DDebug.hlsli">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Collider2DDebug</Filter>
     </None>
     <None Include="Resources\shaders\Line.hlsli">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Line</Filter>
+    </None>
+    <None Include="Resources\shaders\Particle.hlsli">
+      <Filter>shaders\Patrticle</Filter>
+    </None>
+    <None Include="Resources\shaders\Sprite.hlsli">
+      <Filter>shaders\Sprite</Filter>
     </None>
     <None Include="Resources\shaders\SwapChain.hlsli">
-      <Filter>shaders</Filter>
+      <Filter>shaders\SwapChain</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shaders\Sprite.VS.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
+      <Filter>shaders\Object3d</Filter>
     </FxCompile>
     <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Sprite.PS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\OutLine3D.VS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\OutLine3D.PS.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Object3d</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Collider2DDebug</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.PS.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Line.VS.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Collider2DDebug</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Line.PS.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Line</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="Resources\shaders\Line.VS.hlsl">
+      <Filter>shaders\Line</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\OutLine3D.VS.hlsl">
+      <Filter>shaders\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\OutLine3D.PS.hlsl">
+      <Filter>shaders\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
+      <Filter>shaders\Patrticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
+      <Filter>shaders\Patrticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Sprite.VS.hlsl">
+      <Filter>shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Sprite.PS.hlsl">
+      <Filter>shaders\Sprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SwapChain.VS.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\SwapChain</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
+      <Filter>shaders\SwapChain</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

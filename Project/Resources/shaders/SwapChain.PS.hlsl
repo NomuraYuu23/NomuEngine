@@ -13,8 +13,8 @@ PixelShaderOutput main(VertexShaderOutput input)
 	PixelShaderOutput output;
 	float32_t2 tex = input.texcoord;
 	float32_t4 textureColor = gTexture.Sample(gSampler, tex);
-	//tex.x -= 0.01f;
-	//textureColor.r = gTexture.Sample(gSampler, tex).r;
+	tex.x -= 0.01f;
+	textureColor.r = gTexture.Sample(gSampler, tex).r;
 	output.color = textureColor;
 	output.color.w = 1.0f;
 

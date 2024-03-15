@@ -13,6 +13,7 @@
 /// </summary>
 enum SamplerIndex {
 	kSamplerIndexNormal,
+	kSamplerIndexPostEffect,
 	kSamplerIndexOfCount,
 };
 
