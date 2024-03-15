@@ -10,6 +10,8 @@
 #include "WinApp.h"
 #include "../2D/SpriteVertex.h"
 
+#include "GraphicsPipelineState/GraphicsPipelineState.h"
+
 class RenderTargetTexture
 {
 
@@ -55,6 +57,22 @@ public:
 
 	void ChangePixelShaderResource(uint32_t resourceIndex);
 
+	/// <summary>
+	/// 描画のための初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	void TextureInitialize(ID3D12Device* device);
+
+	/// <summary>
+	/// テクスチャ描画
+	/// </summary>
+	/// <param name="pipelineStateName">パイプライン名前</param>
+	/// <param name="resourceIndex">リソースインデックス</param>
+	void TextureDraw(
+		GraphicsPipelineState::PipelineStateName pipelineStateName,
+		uint32_t resourceIndex,
+		ID3D12GraphicsCommandList* commandList);
+
 private: // RTV,DSV
 
 	// リソースの数
@@ -91,6 +109,27 @@ private: // RTV,DSV
 
 	// レンダーターゲットか
 	bool isRenderTarget_[kResourceNum_];
+
+private: 
+
+	// ルートシグネチャ
+	ID3D12RootSignature* postRootSignature_;
+	// パイプラインステートオブジェクト
+	ID3D12PipelineState* postPipelineState_;
+
+	// 頂点バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
+	// 頂点バッファマップ
+	SpriteVertex* vertMap = nullptr;
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
+
+	//インデックスバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
+	//インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView_{};
+	//インデックスリソースにデータを書き込む
+	uint32_t* indexMap = nullptr;
 
 };
 

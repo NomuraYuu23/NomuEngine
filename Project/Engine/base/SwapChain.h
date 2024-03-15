@@ -99,36 +99,5 @@ private: // 変数
 	// コマンドリスト
 	ID3D12GraphicsCommandList* commandList_;
 
-public: 
-
-	// ルートシグネチャ
-	ID3D12RootSignature* postRootSignature_;
-	// パイプラインステートオブジェクト
-	ID3D12PipelineState* postPipelineState_;
-
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	// 頂点バッファマップ
-	SpriteVertex* vertMap = nullptr;
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-
-	//インデックスバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView_{};
-	//インデックスリソースにデータを書き込む
-	uint32_t* indexMap = nullptr;
-
-public:
-
-	/// <summary>
-	/// 描画のための初期化
-	/// </summary>
-	/// <param name="postRootSignature">ルートシグネチャ</param>
-	/// <param name="postPipelineState">パイプラインステート</param>
-	/// <param name="device">デバイス</param>
-	void DrawInitialize(ID3D12Device* device);
-
 };
 
