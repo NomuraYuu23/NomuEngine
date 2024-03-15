@@ -53,8 +53,16 @@ public:
 	/// <param name="rootParameterIndex">ルートパラメータインデックス</param>
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex, uint32_t resourceIndex);
 
+	/// <summary>
+	/// レンダーターゲットに変更
+	/// </summary>
+	/// <param name="resourceIndex">リソースインデックス</param>
 	void ChangeRenderTarget(uint32_t resourceIndex);
 
+	/// <summary>
+	/// ピクセルシェーダーリソースに変更
+	/// </summary>
+	/// <param name="resourceIndex">リソースインデックス</param>
 	void ChangePixelShaderResource(uint32_t resourceIndex);
 
 	/// <summary>
@@ -73,7 +81,7 @@ public:
 		uint32_t resourceIndex,
 		ID3D12GraphicsCommandList* commandList);
 
-private: // RTV,DSV
+private: // 変数
 
 	// リソースの数
 	static const uint32_t kResourceNum_ = 8;
@@ -109,8 +117,6 @@ private: // RTV,DSV
 
 	// レンダーターゲットか
 	bool isRenderTarget_[kResourceNum_];
-
-private: 
 
 	// ルートシグネチャ
 	ID3D12RootSignature* postRootSignature_;

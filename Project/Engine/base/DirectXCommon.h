@@ -75,6 +75,8 @@ public:
 
 	int32_t GetBackBufferHeight() const { return backBufferHeight_; }
 
+	RenderTargetTexture* GetRenderTargetTexture() { return renderTargetTexture_.get(); }
+
 private:
 
 	// ウィンドウアプリケーション
