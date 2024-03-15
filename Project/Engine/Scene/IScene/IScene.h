@@ -31,6 +31,7 @@ protected: // 静的メンバ変数
 	static DirectXCommon* dxCommon_;
 	static Input* input_;
 	static Audio* audio_;
+	static RenderTargetTexture* renderTargetTexture_;
 
 	//ビュープロジェクション
 	static BaseCamera camera_;

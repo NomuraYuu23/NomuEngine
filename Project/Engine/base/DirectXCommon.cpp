@@ -132,13 +132,6 @@ void DirectXCommon::PostDraw() {
 
 }
 
-// 深度バッファのクリア
-void DirectXCommon::ClearDepthBuffer() {
-
-	renderTargetTexture_->ClearDepthBuffer();
-
-}
-
 // フェンス生成
 void DirectXCommon::CreateFence() {
 

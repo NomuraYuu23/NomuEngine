@@ -15,6 +15,8 @@ BaseCamera IScene::camera_;
 std::unique_ptr<DebugCamera> IScene::debugCamera_;
 bool IScene::isDebugCameraActive_;
 
+RenderTargetTexture* IScene::renderTargetTexture_;
+
 void IScene::StaticInitialize()
 {
 
@@ -22,6 +24,7 @@ void IScene::StaticInitialize()
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	renderTargetTexture_ = dxCommon_->GetRenderTargetTexture();
 
 	//ビュープロジェクション
 	camera_.Initialize();

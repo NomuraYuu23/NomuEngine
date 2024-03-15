@@ -195,17 +195,12 @@ void RenderTargetTexture::ClearDepthBuffer()
 
 }
 
-void RenderTargetTexture::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex, uint32_t resourceIndex)
+void RenderTargetTexture::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex, uint32_t resourceIndex)
 {
 
-	assert(commandList_ == nullptr);
 
-	commandList_ = cmdList;
+	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, srvGPUHandles_[resourceIndex]);
 
-	commandList_->SetGraphicsRootDescriptorTable(rootParameterIndex, srvGPUHandles_[resourceIndex]);
-
-	// コマンドリストを解除
-	commandList_ = nullptr;
 
 }
 
@@ -230,6 +225,8 @@ void RenderTargetTexture::ChangeRenderTarget(uint32_t resourceIndex)
 	//TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier);
 
+	isRenderTarget_[resourceIndex] = true;
+
 }
 
 void RenderTargetTexture::ChangePixelShaderResource(uint32_t resourceIndex)
@@ -252,6 +249,8 @@ void RenderTargetTexture::ChangePixelShaderResource(uint32_t resourceIndex)
 	//TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier);
 
+	isRenderTarget_[resourceIndex] = false;
+ 
 }
 
 void RenderTargetTexture::TextureInitialize(ID3D12Device* device)

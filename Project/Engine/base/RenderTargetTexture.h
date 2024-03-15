@@ -49,9 +49,9 @@ public:
 	/// <summary>
 	/// GPUに送る
 	/// </summary>
-	/// <param name="cmdList">コマンドリスト</param>
+	/// <param name="commandList">コマンドリスト</param>
 	/// <param name="rootParameterIndex">ルートパラメータインデックス</param>
-	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex, uint32_t resourceIndex);
+	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex, uint32_t resourceIndex);
 
 	/// <summary>
 	/// レンダーターゲットに変更

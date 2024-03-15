@@ -50,11 +50,6 @@ public:
 	/// </summary>
 	void PostDraw();
 
-	/// <summary>
-	/// 深度バッファのクリア
-	/// </summary>
-	void ClearDepthBuffer();
-
 	ID3D12Device* GetDevice() const { return dxgiDevice_->GetDevice(); }
 
 	ID3D12GraphicsCommandList* GetCommadList() const { return command_->GetCommadList(); }

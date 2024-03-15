@@ -237,10 +237,12 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
-	dxCommon_->ClearDepthBuffer();
+	renderTargetTexture_->ClearDepthBuffer();
 
 
 #pragma endregion
+
+#pragma region モデル描画
 
 	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
 
@@ -262,6 +264,8 @@ void GameScene::Draw() {
 #endif // _DEBUG
 
 	Model::PostDraw();
+
+#pragma endregion
 
 #pragma region 線描画
 	// 前景スプライト描画前処理
