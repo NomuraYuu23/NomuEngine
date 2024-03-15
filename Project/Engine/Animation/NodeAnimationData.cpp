@@ -17,7 +17,9 @@ void NodeAnimationData::Initialize(const aiNodeAnim& nodeAnim)
 
 	for (uint32_t i = 0; i < positionKeyNum_; ++i) {
 		
-		animationVector3Key.value_.x = nodeAnim.mPositionKeys[i].mValue.x;
+		animationVector3Key.value_.x = nodeAnim.mPositionKeys[0].mValue.x + 
+			-1 * (nodeAnim.mPositionKeys[i].mValue.x 
+			- nodeAnim.mPositionKeys[0].mValue.x);
 		animationVector3Key.value_.y = nodeAnim.mPositionKeys[i].mValue.y;
 		animationVector3Key.value_.z = nodeAnim.mPositionKeys[i].mValue.z;
 

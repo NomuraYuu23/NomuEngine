@@ -47,7 +47,7 @@ void SampleObject::Initialize(Model* model)
 		worldtransform_.GetNodeNames());
 
 	animation_.startAnimation(0, true);
-	animation_.startAnimation(1, true);
+	//animation_.startAnimation(1, true);
 
 	enableLighting_ = 0;
 
@@ -89,9 +89,9 @@ void SampleObject::Update()
 
 	//rigidBody_.angularVelocity = RigidBody::AngularVelocityCalc(rigidBody_.inertiaTensor, rigidBody_.angularMomentum);
 
-	if (Input::GetInstance()->TriggerKey(DIK_0)) {
-		animation_.stopAnimation(1);
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
+	//	animation_.stopAnimation(1);
+	//}
 
 	rigidBody_.torque = { 0.0f,0.0f,0.0f };
 
