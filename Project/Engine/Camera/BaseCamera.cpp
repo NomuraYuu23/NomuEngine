@@ -25,7 +25,7 @@ void BaseCamera::Initialize()
 	viewProjectionMatrixBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), (sizeof(ViewProjectionMatrix) + 0xff) & ~0xff);
 	viewProjectionMatrixBuff_->Map(0, nullptr, reinterpret_cast<void**>(&viewProjectionMatrix_));
 
-	Update();
+	BaseCamera::Update();
 
 }
 

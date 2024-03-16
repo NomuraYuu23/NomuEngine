@@ -140,11 +140,11 @@ void SampleObject::RegisteringGlobalVariables()
 	const std::string groupName = "SampleObject";
 
 	// スケール
-	globalVariables->AddItem(groupName, "Scale", worldtransform_.GetScale());
+	globalVariables->AddItem(groupName, "Scale", worldtransform_.transform_.scale);
 	// 回転
-	globalVariables->AddItem(groupName, "Rotate", worldtransform_.GetRoatateVector());
+	globalVariables->AddItem(groupName, "Rotate", worldtransform_.transform_.rotate);
 	// 位置
-	globalVariables->AddItem(groupName, "Transform", worldtransform_.GetTranslate());
+	globalVariables->AddItem(groupName, "Transform", worldtransform_.transform_.translate);
 
 }
 
@@ -157,10 +157,10 @@ void SampleObject::ApplyGlobalVariables()
 	const std::string groupName = "SampleObject";
 
 	// スケール
-	worldtransform_.SetScale(globalVariables->GetVector3Value(groupName, "Scale"));
+	worldtransform_.transform_.scale = globalVariables->GetVector3Value(groupName, "Scale");
 	// 回転
-	worldtransform_.SetRoatate(globalVariables->GetVector3Value(groupName, "Rotate"));
+	worldtransform_.transform_.rotate = globalVariables->GetVector3Value(groupName, "Rotate");
 	// 位置
-	worldtransform_.SetTranslate(globalVariables->GetVector3Value(groupName, "Transform"));
+	worldtransform_.transform_.translate = globalVariables->GetVector3Value(groupName, "Transform");
 
 }

@@ -30,10 +30,7 @@ void Skydome::Initialize(Model* model) {
 /// </summary>
 void Skydome::Update() {
 
-	Vector3 rotate = worldTransform_.GetRoatateVector();
-	rotate.y = fmodf(rotate.y + rotateSpeed_, static_cast<float>(std::numbers::pi) * 2.0f);
-
-	worldTransform_.SetRoatate(rotate);
+	worldTransform_.transform_.rotate.y = fmodf(worldTransform_.transform_.rotate.y + rotateSpeed_, static_cast<float>(std::numbers::pi) * 2.0f);
 
 	worldTransform_.UpdateMatrix();
 

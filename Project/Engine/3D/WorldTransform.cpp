@@ -21,6 +21,9 @@ void WorldTransform::Initialize()
 	// 回転行列
 	rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
 
+	// 方向ベクトルで回転行列
+	usedDirection_ = false;
+
 	// スケールを考えない
 	parentMatrix_ = Matrix4x4::MakeAffineMatrix(Vector3{ 1.0f,1.0f,1.0f }, transform_.rotate, transform_.translate);
 
@@ -35,6 +38,9 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 
 	// 回転行列
 	rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
+
+	// 方向ベクトルで回転行列
+	usedDirection_ = false;
 
 	// スケールを考えない
 	parentMatrix_ = Matrix4x4::MakeAffineMatrix(Vector3{ 1.0f,1.0f,1.0f }, transform_.rotate, transform_.translate);
@@ -63,9 +69,43 @@ void WorldTransform::UpdateMatrix() {
 
 	//拡大縮小行列
 	Matrix4x4 scaleMatrix = Matrix4x4::MakeScaleMatrix(transform_.scale);
+	// どう回転行列作るか
+	if (usedDirection_) {
+		// 回転行列
+		rotateMatrix_ = Matrix4x4::DirectionToDirection(Vector3{0.0f,0.0f,1.0f}, direction_);
+	}
+	else {
+		// 回転行列
+		rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
+	}
+
+	//平行移動行列
+	Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(transform_.translate);
+
+	// ワールド行列
+	worldMatrix_ = Matrix4x4::Multiply(scaleMatrix, Matrix4x4::Multiply(rotateMatrix_, translateMatrix));
+
+	//拡大縮小行列
+	scaleMatrix = Matrix4x4::MakeScaleMatrix(Vector3{ 1.0f,1.0f,1.0f });
+	// 親子関係用
+	parentMatrix_ = Matrix4x4::Multiply(scaleMatrix, Matrix4x4::Multiply(rotateMatrix_, translateMatrix));
+
+	// 親子関係
+	if (parent_) {
+		worldMatrix_ = Matrix4x4::Multiply(worldMatrix_, parent_->parentMatrix_);
+		parentMatrix_ = Matrix4x4::Multiply(parentMatrix_, parent_->parentMatrix_);
+	}
+
+}
+
+void WorldTransform::UpdateMatrix(const Matrix4x4& rotateMatrix)
+{
+
+	//拡大縮小行列
+	Matrix4x4 scaleMatrix = Matrix4x4::MakeScaleMatrix(transform_.scale);
 
 	// 回転行列
-	rotateMatrix_ = Quaternion::MakeRotateMatrix(quaternion_);
+	rotateMatrix_ = rotateMatrix;
 
 	//平行移動行列
 	Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(transform_.translate);
@@ -211,21 +251,5 @@ void WorldTransform::SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix)
 	for (uint32_t i = 0; i < matrix.size(); ++i) {
 		nodeDatas_[i].localMatrix = matrix[i];
 	}
-
-}
-
-void WorldTransform::SetRoatate(const Vector3 rotate)
-{
-
-	transform_.rotate = rotate;
-	quaternion_ = Quaternion::MakeRotateAxisAngleQuaternion(transform_.rotate, 1.0f);
-
-}
-
-void WorldTransform::SetRoatate(const Quaternion quaternion)
-{
-
-	quaternion_ = quaternion;
-	transform_.rotate = Quaternion::RotateVector(Vector3{ 0.0f,0.0f,0.0f }, quaternion_);
 
 }

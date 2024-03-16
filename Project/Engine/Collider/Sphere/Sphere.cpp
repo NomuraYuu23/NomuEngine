@@ -13,8 +13,8 @@ void Sphere::Initialize(const Vector3& center, float radius, ColliderParentObjec
 void Sphere::worldTransformUpdate()
 {
 
-	worldTransform_.SetTranslate(center_);
-	worldTransform_.SetScale({ radius_, radius_, radius_ });
+	worldTransform_.transform_.translate = center_;
+	worldTransform_.transform_.scale = { radius_, radius_, radius_ };
 	worldTransform_.UpdateMatrix();
 
 }
