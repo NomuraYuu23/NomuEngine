@@ -150,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Collision2D\Collision2D.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp" />
+    <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp" />
     <ClCompile Include="Engine\Light\PointLight\PointLight.cpp" />
     <ClCompile Include="Engine\Light\PointLight\PointLightManager.cpp" />
     <ClCompile Include="Engine\Light\SpotLight\SpotLight.cpp" />
@@ -270,6 +271,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Collision2D\Collision2DDebugDraw.h" />
     <ClInclude Include="Engine\Collision2D\Collision2DManager.h" />
     <ClInclude Include="Engine\Collision\CollisionData.h" />
+    <ClInclude Include="Engine\ContactRecord\ContactRecord.h" />
     <ClInclude Include="Engine\Light\PointLight\PointLight.h" />
     <ClInclude Include="Engine\Light\PointLight\PointLightData.h" />
     <ClInclude Include="Engine\Light\PointLight\PointLightManager.h" />

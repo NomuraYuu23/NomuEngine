@@ -190,6 +190,9 @@
     <Filter Include="shaders\PostEffect">
       <UniqueIdentifier>{bb8c5e74-1d42-431a-a81b-b1a379c467cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ContactRecord">
+      <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -507,6 +510,9 @@
     </ClCompile>
     <ClCompile Include="Engine\base\SwapChain.cpp">
       <Filter>Engine\Base\DxCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp">
+      <Filter>Engine\ContactRecord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -923,6 +929,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\SwapChain.h">
       <Filter>Engine\Base\DxCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ContactRecord\ContactRecord.h">
+      <Filter>Engine\ContactRecord</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
