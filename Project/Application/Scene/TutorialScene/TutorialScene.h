@@ -64,11 +64,6 @@ private:
 	/// </summary>
 	void LowerVolumeBGM();
 
-	/// <summary>
-	/// 影更新
-	/// </summary>
-	void ShadowUpdate();
-
 private:
 
 	// パーティクルマネージャー
@@ -93,12 +88,5 @@ private:
 	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Model> skydomeModel_;
-
-	//アウトライン仮
-	OutLineData outline_;
-
-	//影
-	std::unique_ptr<ShadowManager> shadowManager_;
-	std::unique_ptr<Model> shadowModel_;
 
 };

@@ -56,8 +56,8 @@ void OBB::SetOtientatuons(const Matrix4x4& rotateMatrix)
 void OBB::worldTransformUpdate()
 {
 
-	worldTransform_.transform_.translate = center_;
-	worldTransform_.transform_.scale = size_;
+	worldTransform_.SetTranslate(center_);
+	worldTransform_.SetScale(size_);
 	worldTransform_.UpdateMatrix();
 
 }

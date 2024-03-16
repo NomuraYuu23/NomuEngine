@@ -6,11 +6,12 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include "ModelNode.h"
+#include "../Math/Quaternion.h"
 
 class WorldTransform
 {
 
-public:
+public: // 構造体
 
 	/// <summary>
 	/// ノードデータ
@@ -20,18 +21,18 @@ public:
 		Matrix4x4 localMatrix; // ローカル行列
 		uint32_t meshNum; // メッシュ番号
 		std::string name; // 名前
-		WorldTransform::NodeData* parent; // 親
-		int32_t parentIndex;
+		//WorldTransform::NodeData* parent; // 親
+		int32_t parentIndex; // 親番号
 		Matrix4x4 matrix; //最終的なワールド行列
-		Matrix4x4 offsetMatrix; //
+		Matrix4x4 offsetMatrix; // オフセット
 	};
 
-public:
+public: // 変数
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList;
 
-public:
+public: // 関数
 
 	/// <summary>
 	/// デストラクタ
@@ -53,12 +54,6 @@ public:
 	/// 行列更新
 	/// </summary>
 	void UpdateMatrix();
-
-	/// <summary>
-	/// 行列更新
-	/// </summary>
-	/// <param name="rotateMatrix">回転行列</param>
-	void UpdateMatrix(const Matrix4x4& rotateMatrix);
 
 	/// <summary>
 	/// マップ
@@ -118,22 +113,19 @@ public:
 	/// </summary>
 	void SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix);
 
-public:
+private: // 変数
 
 	//トランスフォーム
 	TransformStructure transform_{ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+
+	// クォータニオン
+	Quaternion quaternion_ = { 0.0f,0.0f,0.0f,1.0f };
 
 	//ワールド行列
 	Matrix4x4 worldMatrix_;
 
 	// 回転行列
 	Matrix4x4 rotateMatrix_;
-
-	// 方向ベクトルで回転行列
-	bool usedDirection_;
-
-	// 方向ベクトル
-	Vector3 direction_ = {0.0f,0.0f,1.0f};
 
 	// スケールを考えない
 	Matrix4x4 parentMatrix_;
@@ -158,5 +150,53 @@ public:
 
 	// ノードデータ
 	std::vector<NodeData> nodeDatas_;
+
+public: // アクセッサ
+
+	/// <summary>
+	/// 位置取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetTranslate() { return transform_.translate; }
+
+	/// <summary>
+	/// 位置設定
+	/// </summary>
+	/// <param name="translate"></param>
+	void SetTranslate(const Vector3 translate) {  transform_.translate = translate; }
+
+	/// <summary>
+	/// 回転取得
+	/// </summary>
+	Vector3 GetRoatateVector() { return transform_.rotate; }
+
+	/// <summary>
+	/// 回転取得
+	/// </summary>
+	Quaternion GetQuaternion() { return quaternion_; }
+
+	/// <summary>
+	/// 回転設定
+	/// </summary>
+	/// <param name="rotate"></param>
+	void SetRoatate(const Vector3 rotate);
+
+	/// <summary>
+	/// 回転設定
+	/// </summary>
+	/// <param name="quaternion"></param>
+	void SetRoatate(const Quaternion quaternion);
+
+	/// <summary>
+	/// スケール取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetScale() { return transform_.scale; }
+
+	/// <summary>
+	/// スケール設定
+	/// </summary>
+	/// <param name="scale">スケール</param>
+	void SetScale(const Vector3 scale) { transform_.scale = scale; };
 
 };

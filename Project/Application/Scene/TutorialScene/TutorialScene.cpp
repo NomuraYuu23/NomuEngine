@@ -61,10 +61,6 @@ void TutorialScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
-	//影
-	shadowManager_ = std::make_unique<ShadowManager>();
-	shadowManager_->Initialize(shadowModel_.get());
-
 }
 
 /// <summary>
@@ -104,9 +100,6 @@ void TutorialScene::Update() {
 	//collisionManager_->ListRegister();
 	collisionManager_->CheakAllCollision();
 
-	// 影
-	ShadowUpdate();
-
 	// スカイドーム
 	skydome_->Update();
 
@@ -117,10 +110,6 @@ void TutorialScene::Update() {
 
 	//パーティクル
 	particleManager_->Update(camera_);
-
-	//アウトライン
-	outline_.Initialize();
-	outline_.Map();
 
 }
 
@@ -255,9 +244,6 @@ void TutorialScene::ModelCreate()
 
 	// スカイドーム
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
-	// 影
-	shadowModel_.reset(Model::Create("Resources/Model/shadow/", "shadow.obj", dxCommon_, textureHandleManager_.get()));
-
 }
 
 void TutorialScene::TextureLoad()
@@ -292,22 +278,5 @@ void TutorialScene::LowerVolumeBGM()
 	//		}
 	//	}
 	//}
-
-}
-
-void TutorialScene::ShadowUpdate()
-{
-
-	// リストクリア
-	shadowManager_->ListClear();
-
-	// リスト登録（影を発生させる物）
-	//shadowManager_->CastsShadowObjListRegister();
-
-	// リスト登録（影が現れる物）
-	//shadowManager_->ShadowAppearsObjListRegister();
-
-	// 影が出るか
-	shadowManager_->SeeShadow();
 
 }
