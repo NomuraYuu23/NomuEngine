@@ -115,7 +115,10 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 		}
 
 		// カウントされている
-		if (rotationAddCount_[i] == 0) {
+		if (rotationAddCount_[i] != 0) {
+			targetRotations_[i] *= (1.0f / rotationAddCount_[i]);
+		}
+		else {
 			targetRotations_[i] = initRotations_[i];
 		}
 
@@ -238,12 +241,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 					}
 				}
 
-				if (rotationAddCount_[name] == 0) {
-					targetRotations_[name] = rotation;
-				}
-				else {
-					targetRotations_[name] *= rotation;
-				}
+				targetRotations_[name] += rotation;
 				rotationAddCount_[name]++;
 				break;
 			}
