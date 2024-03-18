@@ -12,11 +12,8 @@ void BaseConpute::Initialize(
 
 	assert(device_);
 
-	shader_ = CompileShader::Compile(
-		filePath,
-		L"cs_6_0",
-		entryPoint);
-
+	// シェーダ
+	CreateShader(filePath, entryPoint);
 	// ルートシグネチャ
 	CreateRootSignature();
 	// パイプライン
@@ -24,31 +21,7 @@ void BaseConpute::Initialize(
 
 }
 
-void BaseConpute::CreatePipelineState()
-{
-
-	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
-	desc.CS.pShaderBytecode = shader_->GetBufferPointer();
-	desc.CS.BytecodeLength = shader_->GetBufferSize();
-	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	desc.NodeMask = 0;
-	desc.pRootSignature = rootSignature_.Get();
-
-	HRESULT hr = device_->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipelineState_));
-
-}
-
-void BaseConpute::PreExecution(DirectXCommon* dxCommon)
-{
-
-	// ルートシグネチャ
-	dxCommon->GetCommadList()->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	dxCommon->GetCommadList()->SetPipelineState(pipelineState_.Get());
-
-}
-
-void BaseConpute::PostExecution(DirectXCommon* dxCommon)
+void BaseConpute::CommandExecution(DirectXCommon* dxCommon)
 {
 
 	//コマンドリストをクローズ、キック
@@ -75,7 +48,7 @@ void BaseConpute::PostExecution(DirectXCommon* dxCommon)
 		//イベントを待つ
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
-
+	
 	//実行が完了したので、アロケータとコマンドリストをリセット
 	hr = dxCommon->GetCommandAllocator()->Reset();
 	assert(SUCCEEDED(hr));

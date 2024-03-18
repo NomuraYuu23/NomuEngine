@@ -511,9 +511,6 @@
     <ClCompile Include="Engine\base\Log.cpp">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
-      <Filter>Engine\Base\DxCommon</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\SwapChain.cpp">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
@@ -521,13 +518,19 @@
       <Filter>Engine\ContactRecord</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\CompileShader.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\Compute\BaseConpute.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Base\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\Compute\TestCompute.cpp">
+      <Filter>Engine\Base\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Glare.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
+      <Filter>Engine\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -930,9 +933,6 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RenderTargetTexture.h">
-      <Filter>Engine\Base\DxCommon</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\DxCommand.h">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
@@ -949,13 +949,19 @@
       <Filter>Engine\ContactRecord</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\CompileShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Compute\BaseConpute.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\Compute\TestCompute.h">
+      <Filter>Engine\Base\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Compute\BaseConpute.h">
+      <Filter>Engine\Base\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Glare.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\RenderTargetTexture.h">
+      <Filter>Engine\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

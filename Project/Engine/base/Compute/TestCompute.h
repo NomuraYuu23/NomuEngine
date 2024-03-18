@@ -32,6 +32,18 @@ private: // 関数
 	void CreateRootSignature() override;
 
 	/// <summary>
+	/// パイプラインを作る
+	/// </summary>
+	void CreatePipelineState() override;
+
+	/// <summary>
+	/// シェーダを作る
+	/// </summary>
+	virtual void CreateShader(
+		const std::wstring& filePath,
+		const wchar_t* entryPoint) override;
+
+	/// <summary>
 	/// リソース作成
 	/// </summary>
 	void CreateResource();
@@ -62,6 +74,9 @@ private:
 
 	// ディスクリプタヒープの位置
 	uint32_t indexDescriptorHeap_ = 0;
+
+	//パイプライン
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
 };
 

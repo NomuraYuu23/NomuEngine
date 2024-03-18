@@ -41,17 +41,19 @@ protected: // 関数
 	/// <summary>
 	/// パイプラインを作る
 	/// </summary>
-	virtual void CreatePipelineState();
+	virtual void CreatePipelineState() = 0;
 
 	/// <summary>
-	/// 実行前処理
+	/// シェーダを作る
 	/// </summary>
-	void PreExecution(DirectXCommon* dxCommon);
+	virtual void CreateShader(
+		const std::wstring& filePath,
+		const wchar_t* entryPoint) = 0;
 
 	/// <summary>
-	/// 実行後処理
+	/// コマンドリスト実行
 	/// </summary>
-	void PostExecution(DirectXCommon* dxCommon);
+	void CommandExecution(DirectXCommon* dxCommon);
 
 protected: // 変数
 
@@ -63,9 +65,6 @@ protected: // 変数
 
 	// シェーダー情報
 	Microsoft::WRL::ComPtr<IDxcBlob> shader_;
-
-	//パイプライン
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
 };
 

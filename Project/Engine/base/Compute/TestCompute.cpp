@@ -25,8 +25,10 @@ void TestCompute::Execution(DirectXCommon* dxCommon)
 	
 	ID3D12GraphicsCommandList* list = dxCommon->GetCommadList();
 
-	// 前処理
-	PreExecution(dxCommon);
+	// ルートシグネチャ
+	dxCommon->GetCommadList()->SetComputeRootSignature(rootSignature_.Get());
+	// パイプライン
+	dxCommon->GetCommadList()->SetPipelineState(pipelineState_.Get());
 
 	// ヒープ
 	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
@@ -38,8 +40,8 @@ void TestCompute::Execution(DirectXCommon* dxCommon)
 	// シェーダー実行
 	list->Dispatch(static_cast<uint32_t>(256), 1, 1);
 
-	// 後処理
-	PostExecution(dxCommon);
+	// コマンド実行
+	CommandExecution(dxCommon);
 
 	// データ
 	float s = static_cast<float*>(data_)[5];
@@ -100,6 +102,30 @@ void TestCompute::CreateRootSignature()
 	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
 		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(hr));
+
+}
+
+void TestCompute::CreatePipelineState()
+{
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
+	desc.CS.pShaderBytecode = shader_->GetBufferPointer();
+	desc.CS.BytecodeLength = shader_->GetBufferSize();
+	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	desc.NodeMask = 0;
+	desc.pRootSignature = rootSignature_.Get();
+
+	HRESULT hr = device_->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipelineState_));
+
+}
+
+void TestCompute::CreateShader(const std::wstring& filePath, const wchar_t* entryPoint)
+{
+
+	shader_ = CompileShader::Compile(
+		filePath,
+		L"cs_6_0",
+		entryPoint);
 
 }
 
