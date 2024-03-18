@@ -13,6 +13,7 @@
 #include "Log.h"
 #include "GraphicsPipelineState/GraphicsPipelineState.h"
 #include "../base/CompileShader.h"
+#include "../base/Compute/BaseConpute.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -50,6 +51,8 @@ void DirectXCommon::Initialize(
 
 	// コンパイルシェーダー
 	CompileShader::Initialize(dxgiDevice_->GetDevice());
+	// コンピュートシェーダー
+	BaseConpute::GatDevice(dxgiDevice_->GetDevice());
 
 	// ディスクリプタヒープ初期化
 	RTVDescriptorHerpManager::Initialize(dxgiDevice_->GetDevice());

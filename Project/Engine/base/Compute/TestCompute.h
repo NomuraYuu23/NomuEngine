@@ -4,8 +4,9 @@
 #include <vector>
 
 #include "../DirectXCommon.h"
+#include "BaseConpute.h"
 
-class Compute
+class TestCompute : public BaseConpute
 {
 
 public:
@@ -13,42 +14,38 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="device">デバイス</param>
-	void Initialize(ID3D12Device* device);
+	/// <param name="device">シェーダーファイルのパス</param>
+	void Initialize(const std::wstring& filePath) override;
 	
 	/// <summary>
 	/// 実行
 	/// </summary>
 	/// <param name="dxCommon">DirectX/param>
-	void Execution(DirectXCommon* dxCommon);
+	void Execution(DirectXCommon* dxCommon) override;
 
 private: // 関数
 
-	void CreateRootSignature();
+	/// <summary>
+	/// ルートシグネチャを作る
+	/// </summary>
+	void CreateRootSignature() override;
 
-	void CreatePipelineState();
-
-	//void CreateHerp();
-
+	/// <summary>
+	/// リソース作成
+	/// </summary>
 	void CreateResource();
 
+	/// <summary>
+	/// UAV作成
+	/// </summary>
 	void CreateUAV();
 
+	/// <summary>
+	/// マップ
+	/// </summary>
 	void Map();
 
 private:
-
-	// デバイス
-	ID3D12Device* device_;
-
-	// ルートシグネチャ
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
-
-	// シェーダー情報
-	Microsoft::WRL::ComPtr<IDxcBlob> shader_;
-
-	//パイプライン
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
 	// リソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;

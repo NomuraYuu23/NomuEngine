@@ -131,10 +131,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Animation\AnimationData.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\CompileShader.cpp" />
+    <ClCompile Include="Engine\base\Compute\BaseConpute.cpp" />
+    <ClCompile Include="Engine\base\Compute\TestCompute.cpp" />
     <ClCompile Include="Engine\base\DSVDescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\DxCommand.cpp" />
     <ClCompile Include="Engine\base\DXGIDevice.cpp" />
-    <ClCompile Include="Engine\base\GraphicsPipelineState\Compute.cpp" />
     <ClCompile Include="Engine\base\Log.cpp" />
     <ClCompile Include="Engine\base\RTVDescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp" />
@@ -249,10 +250,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Animation\AnimationData.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\CompileShader.h" />
+    <ClInclude Include="Engine\base\Compute\TestCompute.h" />
     <ClInclude Include="Engine\base\DSVDescriptorHerpManager.h" />
     <ClInclude Include="Engine\base\DxCommand.h" />
     <ClInclude Include="Engine\base\DXGIDevice.h" />
-    <ClInclude Include="Engine\base\GraphicsPipelineState\Compute.h" />
+    <ClInclude Include="Engine\base\Compute\BaseConpute.h" />
     <ClInclude Include="Engine\base\Log.h" />
     <ClInclude Include="Engine\base\RTVDescriptorHerpManager.h" />
     <ClInclude Include="Engine\base\SRVDescriptorHerpManager.h" />

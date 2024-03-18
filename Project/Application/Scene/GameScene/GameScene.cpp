@@ -139,8 +139,8 @@ void GameScene::Initialize() {
 
 	line_.reset(DrawLine::Create());
 
-	compute_ = std::make_unique<Compute>();
-	compute_->Initialize(dxCommon_->GetDevice());
+	compute_ = std::make_unique<TestCompute>();
+	compute_->Initialize(L"Resources/shaders/Test.CS.hlsl");
 
 }
 

@@ -1,22 +1,14 @@
-#include "Compute.h"
+#include "TestCompute.h"
 #include <cassert>
 #include "../Log.h"
 #include "../SRVDescriptorHerpManager.h"
 #include "../CompileShader.h"
 
-void Compute::Initialize(ID3D12Device* device)
+void TestCompute::Initialize(const std::wstring& filePath)
 {
 
-	device_ = device;
-
-	shader_ = CompileShader::Compile(
-		L"Resources/shaders/Test.CS.hlsl",
-		L"cs_6_0");
-
-	// ルートシグネチャ
-	CreateRootSignature();
-	// パイプライン
-	CreatePipelineState();
+	BaseConpute::Initialize(filePath);
+	
 	// リソース
 	CreateResource();
 	// UAV
@@ -26,17 +18,14 @@ void Compute::Initialize(ID3D12Device* device)
 
 }
 
-void Compute::Execution(DirectXCommon* dxCommon)
+void TestCompute::Execution(DirectXCommon* dxCommon)
 {
 	
 	ID3D12GraphicsCommandList* list = dxCommon->GetCommadList();
-	ID3D12CommandAllocator* allocator = dxCommon->GetCommandAllocator();
-	ID3D12CommandQueue* queue = dxCommon->GetCommandQueue();
 
-	// ルートシグネチャ
-	list->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	list->SetPipelineState(pipelineState_.Get());
+	// 前処理
+	PreExecution(dxCommon);
+
 	// ヒープ
 	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
 	list->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -47,43 +36,15 @@ void Compute::Execution(DirectXCommon* dxCommon)
 	// シェーダー実行
 	list->Dispatch(static_cast<uint32_t>(256), 1, 1);
 
-	//コマンドリストをクローズ、キック
-	HRESULT hr = list->Close();
-	assert(SUCCEEDED(hr));
-
-	ID3D12CommandList* commandLists[] = { list };
-	DxCommand::GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-
-	//実行待ち
-	//Fenceの値を更新
-	dxCommon->SetFenceVal(dxCommon->GetFenceVal() + 1);
-	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	DxCommand::GetCommandQueue()->Signal(dxCommon->GetFence(), dxCommon->GetFenceVal());
-
-	//Fenceの値が指定したSignal値にたどり着いているが確認する
-	//GetCompletedValueの初期値はFence作成時に渡した初期値
-	if (dxCommon->GetFence()->GetCompletedValue() < dxCommon->GetFenceVal()) {
-		//FrenceのSignalを持つためのイベントを作成する
-		HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-		assert(fenceEvent != nullptr);
-		//指定したSignalにたどりついていないので、たどりつくまで待つようにイベントを設定する
-		dxCommon->GetFence()->SetEventOnCompletion(dxCommon->GetFenceVal(), fenceEvent);
-		//イベントを待つ
-		WaitForSingleObject(fenceEvent, INFINITE);
-	}
-
-	//実行が完了したので、アロケータとコマンドリストをリセット
-	hr = allocator->Reset();
-	assert(SUCCEEDED(hr));
-	hr = list->Reset(allocator, nullptr);
-	assert(SUCCEEDED(hr));
+	// 後処理
+	PostExecution(dxCommon);
 
 	// データ
 	float s = static_cast<float*>(data_)[5];
 
 }
 
-void Compute::CreateRootSignature()
+void TestCompute::CreateRootSignature()
 {
 
 	HRESULT hr;
@@ -140,21 +101,7 @@ void Compute::CreateRootSignature()
 
 }
 
-void Compute::CreatePipelineState()
-{
-
-	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
-	desc.CS.pShaderBytecode = shader_->GetBufferPointer();
-	desc.CS.BytecodeLength = shader_->GetBufferSize();
-	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	desc.NodeMask = 0;
-	desc.pRootSignature = rootSignature_.Get();
-
-	HRESULT hr = device_->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipelineState_));
-
-}
-
-void Compute::CreateResource()
+void TestCompute::CreateResource()
 {
 
 	D3D12_HEAP_PROPERTIES prop{};
@@ -187,7 +134,7 @@ void Compute::CreateResource()
 
 }
 
-void Compute::CreateUAV()
+void TestCompute::CreateUAV()
 {
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
@@ -209,7 +156,7 @@ void Compute::CreateUAV()
 
 }
 
-void Compute::Map()
+void TestCompute::Map()
 {
 
 	D3D12_RANGE range{ 0, 1 };
