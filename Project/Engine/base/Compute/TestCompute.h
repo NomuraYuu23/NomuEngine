@@ -14,8 +14,9 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="device">シェーダーファイルのパス</param>
-	void Initialize(const std::wstring& filePath) override;
+	/// <param name="filePath">シェーダーファイルのパス</param>
+	/// <param name="entryPoint">エントリポイント</param>
+	void Initialize(const std::wstring& filePath, const wchar_t* entryPoint = L"main") override;
 	
 	/// <summary>
 	/// 実行

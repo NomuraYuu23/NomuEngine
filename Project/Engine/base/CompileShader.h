@@ -37,11 +37,13 @@ public:
 	/// Shaderをコンパイルする
 	/// </summary>
 	/// <param name="filePath">CompilerするShanderファイルへのパス</param>
-	/// <param name="profile"Compilenに使用するProfile></param>
+	/// <param name="profile">Compilenに使用するProfile</param>
+	/// <param name="entryPoint">エントリポイント</param>
 	/// <returns></returns>
 	static IDxcBlob* Compile(
 		const std::wstring& filePath,
-		const wchar_t* profile);
+		const wchar_t* profile,
+		const wchar_t* entryPoint = L"main");
 
 private: // シングルトン
 

@@ -21,8 +21,9 @@ public: // 関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="device">シェーダーファイルのパス</param>
-	virtual void Initialize(const std::wstring& filePath);
+	/// <param name="filePath">シェーダーファイルのパス</param>
+	/// <param name="entryPoint">エントリポイント</param>
+	virtual void Initialize(const std::wstring& filePath, const wchar_t* entryPoint = L"main");
 
 	/// <summary>
 	/// 実行

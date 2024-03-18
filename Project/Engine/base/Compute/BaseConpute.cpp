@@ -5,14 +5,17 @@
 
 ID3D12Device* BaseConpute::device_ = nullptr;
 
-void BaseConpute::Initialize(const std::wstring& filePath)
+void BaseConpute::Initialize(
+	const std::wstring& filePath,
+	const wchar_t* entryPoint)
 {
 
 	assert(device_);
 
 	shader_ = CompileShader::Compile(
 		filePath,
-		L"cs_6_0");
+		L"cs_6_0",
+		entryPoint);
 
 	// ルートシグネチャ
 	CreateRootSignature();

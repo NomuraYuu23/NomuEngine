@@ -26,7 +26,9 @@ void CompileShader::Initialize(ID3D12Device* sDevice)
 
 }
 
-IDxcBlob* CompileShader::Compile(const std::wstring& filePath, const wchar_t* profile)
+IDxcBlob* CompileShader::Compile(const std::wstring& filePath,
+	const wchar_t* profile,
+	const wchar_t* entryPoint)
 {
 
 	//htslファイルを読む
@@ -46,7 +48,7 @@ IDxcBlob* CompileShader::Compile(const std::wstring& filePath, const wchar_t* pr
 	//Compileする
 	LPCWSTR arguments[] = {
 		filePath.c_str(), //コンパイル対象のhlslファイル名
-		L"-E",L"main",//エントリーポイントの指定,基本的にmain以外にはしない
+		L"-E",entryPoint,//エントリーポイントの指定,基本的にmain以外にはしない
 		L"-T", profile, //ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug", //デバッグ用の情報を埋め込む
 		L"-Od", //最適化を外しておく

@@ -140,7 +140,7 @@ void GameScene::Initialize() {
 	line_.reset(DrawLine::Create());
 
 	compute_ = std::make_unique<TestCompute>();
-	compute_->Initialize(L"Resources/shaders/Test.CS.hlsl");
+	compute_->Initialize(L"Resources/shaders/Test.CS.hlsl",L"CS");
 
 }
 

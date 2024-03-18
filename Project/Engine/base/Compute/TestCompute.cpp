@@ -4,10 +4,12 @@
 #include "../SRVDescriptorHerpManager.h"
 #include "../CompileShader.h"
 
-void TestCompute::Initialize(const std::wstring& filePath)
+void TestCompute::Initialize(
+	const std::wstring& filePath,
+	const wchar_t* entryPoint)
 {
 
-	BaseConpute::Initialize(filePath);
+	BaseConpute::Initialize(filePath, entryPoint);
 	
 	// リソース
 	CreateResource();
