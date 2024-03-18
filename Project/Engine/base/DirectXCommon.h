@@ -60,6 +60,8 @@ public:
 
 	ID3D12CommandAllocator* GetCommandAllocatorLoad() const { return loadCommand_->GetCommandAllocator(); }
 
+	ID3D12CommandQueue* GetCommandQueue() const { return DxCommand::GetCommandQueue(); }
+
 	ID3D12Fence* GetFence() const { return fence_.Get(); }
 
 	UINT64 GetFenceVal() const { return fenceVal_; }

@@ -44,9 +44,6 @@
 // パーティクル
 #include "../Particle/ParticleManager.h"
 
-// ディスクリプタヒープ
-#include ".../../../base/SRVDescriptorHerpManager.h"
-
 class MyFramework
 {
 

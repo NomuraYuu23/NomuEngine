@@ -1,4 +1,6 @@
 #include "GraphicsPipelineState.h"
+#include "../CompileShader.h"
+#include "../Log.h"
 
 using namespace Microsoft::WRL;
 
@@ -8,16 +10,12 @@ Microsoft::WRL::ComPtr<ID3D12RootSignature> GraphicsPipelineState::sRootSignatur
 Microsoft::WRL::ComPtr<ID3D12PipelineState> GraphicsPipelineState::sPipelineState[GraphicsPipelineState::PipelineStateName::kPipelineStateNameOfCount];
 // デバイス
 ID3D12Device* GraphicsPipelineState::sDevice_;
-// シェーダーコンパイル用
-GraphicsPipelineState::CompileShaderStruct GraphicsPipelineState::compileShaderStruct_;
 
 void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 {
 
 	// デバイス
 	sDevice_ = sDevice;
-	// dxcCompilerを初期化
-	DxcCompilerInitialize();
 
 	// ルートパラメータ
 	RootParameterManager::Initialize();
@@ -71,9 +69,9 @@ void GraphicsPipelineState::CreateForModel()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Object3d.vs.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/Object3d.vs.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Object3d.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/Object3d.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -118,9 +116,9 @@ void GraphicsPipelineState::CreateForSprite()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Sprite.vs.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/Sprite.vs.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Sprite.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/Sprite.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -165,9 +163,9 @@ void GraphicsPipelineState::CreateForParticle()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Particle.vs.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/Particle.vs.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Particle.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/Particle.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -212,9 +210,9 @@ void GraphicsPipelineState::CreateForOutLine()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/OutLine3D.vs.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/OutLine3D.vs.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/OutLine3D.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/OutLine3D.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -259,9 +257,9 @@ void GraphicsPipelineState::CreateForCollision2DDebugDraw()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Collider2DDebug.VS.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/Collider2DDebug.VS.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Collider2DDebug.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/Collider2DDebug.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -306,9 +304,9 @@ void GraphicsPipelineState::CreateForLine()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/Line.VS.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/Line.VS.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/Line.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/Line.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -353,9 +351,9 @@ void GraphicsPipelineState::CreateForSwapChain()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader(L"Resources/shaders/SwapChain.VS.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/SwapChain.VS.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader(L"Resources/shaders/SwapChain.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/SwapChain.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
@@ -372,23 +370,6 @@ void GraphicsPipelineState::CreateForSwapChain()
 	createPSODesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	CreatePSO(createPSODesc);
-
-}
-
-void GraphicsPipelineState::DxcCompilerInitialize()
-{
-
-	HRESULT hr;
-
-	//dxcCompilerを初期化
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&compileShaderStruct_.dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compileShaderStruct_.dxcCompiler));
-	assert(SUCCEEDED(hr));
-
-	//現時点でincludeはしないが、includeに対応するための設定を行っておく
-	hr = compileShaderStruct_.dxcUtils->CreateDefaultIncludeHandler(&compileShaderStruct_.includeHandler);
-	assert(SUCCEEDED(hr));
 
 }
 
@@ -412,7 +393,7 @@ void GraphicsPipelineState::RootsignatureSetting(PipelineStateName pipelineState
 	hr = D3D12SerializeRootSignature(&descriptionRootsignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Log::Message(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -456,72 +437,6 @@ D3D12_RASTERIZER_DESC GraphicsPipelineState::ResiterzerStateSetting(D3D12_CULL_M
 
 }
 
-//CompileShader
-IDxcBlob* GraphicsPipelineState::CompileShader(
-	//CompilerするShanderファイルへのパス
-	const std::wstring& filePath,
-	//Compilenに使用するProfile
-	const wchar_t* profile)
-{
-	//htslファイルを読む
-	//これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
-	//hlslファイルを読む
-	IDxcBlobEncoding* shaderSource = nullptr;
-	HRESULT hr = compileShaderStruct_.dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
-	//読めなかった止める
-	assert(SUCCEEDED(hr));
-	//読み込んだファイルの内容を設定する
-	DxcBuffer shaderSourceBuffer;
-	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
-	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
-	shaderSourceBuffer.Encoding = DXC_CP_UTF8; //UTF8の文字コードであることを通知
-
-	//Compileする
-	LPCWSTR arguments[] = {
-		filePath.c_str(), //コンパイル対象のhlslファイル名
-		L"-E",L"main",//エントリーポイントの指定,基本的にmain以外にはしない
-		L"-T", profile, //ShaderProfileの設定
-		L"-Zi", L"-Qembed_debug", //デバッグ用の情報を埋め込む
-		L"-Od", //最適化を外しておく
-		L"-Zpr", //メモリレイアウトは作成
-	};
-	//実際にShaderをコンパイルする
-	IDxcResult* shaderResult = nullptr;
-	hr = compileShaderStruct_.dxcCompiler->Compile(
-		&shaderSourceBuffer,//読み込んだファイル
-		arguments,//コンパイルオプション
-		_countof(arguments),//コンパイルオプションの数
-		compileShaderStruct_.includeHandler,//includeがふくまれた諸々
-		IID_PPV_ARGS(&shaderResult)//コンパイル結果
-	);
-	//コンパイルエラーではなくdixが起動できないなど致命的な状況
-	assert(SUCCEEDED(hr));
-
-	//警告・エラーがでていないか確認する
-	//警告・エラーが出てたらログに出して止める
-	IDxcBlobUtf8* shaderError = nullptr;
-	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
-	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Log(shaderError->GetStringPointer());
-		assert(false);
-	}
-
-	//compile結果を受け取って返す
-	//コンパイル結果から実行用のバイナリ部分を取得
-	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
-	assert(SUCCEEDED(hr));
-	//成功したログを出す
-	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
-	//もう使わないリソースを解放
-	shaderSource->Release();
-	shaderResult->Release();
-	//実行用のバイナリを返却
-	return shaderBlob;
-
-}
-
 void GraphicsPipelineState::CreatePSO(const CreatePSODesc& createPSODesc)
 {
 
@@ -557,36 +472,4 @@ void GraphicsPipelineState::CreatePSO(const CreatePSODesc& createPSODesc)
 		IID_PPV_ARGS(&sPipelineState[createPSODesc.pipelineStateName]));
 	assert(SUCCEEDED(hr));
 
-}
-
-std::wstring GraphicsPipelineState::ConvertString(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-}
-
-std::string GraphicsPipelineState::ConvertString(const std::wstring& str) {
-	if (str.empty()) {
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0) {
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
-}
-
-void GraphicsPipelineState::Log(const std::string& message) {
-	OutputDebugStringA(message.c_str());
 }

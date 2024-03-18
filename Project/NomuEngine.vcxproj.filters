@@ -193,6 +193,12 @@
     <Filter Include="Engine\ContactRecord">
       <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Base\Compute">
+      <UniqueIdentifier>{40d02bae-467e-4c17-afec-4a51df2d7996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Compute">
+      <UniqueIdentifier>{7b1944e8-9303-4540-80f4-cef190e3ded1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -513,6 +519,12 @@
     </ClCompile>
     <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp">
       <Filter>Engine\ContactRecord</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\Compute.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\CompileShader.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -933,6 +945,12 @@
     <ClInclude Include="Engine\ContactRecord\ContactRecord.h">
       <Filter>Engine\ContactRecord</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\GraphicsPipelineState\Compute.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\CompileShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -1003,6 +1021,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
       <Filter>shaders\SwapChain</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Test.CS.hlsl">
+      <Filter>shaders\Compute</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

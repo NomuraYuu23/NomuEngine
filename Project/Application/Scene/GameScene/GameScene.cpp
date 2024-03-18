@@ -139,6 +139,9 @@ void GameScene::Initialize() {
 
 	line_.reset(DrawLine::Create());
 
+	compute_ = std::make_unique<Compute>();
+	compute_->Initialize(dxCommon_->GetDevice());
+
 }
 
 /// <summary>
@@ -149,6 +152,8 @@ void GameScene::Update() {
 #ifdef _DEBUG
 	ImguiDraw();
 #endif
+
+	compute_->Execution(dxCommon_);
 
 	if (requestSceneNo == kClear || requestSceneNo == kTitle || isBeingReset_) {
 		resetScene_ = false;
