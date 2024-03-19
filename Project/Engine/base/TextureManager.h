@@ -26,7 +26,7 @@ public:
 		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 		// シェーダーリソースビューのハンドル(GPU)
 		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-		//  DSVのインデックス
+		//  SRVのインデックス
 		uint32_t indexDescriptorHeap;
 		//名前
 		std::string name;

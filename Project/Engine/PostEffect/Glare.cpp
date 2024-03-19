@@ -3,6 +3,7 @@
 #include "../base/BufferResource.h"
 #include "../base/Log.h"
 #include "../base/CompileShader.h"
+#include "../base/TextureManager.h"
 
 void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& imageForGlareHandles)
 {
@@ -11,11 +12,13 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 	device_ = DirectXCommon::GetInstance()->GetDevice();
 
 	// レンダーターゲット初期化
-	renderTargetTexture_ = std::make_unique<RenderTargetTexture>();
-	renderTargetTexture_->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
+	for (uint32_t i = 0; i < 8; ++i) {
+		writeTextures_[i] = std::make_unique<TextureUAV>();
+		writeTextures_[i]->Initialize(
+			device_,
+			WinApp::kWindowWidth,
+			WinApp::kWindowHeight);
+	}
 
 	// グレア用画像
 	imageForGlareHandles_ = imageForGlareHandles;
@@ -48,18 +51,16 @@ void Glare::Execution(
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& imageWithGlareHandle,
 	float glareIntensity,
 	float threshold,
-	ImageForGlareIndex imageForGlareIndex)
+	ImageForGlareIndex imageForGlareIndex,
+	ID3D12GraphicsCommandList* commandList)
 {
 	
 	// リスト
-	ID3D12GraphicsCommandList* list = DirectXCommon::GetInstance()->GetCommadList();
+	commandList_ = commandList;
 
 	// 定数バッファを更新
 	computeParametersMap_->glareIntensity = glareIntensity;
 	computeParametersMap_->threshold = threshold;
-	// 定数バッファを送る
-	list->SetGraphicsRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-
 
 
 
@@ -229,5 +230,276 @@ void Glare::CreatePipline()
 		HRESULT hr = device_->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipelineStates_[i]));
 		assert(SUCCEEDED(hr));
 	}
+
+}
+
+void Glare::CopyCommand(const CD3DX12_GPU_DESCRIPTOR_HANDLE& in, TextureUAV* out)
+{
+
+	assert(commandList_);
+
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	commandList_->SetComputeRootDescriptorTable(1, in);
+	out->SetRootDescriptorTable(commandList_, 3);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::CopyCommand(uint32_t in, TextureUAV* out)
+{
+
+	assert(commandList_);
+
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(commandList_, 1, in);
+	out->SetRootDescriptorTable(commandList_, 3);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::BinaryThresholdCommand(TextureUAV* in, TextureUAV* out)
+{
+
+	assert(commandList_);
+
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	in->SetRootDescriptorTable(commandList_, 1);
+	out->SetRootDescriptorTable(commandList_, 3);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexBinaryThresholdCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::ClearCommand(TextureUAV* tex)
+{
+
+	assert(commandList_);
+
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	tex->SetRootDescriptorTable(commandList_, 3);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexClesrCS].Get());
+
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
+{
+
+	assert(commandList_);
+
+	// 縦方向
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	real->SetRootDescriptorTable(commandList_, 1);
+	image->SetRootDescriptorTable(commandList_, 2);
+	writeTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+	writeTextures_[3]->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexFFTROWCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+	// 横方向
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	writeTextures_[2]->SetRootDescriptorTable(commandList_, 1);
+	writeTextures_[3]->SetRootDescriptorTable(commandList_, 2);
+	real->SetRootDescriptorTable(commandList_, 3);
+	image->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexFFTCOLCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowWidth, 1);
+
+}
+
+void Glare::IFFTCommand(TextureUAV* real, TextureUAV* image)
+{
+
+	assert(commandList_);
+
+	// 縦方向
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	real->SetRootDescriptorTable(commandList_, 1);
+	image->SetRootDescriptorTable(commandList_, 2);
+	writeTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+	writeTextures_[3]->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexIFFTROWCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+	// 横方向
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	writeTextures_[2]->SetRootDescriptorTable(commandList_, 1);
+	writeTextures_[3]->SetRootDescriptorTable(commandList_, 2);
+	real->SetRootDescriptorTable(commandList_, 3);
+	image->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexIFFTCOLCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowWidth, 1);
+
+
+}
+
+void Glare::AmpCommand(TextureUAV* inReal, TextureUAV* inImage, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	inReal->SetRootDescriptorTable(commandList_, 1);
+	inImage->SetRootDescriptorTable(commandList_, 2);
+	outReal->SetRootDescriptorTable(commandList_, 3);
+	outImage->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexAmpCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::CalcMaxMinCommand(TextureUAV* tex, TextureUAV* outOnePixRealMax, TextureUAV* outOnePixImageMin)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	tex->SetRootDescriptorTable(commandList_, 1);
+	writeTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMaxMinFirstCS].Get());
+	// 実行
+	commandList_->Dispatch(WinApp::kWindowWidth, 1, 1);
+	// バッファを送る
+	writeTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+	outOnePixRealMax->SetRootDescriptorTable(commandList_, 3);
+	outOnePixImageMin->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMaxMinSecondCS].Get());
+	// 実行
+	commandList_->Dispatch(1, 1, 1);
+
+}
+
+void Glare::DivideMaxAmpCommand(TextureUAV* outOnePixRealMax, TextureUAV* outOnePixImageMin, TextureUAV* inReal, TextureUAV* inImage, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	outOnePixRealMax->SetRootDescriptorTable(commandList_, 1);
+	outOnePixImageMin->SetRootDescriptorTable(commandList_, 2);
+	inReal->SetRootDescriptorTable(commandList_, 3);
+	inImage->SetRootDescriptorTable(commandList_, 4);
+	outReal->SetRootDescriptorTable(commandList_, 5);
+	outImage->SetRootDescriptorTable(commandList_, 6);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexDivByMaxAampCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::RaiseRICommand(TextureUAV* inReal, TextureUAV* inImage, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	inReal->SetRootDescriptorTable(commandList_, 1);
+	inImage->SetRootDescriptorTable(commandList_, 2);
+	outReal->SetRootDescriptorTable(commandList_, 3);
+	outImage->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexRaiseRealImageCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::SpectrumScalingCommand(TextureUAV* inReal, TextureUAV* inImage, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	inReal->SetRootDescriptorTable(commandList_, 1);
+	inImage->SetRootDescriptorTable(commandList_, 2);
+	outReal->SetRootDescriptorTable(commandList_, 3);
+	outImage->SetRootDescriptorTable(commandList_, 4);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexSpectrumScalingCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::ConvolutionCommand(TextureUAV* inReal0, TextureUAV* inImage0, TextureUAV* inReal1, TextureUAV* inImage1, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	// 一方のFFT
+	FFTCommand(inReal0, inImage0);
+	// もう一方のFFT
+	FFTCommand(inReal1, inImage1);
+	// 乗算
+	MultiplyCommand(inReal0, inImage0, inReal1, inImage1, outReal, outImage);
+	// 逆FFT
+	IFFTCommand(outReal, outImage);
+
+}
+
+void Glare::MultiplyCommand(TextureUAV* inReal0, TextureUAV* inImage0, TextureUAV* inReal1, TextureUAV* inImage1, TextureUAV* outReal, TextureUAV* outImage)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	inReal0->SetRootDescriptorTable(commandList_, 1);
+	inImage0->SetRootDescriptorTable(commandList_, 2);
+	inReal1->SetRootDescriptorTable(commandList_, 3);
+	inImage1->SetRootDescriptorTable(commandList_, 4);
+	outReal->SetRootDescriptorTable(commandList_, 5);
+	outImage->SetRootDescriptorTable(commandList_, 6);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMulCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+
+}
+
+void Glare::AddCommand(TextureUAV* tex0, TextureUAV* tex1, TextureUAV* out)
+{
+
+	assert(commandList_);
+	// バッファを送る
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	tex0->SetRootDescriptorTable(commandList_, 1);
+	tex1->SetRootDescriptorTable(commandList_, 2);
+	out->SetRootDescriptorTable(commandList_, 3);
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexAddCS].Get());
+	// 実行
+	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
 
 }
