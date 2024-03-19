@@ -2,6 +2,8 @@
 #include "../base/RenderTargetTexture.h"
 #include "../base/DirectXCommon.h"
 #include <array>
+#include <string>
+
 class Glare
 {
 
@@ -24,7 +26,12 @@ public: // サブクラス
 	// グレア用の画像名前
 	enum ImageForGlareIndex {
 		kImageForGlareIndexHalo, // ハロ
-		kImageForGlareIndexOfCount
+		kImageForGlareIndexOfCount // 数を数える用
+	};
+
+	// パイプライン名前
+	enum PiolineIndex {
+		kPiolineIndexOfCount // 数を数える用
 	};
 
 public: // 関数
@@ -49,6 +56,29 @@ public: // 関数
 		float threshold,
 		ImageForGlareIndex imageForGlareIndex);
 
+private:  // 関数
+
+	/// <summary>
+	///	ルートシグネチャ作成
+	/// </summary>
+	void CreateRootSignature();
+
+	/// <summary>
+	/// シェーダーをコンパイル
+	/// </summary>
+	void CompileShader();
+
+	/// <summary>
+	/// パイプライン作成
+	/// </summary>
+	void CreatePipline();
+
+private: // コマンド
+
+	void CopyCommand();
+
+	void BinaryThreshold();
+
 private: // 変数
 
 	// デバイス
@@ -56,17 +86,30 @@ private: // 変数
 
 	// 編集する画像
 	std::unique_ptr<RenderTargetTexture> renderTargetTexture_;
-
 	// グレアを掛ける画像(RTTexのハンドル)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE imageWithGlareHandle_;
-
 	// グレア用の画像ハンドル
 	std::array<uint32_t, kImageForGlareIndexOfCount> imageForGlareHandles_;
 
 	//computeParameters用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;
-
+	// computeParametersのマップ
 	ComputeParameters* computeParametersMap_ = nullptr;
+
+	//パイプライン
+	std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kPiolineIndexOfCount > pipelineStates_;
+	// ルートシグネチャ
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+	// シェーダー情報
+	std::array<Microsoft::WRL::ComPtr<IDxcBlob>, kPiolineIndexOfCount> shaders_;
+
+private: // 定数
+
+	// シェーダー情報 <シェーダ名, エントリポイント>
+	const std::array<std::pair<const std::wstring, const wchar_t*>, kPiolineIndexOfCount> shaderNames_ = 
+	{
+
+	};
 
 };
 
