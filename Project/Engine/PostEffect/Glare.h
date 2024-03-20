@@ -44,7 +44,7 @@ public: // サブクラス
 		kPiolineIndexCopyCS, // コピー
 		kPiolineIndexClesrCS, // クリア
 		kPiolineIndexSpectrumScalingCS, // スペクトルスケール
-		kPiolineIndexRaiseRealImageCS, // ???
+		kPiolineIndexRaiseRealImageCS, //グレアの輝度を底上げ
 		kPiolineIndexMaxMinFirstCS, // 最大値最小値計算1回目
 		kPiolineIndexMaxMinSecondCS, // 最大値最小値計算2回目
 		kPiolineIndexOfCount // 数を数える用
@@ -162,7 +162,7 @@ private: // コマンド
 		TextureUAV* outReal, TextureUAV* outImage);
 
 	/// <summary>
-	/// ???
+	/// グレアの輝度を底上げ
 	/// </summary>
 	/// <param name="inReal">入力実部</param>
 	/// <param name="inImage">入力虚部</param>
@@ -234,6 +234,13 @@ private: // 変数
 	CD3DX12_GPU_DESCRIPTOR_HANDLE imageWithGlareHandle_;
 	// グレア用の画像ハンドル
 	std::array<uint32_t, kImageForGlareIndexOfCount> imageForGlareHandles_;
+	
+	// 最大値最小値計算で使うテクスチャ
+	std::unique_ptr<TextureUAV> maxMinTextures_[2];
+	std::unique_ptr<TextureUAV> lineInnerTexture_;
+
+	// FFTで使うテクスチャ
+	std::unique_ptr<TextureUAV> fftInnerTextures_[2];
 
 	//computeParameters用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;

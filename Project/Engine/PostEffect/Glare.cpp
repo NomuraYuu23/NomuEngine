@@ -20,6 +20,35 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 			WinApp::kWindowHeight);
 	}
 
+	// 最大値最小値計算で使うテクスチャ
+	maxMinTextures_[0] = std::make_unique<TextureUAV>();
+	maxMinTextures_[0]->Initialize(
+		device_,
+		WinApp::kWindowWidth,
+		WinApp::kWindowHeight);
+	maxMinTextures_[1] = std::make_unique<TextureUAV>();
+	maxMinTextures_[1]->Initialize(
+		device_,
+		WinApp::kWindowWidth,
+		WinApp::kWindowHeight);
+	lineInnerTexture_ = std::make_unique<TextureUAV>();
+	lineInnerTexture_->Initialize(
+		device_,
+		WinApp::kWindowWidth,
+		WinApp::kWindowHeight);
+
+	// FFTで使うテクスチャ
+	fftInnerTextures_[0] = std::make_unique<TextureUAV>();
+	fftInnerTextures_[0]->Initialize(
+		device_,
+		WinApp::kWindowWidth,
+		WinApp::kWindowHeight);
+	fftInnerTextures_[1] = std::make_unique<TextureUAV>();
+	fftInnerTextures_[1]->Initialize(
+		device_,
+		WinApp::kWindowWidth,
+		WinApp::kWindowHeight);
+
 	// グレア用画像
 	imageForGlareHandles_ = imageForGlareHandles;
 
@@ -62,7 +91,73 @@ void Glare::Execution(
 	computeParametersMap_->glareIntensity = glareIntensity;
 	computeParametersMap_->threshold = threshold;
 
+	// グレアをかける画像をコピー
+	CopyCommand(imageWithGlareHandle, writeTextures_[0].get());
+	// コピーした画像で2値化画像を作る
+	BinaryThresholdCommand(writeTextures_[0].get(), writeTextures_[1].get());
+	// 2番テクスチャをクリア
+	ClearCommand(writeTextures_[2].get());
 
+	// グレアを作る画像を決定
+	assert(imageForGlareIndex < kImageForGlareIndexOfCount);
+	CopyCommand(imageForGlareHandles_[imageForGlareIndex], writeTextures_[3].get());
+
+	// 4番テクスチャをクリア
+	ClearCommand(writeTextures_[4].get());
+
+	// FFT(グレア生成)
+	FFTCommand(writeTextures_[3].get(), writeTextures_[4].get());
+
+	// 増幅
+	AmpCommand(writeTextures_[3].get(), writeTextures_[4].get(),
+		writeTextures_[5].get(), writeTextures_[6].get());
+
+	// 最大値最小値計算
+	CalcMaxMinCommand(writeTextures_[5].get(),
+		maxMinTextures_[0].get(), maxMinTextures_[1].get());
+
+	// 最大振幅による除算
+	DivideMaxAmpCommand(maxMinTextures_[0].get(), maxMinTextures_[1].get(),
+		writeTextures_[5].get(), writeTextures_[6].get(), 
+		writeTextures_[3].get(), writeTextures_[4].get());
+
+	// グレアの高度を上げる
+	RaiseRICommand(writeTextures_[3].get(), writeTextures_[4].get(),
+		writeTextures_[5].get(), writeTextures_[6].get());
+
+	// 波長スケーリング
+	SpectrumScalingCommand(writeTextures_[5].get(), writeTextures_[6].get(),
+		writeTextures_[3].get(), writeTextures_[4].get());
+
+	// ここまででグレア画像を作成（writeTextures_[3]）
+
+	// 二値化画像とグレア画像を畳み込む
+	ConvolutionCommand(
+		writeTextures_[1].get(), writeTextures_[2].get(),
+		writeTextures_[3].get(), writeTextures_[4].get(),
+		writeTextures_[5].get(), writeTextures_[6].get());
+
+	// 増幅
+	AmpCommand(writeTextures_[5].get(), writeTextures_[6].get(),
+		writeTextures_[0].get(), writeTextures_[1].get());
+
+	// 最大値最小値計算
+	CalcMaxMinCommand(writeTextures_[0].get(),
+		maxMinTextures_[0].get(), maxMinTextures_[1].get());
+
+	// 最大振幅による除算
+	DivideMaxAmpCommand(maxMinTextures_[0].get(), maxMinTextures_[1].get(),
+		writeTextures_[5].get(), writeTextures_[6].get(),
+		writeTextures_[3].get(), writeTextures_[4].get());
+
+	// グレアをかける画像をコピー
+	CopyCommand(imageWithGlareHandle, writeTextures_[0].get());
+
+	// 元画像に作成した画像を加算する
+	AddCommand(writeTextures_[0].get(),
+		writeTextures_[3].get(), writeTextures_[1].get());
+
+	// 画像完成（writeTextures_[1]）
 
 }
 
@@ -340,8 +435,8 @@ void Glare::IFFTCommand(TextureUAV* real, TextureUAV* image)
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	real->SetRootDescriptorTable(commandList_, 1);
 	image->SetRootDescriptorTable(commandList_, 2);
-	writeTextures_[2]->SetRootDescriptorTable(commandList_, 3);
-	writeTextures_[3]->SetRootDescriptorTable(commandList_, 4);
+	fftInnerTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+	fftInnerTextures_[1]->SetRootDescriptorTable(commandList_, 4);
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexIFFTROWCS].Get());
 	// 実行
@@ -350,8 +445,8 @@ void Glare::IFFTCommand(TextureUAV* real, TextureUAV* image)
 	// 横方向
 	// バッファを送る
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	writeTextures_[2]->SetRootDescriptorTable(commandList_, 1);
-	writeTextures_[3]->SetRootDescriptorTable(commandList_, 2);
+	fftInnerTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+	fftInnerTextures_[1]->SetRootDescriptorTable(commandList_, 2);
 	real->SetRootDescriptorTable(commandList_, 3);
 	image->SetRootDescriptorTable(commandList_, 4);
 	// パイプライン
@@ -386,13 +481,13 @@ void Glare::CalcMaxMinCommand(TextureUAV* tex, TextureUAV* outOnePixRealMax, Tex
 	// バッファを送る
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	tex->SetRootDescriptorTable(commandList_, 1);
-	writeTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+	lineInnerTexture_->SetRootDescriptorTable(commandList_, 3);
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMaxMinFirstCS].Get());
 	// 実行
 	commandList_->Dispatch(WinApp::kWindowWidth, 1, 1);
 	// バッファを送る
-	writeTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+	lineInnerTexture_->SetRootDescriptorTable(commandList_, 1);
 	outOnePixRealMax->SetRootDescriptorTable(commandList_, 3);
 	outOnePixImageMin->SetRootDescriptorTable(commandList_, 4);
 	// パイプライン
