@@ -996,6 +996,12 @@
     <None Include="Resources\shaders\SwapChain.hlsli">
       <Filter>shaders\SwapChain</Filter>
     </None>
+    <None Include="Resources\shaders\Glare.hlsl">
+      <Filter>shaders\PostEffect</Filter>
+    </None>
+    <None Include="Resources\shaders\Complex.hlsl">
+      <Filter>shaders\PostEffect</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
@@ -1042,6 +1048,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\Test.CS.hlsl">
       <Filter>shaders\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
+      <Filter>shaders\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

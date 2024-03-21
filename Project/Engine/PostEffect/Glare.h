@@ -52,10 +52,6 @@ public: // サブクラス
 
 public: // 関数
 
-	//static Glare* GetInstance();
-
-public: // 関数
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -95,6 +91,24 @@ private:  // 関数
 	/// </summary>
 	void CreatePipline();
 
+	/// <summary>
+	/// ヘッダを動的に作る
+	/// </summary>
+	/// <param name="width">幅</param>
+	/// <param name="height">高さ</param>
+	/// <param name="row">縦か</param>
+	/// <param name="inv">逆か</param>
+	void CreateHeaderHLSL(
+		uint32_t width, uint32_t height,
+		bool row, bool inv);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="n"></param>
+	/// <returns></returns>
+	int Inv2Pow(int n);
+	
 private: // コマンド
 
 	/// <summary>
@@ -263,8 +277,26 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPiolineIndexOfCount> shaderNames_ = 
 	{
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
 
 	};
+
+	const uint32_t kWidth = 512;
+	const uint32_t kHeight = 512;
 
 };
 

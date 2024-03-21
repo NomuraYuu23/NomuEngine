@@ -26,7 +26,7 @@ void TextureUAV::Initialize(
 	resourceDesc.DepthOrArraySize = 1;
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+	resourceDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	resourceDesc.Height = height;
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	resourceDesc.MipLevels = 1;
@@ -43,9 +43,9 @@ void TextureUAV::Initialize(
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
 	desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-	desc.Format = DXGI_FORMAT_UNKNOWN;
-	desc.Texture2D.MipSlice = 1;
-	desc.Texture2D.PlaneSlice = 1;
+	desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	desc.Texture2D.MipSlice = 0;
+	desc.Texture2D.PlaneSlice = 0;
 
 	uavHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
 	uavHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();

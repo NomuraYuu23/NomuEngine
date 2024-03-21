@@ -4,6 +4,8 @@
 #include "../base/Log.h"
 #include "../base/CompileShader.h"
 #include "../base/TextureManager.h"
+#include <fstream>
+#include <cmath>
 
 void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& imageForGlareHandles)
 {
@@ -22,47 +24,6 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 	computeParametersMap_->glareIntensity = 0.8f; // グレア強度
 	computeParametersMap_->threshold = 0.8f; // しきい値
 
-	// レンダーターゲット初期化
-	for (uint32_t i = 0; i < 8; ++i) {
-		writeTextures_[i] = std::make_unique<TextureUAV>();
-		writeTextures_[i]->Initialize(
-			device_,
-			WinApp::kWindowWidth,
-			WinApp::kWindowHeight);
-	}
-
-	// 最大値最小値計算で使うテクスチャ
-	maxMinTextures_[0] = std::make_unique<TextureUAV>();
-	maxMinTextures_[0]->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
-	maxMinTextures_[1] = std::make_unique<TextureUAV>();
-	maxMinTextures_[1]->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
-	lineInnerTexture_ = std::make_unique<TextureUAV>();
-	lineInnerTexture_->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
-
-	// FFTで使うテクスチャ
-	fftInnerTextures_[0] = std::make_unique<TextureUAV>();
-	fftInnerTextures_[0]->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
-	fftInnerTextures_[1] = std::make_unique<TextureUAV>();
-	fftInnerTextures_[1]->Initialize(
-		device_,
-		WinApp::kWindowWidth,
-		WinApp::kWindowHeight);
-
-	// グレア用画像
-	imageForGlareHandles_ = imageForGlareHandles;
-	
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -71,6 +32,47 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 
 	// パイプライン
 	CreatePipline();
+
+	// レンダーターゲット初期化
+	for (uint32_t i = 0; i < 8; ++i) {
+		writeTextures_[i] = std::make_unique<TextureUAV>();
+		writeTextures_[i]->Initialize(
+			device_,
+			kWidth,
+			kHeight);
+	}
+
+	// 最大値最小値計算で使うテクスチャ
+	maxMinTextures_[0] = std::make_unique<TextureUAV>();
+	maxMinTextures_[0]->Initialize(
+		device_,
+		kWidth,
+		kHeight);
+	maxMinTextures_[1] = std::make_unique<TextureUAV>();
+	maxMinTextures_[1]->Initialize(
+		device_,
+		kWidth,
+		kHeight);
+	lineInnerTexture_ = std::make_unique<TextureUAV>();
+	lineInnerTexture_->Initialize(
+		device_,
+		kWidth,
+		kHeight);
+
+	// FFTで使うテクスチャ
+	fftInnerTextures_[0] = std::make_unique<TextureUAV>();
+	fftInnerTextures_[0]->Initialize(
+		device_,
+		kWidth,
+		kHeight);
+	fftInnerTextures_[1] = std::make_unique<TextureUAV>();
+	fftInnerTextures_[1]->Initialize(
+		device_,
+		kWidth,
+		kHeight);
+
+	// グレア用画像
+	imageForGlareHandles_ = imageForGlareHandles;
 
 }
 
@@ -299,6 +301,27 @@ void Glare::CompileShader()
 
 	for (uint32_t i = 0; i < kPiolineIndexOfCount; ++i) {
 
+		if (i == kPiolineIndexFFTROWCS) {
+			CreateHeaderHLSL(
+				kWidth, kHeight,
+				true, false);
+		}
+		else if (i == kPiolineIndexFFTCOLCS){
+			CreateHeaderHLSL(
+				kWidth, kHeight,
+				false, false);
+		}
+		else if (i == kPiolineIndexIFFTROWCS) {
+			CreateHeaderHLSL(
+				kWidth, kHeight,
+				true, true);
+		}
+		else {
+			CreateHeaderHLSL(
+				kWidth, kWidth,
+				false, true);
+		}
+
 		shaders_[i] = CompileShader::Compile(
 			shaderNames_[i].first,
 			L"cs_6_0", 
@@ -326,6 +349,51 @@ void Glare::CreatePipline()
 
 }
 
+void Glare::CreateHeaderHLSL(uint32_t width, uint32_t height, bool row, bool inv)
+{
+
+	std::ofstream file("Resources/shaders/Glare.hlsl");
+
+	assert(file);
+
+	file << "#define" << " " << "WIDTH" << " " << width << "\n";
+	file << "#define" << " " << "HEIGHT" << " " << height << "\n";
+	file << "#define" << " " << "PI" << " " << 3.14159265 << "\n";
+	file << "#define" << " " << "RAD" << " " << "PI / 180.0" << "\n";
+
+	if (row) {
+		file << "#define" << " " << "ROW" << " " << "1" << "\n";
+		file << "#define" << " " << "LENGTH" << " " << "WIDTH" << "\n";
+		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(width) << "\n";
+	}
+	else {
+		file << "#define" << " " << "ROW" << " " << "0" << "\n";
+		file << "#define" << " " << "LENGTH" << " " << "HEIGHT" << "\n";
+		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(height) << "\n";
+	}
+
+
+	if (inv) {
+		file << "#define" << " " << "INVESE" << " " << "1" << "\n";
+	}
+	else {
+		file << "#define" << " " << "INVESE" << " " << "0" << "\n";
+	}
+
+	file.close();
+
+}
+
+int Glare::Inv2Pow(int n)
+{
+	
+	int m = 0;
+	m = static_cast<int>(std::log(static_cast<double>(n)) / std::log(2.0));
+	return m;
+
+}
+
+
 void Glare::CopyCommand(const CD3DX12_GPU_DESCRIPTOR_HANDLE& in, TextureUAV* out)
 {
 
@@ -339,7 +407,7 @@ void Glare::CopyCommand(const CD3DX12_GPU_DESCRIPTOR_HANDLE& in, TextureUAV* out
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -356,7 +424,7 @@ void Glare::CopyCommand(uint32_t in, TextureUAV* out)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -372,7 +440,7 @@ void Glare::BinaryThresholdCommand(TextureUAV* in, TextureUAV* out)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexBinaryThresholdCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -388,7 +456,7 @@ void Glare::ClearCommand(TextureUAV* tex)
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexClesrCS].Get());
 
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -407,7 +475,7 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexFFTROWCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 	// 横方向
 	// バッファを送る
@@ -419,7 +487,7 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexFFTCOLCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowWidth, 1);
+	commandList_->Dispatch(1, kWidth, 1);
 
 }
 
@@ -438,7 +506,7 @@ void Glare::IFFTCommand(TextureUAV* real, TextureUAV* image)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexIFFTROWCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 	// 横方向
 	// バッファを送る
@@ -450,7 +518,7 @@ void Glare::IFFTCommand(TextureUAV* real, TextureUAV* image)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexIFFTCOLCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowWidth, 1);
+	commandList_->Dispatch(1, kWidth, 1);
 
 
 }
@@ -468,7 +536,7 @@ void Glare::AmpCommand(TextureUAV* inReal, TextureUAV* inImage, TextureUAV* outR
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexAmpCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -483,7 +551,7 @@ void Glare::CalcMaxMinCommand(TextureUAV* tex, TextureUAV* outOnePixRealMax, Tex
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMaxMinFirstCS].Get());
 	// 実行
-	commandList_->Dispatch(WinApp::kWindowWidth, 1, 1);
+	commandList_->Dispatch(kWidth, 1, 1);
 	// バッファを送る
 	lineInnerTexture_->SetRootDescriptorTable(commandList_, 1);
 	outOnePixRealMax->SetRootDescriptorTable(commandList_, 3);
@@ -510,7 +578,7 @@ void Glare::DivideMaxAmpCommand(TextureUAV* outOnePixRealMax, TextureUAV* outOne
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexDivByMaxAampCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -527,7 +595,7 @@ void Glare::RaiseRICommand(TextureUAV* inReal, TextureUAV* inImage, TextureUAV* 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexRaiseRealImageCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -544,7 +612,7 @@ void Glare::SpectrumScalingCommand(TextureUAV* inReal, TextureUAV* inImage, Text
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexSpectrumScalingCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -577,7 +645,7 @@ void Glare::MultiplyCommand(TextureUAV* inReal0, TextureUAV* inImage0, TextureUA
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexMulCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
 
@@ -593,6 +661,6 @@ void Glare::AddCommand(TextureUAV* tex0, TextureUAV* tex1, TextureUAV* out)
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexAddCS].Get());
 	// 実行
-	commandList_->Dispatch(1, WinApp::kWindowHeight, 1);
+	commandList_->Dispatch(1, kHeight, 1);
 
 }
