@@ -11,6 +11,17 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 	// デバイス取得
 	device_ = DirectXCommon::GetInstance()->GetDevice();
 
+	// 定数バッファ作成
+	computeParametersBuff_ = BufferResource::CreateBufferResource(device_, ((sizeof(ComputeParameters) + 0xff) & ~0xff));
+	computeParametersBuff_->Map(0, nullptr, reinterpret_cast<void**>(&computeParametersMap_));
+
+	// 定数バッファに渡す値の設定
+	computeParametersMap_->lamdaR = static_cast<float>(633e-9); // ラムダR
+	computeParametersMap_->lamdaG = static_cast<float>(532e-9); // ラムダG
+	computeParametersMap_->lamdaB = static_cast<float>(466e-9); // ラムダB
+	computeParametersMap_->glareIntensity = 0.8f; // グレア強度
+	computeParametersMap_->threshold = 0.8f; // しきい値
+
 	// レンダーターゲット初期化
 	for (uint32_t i = 0; i < 8; ++i) {
 		writeTextures_[i] = std::make_unique<TextureUAV>();
@@ -51,19 +62,6 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 
 	// グレア用画像
 	imageForGlareHandles_ = imageForGlareHandles;
-
-	// 定数バッファ作成
-	computeParametersBuff_ = BufferResource::CreateBufferResource(
-		device_,
-		(sizeof(ComputeParameters) + 0xff) & ~0xff);
-	computeParametersBuff_->Map(0, nullptr, reinterpret_cast<void**>(&computeParametersMap_));
-
-	// 定数バッファに渡す値の設定
-	computeParametersMap_->lamdaR = static_cast<float>(633e-9); // ラムダR
-	computeParametersMap_->lamdaG = static_cast<float>(532e-9); // ラムダG
-	computeParametersMap_->lamdaB = static_cast<float>(466e-9); // ラムダB
-	computeParametersMap_->glareIntensity = 0.8f; // グレア強度
-	computeParametersMap_->threshold = 0.8f; // しきい値
 	
 	// ルートシグネチャ
 	CreateRootSignature();

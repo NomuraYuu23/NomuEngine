@@ -40,6 +40,11 @@ void TitleScene::Initialize()
 	//アウトライン
 	outline_.Initialize();
 	outline_.Map();
+
+	glare_ = std::make_unique<Glare>();
+	std::array<uint32_t, Glare::kImageForGlareIndexOfCount> test;
+	glare_->Initialize(test);
+
 }
 
 void TitleScene::Update()

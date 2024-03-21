@@ -16,11 +16,11 @@ public: // サブクラス
 	struct ComputeParameters
 	{
 
-		float lamdaR = static_cast<float>(633e-9); // ラムダR
-		float lamdaG = static_cast<float>(532e-9); // ラムダG
-		float lamdaB = static_cast<float>(466e-9); // ラムダB
-		float glareIntensity = 0.8f; // グレア強度
-		float threshold = 0.8f; // しきい値
+		float lamdaR/* = static_cast<float>(633e-9)*/; // ラムダR
+		float lamdaG/* = static_cast<float>(532e-9)*/; // ラムダG
+		float lamdaB/* = static_cast<float>(466e-9)*/; // ラムダB
+		float glareIntensity/* = 0.8f*/; // グレア強度
+		float threshold/* = 0.8f*/; // しきい値
 
 	};
 
@@ -49,6 +49,10 @@ public: // サブクラス
 		kPiolineIndexMaxMinSecondCS, // 最大値最小値計算2回目
 		kPiolineIndexOfCount // 数を数える用
 	};
+
+public: // 関数
+
+	//static Glare* GetInstance();
 
 public: // 関数
 
