@@ -295,8 +295,8 @@ private: // 定数
 
 	};
 
-	const uint32_t kWidth = 512;
-	const uint32_t kHeight = 512;
+	const uint32_t kWidth = 854;
+	const uint32_t kHeight = 480;
 
 };
 
