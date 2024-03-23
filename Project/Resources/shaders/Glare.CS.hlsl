@@ -27,3 +27,49 @@ void mainCopy( uint3 dispatchId : SV_DispatchThreadID )
 	destinationImageR[index] = sourceImageR[index];
 
 }
+
+[numthreads(WIDTH, 1, 1)]
+void mainBinaryThreshold(uint3 dispatchId : SV_DispatchThreadID) 
+{
+
+	float2 index = dispatchId.xy;
+	float3 input = sourceImageR[index].rgb;
+
+	float3 col = float3(0.0, 0.0, 0.0);
+
+	float r = 0;
+	float g = 0;
+	float b = 0;
+
+	if ((input.r + input.g + input.b) / 3.0 > computeConstants.thereshold) {
+		col = float3(1.0, 1.0, 1.0);
+	}
+
+	destinationImageR[index] = float4(col, 1.0f);
+
+}
+
+[numthreads(WIDTH, 1, 1)]
+void mainClear(uint3 dispatchId : SV_DispatchThreadID) {
+	
+	float2 index = dispatchId.xy;
+
+	destinationImageR[index] = float4(0.0, 0.0, 0.0, 1.0);
+
+}
+
+// fftSeries
+void ComputeSrcID(uint passIndex, uint x, out uint2 indices)
+{
+
+	uint regionWidth = 2 << passIndex;
+	//indeces.x = (x & ~(regionWidth - 1)) + (x & (regionWidth / 2 - 1));
+	//indeces.y = indeces.x + regionWidth / 2;
+
+	//if (passIndex == 0) {
+	//	indices = reversebits(indices) >> (32 - BUTTERFLY_COUNT) & (LENGTH - 1);
+	//}
+
+}
+
+

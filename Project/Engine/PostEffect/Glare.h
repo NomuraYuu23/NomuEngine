@@ -285,9 +285,9 @@ private: // 定数
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"}, // コピー
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainClear"}, // クリア
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
