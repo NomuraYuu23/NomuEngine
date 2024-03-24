@@ -64,8 +64,7 @@ public:
 	/// <summary>
 	/// マップ
 	/// </summary>
-	/// <param name="viewProjectionMatrix">ビュープロジェクション</param>
-	void Map(const Matrix4x4& viewProjectionMatrix);
+	void Map();
 
 	/// <summary>
 	/// SRVを作る

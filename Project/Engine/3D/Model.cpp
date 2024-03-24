@@ -179,7 +179,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map();
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -224,7 +224,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map();
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -269,7 +269,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map();
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -338,7 +338,7 @@ void Model::OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera, OutL
 	assert(sCommandList);
 	assert(0);
 
-	worldTransform.Map(camera.GetViewProjectionMatrix());
+	worldTransform.Map();
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
 	//wvp用のCBufferの場所を設定

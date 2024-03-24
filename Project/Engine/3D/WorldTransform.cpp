@@ -131,7 +131,7 @@ void WorldTransform::UpdateMatrix(const Matrix4x4& rotateMatrix)
 
 }
 
-void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
+void WorldTransform::Map()
 {
 
 	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
