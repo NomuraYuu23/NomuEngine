@@ -189,8 +189,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 	
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootConstantBufferView(10, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
 	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(10, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(11, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
@@ -232,8 +234,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootConstantBufferView(10, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
 	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(10, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(11, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
@@ -275,8 +279,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(7, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootConstantBufferView(10, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
 	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(10, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(11, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle);

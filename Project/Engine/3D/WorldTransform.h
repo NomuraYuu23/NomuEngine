@@ -3,6 +3,7 @@
 #include "../Math/Matrix4x4.h"
 
 #include "TransformationMatrix.h"
+#include "LocalMatrix.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include "ModelNode.h"
@@ -118,6 +119,12 @@ public:
 	/// </summary>
 	void SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix);
 
+	/// <summary>
+	/// トランスフォームバッファ取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12Resource* GetTransformationMatrixBuff() { return transformationMatrixBuff_.Get(); }
+
 public:
 
 	//トランスフォーム
@@ -142,16 +149,19 @@ public:
 	WorldTransform* parent_ = nullptr;
 
 	//WVP用のリソースを作る。
-	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixesBuff_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixBuff_;
 	
 	//書き込むためのアドレスを取得
-	TransformationMatrix* transformationMatrixesMap_{};
+	TransformationMatrix* transformationMatrixMap_{};
 
+	// local
+	Microsoft::WRL::ComPtr<ID3D12Resource> localMatrixesBuff_;
+	//書き込むためのアドレスを取得
+	LocalMatrix* localMatrixesMap_{};
 	// CPUハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
-
+	D3D12_CPU_DESCRIPTOR_HANDLE localMatrixesHandleCPU_;
 	// GPUハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE localMatrixesHandleGPU_;
 
 	// ディスクリプタヒープの位置
 	uint32_t indexDescriptorHeap_ = 0;

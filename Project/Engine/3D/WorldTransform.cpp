@@ -50,13 +50,18 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 	assert(nodeCount);
 
 	//WVP用のリソースを作る。
-	transformationMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(TransformationMatrix) + 0xff) & ~0xff) * nodeCount);
+	transformationMatrixBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(TransformationMatrix) + 0xff) & ~0xff));
 	//書き込むためのアドレスを取得
-	transformationMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixesMap_));
+	transformationMatrixBuff_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixMap_));
+
+	transformationMatrixMap_->World = Matrix4x4::MakeIdentity4x4();
+	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
+
+	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * nodeCount);
+	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
 
 	for (uint32_t i = 0; i < nodeCount; ++i) {
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].World = Matrix4x4::MakeIdentity4x4();
-		transformationMatrixesMap_[nodeDatas_[i].meshNum].WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
+		localMatrixesMap_[nodeDatas_[i].meshNum].matrix = Matrix4x4::MakeIdentity4x4();
 	}
 
 	UpdateMatrix();
@@ -140,10 +145,13 @@ void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
 		}
 
-		transformationMatrixesMap_[i].World = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, Matrix4x4::Multiply(nodeDatas_[i].matrix, worldMatrix_));
-		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Inverse(Matrix4x4::Transpose(transformationMatrixesMap_[i].World));
+		localMatrixesMap_[i].matrix = nodeDatas_[i].offsetMatrix * nodeDatas_[i].matrix;
 
 	}
+
+
+	transformationMatrixMap_->World = worldMatrix_;
+	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(worldMatrix_);
 
 }
 
@@ -165,11 +173,11 @@ void WorldTransform::SRVCreate()
 	}
 
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-	instancingSrvHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
-	instancingSrvHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
 	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(transformationMatrixesBuff_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &instancingSrvDesc, localMatrixesHandleCPU_);
 
 }
 
@@ -181,7 +189,7 @@ void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 
 	sCommandList = cmdList;
 
-	sCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, instancingSrvHandleGPU_);
+	sCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, localMatrixesHandleGPU_);
 
 	// コマンドリストを解除
 	sCommandList = nullptr;

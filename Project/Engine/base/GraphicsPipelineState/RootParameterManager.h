@@ -19,7 +19,7 @@ enum DescriptorRangeIndex {
 	kDescriptorRangeIndexInstancing,
 	kDescriptorRangeIndexPointLight,
 	kDescriptorRangeIndexSpotLight,
-	kDescriptorRangeIndexTransformMatrix,
+	kDescriptorRangeIndexLocalMatrix,
 	kDexcriptorRangeIndexCollider2DDebugDrawForGPU,
 	kDescriptorRangeIndexOfCount,
 };
