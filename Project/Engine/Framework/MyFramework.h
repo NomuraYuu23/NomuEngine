@@ -44,6 +44,9 @@
 // パーティクル
 #include "../Particle/ParticleManager.h"
 
+// Windowサイズのスプライト
+#include "../2D/WindowSprite.h"
+
 class MyFramework
 {
 

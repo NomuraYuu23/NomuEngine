@@ -46,6 +46,12 @@ public:
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
 	void Barrier(ID3D12GraphicsCommandList* commandList);
+	
+	/// <summary>
+	/// シェーダーリソースビューのハンドル(GPU)取得
+	/// </summary>
+	/// <returns></returns>
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetUavHandleGPU() { return uavHandleGPU_; }
 
 private: // 変数
 	

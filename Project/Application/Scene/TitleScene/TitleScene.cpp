@@ -113,6 +113,16 @@ void TitleScene::Draw()
 
 #pragma endregion
 
+	renderTargetTexture_->ChangePixelShaderResource(0);
+	glare_->Execution(
+		renderTargetTexture_->GetSrvGPUHandle(0),
+		0.8f,
+		0.8f,
+		Glare::kImageForGlareIndexHalo,
+		dxCommon_->GetCommadList());
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->TextureDraw(glare_->GetEditTextures(0)->GetUavHandleGPU());
+
 }
 
 void TitleScene::ImguiDraw()

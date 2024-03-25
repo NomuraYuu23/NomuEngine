@@ -35,8 +35,8 @@ void Glare::Initialize(const std::array<uint32_t, kImageForGlareIndexOfCount>& i
 
 	// レンダーターゲット初期化
 	for (uint32_t i = 0; i < 8; ++i) {
-		writeTextures_[i] = std::make_unique<TextureUAV>();
-		writeTextures_[i]->Initialize(
+		editTextures_[i] = std::make_unique<TextureUAV>();
+		editTextures_[i]->Initialize(
 			device_,
 			kWidth,
 			kHeight);
@@ -92,70 +92,76 @@ void Glare::Execution(
 	computeParametersMap_->threshold = threshold;
 
 	// グレアをかける画像をコピー
-	CopyCommand(imageWithGlareHandle, writeTextures_[0].get());
+	CopyCommand(imageWithGlareHandle, editTextures_[0].get());
+	for (uint32_t i = 0; i < 8; ++i) {
+		editTextures_[i]->Barrier(commandList_);
+	}
+
+	return;
+
 	// コピーした画像で2値化画像を作る
-	BinaryThresholdCommand(writeTextures_[0].get(), writeTextures_[1].get());
+	BinaryThresholdCommand(editTextures_[0].get(), editTextures_[1].get());
 	// 2番テクスチャをクリア
-	ClearCommand(writeTextures_[2].get());
+	ClearCommand(editTextures_[2].get());
 
 	// グレアを作る画像を決定
 	assert(imageForGlareIndex < kImageForGlareIndexOfCount);
-	CopyCommand(imageForGlareHandles_[imageForGlareIndex], writeTextures_[3].get());
+	CopyCommand(imageForGlareHandles_[imageForGlareIndex], editTextures_[3].get());
 
 	// 4番テクスチャをクリア
-	ClearCommand(writeTextures_[4].get());
+	ClearCommand(editTextures_[4].get());
 
 	// FFT(グレア生成)
-	FFTCommand(writeTextures_[3].get(), writeTextures_[4].get());
+	FFTCommand(editTextures_[3].get(), editTextures_[4].get());
 
 	// 増幅
-	AmpCommand(writeTextures_[3].get(), writeTextures_[4].get(),
-		writeTextures_[5].get(), writeTextures_[6].get());
+	AmpCommand(editTextures_[3].get(), editTextures_[4].get(),
+		editTextures_[5].get(), editTextures_[6].get());
 
 	// 最大値最小値計算
-	CalcMaxMinCommand(writeTextures_[5].get(),
+	CalcMaxMinCommand(editTextures_[5].get(),
 		maxMinTextures_[0].get(), maxMinTextures_[1].get());
 
 	// 最大振幅による除算
 	DivideMaxAmpCommand(maxMinTextures_[0].get(), maxMinTextures_[1].get(),
-		writeTextures_[5].get(), writeTextures_[6].get(), 
-		writeTextures_[3].get(), writeTextures_[4].get());
+		editTextures_[5].get(), editTextures_[6].get(), 
+		editTextures_[3].get(), editTextures_[4].get());
 
 	// グレアの高度を上げる
-	RaiseRICommand(writeTextures_[3].get(), writeTextures_[4].get(),
-		writeTextures_[5].get(), writeTextures_[6].get());
+	RaiseRICommand(editTextures_[3].get(), editTextures_[4].get(),
+		editTextures_[5].get(), editTextures_[6].get());
 
 	// 波長スケーリング
-	SpectrumScalingCommand(writeTextures_[5].get(), writeTextures_[6].get(),
-		writeTextures_[3].get(), writeTextures_[4].get());
+	SpectrumScalingCommand(editTextures_[5].get(), editTextures_[6].get(),
+		editTextures_[3].get(), editTextures_[4].get());
 
 	// ここまででグレア画像を作成（writeTextures_[3]）
 
 	// 二値化画像とグレア画像を畳み込む
 	ConvolutionCommand(
-		writeTextures_[1].get(), writeTextures_[2].get(),
-		writeTextures_[3].get(), writeTextures_[4].get(),
-		writeTextures_[5].get(), writeTextures_[6].get());
+		editTextures_[1].get(), editTextures_[2].get(),
+		editTextures_[3].get(), editTextures_[4].get(),
+		editTextures_[5].get(), editTextures_[6].get());
 
 	// 増幅
-	AmpCommand(writeTextures_[5].get(), writeTextures_[6].get(),
-		writeTextures_[0].get(), writeTextures_[1].get());
+	AmpCommand(editTextures_[5].get(), editTextures_[6].get(),
+		editTextures_[0].get(), editTextures_[1].get());
 
 	// 最大値最小値計算
-	CalcMaxMinCommand(writeTextures_[0].get(),
+	CalcMaxMinCommand(editTextures_[0].get(),
 		maxMinTextures_[0].get(), maxMinTextures_[1].get());
 
 	// 最大振幅による除算
 	DivideMaxAmpCommand(maxMinTextures_[0].get(), maxMinTextures_[1].get(),
-		writeTextures_[5].get(), writeTextures_[6].get(),
-		writeTextures_[3].get(), writeTextures_[4].get());
+		editTextures_[5].get(), editTextures_[6].get(),
+		editTextures_[3].get(), editTextures_[4].get());
 
 	// グレアをかける画像をコピー
-	CopyCommand(imageWithGlareHandle, writeTextures_[0].get());
+	CopyCommand(imageWithGlareHandle, editTextures_[0].get());
 
 	// 元画像に作成した画像を加算する
-	AddCommand(writeTextures_[0].get(),
-		writeTextures_[3].get(), writeTextures_[1].get());
+	AddCommand(editTextures_[0].get(),
+		editTextures_[3].get(), editTextures_[1].get());
 
 	// 画像完成（writeTextures_[1]）
 
@@ -399,13 +405,14 @@ void Glare::CopyCommand(const CD3DX12_GPU_DESCRIPTOR_HANDLE& in, TextureUAV* out
 
 	assert(commandList_);
 
+	// パイプライン
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
 	// バッファを送る
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	commandList_->SetComputeRootDescriptorTable(1, in);
 	out->SetRootDescriptorTable(commandList_, 3);
 
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexCopyCS].Get());
 	// 実行
 	commandList_->Dispatch(1, kHeight, 1);
 
@@ -470,8 +477,8 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	real->SetRootDescriptorTable(commandList_, 1);
 	image->SetRootDescriptorTable(commandList_, 2);
-	writeTextures_[2]->SetRootDescriptorTable(commandList_, 3);
-	writeTextures_[3]->SetRootDescriptorTable(commandList_, 4);
+	editTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+	editTextures_[3]->SetRootDescriptorTable(commandList_, 4);
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexFFTROWCS].Get());
 	// 実行
@@ -480,8 +487,8 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 	// 横方向
 	// バッファを送る
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	writeTextures_[2]->SetRootDescriptorTable(commandList_, 1);
-	writeTextures_[3]->SetRootDescriptorTable(commandList_, 2);
+	editTextures_[2]->SetRootDescriptorTable(commandList_, 1);
+	editTextures_[3]->SetRootDescriptorTable(commandList_, 2);
 	real->SetRootDescriptorTable(commandList_, 3);
 	image->SetRootDescriptorTable(commandList_, 4);
 	// パイプライン

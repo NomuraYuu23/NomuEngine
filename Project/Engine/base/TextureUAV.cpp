@@ -28,7 +28,7 @@ void TextureUAV::Initialize(
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 	resourceDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	resourceDesc.Height = height;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	resourceDesc.MipLevels = 1;
 	resourceDesc.SampleDesc = { 1,0 };
 	resourceDesc.Width = width;
@@ -67,7 +67,7 @@ void TextureUAV::SetRootDescriptorTable(ID3D12GraphicsCommandList* commandList, 
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	//シェーダーリソースビューをセット
-	commandList->SetGraphicsRootDescriptorTable(rootParamIndex, uavHandleGPU_);
+	commandList->SetComputeRootDescriptorTable(rootParamIndex, uavHandleGPU_);
 
 }
 

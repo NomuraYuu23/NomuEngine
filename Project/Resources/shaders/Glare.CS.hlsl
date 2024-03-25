@@ -62,7 +62,7 @@ void mainClear(uint3 dispatchId : SV_DispatchThreadID) {
 void ComputeSrcID(uint passIndex, uint x, out uint2 indices)
 {
 
-	uint regionWidth = 2 << passIndex;
+	//uint regionWidth = 2 << passIndex;
 	//indeces.x = (x & ~(regionWidth - 1)) + (x & (regionWidth / 2 - 1));
 	//indeces.y = indeces.x + regionWidth / 2;
 

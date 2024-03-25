@@ -18,10 +18,16 @@ void MyFramework::Initialize()
 	//テクスチャマネージャー
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
 
+	// マテリアル静的初期化
+	Material::StaticInitialize(dxCommon->GetDevice());
+
 	// スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDevice(), 
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite].Get(), 
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite].Get());
+
+	// Windowサイズのスプライト
+	WindowSprite::GetInstance()->Initialize(dxCommon->GetDevice(), dxCommon->GetCommadList());
 
 	// モデル静的初期化
 	std::array<ID3D12RootSignature*, Model::PipelineStateName::kPipelineStateNameOfCount> rootSignature = {
@@ -38,9 +44,6 @@ void MyFramework::Initialize()
 	DrawLine::StaticInitialize(dxCommon->GetDevice(),
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameLine].Get(),
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameLine].Get());
-
-	// マテリアル静的初期化
-	Material::StaticInitialize(dxCommon->GetDevice());
 
 	// 光源静的初期化
 	DirectionalLight::StaticInitialize(dxCommon->GetDevice());

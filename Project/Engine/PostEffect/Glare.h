@@ -74,6 +74,13 @@ public: // 関数
 		ImageForGlareIndex imageForGlareIndex,
 		ID3D12GraphicsCommandList* commandList);
 
+	/// <summary>
+	/// 編集する画像取得
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	TextureUAV* GetEditTextures(uint32_t index) { return editTextures_[index].get(); }
+
 private:  // 関数
 
 	/// <summary>
@@ -247,7 +254,7 @@ private: // 変数
 	ID3D12GraphicsCommandList* commandList_;
 
 	// 編集する画像
-	std::unique_ptr<TextureUAV> writeTextures_[8];
+	std::unique_ptr<TextureUAV> editTextures_[8];
 	// グレアを掛ける画像(RTTexのハンドル)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE imageWithGlareHandle_;
 	// グレア用の画像ハンドル
