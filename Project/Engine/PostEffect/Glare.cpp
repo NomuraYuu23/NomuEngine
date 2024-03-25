@@ -87,22 +87,24 @@ void Glare::Execution(
 	// リスト
 	commandList_ = commandList;
 
+	// バリア
+	for (uint32_t i = 0; i < 8; ++i) {
+		editTextures_[i]->Barrier(commandList_);
+	}
+
 	// 定数バッファを更新
 	computeParametersMap_->glareIntensity = glareIntensity;
 	computeParametersMap_->threshold = threshold;
 
 	// グレアをかける画像をコピー
 	CopyCommand(imageWithGlareHandle, editTextures_[0].get());
-	for (uint32_t i = 0; i < 8; ++i) {
-		editTextures_[i]->Barrier(commandList_);
-	}
-
-	return;
 
 	// コピーした画像で2値化画像を作る
 	BinaryThresholdCommand(editTextures_[0].get(), editTextures_[1].get());
 	// 2番テクスチャをクリア
 	ClearCommand(editTextures_[2].get());
+
+	return;
 
 	// グレアを作る画像を決定
 	assert(imageForGlareIndex < kImageForGlareIndexOfCount);
