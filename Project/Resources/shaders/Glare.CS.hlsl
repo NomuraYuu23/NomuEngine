@@ -89,3 +89,4 @@ groupshared float3 BufferflyArray[2][2][LENGTH];
 
 // fftSeries(バタフライウェイトパス)
 
+
