@@ -158,26 +158,26 @@ void WorldTransform::Map()
 void WorldTransform::SRVCreate()
 {
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
-	instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	instancingSrvDesc.Buffer.FirstElement = 0;
-	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
+	localMatrixesSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	localMatrixesSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	localMatrixesSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	localMatrixesSrvDesc.Buffer.FirstElement = 0;
+	localMatrixesSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 	if (nodeDatas_.size() == 0){
 		assert(0);
 	}
 	else {
-		instancingSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
+		localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
 	}
 
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+	localMatrixesSrvDesc.Buffer.StructureByteStride = sizeof(LocalMatrix);
 	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
 	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
 	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &instancingSrvDesc, localMatrixesHandleCPU_);
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &localMatrixesSrvDesc, localMatrixesHandleCPU_);
 
 }
 
@@ -199,7 +199,7 @@ void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex)
 {
 
-	WorldTransform::NodeData nodeData;
+	NodeData nodeData;
 
 	nodeData.localMatrix = modelNode.localMatrix;
 	nodeData.meshNum = modelNode.meshNum;

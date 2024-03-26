@@ -7,25 +7,10 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include "ModelNode.h"
+#include "ModelNodeData.h"
 
 class WorldTransform
 {
-
-public:
-
-	/// <summary>
-	/// ノードデータ
-	/// </summary>
-	struct NodeData
-	{
-		Matrix4x4 localMatrix; // ローカル行列
-		uint32_t meshNum; // メッシュ番号
-		std::string name; // 名前
-		//WorldTransform::NodeData* parent; // 親
-		int32_t parentIndex;
-		Matrix4x4 matrix; //最終的なワールド行列
-		Matrix4x4 offsetMatrix; //
-	};
 
 public:
 
