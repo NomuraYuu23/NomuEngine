@@ -85,6 +85,14 @@ public:
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
 
+	/// <summary>
+	/// ディスクリプタテーブルをセット
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="rootParamIndex">ルートパラメータ番号</param>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	void SetComputeRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
+
 private:
 	TextureManager() = default;
 	~TextureManager() = default;
