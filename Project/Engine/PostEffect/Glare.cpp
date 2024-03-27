@@ -360,24 +360,33 @@ void Glare::CreatePipline()
 void Glare::CreateHeaderHLSL(uint32_t width, uint32_t height, bool row, bool inv)
 {
 
+	uint32_t defWidth = width;
+	uint32_t defHeight = height;
+	if (defWidth > 1024) {
+		defWidth = 1024;
+	}
+	if (defHeight > 1024) {
+		defHeight = 1024;
+	}
+
 	std::ofstream file("Resources/shaders/Glare.hlsl");
 
 	assert(file);
 
-	file << "#define" << " " << "WIDTH" << " " << width << "\n";
-	file << "#define" << " " << "HEIGHT" << " " << height << "\n";
+	file << "#define" << " " << "WIDTH" << " " << defWidth << "\n";
+	file << "#define" << " " << "HEIGHT" << " " << defHeight << "\n";
 	file << "#define" << " " << "PI" << " " << 3.14159265 << "\n";
 	file << "#define" << " " << "RAD" << " " << "PI / 180.0" << "\n";
 
 	if (row) {
 		file << "#define" << " " << "ROW" << " " << "1" << "\n";
 		file << "#define" << " " << "LENGTH" << " " << "WIDTH" << "\n";
-		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(width) << "\n";
+		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(defWidth) << "\n";
 	}
 	else {
 		file << "#define" << " " << "ROW" << " " << "0" << "\n";
 		file << "#define" << " " << "LENGTH" << " " << "HEIGHT" << "\n";
-		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(height) << "\n";
+		file << "#define" << " " << "BUTTERFLY_COUNT" << " " << Inv2Pow(defHeight) << "\n";
 	}
 
 

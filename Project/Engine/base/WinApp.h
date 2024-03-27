@@ -6,8 +6,8 @@ class WinApp
 {
 public: 
 	//ウィンドウサイズ
-	static const int kWindowWidth = 854;
-	static const int kWindowHeight = 480;
+	static const int kWindowWidth = 1280;
+	static const int kWindowHeight = 720;
 	//ウィンドウクラス名
 	static const wchar_t kWindowClassName[];
 

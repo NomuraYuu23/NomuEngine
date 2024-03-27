@@ -82,11 +82,65 @@ void ComputeTwiddleFactor(uint passIndex, uint x, out uint2 weights) {
 }
 
 #define REAL 0
-#define IMAGE 0
+#define IMAGE 1
 
-groupshared float3 BufferflyArray[2][2][LENGTH];
+groupshared float3 ButterflyArray[2][2][LENGTH];
 #define SharedArray(tmpID, x, realImage) (ButterflyArray[(tmpID)][(realImage)][(x)])
 
 // fftSeries(バタフライウェイトパス)
+void ButterflyWeightPass(uint passIndex, uint x, uint tmp, out float3 resultR, out float3 resultI) {
 
+	uint2 indices;
+	float2 weights;
 
+	ComputeSrcID(passIndex, x, indices);
+
+	float3 inputR1 = SharedArray(tmp, indices.x, REAL);
+	float3 inputI1 = SharedArray(tmp, indices.x, IMAGE);
+
+	float3 inputR2 = SharedArray(tmp, indices.y, REAL);
+	float3 inputI2 = SharedArray(tmp, indices.y, IMAGE);
+
+	ComputeTwiddleFactor(passIndex, x, weights);
+
+#if INVERSE
+	resultR = (inputR1 + weights.x * inputR2 + weights.y * inputI2) * 0.5;
+	resultI = (inputI1 - weights.y * inputR2 + weights.x * inputI2) * 0.5;
+#else
+	resultR = inputR1 + weights.x * inputR2 - weights.y * inputI2;
+	resultI = inputI1 + weights.y * inputR2 + weights.x * inputI2;
+#endif
+
+}
+
+// fftSeries(FFT初期化共有配列)
+void InitializeFFTSharedArray(uint bufferID, inout uint2 texPos) {
+
+	texPos = (texPos + LENGTH / 2) % LENGTH;
+	SharedArray(0, bufferID, REAL) = sourceImageR[texPos].xyz;
+
+#if ROW && !INVERSE
+	SharedArray(0, bufferID, IMAGE) = (0.0).xxx;
+#else
+	SharedArray(0, bufferID, IMAGE) = sourceImageI[texPos].xyz;
+#endif
+
+}
+
+// fftSeries(バタフライパス)
+void ButterflyPass(in uint bufferID, out float3 real, out float3 image) {
+
+	for (int butterflyID = 0; butterflyID < BUTTERFLY_COUNT - 1; butterflyID++) {
+		GroupMemoryBarrierWithGroupSync();
+		ButterflyWeightPass(butterflyID, bufferID, butterflyID % 2,
+			SharedArray((butterflyID + 1) % 2, bufferID, REAL),
+			SharedArray((butterflyID + 1) % 2, bufferID, IMAGE));
+	}
+
+	GroupMemoryBarrierWithGroupSync();
+	ButterflyWeightPass(BUTTERFLY_COUNT - 1, bufferID, (BUTTERFLY_COUNT - 1) % 2,
+		real, image);
+
+}
+
+// FFTメイン
