@@ -67,6 +67,7 @@ public:
 		kPipelineStateNameModel,
 		kPipelineStateNameParticle,
 		kPipelineStateNameOutLine,
+		kPipelineStateNameManyModels,
 		kPipelineStateNameOfCount
 	};
 
@@ -141,7 +142,27 @@ public:
 	/// </summary>
 	void Draw(WorldTransform& worldTransform, BaseCamera& camera);
 	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material);
-	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material,uint32_t texureHandle);
+	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material,uint32_t textureHandle);
+
+	void Draw(
+		const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
+		BaseCamera& camera,
+		uint32_t numInstance);
+	void Draw(
+		const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
+		BaseCamera& camera,
+		uint32_t numInstance,
+		Material* material);
+	void Draw(
+		const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
+		BaseCamera& camera,
+		uint32_t numInstance,
+		Material* material,
+		uint32_t textureHandle);
+
 	void ParticleDraw();
 	void OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera,OutLineData& outLineData);
 
