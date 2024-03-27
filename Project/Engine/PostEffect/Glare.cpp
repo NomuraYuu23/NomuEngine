@@ -594,7 +594,7 @@ void Glare::DivideMaxAmpCommand(TextureUAV* outOnePixRealMax, TextureUAV* outOne
 	outReal->SetRootDescriptorTable(commandList_, 5);
 	outImage->SetRootDescriptorTable(commandList_, 6);
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexDivByMaxAampCS].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPiolineIndexDivByMaxAmpCS].Get());
 	// 実行
 	commandList_->Dispatch(1, kHeight, 1);
 

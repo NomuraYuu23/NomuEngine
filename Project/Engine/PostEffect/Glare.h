@@ -38,7 +38,7 @@ public: // サブクラス
 		kPiolineIndexIFFTROWCS, // 逆FFT縦
 		kPiolineIndexIFFTCOLCS, // 逆FFT横
 		kPiolineIndexAmpCS, // 増幅
-		kPiolineIndexDivByMaxAampCS, // 最大振幅による除算
+		kPiolineIndexDivByMaxAmpCS, // 最大振幅による除算
 		kPiolineIndexAddCS, // 加算
 		kPiolineIndexBinaryThresholdCS,// 二値化
 		kPiolineIndexCopyCS, // コピー
@@ -284,26 +284,26 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPiolineIndexOfCount> shaderNames_ = 
 	{
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainMul"}, // 乗算
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainFFT"}, // FFT縦
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainFFT"}, // FFT横
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainFFT"}, // 逆FFT縦
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainFFT"}, // 逆FFT横
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainAmp"}, // 増幅
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainDivByMaxAmp"}, // 最大振幅による除算
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainAdd"}, // 加算
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"}, // コピー
 		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainClear"}, // クリア
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
-		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainCopy"},
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainSpectrumScaling"}, // スペクトルスケール
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainRaiseRealImage"},//グレアの輝度を底上げ
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainMaxMinFirst"}, // 最大値最小値計算1回目
+		std::pair{L"Resources/shaders/Glare.CS.hlsl", L"mainMaxMinSecond"}, // 最大値最小値計算2回目
 
 	};
 
-	const uint32_t kWidth = 854;
-	const uint32_t kHeight = 480;
+	const uint32_t kWidth = 1024; // 幅
+	const uint32_t kHeight = 720; // 高さ
 
 };
 
