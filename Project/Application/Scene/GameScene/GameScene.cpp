@@ -139,6 +139,18 @@ void GameScene::Initialize() {
 
 	line_.reset(DrawLine::Create());
 
+	testManyObject_ = std::make_unique<LargeNumberOfObjects>();
+	testManyObject_->Initialize(testModel_.get());
+
+	for (uint32_t i = 0; i < 3; ++i) {
+		OneOfManyObjects* obj = new OneOfManyObjects();
+		obj->Initialize();
+		obj->transform_.translate.x = i * 1.0f;
+		testManyObject_->AddObject(obj);
+	}
+
+	testManyObject_->Update();
+
 }
 
 /// <summary>
@@ -262,6 +274,16 @@ void GameScene::Draw() {
 	//colliderDebugDraw_->Draw(camera_);
 
 #endif // _DEBUG
+
+	Model::PostDraw();
+
+#pragma endregion
+
+#pragma region 多量モデル描画
+
+	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
+
+	testManyObject_->Draw(camera_);
 
 	Model::PostDraw();
 
@@ -443,6 +465,9 @@ void GameScene::ModelCreate()
 
 	// サンプルobj
 	sampleObjModel_.reset(Model::Create("Resources/Model/Spear", "Spear.gltf", dxCommon_, textureHandleManager_.get()));
+
+	// テスト
+	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
 
 }
 

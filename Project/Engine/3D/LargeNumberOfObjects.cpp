@@ -9,6 +9,9 @@ LargeNumberOfObjects::~LargeNumberOfObjects()
 		return true;
 		});
 
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(transformationMatrixesIndexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(localMatrixesIndexDescriptorHeap_);
+
 }
 
 void LargeNumberOfObjects::Initialize(Model* model)
@@ -118,6 +121,15 @@ void LargeNumberOfObjects::Map()
 
 void LargeNumberOfObjects::Draw(BaseCamera& camera)
 {
+
+	Map();
+
+	model_->Draw(
+		localMatrixesHandleGPU_,
+		transformationMatrixesHandleGPU_,
+		camera,
+		numInstance_,
+		material_.get());
 
 }
 
