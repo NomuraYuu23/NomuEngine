@@ -12,15 +12,16 @@
 /// ディスクリプタレンジの名前
 /// </summary>
 enum DescriptorRangeIndex {
-	kDescriptorRangeIndexTexture0,
-	kDescriptorRangeIndexTexture1,
-	kDescriptorRangeIndexTexture2,
-	kDescriptorRangeIndexTexture3,
-	kDescriptorRangeIndexInstancing,
-	kDescriptorRangeIndexPointLight,
-	kDescriptorRangeIndexSpotLight,
-	kDescriptorRangeIndexLocalMatrix,
-	kDexcriptorRangeIndexCollider2DDebugDrawForGPU,
+	kDescriptorRangeIndexTexture0, // テクスチャ0
+	kDescriptorRangeIndexTexture1, // テクスチャ1
+	kDescriptorRangeIndexTexture2, // テクスチャ2
+	kDescriptorRangeIndexTexture3, // テクスチャ3
+	kDescriptorRangeIndexInstancing, // パーティクル
+	kDescriptorRangeIndexPointLight, // ポイントライト
+	kDescriptorRangeIndexSpotLight, // スポットライト
+	kDescriptorRangeIndexLocalMatrix, // ローカル行列
+	kDexcriptorRangeIndexCollider2DDebugDrawForGPU, // コライダーデバッグ2d
+	kDexcriptorRangeIndexTransformationMatrix, // トランスフォーム行列
 	kDescriptorRangeIndexOfCount,
 };
 
@@ -28,13 +29,14 @@ enum DescriptorRangeIndex {
 /// ルートパラメータの名前
 /// </summary>
 enum RootParameterIndex {
-	kRootParameterIndexModel,
-	kRootParameterIndexSprite,
-	kRootParameterIndexParticle,
-	kRootParameterIndexOutLine,
-	kRootParameterIndexCollision2DDebugDraw,
-	kRootParameterIndexLine,
-	kRootParameterIndexSwapChain,
+	kRootParameterIndexModel, // モデル
+	kRootParameterIndexSprite, // スプライト
+	kRootParameterIndexParticle, // パーティクル
+	kRootParameterIndexOutLine, // アウトライン
+	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
+	kRootParameterIndexLine, // 線
+	kRootParameterIndexSwapChain, // スワップチェーン
+	kRootParameterIndexManyModels, // 多くのオブジェクト
 	kRootParameterIndexOfCount,
 };
 
@@ -90,6 +92,11 @@ private: // 関数
 	/// ポストエフェクト
 	/// </summary>
 	static void RootParameterInitializeForSwapChain();
+
+	/// <summary>
+	/// 多くのオブジェクト
+	/// </summary>
+	static void RootParameterInitializeForManyModels();
 
 	/// <summary>
 	/// ディスクリプタレンジの初期化

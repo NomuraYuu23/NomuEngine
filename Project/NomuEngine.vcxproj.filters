@@ -1022,6 +1022,12 @@
     <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
       <Filter>shaders\SwapChain</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\ManyModels.VS.hlsl">
+      <Filter>shaders\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
+      <Filter>shaders\Object3d</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">
