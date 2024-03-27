@@ -56,6 +56,13 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* point
 
 	sCommandList = cmdList;
 
+	//RootSignatureを設定。
+	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameModel]);
+
+	//形状を設定。PS0に設定しているものとは別。
+	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	pointLightManager_ = pointLightManager;
 	spotLightManager_ = spotLightManager;
 
@@ -98,6 +105,25 @@ void Model::PreDrawOutLine(ID3D12GraphicsCommandList* cmdList) {
 
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+}
+
+void Model::PreManyModelsDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager, SpotLightManager* spotLightManager)
+{
+
+	assert(sCommandList == nullptr);
+
+	sCommandList = cmdList;
+
+	//RootSignatureを設定。
+	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameManyModels]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameManyModels]);
+
+	//形状を設定。PS0に設定しているものとは別。
+	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	pointLightManager_ = pointLightManager;
+	spotLightManager_ = spotLightManager;
 
 }
 
@@ -174,13 +200,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 
 	worldTransform.Map();
 
-	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameModel]);
-
-	//形状を設定。PS0に設定しているものとは別。
-	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
 	//マテリアルCBufferの場所を設定
@@ -226,13 +245,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	worldTransform.Map();
 
-	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameModel]);
-
-	//形状を設定。PS0に設定しているものとは別。
-	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
 	//マテリアルCBufferの場所を設定
@@ -277,13 +289,6 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sCommandList);
 
 	worldTransform.Map();
-
-	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameModel]);
-
-	//形状を設定。PS0に設定しているものとは別。
-	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
@@ -421,7 +426,7 @@ void Model::Draw(
 	sCommandList->SetGraphicsRootDescriptorTable(1, localMatrixesHandle);
 
 	//描画
-	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
 
 }
 
@@ -474,7 +479,7 @@ void Model::Draw(
 	sCommandList->SetGraphicsRootDescriptorTable(1, localMatrixesHandle);
 
 	//描画
-	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
 
 }
 

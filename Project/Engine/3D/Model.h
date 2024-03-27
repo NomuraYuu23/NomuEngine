@@ -98,6 +98,13 @@ public:
 	static void PreDrawOutLine(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
+	/// 静的前処理
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
+	static void PreManyModelsDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr, SpotLightManager* spotLightManager = nullptr);
+
+
+	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	static void PostDraw();
