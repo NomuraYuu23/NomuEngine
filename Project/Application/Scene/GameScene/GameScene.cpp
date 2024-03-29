@@ -283,7 +283,7 @@ void GameScene::Draw() {
 
 	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
 
 	Model::PostDraw();
 

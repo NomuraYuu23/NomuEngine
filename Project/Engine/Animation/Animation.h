@@ -29,6 +29,7 @@ public:
 	/// <param name="initPositions">初期位置(ノード数)</param>
 	/// <param name="initRotations_">初期回転(ノード数)</param>
 	/// <param name="initScalings">初期大きさ(ノード数)</param>
+	/// <param name="nodeNames">ノード名前</param>
 	void Initialize(
 		const std::vector<AnimationData>& animationDatas,
 		const std::vector<Vector3>& initPositions,
@@ -39,35 +40,47 @@ public:
 	/// <summary>
 	/// アニメーション
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ローカル行列(ノード数)</returns>
 	std::vector<Matrix4x4> AnimationUpdate();
-
+	
 	/// <summary>
 	/// アニメーションを開始させる
 	/// </summary>
 	/// <param name="animationNum">アニメーション番号</param>
-	void startAnimation(uint32_t animationNum, bool isLoop);
+	/// <param name="isLoop">ループさせるか</param>
+	void StartAnimation(uint32_t animationNum, bool isLoop);
 
 	/// <summary>
 	/// アニメーションを停止させる(リセット)
 	/// </summary>
 	/// <param name="animationNum">アニメーション番号</param>
-	void stopAnimation(uint32_t animationNum);
+	void StopAnimation(uint32_t animationNum);
 
 	/// <summary>
 	/// アニメーションが終了したか
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>アニメーション終了したか(ノード数)</returns>
 	std::vector<bool> FinishedAnimations();
 
 	/// <summary>
 	/// 移動補間係数セット
 	/// </summary>
-	/// <param name="moveT"></param>
+	/// <param name="moveT">移動補間係数</param>
 	void SetMoveT(float moveT) { moveT_ = moveT; }
+
+	/// <summary>
+	/// アニメーションの実行状態取得
+	/// </summary>
+	/// <returns>アニメーションの実行状態</returns>
+	std::vector<bool> GetRunningAnimations();
 
 private:
 
+	/// <summary>
+	/// ノードアニメーション更新
+	/// </summary>
+	/// <param name="index">インデックス</param>
+	/// <param name="timer">時間</param>
 	void NodeAnimationUpdate(uint32_t index, double timer);
 
 private:
@@ -86,14 +99,6 @@ private:
 	std::vector <Quaternion> rotations_;
 	// 大きさ 初期行列と同じ分だけ
 	std::vector <Vector3> scalings_;
-
-	// 強制的にすべてのアニメーションが止まった場合
-	// 位置 初期行列と同じ分だけ
-	std::vector <Vector3> initPositions_;
-	// 回転 初期行列と同じ分だけ
-	std::vector <Quaternion> initRotations_;
-	// 大きさ 初期行列と同じ分だけ
-	std::vector <Vector3> initScalings_;
 
 	// アニメーション速度
 	double animationSpeed_;
