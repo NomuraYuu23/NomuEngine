@@ -91,6 +91,11 @@ void Glare::Execution(
 	for (uint32_t i = 0; i < 8; ++i) {
 		editTextures_[i]->Barrier(commandList_);
 	}
+	maxMinTextures_[0]->Barrier(commandList_);
+	maxMinTextures_[1]->Barrier(commandList_);
+	lineInnerTexture_->Barrier(commandList_);
+	fftInnerTextures_[0]->Barrier(commandList_);
+	fftInnerTextures_[1]->Barrier(commandList_);
 
 	// 定数バッファを更新
 	computeParametersMap_->glareIntensity = glareIntensity;
@@ -116,6 +121,9 @@ void Glare::Execution(
 
 	// FFT(グレア生成)
 	FFTCommand(editTextures_[3].get(), editTextures_[4].get());
+
+	return;
+
 
 	// 増幅
 	AmpCommand(editTextures_[3].get(), editTextures_[4].get(),
@@ -497,8 +505,8 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	real->SetRootDescriptorTable(commandList_, 1);
 	image->SetRootDescriptorTable(commandList_, 2);
-	editTextures_[2]->SetRootDescriptorTable(commandList_, 3);
-	editTextures_[3]->SetRootDescriptorTable(commandList_, 4);
+	fftInnerTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+	fftInnerTextures_[1]->SetRootDescriptorTable(commandList_, 4);
 
 	// 実行
 	commandList_->Dispatch(1, kHeight, 1);
@@ -510,8 +518,8 @@ void Glare::FFTCommand(TextureUAV* real, TextureUAV* image)
 
 	// バッファを送る
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	editTextures_[2]->SetRootDescriptorTable(commandList_, 1);
-	editTextures_[3]->SetRootDescriptorTable(commandList_, 2);
+	fftInnerTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+	fftInnerTextures_[1]->SetRootDescriptorTable(commandList_, 2);
 	real->SetRootDescriptorTable(commandList_, 3);
 	image->SetRootDescriptorTable(commandList_, 4);
 

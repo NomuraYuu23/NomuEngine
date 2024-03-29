@@ -122,7 +122,7 @@ void TitleScene::Draw()
 		Glare::kImageForGlareIndexHalo,
 		dxCommon_->GetCommadList());
 	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->TextureDraw(glare_->GetEditTextures(1)->GetUavHandleGPU());
+	renderTargetTexture_->TextureDraw(glare_->GetEditTextures(3)->GetUavHandleGPU());
 
 }
 

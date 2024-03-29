@@ -302,8 +302,8 @@ private: // 定数
 
 	};
 
-	const uint32_t kWidth = 720; // 幅
-	const uint32_t kHeight = 480; // 高さ
+	const uint32_t kWidth = 128; // 幅
+	const uint32_t kHeight = 128; // 高さ
 
 };
 
