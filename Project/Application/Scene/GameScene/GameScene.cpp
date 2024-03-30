@@ -458,7 +458,7 @@ void GameScene::DebugCameraUpdate()
 		}
 
 		// デバッグカメラの更新
-		debugCamera_->Update(kDeltaTime_);
+		debugCamera_->Update(kDeltaTime_ * 5.0f);
 		// デバッグカメラのビュー行列をコピー
 		camera_ = static_cast<BaseCamera>(*debugCamera_.get());
 		// ビュー行列の転送

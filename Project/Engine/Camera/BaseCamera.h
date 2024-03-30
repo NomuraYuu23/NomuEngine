@@ -117,7 +117,8 @@ protected: // 関数
 	/// <summary>
 	/// ズーム処理
 	/// </summary>
-	void Zoom();
+	/// <param name="elapsedTime">経過時間</param>
+	void Zoom(float elapsedTime);
 
 protected: // 変数
 

@@ -4,6 +4,7 @@
 #include "../base/DirectXCommon.h"
 #include "../Math/RandomEngine.h"
 #include "../Math/Ease.h"
+#include "../Math/DeltaTime.h"
 
 void BaseCamera::Initialize()
 {
@@ -48,7 +49,7 @@ void BaseCamera::Update(float elapsedTime)
 {
 
 	// ズーム
-	Zoom();
+	Zoom(elapsedTime);
 
 	// シェイク
 	if (isShake_) {
@@ -110,9 +111,9 @@ void BaseCamera::ShakeUpdate(float elapsedTime)
 
 }
 
-void BaseCamera::Zoom()
+void BaseCamera::Zoom(float elapsedTime)
 {
-
-	fovY_ = Ease::Easing(Ease::EaseName::Lerp, fovY_, targetFovY_, zoomT_);
+	
+	fovY_ = Ease::Easing(Ease::EaseName::Lerp, fovY_, targetFovY_, zoomT_ * (elapsedTime / kDeltaTime_));
 
 }
