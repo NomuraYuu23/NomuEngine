@@ -449,6 +449,14 @@ void GameScene::DebugCameraUpdate()
 			debugCamera_->ShakeStop();
 		}
 
+		if (input_->TriggerKey(DIK_C)) {
+			debugCamera_->SetTargetFovY(0.7f);
+		}
+		if (input_->TriggerKey(DIK_X)) {
+			debugCamera_->SetTargetFovY(0.45f);
+			debugCamera_->SetFovY(0.45f);
+		}
+
 		// デバッグカメラの更新
 		debugCamera_->Update(kDeltaTime_);
 		// デバッグカメラのビュー行列をコピー

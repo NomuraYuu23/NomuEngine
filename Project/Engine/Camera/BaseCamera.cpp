@@ -3,6 +3,7 @@
 #include "../base/BufferResource.h"
 #include "../base/DirectXCommon.h"
 #include "../Math/RandomEngine.h"
+#include "../Math/Ease.h"
 
 void BaseCamera::Initialize()
 {
@@ -10,6 +11,8 @@ void BaseCamera::Initialize()
 	transform_ = { { 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f, 0.0f},{ 0.0f, 0.0f, -10.0f} };
 
 	fovY_ = 0.45f;
+	targetFovY_ = 0.45f;
+	zoomT_ = 0.05f;
 
 	aspectRatio_ = float(WinApp::kWindowWidth) / float(WinApp::kWindowHeight);
 
@@ -43,6 +46,9 @@ void BaseCamera::Initialize()
 
 void BaseCamera::Update(float elapsedTime)
 {
+
+	// ズーム
+	Zoom();
 
 	// シェイク
 	if (isShake_) {
@@ -101,5 +107,12 @@ void BaseCamera::ShakeUpdate(float elapsedTime)
 	if (shakeTime_ <= 0.0f) {
 		ShakeStop();
 	}
+
+}
+
+void BaseCamera::Zoom()
+{
+
+	fovY_ = Ease::Easing(Ease::EaseName::Lerp, fovY_, targetFovY_, zoomT_);
 
 }

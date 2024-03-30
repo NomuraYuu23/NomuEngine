@@ -77,6 +77,24 @@ public:
 	ID3D12Resource* GetViewProjectionMatriBuff() { return viewProjectionMatrixBuff_.Get(); }
 
 	/// <summary>
+	/// FovY設定
+	/// </summary>
+	/// <param name="fovY"></param>
+	void SetFovY(float fovY) { fovY_ = fovY; }
+
+	/// <summary>
+	/// TargetFovY設定
+	/// </summary>
+	/// <param name="targetFovY"></param>
+	void SetTargetFovY(float targetFovY) { targetFovY_ = targetFovY; }
+
+	/// <summary>
+	/// ズーム補間係数設定
+	/// </summary>
+	/// <param name="zoomT"></param>
+	void SetZoomT(float zoomT) { zoomT_ = zoomT; }
+
+	/// <summary>
 	/// シェイク開始
 	/// </summary>
 	/// <param name="shakeSize">シェイク大きさ</param>
@@ -95,6 +113,11 @@ protected: // 関数
 	/// </summary>
 	/// <param name="elapsedTime">経過時間</param>
 	void ShakeUpdate(float elapsedTime);
+
+	/// <summary>
+	/// ズーム処理
+	/// </summary>
+	void Zoom();
 
 protected: // 変数
 
@@ -141,6 +164,11 @@ protected: // 変数
 	float shakeTime_;
 	// シェイク追加位置
 	Vector3 shakeAddPosition_;
+
+	// 目指すfovY
+	float targetFovY_;
+	// ズームの補間係数
+	float zoomT_;
 
 };
 
