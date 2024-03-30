@@ -515,10 +515,10 @@
       <Filter>Engine\ContactRecord</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\OneOfManyObjects.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -942,14 +942,14 @@
     <ClInclude Include="Engine\3D\LocalMatrix.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\ModelNodeData.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\OneOfManyObjects.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
+      <Filter>Engine\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
