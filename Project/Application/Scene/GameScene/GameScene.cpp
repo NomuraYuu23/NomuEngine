@@ -442,8 +442,15 @@ void GameScene::DebugCameraUpdate()
 
 	// カメラの処理
 	if (isDebugCameraActive_) {
+		if (input_->TriggerKey(DIK_Z)) {
+			debugCamera_->ShakeStart(1.0f,3.0f);
+		}
+		if (input_->TriggerKey(DIK_X)) {
+			debugCamera_->ShakeStop();
+		}
+
 		// デバッグカメラの更新
-		debugCamera_->Update();
+		debugCamera_->Update(kDeltaTime_);
 		// デバッグカメラのビュー行列をコピー
 		camera_ = static_cast<BaseCamera>(*debugCamera_.get());
 		// ビュー行列の転送

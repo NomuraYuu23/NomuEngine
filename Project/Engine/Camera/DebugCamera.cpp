@@ -17,7 +17,7 @@ void DebugCamera::Initialize() {
 /// <summary>
 /// 更新
 /// </summary>
-void DebugCamera::Update() {
+void DebugCamera::Update(float elapsedTime) {
 
 	Input* input = Input::GetInstance();
 	
@@ -53,7 +53,7 @@ void DebugCamera::Update() {
 		transform_.rotate.x -= rotateSpeed_;
 	}
 
-	BaseCamera::Update();
+	BaseCamera::Update(elapsedTime);
 
 }
 

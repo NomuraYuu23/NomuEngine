@@ -14,7 +14,8 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update() override;
+	/// <param name="elapsedTime">経過時間</param>
+	void Update(float elapsedTime = 0.0f) override;
 
 	/// <summary>
 	/// ImGui描画

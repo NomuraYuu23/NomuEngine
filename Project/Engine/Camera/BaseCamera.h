@@ -19,7 +19,8 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	virtual void Update();
+	/// <param name="elapsedTime"></param>
+	virtual void Update(float elapsedTime = 0.0f);
 
 	/// <summary>
 	/// ビュープロジェクション行列取得
@@ -75,9 +76,27 @@ public:
 	/// <returns>ビュープロジェクション行列バッファ</returns>
 	ID3D12Resource* GetViewProjectionMatriBuff() { return viewProjectionMatrixBuff_.Get(); }
 
+	/// <summary>
+	/// シェイク開始
+	/// </summary>
+	/// <param name="shakeSize">シェイク大きさ</param>
+	/// <param name="shakeTime">シェイク時間</param>
+	void ShakeStart(float shakeSize, float shakeTime);
 
+	/// <summary>
+	/// シェイク終了
+	/// </summary>
+	void ShakeStop();
 
-protected:
+protected: // 関数
+
+	/// <summary>
+	/// シェイク更新
+	/// </summary>
+	/// <param name="elapsedTime">経過時間</param>
+	void ShakeUpdate(float elapsedTime);
+
+protected: // 変数
 
 	// トランスフォーム
 	TransformStructure transform_{ { 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f, 0.0f},{ 0.0f, 0.0f, -10.0f} };
@@ -111,6 +130,17 @@ protected:
 	Matrix4x4 viewMatrix_;
 	// プロジェクション行列
 	Matrix4x4 projectionMatrix_;
+
+	// シェイクしているか
+	bool isShake_;
+	// シェイクの大きさ(絶対値)
+	float shakeSize_;
+	// シェイク初期時間
+	float shakeInitTime_;
+	// シェイク時間
+	float shakeTime_;
+	// シェイク追加位置
+	Vector3 shakeAddPosition_;
 
 };
 
