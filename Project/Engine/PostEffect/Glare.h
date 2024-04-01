@@ -1,5 +1,4 @@
 #pragma once
-#include "../base/RenderTargetTexture.h"
 #include "../base/DirectXCommon.h"
 #include <array>
 #include <string>
