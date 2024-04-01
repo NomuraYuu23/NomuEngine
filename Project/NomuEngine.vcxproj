@@ -132,8 +132,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Animation\AnimationData.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\CompileShader.cpp" />
-    <ClCompile Include="Engine\base\Compute\BaseConpute.cpp" />
-    <ClCompile Include="Engine\base\Compute\TestCompute.cpp" />
     <ClCompile Include="Engine\base\DSVDescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\DxCommand.cpp" />
     <ClCompile Include="Engine\base\DXGIDevice.cpp" />
@@ -255,11 +253,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Animation\AnimationData.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\CompileShader.h" />
-    <ClInclude Include="Engine\base\Compute\TestCompute.h" />
     <ClInclude Include="Engine\base\DSVDescriptorHerpManager.h" />
     <ClInclude Include="Engine\base\DxCommand.h" />
     <ClInclude Include="Engine\base\DXGIDevice.h" />
-    <ClInclude Include="Engine\base\Compute\BaseConpute.h" />
     <ClInclude Include="Engine\base\Log.h" />
     <ClInclude Include="Engine\base\RTVDescriptorHerpManager.h" />
     <ClInclude Include="Engine\base\SRVDescriptorHerpManager.h" />
@@ -498,13 +494,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\shaders\Sprite.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Test.CS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

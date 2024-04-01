@@ -19,7 +19,6 @@
 
 #include "../../../Engine/Collision2D/Collision2DManager.h"
 #include "../../../Engine/Collision2D/Collision2DDebugDraw.h"
-#include "../../../Engine/base/Compute/TestCompute.h"
 
 class GameScene : public IScene
 {
@@ -142,7 +141,5 @@ private:
 	std::unique_ptr<DrawLine> line_;
 	Vector3 linePos0_ = { 0.0f,0.0f,0.0f};
 	Vector3 linePos1_ = { 10.0f,0.0f,0.0f };
-
-	std::unique_ptr<TestCompute> compute_;
 	
 };

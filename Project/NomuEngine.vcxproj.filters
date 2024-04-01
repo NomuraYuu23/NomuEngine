@@ -181,9 +181,6 @@
     <Filter Include="Engine\ContactRecord">
       <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\Compute">
-      <UniqueIdentifier>{7b1944e8-9303-4540-80f4-cef190e3ded1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\PostEffect\Glare">
       <UniqueIdentifier>{774ce521-7247-4be2-ac67-97e9ab113ea5}</UniqueIdentifier>
     </Filter>
@@ -198,9 +195,6 @@
     </Filter>
     <Filter Include="Engine\Base\DxCommon">
       <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Base\Compute">
-      <UniqueIdentifier>{40d02bae-467e-4c17-afec-4a51df2d7996}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -522,12 +516,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\CompileShader.cpp">
       <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\Compute\BaseConpute.cpp">
-      <Filter>Engine\Base\Compute</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\Compute\TestCompute.cpp">
-      <Filter>Engine\Base\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Glare.cpp">
       <Filter>ソース ファイル</Filter>
@@ -963,12 +951,6 @@
     <ClInclude Include="Engine\base\CompileShader.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\Compute\TestCompute.h">
-      <Filter>Engine\Base\Compute</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Compute\BaseConpute.h">
-      <Filter>Engine\Base\Compute</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\PostEffect\Glare.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -1066,9 +1048,6 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
       <Filter>shaders\SwapChain</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Test.CS.hlsl">
-      <Filter>shaders\Compute</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>

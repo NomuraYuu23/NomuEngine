@@ -139,9 +139,6 @@ void GameScene::Initialize() {
 
 	line_.reset(DrawLine::Create());
 
-	compute_ = std::make_unique<TestCompute>();
-	compute_->Initialize(L"Resources/shaders/Test.CS.hlsl",L"CS");
-
 }
 
 /// <summary>
@@ -152,8 +149,6 @@ void GameScene::Update() {
 #ifdef _DEBUG
 	ImguiDraw();
 #endif
-
-	compute_->Execution(dxCommon_);
 
 	if (requestSceneNo == kClear || requestSceneNo == kTitle || isBeingReset_) {
 		resetScene_ = false;
