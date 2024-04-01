@@ -25,9 +25,6 @@
     <Filter Include="Engine\Audio">
       <UniqueIdentifier>{a862bee7-390e-43ab-a1d1-dcfda0a115a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base">
-      <UniqueIdentifier>{54c51a6a-0bf9-4e7d-bbe2-ee1301fc3c45}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Camera">
       <UniqueIdentifier>{9a35c47e-6f93-495c-a44e-4dad89e6c889}</UniqueIdentifier>
     </Filter>
@@ -106,9 +103,6 @@
     <Filter Include="Application\ShadowManager">
       <UniqueIdentifier>{2dc79464-0118-45cd-be8d-632b77b942fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base\GraphicsPipelineState">
-      <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Light">
       <UniqueIdentifier>{5a091109-c03a-49db-8519-00c4afaea1c6}</UniqueIdentifier>
     </Filter>
@@ -160,12 +154,6 @@
     <Filter Include="Engine\Math\Matrix3x3">
       <UniqueIdentifier>{7f7d088f-e420-4dd5-8ae3-748e04aa8d24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base\DescriptorHerpManager">
-      <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Base\DxCommon">
-      <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\Object3d">
       <UniqueIdentifier>{e8b1b387-3420-407b-b41a-60165565e62a}</UniqueIdentifier>
     </Filter>
@@ -193,11 +181,26 @@
     <Filter Include="Engine\ContactRecord">
       <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base\Compute">
-      <UniqueIdentifier>{40d02bae-467e-4c17-afec-4a51df2d7996}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\Compute">
       <UniqueIdentifier>{7b1944e8-9303-4540-80f4-cef190e3ded1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\PostEffect\Glare">
+      <UniqueIdentifier>{774ce521-7247-4be2-ac67-97e9ab113ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base">
+      <UniqueIdentifier>{54c51a6a-0bf9-4e7d-bbe2-ee1301fc3c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\GraphicsPipelineState">
+      <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\DescriptorHerpManager">
+      <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\DxCommon">
+      <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\Compute">
+      <UniqueIdentifier>{40d02bae-467e-4c17-afec-4a51df2d7996}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1012,9 +1015,12 @@
       <Filter>shaders\SwapChain</Filter>
     </None>
     <None Include="Resources\shaders\Glare.hlsl">
-      <Filter>shaders\PostEffect</Filter>
+      <Filter>shaders\PostEffect\Glare</Filter>
     </None>
     <None Include="Resources\shaders\Complex.hlsl">
+      <Filter>shaders\PostEffect\Glare</Filter>
+    </None>
+    <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
   </ItemGroup>
@@ -1064,8 +1070,11 @@
     <FxCompile Include="Resources\shaders\Test.CS.hlsl">
       <Filter>shaders\Compute</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
+      <Filter>shaders\PostEffect\Glare</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #include "../../../Engine/2D/ImguiManager.h"
 #include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../../Engine/Math/Ease.h"
+#include "../../../Engine/PostEffect/PostEffect.h"
 
 TitleScene::~TitleScene()
 {
@@ -41,10 +42,10 @@ void TitleScene::Initialize()
 	outline_.Initialize();
 	outline_.Map();
 
-	glare_ = std::make_unique<Glare>();
-	std::array<uint32_t, Glare::kImageForGlareIndexOfCount> test;
-	test[0] = TextureManager::GetInstance()->Load("Resources/postEffect/zp800x800.png",dxCommon_, textureHandleManager_.get());
-	glare_->Initialize(test);
+	//glare_ = std::make_unique<Glare>();
+	//std::array<uint32_t, Glare::kImageForGlareIndexOfCount> test;
+	//test[0] = TextureManager::GetInstance()->Load("Resources/postEffect/zp800x800.png",dxCommon_, textureHandleManager_.get());
+	//glare_->Initialize(test);
 
 }
 
@@ -115,14 +116,20 @@ void TitleScene::Draw()
 #pragma endregion
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
-	glare_->Execution(
-		renderTargetTexture_->GetSrvGPUHandle(0),
-		0.2f,
-		0.2f,
-		Glare::kImageForGlareIndexHalo,
-		dxCommon_->GetCommadList());
+	//glare_->Execution(
+	//	renderTargetTexture_->GetSrvGPUHandle(0),
+	//	0.2f,
+	//	0.2f,
+	//	Glare::kImageForGlareIndexHalo,
+	//	dxCommon_->GetCommadList());
+	
+	PostEffect::GetInstance()->ClearCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		Vector4(0.5f, 0.5f, 0.0f, 1.0f)
+	);
 	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->TextureDraw(glare_->GetEditTextures(3)->GetUavHandleGPU());
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

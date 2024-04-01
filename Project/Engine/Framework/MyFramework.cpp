@@ -53,6 +53,9 @@ void MyFramework::Initialize()
 	// パーティクル
 	ParticleManager::GetInstance()->Initialize();
 
+	// ポストエフェクト
+	PostEffect::GetInstance()->Initialize();
+
 	//サウンド
 	audio = Audio::GetInstance();
 	audio->Initialize();

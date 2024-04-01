@@ -47,6 +47,9 @@
 // Windowサイズのスプライト
 #include "../2D/WindowSprite.h"
 
+// PostEffect
+#include "../PostEffect/PostEffect.h"
+
 class MyFramework
 {
 

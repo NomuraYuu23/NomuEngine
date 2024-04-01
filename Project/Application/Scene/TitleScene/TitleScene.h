@@ -69,7 +69,7 @@ private: // メンバ変数
 	OutLineData outline_;
 
 	// グレア（テスト）
-	std::unique_ptr<Glare> glare_;
+	//std::unique_ptr<Glare> glare_;
 
 };
 

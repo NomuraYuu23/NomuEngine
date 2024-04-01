@@ -2,6 +2,14 @@
 #include "../base/BufferResource.h"
 #include "../base/Log.h"
 #include "../base/CompileShader.h"
+#include <fstream>
+#include <cmath>
+
+PostEffect* PostEffect::GetInstance()
+{
+	static PostEffect instance;
+	return &instance;
+}
 
 void PostEffect::Initialize()
 {
@@ -14,6 +22,14 @@ void PostEffect::Initialize()
 	computeParametersBuff_->Map(0, nullptr, reinterpret_cast<void**>(&computeParametersMap_));
 
 	// 定数バッファに渡す値の設定
+	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
+	computeParametersMap_->threadIdTotalX = 1; // スレッドの総数X
+	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
+	computeParametersMap_->threadIdTotalY = 1; // スレッドの総数Y
+	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
+	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+
+	computeParametersMap_->clearColor = { 0.1f, 0.25f, 0.5f, 1.0f }; // クリアするときの色
 	computeParametersMap_->threshold = 0.8f; // しきい値
 
 	// ルートシグネチャ
@@ -26,13 +42,113 @@ void PostEffect::Initialize()
 	CreatePipline();
 
 	// 編集する画像初期化
-	for (uint32_t i = 0; i < 8; ++i) {
+	for (uint32_t i = 0; i < kNumEditTexture; ++i) {
 		editTextures_[i] = std::make_unique<TextureUAV>();
 		editTextures_[i]->Initialize(
 			device_,
 			kTextureWidth,
 			kTextureHeight);
 	}
+
+}
+
+void PostEffect::CopyCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex,
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& copyGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
+
+	// 定数設定
+	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
+	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
+	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
+	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
+	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
+	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+
+	// バッファを送る
+
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// コピーする画像
+	commandList_->SetComputeRootDescriptorTable(1, copyGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::ClearCommand(
+	ID3D12GraphicsCommandList* commandList,
+	uint32_t editTextureIndex,
+	const Vector4& color)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexClesrCS].Get());
+
+	// 定数設定
+	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
+	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
+	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
+	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
+	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
+	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+
+	computeParametersMap_->clearColor = color; // クリアするときの色
+
+	// バッファを送る
+
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
 
 }
 
@@ -175,16 +291,26 @@ void PostEffect::CreateRootSignature()
 void PostEffect::CreateHeaderHLSL()
 {
 	
+	// ファイルを開く
+	std::ofstream file("Resources/shaders/PostEffect.hlsli");
 
+	// ファイルがないのでエラー
+	assert(file);
 
+	// スレッド数
+	file << "#define" << " " << "THREAD_X" << " " << kNumThreadX << "\n";
+	file << "#define" << " " << "THREAD_Y" << " " << kNumThreadY << "\n";
+	file << "#define" << " " << "THREAD_Z" << " " << kNumThreadZ << "\n";
+
+	// ファイルを閉じる
+	file.close();
 
 }
 
 void PostEffect::CompileShader()
 {
 
-
-	for (uint32_t i = 0; i < kPiolineIndexOfCount; ++i) {
+	for (uint32_t i = 0; i < kPipelineIndexOfCount; ++i) {
 
 		// ヘッダを作成
 		CreateHeaderHLSL();
@@ -203,7 +329,7 @@ void PostEffect::CreatePipline()
 {
 
 	// パイプライン作成
-	for (uint32_t i = 0; i < kPiolineIndexOfCount; ++i) {
+	for (uint32_t i = 0; i < kPipelineIndexOfCount; ++i) {
 
 		D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
 		desc.CS.pShaderBytecode = shaders_[i]->GetBufferPointer();
