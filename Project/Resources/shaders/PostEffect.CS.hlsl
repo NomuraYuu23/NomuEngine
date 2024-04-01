@@ -28,11 +28,6 @@ RWTexture2D<float4> destinationImageR1 : register(u2);
 // 行先I1
 RWTexture2D<float4> destinationImageI1 : register(u3);
 
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void main( uint3 DTid : SV_DispatchThreadID )
-{
-}
-
 void Copy(float2 index) {
 
 	destinationImageR[index] = sourceImageR[index];
@@ -66,6 +61,33 @@ void mainClear(uint3 dispatchId : SV_DispatchThreadID)
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		Clear(dispatchId.xy);
+
+	}
+
+}
+
+void BinaryThreshold(float2 index) {
+
+	float3 input = sourceImageR[index].rgb;
+
+	float3 col = float3(0.0, 0.0, 0.0);
+
+	if ((input.r + input.g + input.b) / 3.0 > gComputeConstants.threshold) {
+		col = float3(1.0, 1.0, 1.0);
+	}
+
+	destinationImageR[index] = float4(col, 1.0f);
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainBinaryThreshold(uint3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		BinaryThreshold(dispatchId.xy);
 
 	}
 

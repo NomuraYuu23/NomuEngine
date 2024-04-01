@@ -21,6 +21,7 @@ public: // サブクラス
 		uint32_t threadIdOffsetY; // スレッドのオフセットY
 		uint32_t threadIdTotalY; // スレッドの総数Y
 		uint32_t threadIdOffsetZ; // スレッドのオフセットZ
+		float padding[2]; // パディング
 		uint32_t threadIdTotalZ; // スレッドの総数Z
 		Vector4 clearColor; // クリアするときの色
 		float threshold; // しきい値
@@ -30,9 +31,9 @@ public: // サブクラス
 	/// パイプライン名前
 	/// </summary>
 	enum PipelineIndex {
-		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
 		kPipelineIndexCopyCS, // コピー
 		kPipelineIndexClesrCS, // クリア
+		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -41,9 +42,9 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPipelineIndexOfCount> shaderNames_ =
 	{
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"main"}, // 二値化
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainCopy"}, // コピー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainClear"}, // クリア
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
 	};
 	
 	// 画像の幅
@@ -99,6 +100,19 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const Vector4& color = { 0.1f, 0.25f, 0.5f, 1.0f });
+
+	/// <summary>
+	/// 二値化
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="threshold">しきい値</param>
+	/// <param name="copyGPUHandle">二値化する画像のGPUハンドル</param>
+	void BinaryThresholdCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex, 
+		float threshold,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle);
 
 private:  // 関数
 

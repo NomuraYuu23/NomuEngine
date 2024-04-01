@@ -123,10 +123,11 @@ void TitleScene::Draw()
 	//	Glare::kImageForGlareIndexHalo,
 	//	dxCommon_->GetCommadList());
 	
-	PostEffect::GetInstance()->ClearCommand(
+	PostEffect::GetInstance()->BinaryThresholdCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		Vector4(0.5f, 0.5f, 0.0f, 1.0f)
+		0.4f,
+		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);
 	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
