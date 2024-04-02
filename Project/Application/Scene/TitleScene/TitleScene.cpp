@@ -123,10 +123,9 @@ void TitleScene::Draw()
 	//	Glare::kImageForGlareIndexHalo,
 	//	dxCommon_->GetCommadList());
 	
-	PostEffect::GetInstance()->BinaryThresholdCommand(
+	PostEffect::GetInstance()->GaussianBlurCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		0.4f,
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);

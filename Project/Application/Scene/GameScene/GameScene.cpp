@@ -6,6 +6,7 @@
 #include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../Particle/EmitterName.h"
 #include "../../../Engine/Math/DeltaTime.h"
+#include "../../../Engine/PostEffect/PostEffect.h"
 
 GameScene::~GameScene()
 {
@@ -325,6 +326,22 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+
+	renderTargetTexture_->ChangePixelShaderResource(0);
+	//glare_->Execution(
+	//	renderTargetTexture_->GetSrvGPUHandle(0),
+	//	0.2f,
+	//	0.2f,
+	//	Glare::kImageForGlareIndexHalo,
+	//	dxCommon_->GetCommadList());
+
+	PostEffect::GetInstance()->GaussianBlurCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

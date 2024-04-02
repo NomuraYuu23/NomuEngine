@@ -92,3 +92,79 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 	}
 
 }
+
+float32_t Gauss(float32_t x, float32_t y, float32_t sigma) {
+
+	return 1.0f / (2.0f * PI * sigma * sigma) * exp(-(x * x + y * y) / (2.0f * sigma * sigma));
+
+}
+
+void GaussianBlur(float32_t2 index) {
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+	
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	// カーネルサイズ(後で定数に持ってく)
+	int32_t KERNEL_SIZE = 15;
+
+	// 標準偏差(後で定数に持ってく)
+	float32_t SIGIMA = 20.0f;
+
+	for (int32_t x = -KERNEL_SIZE / 2; x < KERNEL_SIZE / 2; ++x) {
+
+		for (int32_t y = -KERNEL_SIZE / 2; y < KERNEL_SIZE / 2; ++y) {
+
+			// インデックス
+			indexTmp = index;
+			
+			indexTmp.x += float32_t(x);
+			//if (indexTmp.x < 0.0f || indexTmp.x > gComputeConstants.threadIdTotalX) {
+			//	continue;
+			//}
+			
+			indexTmp.y += float32_t(y);
+			//if (indexTmp.y < 0.0f || indexTmp.y > gComputeConstants.threadIdTotalY) {
+			//	continue;
+			//}
+
+			// 重み確認
+			weight = Gauss(float32_t(x), float32_t(y), SIGIMA);
+
+			// outputに加算
+			output += sourceImageR[indexTmp] * weight;
+
+			// 重みの合計に加算
+			weightSum += weight;
+
+		}
+	}
+
+	// 重みの合計分割る
+	output *= (1.0f / weightSum);
+
+	// 代入
+	destinationImageR[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainGaussianBlur(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		GaussianBlur(dispatchId.xy);
+
+	}
+
+}

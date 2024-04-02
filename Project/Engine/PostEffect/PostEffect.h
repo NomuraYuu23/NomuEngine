@@ -34,6 +34,7 @@ public: // サブクラス
 		kPipelineIndexCopyCS, // コピー
 		kPipelineIndexClesrCS, // クリア
 		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
+		kPipelineIndexGaussianBlur, // ガウスブラー
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -45,6 +46,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainCopy"}, // コピー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainClear"}, // クリア
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlur"}, // ガウスブラー
 	};
 	
 	// 画像の幅
@@ -113,6 +115,17 @@ public: // 関数
 		uint32_t editTextureIndex, 
 		float threshold,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle);
+
+	/// <summary>
+	/// ガウスブラー
+	/// </summary>
+	/// <param name="commandList"></param>
+	/// <param name="editTextureIndex"></param>
+	/// <param name="gaussianBluGPUHandle"></param>
+	void GaussianBlurCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle);
 
 private:  // 関数
 
