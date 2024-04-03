@@ -11,6 +11,8 @@ struct ComputeParameters {
 	uint32_t threadIdTotalZ; // スレッドの総数Z
 	float32_t4 clearColor; // クリアするときの色
 	float32_t threshold; // しきい値
+	int32_t kernelSize; // カーネルサイズ
+	float32_t sigma; // 標準偏差
 };
 
 // 定数データ
@@ -113,15 +115,15 @@ void GaussianBlur(float32_t2 index) {
 	// 重み合計
 	float32_t weightSum = 0.0f;
 
-	// カーネルサイズ(後で定数に持ってく)
-	int32_t KERNEL_SIZE = 15;
+	//// カーネルサイズ(後で定数に持ってく)
+	//int32_t KERNEL_SIZE = 15;
 
-	// 標準偏差(後で定数に持ってく)
-	float32_t SIGIMA = 20.0f;
+	//// 標準偏差(後で定数に持ってく)
+	//float32_t SIGIMA = 20.0f;
 
-	for (int32_t x = -KERNEL_SIZE / 2; x < KERNEL_SIZE / 2; ++x) {
+	for (int32_t x = -gComputeConstants.kernelSize / 2; x < gComputeConstants.kernelSize / 2; ++x) {
 
-		for (int32_t y = -KERNEL_SIZE / 2; y < KERNEL_SIZE / 2; ++y) {
+		for (int32_t y = -gComputeConstants.kernelSize / 2; y < gComputeConstants.kernelSize / 2; ++y) {
 
 			// インデックス
 			indexTmp = index;
@@ -137,7 +139,7 @@ void GaussianBlur(float32_t2 index) {
 			//}
 
 			// 重み確認
-			weight = Gauss(float32_t(x), float32_t(y), SIGIMA);
+			weight = Gauss(float32_t(x), float32_t(y), gComputeConstants.sigma);
 
 			// outputに加算
 			output += sourceImageR[indexTmp] * weight;

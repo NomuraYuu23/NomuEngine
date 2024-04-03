@@ -32,6 +32,9 @@ void PostEffect::Initialize()
 	computeParametersMap_->clearColor = { 0.1f, 0.25f, 0.5f, 1.0f }; // クリアするときの色
 	computeParametersMap_->threshold = 0.8f; // しきい値
 
+	computeParametersMap_->kernelSize = 7; // カーネルサイズ
+	computeParametersMap_->sigma = 20.0f; // 標準偏差
+
 	// ルートシグネチャ
 	CreateRootSignature();
 

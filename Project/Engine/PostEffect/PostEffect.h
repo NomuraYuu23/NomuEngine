@@ -21,10 +21,13 @@ public: // サブクラス
 		uint32_t threadIdOffsetY; // スレッドのオフセットY
 		uint32_t threadIdTotalY; // スレッドの総数Y
 		uint32_t threadIdOffsetZ; // スレッドのオフセットZ
-		float padding[2]; // パディング
 		uint32_t threadIdTotalZ; // スレッドの総数Z
+		float padding[2]; // パディング
 		Vector4 clearColor; // クリアするときの色
 		float threshold; // しきい値
+		int32_t kernelSize; // カーネルサイズ
+		float sigma; // 標準偏差
+
 	};
 
 	/// <summary>
