@@ -45,6 +45,10 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				aiVertexWeight* weights = bone[i]->mWeights;
 				for (uint32_t j = 0; j < bone[i]->mNumWeights; ++j) {
 					
+					if (weights[j].mWeight == 0.0f) {
+						continue;
+					}
+
 					std::pair<uint32_t, float> boneData;
 					boneData.first = weights[j].mVertexId;
 					boneData.second = weights[j].mWeight;
