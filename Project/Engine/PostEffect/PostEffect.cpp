@@ -210,8 +210,10 @@ void PostEffect::BinaryThresholdCommand(
 }
 
 void PostEffect::GaussianBlurCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
+	ID3D12GraphicsCommandList* commandList,
+	uint32_t editTextureIndex,
+	int32_t kernelSize,
+	float sigma,
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle)
 {
 
@@ -237,6 +239,9 @@ void PostEffect::GaussianBlurCommand(
 	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
 	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
 	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+
+	computeParametersMap_->kernelSize = kernelSize; // カーネルサイズ
+	computeParametersMap_->sigma = sigma; // 標準偏差
 
 	// バッファを送る
 

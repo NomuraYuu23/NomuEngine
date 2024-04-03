@@ -126,6 +126,8 @@ void TitleScene::Draw()
 	PostEffect::GetInstance()->GaussianBlurCommand(
 		dxCommon_->GetCommadList(),
 		0,
+		7,
+		3.0f,
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);

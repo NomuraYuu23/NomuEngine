@@ -119,18 +119,23 @@ public: // 関数
 		float threshold,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle);
 
+
 	/// <summary>
 	/// ガウスブラー
 	/// </summary>
-	/// <param name="commandList"></param>
-	/// <param name="editTextureIndex"></param>
-	/// <param name="gaussianBluGPUHandle"></param>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="kernelSize">カーネルサイズ</param>
+	/// <param name="sigma">シグマ</param>
+	/// <param name="gaussianBluGPUHandle">ガウスブラーをかける画像のGPUハンドル</param>
 	void GaussianBlurCommand(
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
+		int32_t kernelSize,
+		float sigma,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle);
 
-private:  // 関数
+private: // 関数
 
 	/// <summary>
 	///	ルートシグネチャ作成
