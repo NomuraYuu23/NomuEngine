@@ -217,9 +217,11 @@ void PostEffect::GaussianBlurCommand(
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle)
 {
 
-
 	// インデックスが超えているとエラー
 	assert(editTextureIndex < kNumEditTexture);
+
+	// カーネルサイズ
+	assert(kernelSize > 1);
 
 	// コマンドリスト
 	commandList_ = commandList;

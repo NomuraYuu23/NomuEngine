@@ -141,5 +141,8 @@ private:
 	std::unique_ptr<DrawLine> line_;
 	Vector3 linePos0_ = { 0.0f,0.0f,0.0f};
 	Vector3 linePos1_ = { 10.0f,0.0f,0.0f };
+
+	int32_t kernelSize = 7;
+	float sigma = 3.0f;
 	
 };
