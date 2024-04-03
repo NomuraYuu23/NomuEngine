@@ -196,6 +196,9 @@
     <Filter Include="Engine\Base\DxCommon">
       <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\PostEffect">
+      <UniqueIdentifier>{c33a6266-7178-4232-9219-9a698fd35354}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -523,20 +526,20 @@
     <ClCompile Include="Engine\base\CompileShader.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\PostEffect\Glare.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\TextureUAV.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\WindowSprite.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\PostEffect\Glare.cpp">
+      <Filter>Engine\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\WindowSprite.cpp">
+      <Filter>Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\TextureUAV.cpp">
+      <Filter>Engine\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -957,23 +960,8 @@
     <ClInclude Include="Engine\base\CompileShader.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\PostEffect\Glare.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\RenderTargetTexture.h">
       <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\TextureUAV.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\LocalMatrix.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\WindowSprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\PostEffect\PostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ModelNodeData.h">
       <Filter>Engine\3D\Model</Filter>
@@ -982,6 +970,21 @@
       <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
+      <Filter>Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Glare.h">
+      <Filter>Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostEffect.h">
+      <Filter>Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\WindowSprite.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\TextureUAV.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\LocalMatrix.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
   </ItemGroup>
