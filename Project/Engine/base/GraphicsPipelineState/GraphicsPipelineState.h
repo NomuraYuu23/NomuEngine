@@ -27,6 +27,7 @@ public: // 変数
 		kPipelineStateNameLine, // 線
 		kPipelineStateNameSwapChain, // スワップチェーン
 		kPipelineStateNameManyModels, // たくさんのモデル
+		kPipelineStateNameCloth, // 布
 		kPipelineStateNameOfCount // 使わない
 	};
 
@@ -77,6 +78,11 @@ private: // グラフィックスパイプライン作成関数
 	/// たくさんのモデル
 	/// </summary>
 	static void CreateForManyModels();
+
+	/// <summary>
+	/// 布
+	/// </summary>
+	static void CreateForCloth();
 
 private: // 以下パイプラインの変数やenum
 

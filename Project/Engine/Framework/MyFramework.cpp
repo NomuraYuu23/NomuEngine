@@ -58,6 +58,12 @@ void MyFramework::Initialize()
 	// ポストエフェクト
 	PostEffect::GetInstance()->Initialize();
 
+	// 布
+	Cloth::StaticInitialize(
+		dxCommon->GetDevice(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameCloth].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameCloth].Get());
+
 	//サウンド
 	audio = Audio::GetInstance();
 	audio->Initialize();

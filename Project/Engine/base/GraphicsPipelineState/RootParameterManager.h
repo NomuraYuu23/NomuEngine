@@ -37,6 +37,7 @@ enum RootParameterIndex {
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexSwapChain, // スワップチェーン
 	kRootParameterIndexManyModels, // 多くのオブジェクト
+	kRootParameterIndexCloth, // 布
 	kRootParameterIndexOfCount,
 };
 
@@ -97,6 +98,11 @@ private: // 関数
 	/// 多くのオブジェクト
 	/// </summary>
 	static void RootParameterInitializeForManyModels();
+
+	/// <summary>
+	/// 布
+	/// </summary>
+	static void  RootParameterInitializeForCloth();
 
 	/// <summary>
 	/// ディスクリプタレンジの初期化

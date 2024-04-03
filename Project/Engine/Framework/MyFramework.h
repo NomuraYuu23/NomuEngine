@@ -50,6 +50,9 @@
 // PostEffect
 #include "../PostEffect/PostEffect.h"
 
+// 布
+#include "../Physics/Cloth.h"
+
 class MyFramework
 {
 

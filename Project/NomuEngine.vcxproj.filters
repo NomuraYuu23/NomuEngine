@@ -199,6 +199,9 @@
     <Filter Include="Engine\PostEffect">
       <UniqueIdentifier>{c33a6266-7178-4232-9219-9a698fd35354}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\Cloth">
+      <UniqueIdentifier>{c7024ae9-ad84-4413-a416-f81400e9fbe7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -1029,6 +1032,9 @@
     <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
+    <None Include="Resources\shaders\Cloth.hlsli">
+      <Filter>shaders\Cloth</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
@@ -1084,6 +1090,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
       <Filter>shaders\PostEffect\Glare</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Cloth.VS.hlsl">
+      <Filter>shaders\Cloth</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Cloth.PS.hlsl">
+      <Filter>shaders\Cloth</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

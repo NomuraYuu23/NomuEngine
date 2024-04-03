@@ -18,8 +18,8 @@ void Cloth::StaticInitialize(ID3D12Device* device, ID3D12RootSignature* rootSign
 {
 
 	assert(device);
-	assert(sRootSignature);
-	assert(sPipelineState);
+	assert(rootSignature);
+	assert(pipelineState);
 
 	sDevice = device;
 
@@ -235,13 +235,13 @@ Cloth::ClothConstraint Cloth::ClothConstraintGenerate(
 
 	ClothConstraint clothConstraint{ {},{},0.0f ,kClothConstraintIndexOfCount };
 	if (targetX >= 0 &&
-		targetX < div_ + 1 &&
+		targetX < static_cast<int32_t>(div_) + 1 &&
 		targetY >= 0 &&
-		targetY < div_ + 1) {
+		targetY < static_cast<int32_t>(div_) + 1) {
 
 		clothConstraint.p1 = &points_[y * (div_ + 1) + x];
 		clothConstraint.p2 = &points_[targetY * (div_ + 1) + targetY];
-		clothConstraint.naturalLength = scale_ * 2.0f / div_ * std::sqrtf(offsetX * offsetX + offsetY * offsetY);
+		clothConstraint.naturalLength = scale_ * 2.0f / div_ * std::sqrtf(static_cast<float>(offsetX * offsetX + offsetY * offsetY));
 		clothConstraint.type = type;
 	}
 
@@ -315,7 +315,7 @@ void Cloth::IntegralPhase(
 {
 
 	// 重力と風力による変位(移動量)を計算しておく
-	Vector3 f;
+	Vector3 f{};
 	f.x = 0.0f; // 特に力は加えない
 	f.y -= gravity; // 重力
 	f.z += wind * (std::sinf(acc) * 0.5f + 0.5f); // 風力（適当になびかせる）

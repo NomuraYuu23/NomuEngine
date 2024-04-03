@@ -106,7 +106,7 @@ public: // 静的変数
 
 public: // 静的関数
 
-	void StaticInitialize(
+	static void StaticInitialize(
 		ID3D12Device* device,
 		ID3D12RootSignature* rootSignature,
 		ID3D12PipelineState* pipelineState);
