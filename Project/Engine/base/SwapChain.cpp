@@ -196,7 +196,7 @@ void SwapChain::Draw(ID3D12GraphicsCommandList* commandList,
 
 	PreDraw(commandList);
 
-	renderTargetTexture->TextureDraw(GraphicsPipelineState::kPipelineStateNameSwapChain, 0, commandList_);
+	renderTargetTexture->TextureDraw(0);
 
 #ifdef _DEBUG
 	//実際のcommandListのImGuiの描画コマンドを積む

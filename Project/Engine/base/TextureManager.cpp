@@ -136,6 +136,18 @@ void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 
 }
 
+void TextureManager::SetComputeRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle)
+{
+
+	assert(textureHandle < textures_.size());
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//シェーダーリソースビューをセット
+	commandList->SetComputeRootDescriptorTable(rootParamIndex, textures_[textureHandle].gpuDescHandleSRV);
+
+}
+
 //コンバートストリング
 std::wstring TextureManager::ConvertString(const std::string& str) {
 	if (str.empty()) {

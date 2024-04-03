@@ -25,9 +25,6 @@
     <Filter Include="Engine\Audio">
       <UniqueIdentifier>{a862bee7-390e-43ab-a1d1-dcfda0a115a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base">
-      <UniqueIdentifier>{54c51a6a-0bf9-4e7d-bbe2-ee1301fc3c45}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Camera">
       <UniqueIdentifier>{9a35c47e-6f93-495c-a44e-4dad89e6c889}</UniqueIdentifier>
     </Filter>
@@ -106,9 +103,6 @@
     <Filter Include="Application\ShadowManager">
       <UniqueIdentifier>{2dc79464-0118-45cd-be8d-632b77b942fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base\GraphicsPipelineState">
-      <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Light">
       <UniqueIdentifier>{5a091109-c03a-49db-8519-00c4afaea1c6}</UniqueIdentifier>
     </Filter>
@@ -160,12 +154,6 @@
     <Filter Include="Engine\Math\Matrix3x3">
       <UniqueIdentifier>{7f7d088f-e420-4dd5-8ae3-748e04aa8d24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Base\DescriptorHerpManager">
-      <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Base\DxCommon">
-      <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\Object3d">
       <UniqueIdentifier>{e8b1b387-3420-407b-b41a-60165565e62a}</UniqueIdentifier>
     </Filter>
@@ -192,6 +180,21 @@
     </Filter>
     <Filter Include="Engine\ContactRecord">
       <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\PostEffect\Glare">
+      <UniqueIdentifier>{774ce521-7247-4be2-ac67-97e9ab113ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base">
+      <UniqueIdentifier>{54c51a6a-0bf9-4e7d-bbe2-ee1301fc3c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\GraphicsPipelineState">
+      <UniqueIdentifier>{09734e10-8fc5-4059-932a-21b9f930834c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\DescriptorHerpManager">
+      <UniqueIdentifier>{55c4d868-4816-480f-9511-a27ca23aef2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\DxCommon">
+      <UniqueIdentifier>{89b7696d-ce1f-4c90-8d01-4cd1a69b981b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -505,9 +508,6 @@
     <ClCompile Include="Engine\base\Log.cpp">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
-      <Filter>Engine\Base\DxCommon</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\SwapChain.cpp">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClCompile>
@@ -519,6 +519,24 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\OneOfManyObjects.cpp">
       <Filter>Engine\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\CompileShader.cpp">
+      <Filter>Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Glare.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
+      <Filter>Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\TextureUAV.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\WindowSprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -921,9 +939,6 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RenderTargetTexture.h">
-      <Filter>Engine\Base\DxCommon</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\DxCommand.h">
       <Filter>Engine\Base\DxCommon</Filter>
     </ClInclude>
@@ -939,8 +954,26 @@
     <ClInclude Include="Engine\ContactRecord\ContactRecord.h">
       <Filter>Engine\ContactRecord</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\CompileShader.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Glare.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\RenderTargetTexture.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\TextureUAV.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\3D\LocalMatrix.h">
-      <Filter>Engine\3D</Filter>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\WindowSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\ModelNodeData.h">
       <Filter>Engine\3D\Model</Filter>
@@ -977,6 +1010,15 @@
     </None>
     <None Include="Resources\shaders\SwapChain.hlsli">
       <Filter>shaders\SwapChain</Filter>
+    </None>
+    <None Include="Resources\shaders\Glare.hlsl">
+      <Filter>shaders\PostEffect\Glare</Filter>
+    </None>
+    <None Include="Resources\shaders\Complex.hlsl">
+      <Filter>shaders\PostEffect\Glare</Filter>
+    </None>
+    <None Include="Resources\shaders\PostEffect.hlsli">
+      <Filter>shaders\PostEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1027,6 +1069,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
       <Filter>shaders\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
+      <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
+      <Filter>shaders\PostEffect\Glare</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
