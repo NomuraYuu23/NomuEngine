@@ -39,6 +39,8 @@ public: // サブクラス
 		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
 		kPipelineIndexGaussianBlurHorizontal, // ガウスブラー水平
 		kPipelineIndexGaussianBlurVertical, // ガウスブラー垂直
+		kPipelineIndexBrightnessThreshold, // 明度分け
+		kPipelineIndexAdd, // 加算
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -52,6 +54,8 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBrightnessThreshold"}, // 明度分け
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainAdd"}, // 加算
 	};
 	
 	// 画像の幅
@@ -87,7 +91,7 @@ public: // 関数
 	TextureUAV* GetEditTextures(uint32_t index) { return editTextures_[index].get(); }
 
 	/// <summary>
-	/// コピーコマンド
+	/// コピー
 	/// </summary>
  	/// <param name="commandList">コマンドリスト</param>
 	/// <param name="copyGPUHandle">コピーする画像のGPUハンドル</param>
@@ -98,7 +102,7 @@ public: // 関数
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& copyGPUHandle);
 
 	/// <summary>
-	/// クリアコマンド
+	/// クリア
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
 	/// <param name="editTextureIndex">編集する画像番号</param>
@@ -128,7 +132,7 @@ public: // 関数
 	/// <param name="commandList">コマンドリスト</param>
 	/// <param name="editTextureIndex">編集する画像番号</param>
 	/// <param name="kernelSize">カーネルサイズ</param>
-	/// <param name="sigma">シグマ</param>
+	/// <param name="sigma">標準偏差</param>
 	/// <param name="gaussianBluGPUHandle">ガウスブラーをかける画像のGPUハンドル</param>
 	void GaussianBlurCommand(
 		ID3D12GraphicsCommandList* commandList,
@@ -136,6 +140,23 @@ public: // 関数
 		int32_t kernelSize,
 		float sigma,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle);
+
+	/// <summary>
+	/// ブルーム
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="kernelSize">カーネルサイズ</param>
+	/// <param name="sigma">標準偏差</param>
+	/// <param name="threshold">しきい値</param>
+	/// <param name="bloomGPUHandle">ブルームをかける画像のGPUハンドル</param>
+	void BloomCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		int32_t kernelSize,
+		float sigma,
+		float threshold,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& bloomGPUHandle);
 
 private: // 関数
 
@@ -171,7 +192,7 @@ private: // 変数
 	std::unique_ptr<TextureUAV> editTextures_[8];
 
 	// 内部編集画像
-	std::unique_ptr<TextureUAV> internalEditTextures_;
+	std::unique_ptr<TextureUAV> internalEditTextures_[8];
 
 	//computeParameters用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;

@@ -166,3 +166,133 @@ void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 	}
 
 }
+
+void Bloom(float32_t2 index, float32_t2 dir) {
+
+	// 入力色
+	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
+	
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	for (int32_t i = -gComputeConstants.kernelSize / 2; i < gComputeConstants.kernelSize / 2; i += 2) {
+
+		// インデックス
+		indexTmp = index;
+
+		indexTmp.x += (float32_t(i) + 0.5f) * dir.x;
+		indexTmp.y += (float32_t(i) + 0.5f) * dir.y;
+
+		input = sourceImageR[indexTmp];
+
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+		// 色確認
+		if (((input.r + input.g + input.b) / 3.0 > gComputeConstants.threshold) || 
+			(i <= 1 && i >= -1 )) {
+			// outputに加算
+			output += input * weight;
+			// 重みの合計に加算
+			weightSum += weight;
+		}
+	}
+
+
+	// 重みの合計分割る
+	output *= (1.0f / weightSum);
+
+	// 代入
+	destinationImageR[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainBloomHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
+
+	}
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
+
+	}
+
+}
+
+void BrightnessThreshold(float32_t2 index) {
+
+	float32_t4 input = sourceImageR[index];
+
+	float32_t4 col = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	if ((input.r + input.g + input.b) / 3.0f > gComputeConstants.threshold) {
+		col = input;
+	}
+
+	destinationImageR[index] = col;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		BrightnessThreshold(dispatchId.xy);
+
+	}
+
+}
+
+void Add(float32_t2 index) {
+
+	float3 input1 = sourceImageR[index].rgb;
+	float3 input2 = sourceImageI[index].rgb;
+
+	float32_t alphaSum = sourceImageR[index].a + sourceImageI[index].a;
+	float32_t a1 = sourceImageR[index].a / alphaSum;
+	float32_t a2 = sourceImageI[index].a / alphaSum;
+
+	float3 col = input1 * a1 + input2 * a2;
+
+	destinationImageR[index] = float4(col, min(alphaSum, 1.0f));
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Add(dispatchId.xy);
+
+	}
+
+}

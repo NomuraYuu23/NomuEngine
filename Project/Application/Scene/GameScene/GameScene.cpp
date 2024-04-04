@@ -357,11 +357,12 @@ void GameScene::Draw() {
 	//	Glare::kImageForGlareIndexHalo,
 	//	dxCommon_->GetCommadList());
 
-	PostEffect::GetInstance()->GaussianBlurCommand(
+	PostEffect::GetInstance()->BloomCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		kernelSize,
 		sigma,
+		0.2f,
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);

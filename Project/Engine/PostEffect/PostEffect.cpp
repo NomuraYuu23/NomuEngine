@@ -53,11 +53,13 @@ void PostEffect::Initialize()
 			kTextureHeight);
 	}
 
-	internalEditTextures_ = std::make_unique<TextureUAV>();
-	internalEditTextures_->Initialize(
-		device_,
-		kTextureWidth,
-		kTextureHeight);
+	for (uint32_t i = 0; i < kNumEditTexture; ++i) {
+		internalEditTextures_[i] = std::make_unique<TextureUAV>();
+		internalEditTextures_[i]->Initialize(
+			device_,
+			kTextureWidth,
+			kTextureHeight);
+	}
 
 }
 
@@ -212,7 +214,6 @@ void PostEffect::BinaryThresholdCommand(
 	// コマンドリスト
 	commandList_ = nullptr;
 
-
 }
 
 void PostEffect::GaussianBlurCommand(
@@ -261,7 +262,7 @@ void PostEffect::GaussianBlurCommand(
 	// ガウスブラーを掛ける画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
 	// 編集する画像セット
-	internalEditTextures_->SetRootDescriptorTable(commandList_, 3);
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
 	commandList_->Dispatch(x, y, z);
 
@@ -271,12 +272,110 @@ void PostEffect::GaussianBlurCommand(
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// ガウスブラーを掛ける画像をセット
-	internalEditTextures_->SetRootDescriptorTable(commandList_, 1);
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
 	commandList_->Dispatch(x, y, z);
 
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::BloomCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	int32_t kernelSize, 
+	float sigma, 
+	float threshold, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& bloomGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// カーネルサイズ
+	assert(kernelSize > 1);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	// 定数設定
+	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
+	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
+	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
+	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
+	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
+	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+
+	computeParametersMap_->threshold = threshold; // しきい値
+	computeParametersMap_->kernelSize = kernelSize; // カーネルサイズ
+	computeParametersMap_->sigma = sigma; // 標準偏差
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBrightnessThreshold].Get());
+
+	// バッファを送る
+
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 明度分けする画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
+	// 編集する画像セット
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// ガウスブラーを掛ける画像をセット
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+	// 編集する画像セット
+	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 3);
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// ガウスブラーを掛ける画像をセット
+	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 1);
+	// 編集する画像セット
+	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexAdd].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 加算する画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
+	// 加算する画像をセット
+	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 2);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+	// 実行
+	commandList_->Dispatch(x, y, z);
+	
 	// コマンドリスト
 	commandList_ = nullptr;
 
