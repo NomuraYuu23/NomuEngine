@@ -1,12 +1,5 @@
 #include "GameScene.h"
-#include "../../../Engine/base/WinApp.h"
-#include "../../../Engine/base/TextureManager.h"
-#include "../../../Engine/2D/ImguiManager.h"
-#include "../../../Engine/base/D3DResourceLeakChecker.h"
-#include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../Particle/EmitterName.h"
-#include "../../../Engine/Math/DeltaTime.h"
-#include "../../../Engine/PostEffect/PostEffect.h"
 
 GameScene::~GameScene()
 {

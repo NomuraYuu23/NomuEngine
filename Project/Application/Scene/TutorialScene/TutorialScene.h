@@ -1,13 +1,8 @@
 #pragma once
 
 #include "../../../Engine/Scene/IScene/IScene.h"
-#include "../../../Engine/Collider/ColliderDebugDraw/ColliderDebugDraw.h"// コライダーデバッグ描画
-#include"../../../Engine/Collision/CollisionManager.h"
-#include "../../../Engine/base/ITextureHandleManager.h"
-#include "../../../Engine/Collision/CollisionManager.h"
 #include "../../AudioManager/GameAudioManager.h"
 #include "../../Skydome/Skydome.h"
-#include "../../../Engine/3D/OutLineData.h"
 #include "../../ShadowManager/ShadowManager.h"
 
 

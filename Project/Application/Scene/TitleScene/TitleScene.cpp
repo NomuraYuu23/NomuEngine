@@ -1,9 +1,4 @@
 #include "TitleScene.h"
-#include "../../../Engine/base/TextureManager.h"
-#include "../../../Engine/2D/ImguiManager.h"
-#include "../../../Engine/GlobalVariables/GlobalVariables.h"
-#include "../../../Engine/Math/Ease.h"
-#include "../../../Engine/PostEffect/PostEffect.h"
 
 TitleScene::~TitleScene()
 {

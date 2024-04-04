@@ -1,26 +1,12 @@
 #pragma once
 
 #include "../../../Engine/Scene/IScene/IScene.h"
-#include "../../../Engine/Collider/ColliderDebugDraw/ColliderDebugDraw.h"// コライダーデバッグ描画
-#include"../../../Engine/Collision/CollisionManager.h"
-#include "../../../Engine/base/ITextureHandleManager.h"
-#include "../../../Engine/Collision/CollisionManager.h"
 #include "../../UI/UIManager.h"
 #include "../../AudioManager/GameAudioManager.h"
 #include "../../Skydome/Skydome.h"
-#include "../../../Engine/3D/OutLineData.h"
 #include "../../ShadowManager/ShadowManager.h"
 
 #include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
-
-#include "../../../Engine/Light/DirectionalLight/DirectionalLight.h" // 平行光源
-#include "../../../Engine/Light/PointLight/PointLightManager.h" // 点光源
-#include "../../../Engine/Light/SpotLight/SpotLightManager.h" // スポット
-
-#include "../../../Engine/Collision2D/Collision2DManager.h"
-#include "../../../Engine/Collision2D/Collision2DDebugDraw.h"
-
-#include "../../../Engine/3D/LargeNumberOfObjects.h"
 
 class GameScene : public IScene
 {

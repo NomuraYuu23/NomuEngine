@@ -4,7 +4,6 @@
 #include "../../AudioManager/TitleAudioManager.h"
 
 #include "../../Skydome/Skydome.h"
-#include "../../../Engine/PostEffect/Glare.h"
 
 class TitleScene : public IScene
 {
@@ -67,9 +66,6 @@ private: // メンバ変数
 
 	//アウトライン仮
 	OutLineData outline_;
-
-	// グレア（テスト）
-	//std::unique_ptr<Glare> glare_;
 
 };
 
