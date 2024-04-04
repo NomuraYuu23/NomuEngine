@@ -25,6 +25,8 @@ ID3D12PipelineState* Model::sPipelineState[PipelineStateName::kPipelineStateName
 PointLightManager* Model::pointLightManager_ = nullptr;
 //	スポットライトマネージャ
 SpotLightManager* Model::spotLightManager_ = nullptr;
+//	平行光源
+DirectionalLight* Model::directionalLight_ = nullptr;
 
 /// <summary>
 /// 静的初期化
@@ -46,11 +48,11 @@ void Model::StaticInitialize(ID3D12Device* device,
 
 }
 
-/// <summary>
-/// 静的前処理
-/// </summary>
-/// <param name="cmdList">描画コマンドリスト</param>
-void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager, SpotLightManager* spotLightManager) {
+void Model::PreDraw(
+	ID3D12GraphicsCommandList* cmdList,
+	PointLightManager* pointLightManager, 
+	SpotLightManager* spotLightManager,
+	DirectionalLight* directionalLight) {
 
 	assert(sCommandList == nullptr);
 
@@ -65,6 +67,7 @@ void Model::PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* point
 
 	pointLightManager_ = pointLightManager;
 	spotLightManager_ = spotLightManager;
+	directionalLight_ = directionalLight;
 
 }
 
@@ -108,7 +111,11 @@ void Model::PreDrawOutLine(ID3D12GraphicsCommandList* cmdList) {
 
 }
 
-void Model::PreManyModelsDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager, SpotLightManager* spotLightManager)
+void Model::PreManyModelsDraw(
+	ID3D12GraphicsCommandList* cmdList, 
+	PointLightManager* pointLightManager, 
+	SpotLightManager* spotLightManager,
+	DirectionalLight* directionalLight)
 {
 
 	assert(sCommandList == nullptr);
@@ -124,6 +131,7 @@ void Model::PreManyModelsDraw(ID3D12GraphicsCommandList* cmdList, PointLightMana
 
 	pointLightManager_ = pointLightManager;
 	spotLightManager_ = spotLightManager;
+	directionalLight_ = directionalLight;
 
 }
 
@@ -136,6 +144,7 @@ void Model::PostDraw() {
 
 	pointLightManager_ = nullptr;
 	spotLightManager_ = nullptr;
+	directionalLight_ = nullptr;
 
 }
 
@@ -226,6 +235,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
 	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
+	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
 
@@ -271,6 +284,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
 	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
+	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
 
@@ -313,6 +330,10 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	// スポットライト
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
+	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
 	}
 
 	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 1);
@@ -364,6 +385,10 @@ void Model::Draw(
 	// スポットライト
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
+	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
 	}
 
 	// ワールドトランスフォーム
@@ -419,6 +444,10 @@ void Model::Draw(
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
 	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
+	}
 
 	// ワールドトランスフォーム
 	sCommandList->SetGraphicsRootDescriptorTable(10, transformationMatrixesHandle);
@@ -471,6 +500,10 @@ void Model::Draw(
 	// スポットライト
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 9);
+	}
+	// 平行光源
+	if (directionalLight_) {
+		directionalLight_->Draw(sCommandList, 6);
 	}
 
 	// ワールドトランスフォーム

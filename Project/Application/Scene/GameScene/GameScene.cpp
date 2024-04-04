@@ -250,10 +250,8 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
 
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
+	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
-	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
 	//3Dオブジェクトはここ
 
 	//Obj
@@ -275,7 +273,7 @@ void GameScene::Draw() {
 
 #pragma region 多量モデル描画
 
-	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get());
+	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
 	//testManyObject_->Draw(camera_);
 

@@ -33,6 +33,7 @@
 #include "OutLineData.h"
 #include "../Light/PointLight/PointLightManager.h"
 #include "../Light/SpotLight/SpotLightManager.h"
+#include "../Light/DirectionalLight/DirectionalLight.h"
 
 #include "Mesh.h"
 #include "ModelNode.h"
@@ -80,16 +81,22 @@ public:
 		const std::array<ID3D12PipelineState*, PipelineStateName::kPipelineStateNameOfCount>& pipelineState);
 
 	/// <summary>
-	/// 静的前処理
+	/// 静的描画前処理（オブジェクト）
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr, SpotLightManager* spotLightManager = nullptr);
+	static void PreDraw(
+		ID3D12GraphicsCommandList* cmdList, 
+		PointLightManager* pointLightManager = nullptr, 
+		SpotLightManager* spotLightManager = nullptr,
+		DirectionalLight* directionalLight = nullptr);
 
 	/// <summary>
-	/// 静的前処理
+	/// 静的描画前処理（パーティクル）
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreParticleDraw(ID3D12GraphicsCommandList* cmdList, const Matrix4x4& viewProjectionMatrix);
+	static void PreParticleDraw(
+		ID3D12GraphicsCommandList* cmdList, 
+		const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
 	/// 静的前処理
@@ -101,7 +108,11 @@ public:
 	/// 静的前処理
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreManyModelsDraw(ID3D12GraphicsCommandList* cmdList, PointLightManager* pointLightManager = nullptr, SpotLightManager* spotLightManager = nullptr);
+	static void PreManyModelsDraw(
+		ID3D12GraphicsCommandList* cmdList,
+		PointLightManager* pointLightManager = nullptr,
+		SpotLightManager* spotLightManager = nullptr,
+		DirectionalLight* directionalLight = nullptr);
 
 
 	/// <summary>
@@ -113,7 +124,11 @@ public:
 	/// 3Dモデル生成
 	/// </summary>
 	/// <returns></returns>
-	static Model* Create(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager);
+	static Model* Create(
+		const std::string& directoryPath, 
+		const std::string& filename, 
+		DirectXCommon* dxCommon, 
+		ITextureHandleManager* textureHandleManager);
 
 private:
 
@@ -131,6 +146,8 @@ private:
 	static PointLightManager* pointLightManager_;
 	//	スポットライトマネージャ
 	static SpotLightManager* spotLightManager_;
+	//	平行光源
+	static DirectionalLight* directionalLight_;
 
 public:
 

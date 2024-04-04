@@ -93,7 +93,7 @@ private:
 	std::unique_ptr<Model> skydomeModel_;
 
 	//アウトライン仮
-	OutLineData outline_;;
+	OutLineData outline_;
 
 	//影
 	//std::unique_ptr<ShadowManager> shadowManager_;
