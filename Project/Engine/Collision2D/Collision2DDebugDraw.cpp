@@ -185,6 +185,11 @@ void Collision2DDebugDraw::Draw(ID3D12GraphicsCommandList* cmdList)
 	//RootSignatureを設定。
 	commandList_->SetPipelineState(pipelineState_);//PS0を設定
 	commandList_->SetGraphicsRootSignature(rootSignature_);
+
+	// SRV
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	commandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	//形状を設定。PS0に設定しているものとは別。
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

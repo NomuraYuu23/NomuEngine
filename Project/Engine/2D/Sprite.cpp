@@ -47,6 +47,11 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* cmdList) {
 	//RootSignatureを設定。
 	sCommandList->SetPipelineState(sPipelineState);//PS0を設定
 	sCommandList->SetGraphicsRootSignature(sRootSignature);
+
+	// SRV
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	sCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	//形状を設定。PS0に設定しているものとは別。
 	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
