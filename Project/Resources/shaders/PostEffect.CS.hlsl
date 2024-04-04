@@ -95,53 +95,42 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
-float32_t Gauss(float32_t x, float32_t y, float32_t sigma) {
+float32_t Gauss(float32_t i, float32_t sigma) {
 
-	return 1.0f / (2.0f * PI * sigma * sigma) * exp(-(x * x + y * y) / (2.0f * sigma * sigma));
+	return 1.0f / (2.0f * PI * sigma * sigma) * exp(-(i * i) / (2.0f * sigma * sigma));
 
 }
 
-void GaussianBlur(float32_t2 index) {
+void GaussianBlur(float32_t2 index, float32_t2 dir) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
 
 	// 一時的なインデックス
 	float32_t2 indexTmp = { 0.0f,0.0f };
-	
+
 	// 重み
 	float32_t weight = 0.0f;
 
 	// 重み合計
 	float32_t weightSum = 0.0f;
 
-	for (int32_t x = -gComputeConstants.kernelSize / 2; x < gComputeConstants.kernelSize / 2; ++x) {
+	for (int32_t i = -gComputeConstants.kernelSize / 2; i < gComputeConstants.kernelSize / 2; i += 2) {
 
-		for (int32_t y = -gComputeConstants.kernelSize / 2; y < gComputeConstants.kernelSize / 2; ++y) {
+		// インデックス
+		indexTmp = index;
 
-			// インデックス
-			indexTmp = index;
-			
-			indexTmp.x += float32_t(x);
-			//if (indexTmp.x < 0.0f || indexTmp.x > gComputeConstants.threadIdTotalX) {
-			//	continue;
-			//}
-			
-			indexTmp.y += float32_t(y);
-			//if (indexTmp.y < 0.0f || indexTmp.y > gComputeConstants.threadIdTotalY) {
-			//	continue;
-			//}
+		indexTmp.x += (float32_t(i) + 0.5f) * dir.x;
+		indexTmp.y += (float32_t(i) + 0.5f) * dir.y;
 
-			// 重み確認
-			weight = Gauss(float32_t(x), float32_t(y), gComputeConstants.sigma);
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
 
-			// outputに加算
-			output += sourceImageR[indexTmp] * weight;
+		// outputに加算
+		output += sourceImageR[indexTmp] * weight;
 
-			// 重みの合計に加算
-			weightSum += weight;
-
-		}
+		// 重みの合計に加算
+		weightSum += weight;
 	}
 
 	// 重みの合計分割る
@@ -153,13 +142,26 @@ void GaussianBlur(float32_t2 index) {
 }
 
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainGaussianBlur(uint32_t3 dispatchId : SV_DispatchThreadID)
+void mainGaussianBlurHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 {
 
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		GaussianBlur(dispatchId.xy);
+		GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
+
+	}
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		GaussianBlur(dispatchId.xy, float32_t2(0.0f, 1.0f));
 
 	}
 

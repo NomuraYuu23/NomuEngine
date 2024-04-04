@@ -37,7 +37,8 @@ public: // サブクラス
 		kPipelineIndexCopyCS, // コピー
 		kPipelineIndexClesrCS, // クリア
 		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
-		kPipelineIndexGaussianBlur, // ガウスブラー
+		kPipelineIndexGaussianBlurHorizontal, // ガウスブラー水平
+		kPipelineIndexGaussianBlurVertical, // ガウスブラー垂直
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -49,7 +50,8 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainCopy"}, // コピー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainClear"}, // クリア
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlur"}, // ガウスブラー
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
 	};
 	
 	// 画像の幅
@@ -167,6 +169,9 @@ private: // 変数
 
 	// 編集する画像
 	std::unique_ptr<TextureUAV> editTextures_[8];
+
+	// 内部編集画像
+	std::unique_ptr<TextureUAV> internalEditTextures_;
 
 	//computeParameters用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;

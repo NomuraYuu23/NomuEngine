@@ -53,6 +53,12 @@ void PostEffect::Initialize()
 			kTextureHeight);
 	}
 
+	internalEditTextures_ = std::make_unique<TextureUAV>();
+	internalEditTextures_->Initialize(
+		device_,
+		kTextureWidth,
+		kTextureHeight);
+
 }
 
 void PostEffect::CopyCommand(
@@ -231,9 +237,6 @@ void PostEffect::GaussianBlurCommand(
 
 	// ルートシグネチャ
 	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlur].Get());
-
 	// 定数設定
 	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
 	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
@@ -245,20 +248,32 @@ void PostEffect::GaussianBlurCommand(
 	computeParametersMap_->kernelSize = kernelSize; // カーネルサイズ
 	computeParametersMap_->sigma = sigma; // 標準偏差
 
-	// バッファを送る
-
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ガウスブラーを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
 	// ディスパッチ数
 	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
 	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
 	uint32_t z = 1;
 
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// ガウスブラーを掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
+	// 編集する画像セット
+	internalEditTextures_->SetRootDescriptorTable(commandList_, 3);
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// ガウスブラーを掛ける画像をセット
+	internalEditTextures_->SetRootDescriptorTable(commandList_, 1);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
 	commandList_->Dispatch(x, y, z);
 
