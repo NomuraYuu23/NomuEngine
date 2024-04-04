@@ -3,6 +3,7 @@
 #include "../../../Engine/2D/ImguiManager.h"
 #include "../../../Engine/GlobalVariables/GlobalVariables.h"
 #include "../../../Engine/Math/Ease.h"
+#include "../../../Engine/PostEffect/PostEffect.h"
 
 TitleScene::~TitleScene()
 {
@@ -40,6 +41,12 @@ void TitleScene::Initialize()
 	//アウトライン
 	outline_.Initialize();
 	outline_.Map();
+
+	//glare_ = std::make_unique<Glare>();
+	//std::array<uint32_t, Glare::kImageForGlareIndexOfCount> test;
+	//test[0] = TextureManager::GetInstance()->Load("Resources/postEffect/zp800x800.png",dxCommon_, textureHandleManager_.get());
+	//glare_->Initialize(test);
+
 }
 
 void TitleScene::Update()
@@ -107,6 +114,24 @@ void TitleScene::Draw()
 	Sprite::PostDraw();
 
 #pragma endregion
+
+	renderTargetTexture_->ChangePixelShaderResource(0);
+	//glare_->Execution(
+	//	renderTargetTexture_->GetSrvGPUHandle(0),
+	//	0.2f,
+	//	0.2f,
+	//	Glare::kImageForGlareIndexHalo,
+	//	dxCommon_->GetCommadList());
+	
+	PostEffect::GetInstance()->GaussianBlurCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		7,
+		3.0f,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

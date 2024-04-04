@@ -26,7 +26,7 @@ public:
 		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 		// シェーダーリソースビューのハンドル(GPU)
 		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-		//  DSVのインデックス
+		//  SRVのインデックス
 		uint32_t indexDescriptorHeap;
 		//名前
 		std::string name;
@@ -84,6 +84,14 @@ public:
 	/// <param name="rootParamIndex">ルートパラメータ番号</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
+
+	/// <summary>
+	/// ディスクリプタテーブルをセット
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="rootParamIndex">ルートパラメータ番号</param>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	void SetComputeRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
 
 private:
 	TextureManager() = default;

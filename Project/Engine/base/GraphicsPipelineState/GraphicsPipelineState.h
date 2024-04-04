@@ -84,18 +84,6 @@ private: // 以下パイプラインの変数やenum
 	static ID3D12Device* sDevice_;
 
 	/// <summary>
-	/// シェーダーコンパイル用
-	/// </summary>
-	struct CompileShaderStruct {
-		IDxcUtils* dxcUtils = nullptr;
-		IDxcCompiler3* dxcCompiler = nullptr;
-		IDxcIncludeHandler* includeHandler = nullptr;
-	};
-
-	// シェーダーコンパイル用
-	static CompileShaderStruct compileShaderStruct_;
-
-	/// <summary>
 	/// PSO用
 	/// </summary>
 	struct CreatePSODesc {
@@ -115,11 +103,6 @@ private: // 以下パイプラインの変数やenum
 	};
 
 private: // パイプラインステートオブジェクト作成
-
-	/// <summary>
-	/// dxcCompilerを初期化
-	/// </summary>
-	static void DxcCompilerInitialize();
 
 	/// <summary>
 	/// RootSignature設定
@@ -162,36 +145,10 @@ private: // パイプラインステートオブジェクト作成
 	static D3D12_RASTERIZER_DESC ResiterzerStateSetting(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 
 	/// <summary>
-	/// Shaderをコンパイルする
-	/// </summary>
-	/// <param name="filePath">CompilerするShanderファイルへのパス</param>
-	/// <param name="profile"Compilenに使用するProfile></param>
-	/// <returns></returns>
-	static IDxcBlob* CompileShader(
-		const std::wstring& filePath,
-		const wchar_t* profile);
-
-	/// <summary>
 	/// PSOを生成 
 	/// </summary>
 	/// <param name="createPSODesc_">作るための引数</param>
 	static void CreatePSO(const CreatePSODesc& createPSODesc_);
-
-private: // その他の関数
-
-	/// <summary>
-	/// 文字列のコンバータ
-	/// </summary>
-	/// <param name="str"></param>
-	/// <returns></returns>
-	static std::wstring ConvertString(const std::string& str);
-	static std::string ConvertString(const std::wstring& str);
-
-	/// <summary>
-	/// ログ
-	/// </summary>
-	/// <param name="message"></param>
-	static void Log(const std::string& message);
 
 private: // シングルトン
 

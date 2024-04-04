@@ -12,6 +12,7 @@
 #include "../Math/Matrix4x4.h"
 #include "Log.h"
 #include "GraphicsPipelineState/GraphicsPipelineState.h"
+#include "../base/CompileShader.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -45,6 +46,10 @@ void DirectXCommon::Initialize(
 	// DXGIデバイス初期化
 	dxgiDevice_ = DXGIDevice::GetInstance();
 	dxgiDevice_->Initialize();
+
+
+	// コンパイルシェーダー
+	CompileShader::Initialize(dxgiDevice_->GetDevice());
 
 	// ディスクリプタヒープ初期化
 	RTVDescriptorHerpManager::Initialize(dxgiDevice_->GetDevice());

@@ -148,4 +148,8 @@ private:
 	std::unique_ptr<LargeNumberOfObjects> testManyObject_;
 	std::unique_ptr<Model> testModel_;
 
+
+	int32_t kernelSize = 7;
+	float sigma = 3.0f;
+	
 };
