@@ -18,21 +18,15 @@ struct ComputeParameters {
 // 定数データ
 ConstantBuffer<ComputeParameters> gComputeConstants : register(b0);
 // ソースR
-Texture2D<float32_t4> sourceImageR : register(t0);
+Texture2D<float32_t4> sourceImage0 : register(t0);
 // ソースI
-Texture2D<float32_t4> sourceImageI : register(t1);
+Texture2D<float32_t4> sourceImage1 : register(t1);
 // 行先R
-RWTexture2D<float32_t4> destinationImageR : register(u0);
-// 行先I
-RWTexture2D<float32_t4> destinationImageI : register(u1);
-// 行先R1
-RWTexture2D<float32_t4> destinationImageR1 : register(u2);
-// 行先I1
-RWTexture2D<float32_t4> destinationImageI1 : register(u3);
+RWTexture2D<float32_t4> destinationImage0 : register(u0);
 
 void Copy(float32_t2 index) {
 
-	destinationImageR[index] = sourceImageR[index];
+	destinationImage0[index] = sourceImage0[index];
 
 }
 
@@ -51,7 +45,7 @@ void mainCopy(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 void Clear(float32_t2 index) {
 
-	destinationImageR[index] = gComputeConstants.clearColor;
+	destinationImage0[index] = gComputeConstants.clearColor;
 
 }
 
@@ -70,7 +64,7 @@ void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 void BinaryThreshold(float32_t2 index) {
 
-	float32_t3 input = sourceImageR[index].rgb;
+	float32_t3 input = sourceImage0[index].rgb;
 
 	float32_t3 col = float32_t3(0.0, 0.0, 0.0);
 
@@ -78,7 +72,7 @@ void BinaryThreshold(float32_t2 index) {
 		col = float32_t3(1.0, 1.0, 1.0);
 	}
 
-	destinationImageR[index] = float32_t4(col, 1.0f);
+	destinationImage0[index] = float32_t4(col, 1.0f);
 
 }
 
@@ -127,7 +121,7 @@ void GaussianBlur(float32_t2 index, float32_t2 dir) {
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
 
 		// outputに加算
-		output += sourceImageR[indexTmp] * weight;
+		output += sourceImage0[indexTmp] * weight;
 
 		// 重みの合計に加算
 		weightSum += weight;
@@ -137,7 +131,7 @@ void GaussianBlur(float32_t2 index, float32_t2 dir) {
 	output *= (1.0f / weightSum);
 
 	// 代入
-	destinationImageR[index] = output;
+	destinationImage0[index] = output;
 
 }
 
@@ -192,7 +186,7 @@ void Bloom(float32_t2 index, float32_t2 dir) {
 		indexTmp.x += (float32_t(i) + 0.5f) * dir.x;
 		indexTmp.y += (float32_t(i) + 0.5f) * dir.y;
 
-		input = sourceImageR[indexTmp];
+		input = sourceImage0[indexTmp];
 
 		// 重み確認
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
@@ -212,7 +206,7 @@ void Bloom(float32_t2 index, float32_t2 dir) {
 	output *= (1.0f / weightSum);
 
 	// 代入
-	destinationImageR[index] = output;
+	destinationImage0[index] = output;
 
 }
 
@@ -244,7 +238,7 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 void BrightnessThreshold(float32_t2 index) {
 
-	float32_t4 input = sourceImageR[index];
+	float32_t4 input = sourceImage0[index];
 
 	float32_t4 col = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -252,7 +246,7 @@ void BrightnessThreshold(float32_t2 index) {
 		col = input;
 	}
 
-	destinationImageR[index] = col;
+	destinationImage0[index] = col;
 
 }
 
@@ -271,16 +265,16 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 void Add(float32_t2 index) {
 
-	float3 input1 = sourceImageR[index].rgb;
-	float3 input2 = sourceImageI[index].rgb;
+	float3 input1 = sourceImage0[index].rgb;
+	float3 input2 = sourceImage1[index].rgb;
 
-	float32_t alphaSum = sourceImageR[index].a + sourceImageI[index].a;
-	float32_t a1 = sourceImageR[index].a / alphaSum;
-	float32_t a2 = sourceImageI[index].a / alphaSum;
+	float32_t alphaSum = sourceImage0[index].a + sourceImage1[index].a;
+	float32_t a1 = sourceImage0[index].a / alphaSum;
+	float32_t a2 = sourceImage1[index].a / alphaSum;
 
 	float3 col = input1 * a1 + input2 * a2;
 
-	destinationImageR[index] = float4(col, min(alphaSum, 1.0f));
+	destinationImage0[index] = float4(col, min(alphaSum, 1.0f));
 
 }
 
