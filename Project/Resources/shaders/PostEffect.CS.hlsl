@@ -265,16 +265,24 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 void Add(float32_t2 index) {
 
-	float3 input1 = sourceImage0[index].rgb;
-	float3 input2 = sourceImage1[index].rgb;
+	float32_t3 input1 = sourceImage0[index].rgb;
+	float32_t3 input2 = sourceImage1[index].rgb;
 
 	float32_t alphaSum = sourceImage0[index].a + sourceImage1[index].a;
-	float32_t a1 = sourceImage0[index].a / alphaSum;
-	float32_t a2 = sourceImage1[index].a / alphaSum;
 
-	float3 col = input1 * a1 + input2 * a2;
+	if (alphaSum == 0.0f) {
+		float32_t3 col = sourceImage0[index].rgb;
+		destinationImage0[index] = float32_t4(col, 1.0f);
+	}
+	else {
+		float32_t a1 = sourceImage0[index].a / alphaSum;
+		float32_t a2 = sourceImage1[index].a / alphaSum;
 
-	destinationImage0[index] = float4(col, min(alphaSum, 1.0f));
+		float32_t3 col = input1 * a1 + input2 * a2;
+		destinationImage0[index] = float32_t4(col, min(alphaSum, 1.0f));
+	}
+
+	//destinationImage0[index] = float32_t4(col, min(alphaSum, 1.0f));
 
 }
 

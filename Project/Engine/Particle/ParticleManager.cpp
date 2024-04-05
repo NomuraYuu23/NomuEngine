@@ -140,7 +140,7 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 {
 
 	// 全軸
-	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
+	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 0.0f, 0.0f });
 	billBoardMatrix_ = Matrix4x4::Multiply(backToFrontMatrix, camera.GetTransformMatrix());
 	billBoardMatrix_.m[3][0] = 0.0f;
 	billBoardMatrix_.m[3][1] = 0.0f;
