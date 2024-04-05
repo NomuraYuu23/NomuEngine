@@ -15,7 +15,6 @@ public: // サブクラス
 	/// </summary>
 	struct ComputeParameters
 	{
-
 		uint32_t threadIdOffsetX; // スレッドのオフセットX
 		uint32_t threadIdTotalX; // スレッドの総数X
 		uint32_t threadIdOffsetY; // スレッドのオフセットY
@@ -27,7 +26,6 @@ public: // サブクラス
 		float threshold; // 明度のしきい値
 		int32_t kernelSize; // カーネルサイズ
 		float sigma; // 標準偏差
-
 	};
 
 	/// <summary>
@@ -42,23 +40,6 @@ public: // サブクラス
 		kPipelineIndexBrightnessThreshold, // 明度分け
 		kPipelineIndexAdd, // 加算
 		kPipelineIndexOfCount // 数を数える用
-	};
-
-	/// <summary>
-	/// 編集するテクスチャ情報
-	/// </summary>
-	struct EditTextureInformation {
-		uint32_t top; // 上
-		uint32_t bottom; // 下
-		uint32_t left; // 左
-		uint32_t right; // 右
-	};
-
-	/// スレッドグループカウント
-	struct ThreadGroupCount {
-		uint32_t x; // x
-		uint32_t y; // y
-		uint32_t z; // z
 	};
 
 private: // 定数
@@ -183,16 +164,6 @@ private: // 関数
 	/// </summary>
 	void CreatePipline();
 
-	/// <summary>
-	/// 編集するテクスチャ情報の初期化
-	/// </summary>
-	void EditTextureInformationInitialize();
-
-	/// <summary>
-	/// スレッド数セット
-	/// </summary>
-	void SetThreadId();
-
 public: // アクセッサ
 
 	/// <summary>
@@ -244,21 +215,6 @@ private: // 変数
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	// シェーダー情報
 	std::array<Microsoft::WRL::ComPtr<IDxcBlob>, kPipelineIndexOfCount> shaders_;
-
-	// お試し 編集するテクスチャ情報
-	// EditTextureInformation用のリソースを作る。
-	Microsoft::WRL::ComPtr<ID3D12Resource> editTextureInformationBuff_;
-	// EditTextureInformationのマップ
-	EditTextureInformation* editTextureInformationMap_;
-	// シェーダーリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE editTextureInformationHandleCPU_;
-	// シェーダーリソースビューのハンドル(GPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE editTextureInformationHandleGPU_;
-	//  SRVのインデックス
-	uint32_t editTextureInformationIndexDescriptorHeap_;
-
-	// スレッドグループカウント
-	ThreadGroupCount threadGroupCount_;
 
 private: // シングルトン
 	PostEffect() = default;
