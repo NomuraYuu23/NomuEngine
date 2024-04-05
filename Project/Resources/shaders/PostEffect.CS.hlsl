@@ -254,6 +254,12 @@ void BrightnessThreshold(float32_t2 index) {
 
 	if ((input.r + input.g + input.b) / 3.0f > gComputeConstants.threshold) {
 		col = input;
+
+		//gEditTextureInformation[0].top = min(gEditTextureInformation[0].top, int32_t(index.y));
+		//gEditTextureInformation[0].bottom = max(gEditTextureInformation[0].bottom, int32_t(index.y));
+		//gEditTextureInformation[0].left = min(gEditTextureInformation[0].left, int32_t(index.x));
+		//gEditTextureInformation[0].right = max(gEditTextureInformation[0].right, int32_t(index.x));
+
 	}
 
 	destinationImage0[index] = col;
@@ -270,8 +276,6 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 		BrightnessThreshold(dispatchId.xy);
 
 	}
-
-	gEditTextureInformation[0].top = 1;;
 
 }
 

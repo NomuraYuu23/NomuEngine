@@ -193,6 +193,16 @@ private: // 関数
 	/// </summary>
 	void SetThreadId();
 
+	/// <summary>
+	/// 編集するテクスチャ情報のリセット
+	/// </summary>
+	void EditTextureInformationReset();
+
+	/// <summary>
+	/// 編集するテクスチャ情報の実行前処理
+	/// </summary>
+	void EditTextureInformationPreDispatch();
+
 public: // アクセッサ
 
 	/// <summary>

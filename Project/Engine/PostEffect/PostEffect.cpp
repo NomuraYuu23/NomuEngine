@@ -85,6 +85,9 @@ void PostEffect::CopyCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
 
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
 	// スレッド数セット
 	SetThreadId();
 
@@ -126,6 +129,9 @@ void PostEffect::ClearCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexClesrCS].Get());
 
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
 	// スレッド数セット
 	SetThreadId();
 
@@ -166,11 +172,13 @@ void PostEffect::BinaryThresholdCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBinaryThresholdCS].Get());
 
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
 	// スレッド数セット
 	SetThreadId();
 
 	// バッファを送る
-
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// 二値化する画像をセット
@@ -207,6 +215,9 @@ void PostEffect::GaussianBlurCommand(
 	// ルートシグネチャ
 	commandList_->SetComputeRootSignature(rootSignature_.Get());
 	
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
 	// スレッド数セット
 	SetThreadId();
 
@@ -263,8 +274,14 @@ void PostEffect::BloomCommand(
 	// ルートシグネチャ
 	commandList_->SetComputeRootSignature(rootSignature_.Get());
 
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
 	// スレッド数セット
 	SetThreadId();
+
+	// 編集するテクスチャ情報の実行前処理
+	EditTextureInformationPreDispatch();
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBrightnessThreshold].Get());
@@ -284,6 +301,9 @@ void PostEffect::BloomCommand(
 		threadGroupCount_.x, 
 		threadGroupCount_.y, 
 		threadGroupCount_.z);
+
+	// スレッド数セット
+	SetThreadId();
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
@@ -314,6 +334,12 @@ void PostEffect::BloomCommand(
 		threadGroupCount_.x,
 		threadGroupCount_.y,
 		threadGroupCount_.z);
+
+	// 編集するテクスチャ情報のリセット
+	EditTextureInformationReset();
+
+	// スレッド数セット
+	SetThreadId();
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexAdd].Get());
@@ -579,5 +605,25 @@ void PostEffect::SetThreadId()
 		+ kNumThreadY - 1) / kNumThreadY;
 	threadGroupCount_.z = 1;
 
+
+}
+
+void PostEffect::EditTextureInformationReset()
+{
+
+	editTextureInformationMap_->top = 0;
+	editTextureInformationMap_->bottom = kTextureHeight;
+	editTextureInformationMap_->left = 0;
+	editTextureInformationMap_->right = kTextureWidth;
+
+}
+
+void PostEffect::EditTextureInformationPreDispatch()
+{
+
+	editTextureInformationMap_->top = kTextureHeight;
+	editTextureInformationMap_->bottom = 0;
+	editTextureInformationMap_->left = kTextureWidth;
+	editTextureInformationMap_->right = 0;
 
 }
