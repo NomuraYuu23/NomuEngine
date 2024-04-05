@@ -33,7 +33,12 @@ void PostEffect::Initialize()
 	computeParametersMap_->threshold = 0.8f; // しきい値
 
 	computeParametersMap_->kernelSize = 7; // カーネルサイズ
-	computeParametersMap_->sigma = 20.0f; // 標準偏差
+	computeParametersMap_->sigma = 1.0f; // 標準偏差
+
+	threadGroupCount_ = { 1,1,1 };
+
+	// 編集するテクスチャ情報の初期化
+	EditTextureInformationInitialize();
 
 	// ルートシグネチャ
 	CreateRootSignature();
@@ -51,9 +56,6 @@ void PostEffect::Initialize()
 			device_,
 			kTextureWidth,
 			kTextureHeight);
-	}
-
-	for (uint32_t i = 0; i < kNumEditTexture; ++i) {
 		internalEditTextures_[i] = std::make_unique<TextureUAV>();
 		internalEditTextures_[i]->Initialize(
 			device_,
@@ -83,16 +85,10 @@ void PostEffect::CopyCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
 
-	// 定数設定
-	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
-	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
-	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
-	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
-	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
-	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
+	// スレッド数セット
+	SetThreadId();
 
 	// バッファを送る
-
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// コピーする画像
@@ -100,13 +96,11 @@ void PostEffect::CopyCommand(
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -115,8 +109,7 @@ void PostEffect::CopyCommand(
 
 void PostEffect::ClearCommand(
 	ID3D12GraphicsCommandList* commandList,
-	uint32_t editTextureIndex,
-	const Vector4& color)
+	uint32_t editTextureIndex)
 {
 
 	// インデックスが超えているとエラー
@@ -133,30 +126,20 @@ void PostEffect::ClearCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexClesrCS].Get());
 
-	// 定数設定
-	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
-	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
-	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
-	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
-	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
-	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
-
-	computeParametersMap_->clearColor = color; // クリアするときの色
+	// スレッド数セット
+	SetThreadId();
 
 	// バッファを送る
-
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -166,7 +149,6 @@ void PostEffect::ClearCommand(
 void PostEffect::BinaryThresholdCommand(
 	ID3D12GraphicsCommandList* commandList,
 	uint32_t editTextureIndex,
-	float threshold,
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle)
 {
 
@@ -184,15 +166,8 @@ void PostEffect::BinaryThresholdCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBinaryThresholdCS].Get());
 
-	// 定数設定
-	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
-	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
-	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
-	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
-	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
-	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
-
-	computeParametersMap_->threshold = threshold; // しきい値
+	// スレッド数セット
+	SetThreadId();
 
 	// バッファを送る
 
@@ -203,13 +178,11 @@ void PostEffect::BinaryThresholdCommand(
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -219,16 +192,11 @@ void PostEffect::BinaryThresholdCommand(
 void PostEffect::GaussianBlurCommand(
 	ID3D12GraphicsCommandList* commandList,
 	uint32_t editTextureIndex,
-	int32_t kernelSize,
-	float sigma,
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle)
 {
 
 	// インデックスが超えているとエラー
 	assert(editTextureIndex < kNumEditTexture);
-
-	// カーネルサイズ
-	assert(kernelSize > 1);
 
 	// コマンドリスト
 	commandList_ = commandList;
@@ -238,21 +206,9 @@ void PostEffect::GaussianBlurCommand(
 
 	// ルートシグネチャ
 	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// 定数設定
-	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
-	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
-	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
-	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
-	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
-	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
-
-	computeParametersMap_->kernelSize = kernelSize; // カーネルサイズ
-	computeParametersMap_->sigma = sigma; // 標準偏差
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
+	
+	// スレッド数セット
+	SetThreadId();
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
@@ -264,7 +220,10 @@ void PostEffect::GaussianBlurCommand(
 	// 編集する画像セット
 	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
@@ -276,7 +235,10 @@ void PostEffect::GaussianBlurCommand(
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -286,17 +248,11 @@ void PostEffect::GaussianBlurCommand(
 void PostEffect::BloomCommand(
 	ID3D12GraphicsCommandList* commandList, 
 	uint32_t editTextureIndex, 
-	int32_t kernelSize, 
-	float sigma, 
-	float threshold, 
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& bloomGPUHandle)
 {
 
 	// インデックスが超えているとエラー
 	assert(editTextureIndex < kNumEditTexture);
-
-	// カーネルサイズ
-	assert(kernelSize > 1);
 
 	// コマンドリスト
 	commandList_ = commandList;
@@ -306,22 +262,9 @@ void PostEffect::BloomCommand(
 
 	// ルートシグネチャ
 	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// 定数設定
-	computeParametersMap_->threadIdOffsetX = 0; // スレッドのオフセットX
-	computeParametersMap_->threadIdTotalX = kTextureWidth; // スレッドの総数X
-	computeParametersMap_->threadIdOffsetY = 0; // スレッドのオフセットY
-	computeParametersMap_->threadIdTotalY = kTextureHeight; // スレッドの総数Y
-	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
-	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
 
-	computeParametersMap_->threshold = threshold; // しきい値
-	computeParametersMap_->kernelSize = kernelSize; // カーネルサイズ
-	computeParametersMap_->sigma = sigma; // 標準偏差
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
+	// スレッド数セット
+	SetThreadId();
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBrightnessThreshold].Get());
@@ -334,9 +277,13 @@ void PostEffect::BloomCommand(
 	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
 	// 編集する画像セット
 	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
-
+	// 編集するテクスチャ情報
+	commandList_->SetComputeRootDescriptorTable(4, editTextureInformationHandleGPU_);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x, 
+		threadGroupCount_.y, 
+		threadGroupCount_.z);
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
@@ -348,7 +295,10 @@ void PostEffect::BloomCommand(
 	// 編集する画像セット
 	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
@@ -360,7 +310,10 @@ void PostEffect::BloomCommand(
 	// 編集する画像セット
 	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexAdd].Get());
@@ -374,7 +327,10 @@ void PostEffect::BloomCommand(
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 	// 実行
-	commandList_->Dispatch(x, y, z);
+	commandList_->Dispatch(
+		threadGroupCount_.x,
+		threadGroupCount_.y,
+		threadGroupCount_.z);
 	
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -392,29 +348,35 @@ void PostEffect::CreateRootSignature()
 	// ディスクリプタレンジ
 
 	// ソース0
-	D3D12_DESCRIPTOR_RANGE souceReal[1] = {};
-	souceReal[0].BaseShaderRegister = 0;//0から始まる
-	souceReal[0].NumDescriptors = 1;//数は一つ
-	souceReal[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//UAVを使う
-	souceReal[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+	D3D12_DESCRIPTOR_RANGE descriptorRangeSouce0[1] = {};
+	descriptorRangeSouce0[0].BaseShaderRegister = 0;//0から始まる
+	descriptorRangeSouce0[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeSouce0[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SAVを使う
+	descriptorRangeSouce0[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	// ソース1
-	D3D12_DESCRIPTOR_RANGE souceImaginary[1] = {};
-	souceImaginary[0].BaseShaderRegister = 1;//0から始まる
-	souceImaginary[0].NumDescriptors = 1;//数は一つ
-	souceImaginary[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//UAVを使う
-	souceImaginary[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+	D3D12_DESCRIPTOR_RANGE descriptorRangeSouce1[1] = {};
+	descriptorRangeSouce1[0].BaseShaderRegister = 1;//0から始まる
+	descriptorRangeSouce1[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeSouce1[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SAVを使う
+	descriptorRangeSouce1[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
-	// 行き先1
-	D3D12_DESCRIPTOR_RANGE destinationReal0[1] = {};
-	destinationReal0[0].BaseShaderRegister = 0;//0から始まる
-	destinationReal0[0].NumDescriptors = 1;//数は一つ
-	destinationReal0[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
-	destinationReal0[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+	// 行き先
+	D3D12_DESCRIPTOR_RANGE descriptorRangeDestination[1] = {};
+	descriptorRangeDestination[0].BaseShaderRegister = 0;//0から始まる
+	descriptorRangeDestination[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeDestination[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
+	descriptorRangeDestination[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
+	// 編集するテクスチャ情報
+	D3D12_DESCRIPTOR_RANGE descriptorRangeEditTextureInformation[1] = {};
+	descriptorRangeEditTextureInformation[0].BaseShaderRegister = 1;//0から始まる
+	descriptorRangeEditTextureInformation[0].NumDescriptors = 1;//数は一つ
+	descriptorRangeEditTextureInformation[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
+	descriptorRangeEditTextureInformation[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	// ルートパラメータ
-	D3D12_ROOT_PARAMETER rootParameters[7] = {};
+	D3D12_ROOT_PARAMETER rootParameters[5] = {};
 	// 定数バッファ
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
@@ -423,20 +385,26 @@ void PostEffect::CreateRootSignature()
 	// 元画像テクスチャ0
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[1].DescriptorTable.pDescriptorRanges = souceReal;//Tableの中身の配列を指定
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(souceReal);//Tableで利用する数
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeSouce0;//Tableの中身の配列を指定
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeSouce0);//Tableで利用する数
 
 	// 元画像テクスチャ1
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[2].DescriptorTable.pDescriptorRanges = souceImaginary;//Tableの中身の配列を指定
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(souceImaginary);//Tableで利用する数
+	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeSouce1;//Tableの中身の配列を指定
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeSouce1);//Tableで利用する数
 
 	// 行先画像テクスチャ
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[3].DescriptorTable.pDescriptorRanges = destinationReal0;//Tableの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(destinationReal0);//Tableで利用する数
+	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRangeDestination;//Tableの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeDestination);//Tableで利用する数
+
+	// 行先画像テクスチャ
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
+	rootParameters[4].DescriptorTable.pDescriptorRanges = descriptorRangeEditTextureInformation;//Tableの中身の配列を指定
+	rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeEditTextureInformation);//Tableで利用する数
 
 	descriptionRootsignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootsignature.NumParameters = _countof(rootParameters); //配列の長さ
@@ -529,5 +497,87 @@ void PostEffect::CreatePipline()
 		HRESULT hr = device_->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipelineStates_[i]));
 		assert(SUCCEEDED(hr));
 	}
+
+}
+
+void PostEffect::EditTextureInformationInitialize()
+{
+
+	// リソース
+	D3D12_HEAP_PROPERTIES prop{};
+
+	prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	prop.CreationNodeMask = 1;
+	prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	prop.Type = D3D12_HEAP_TYPE_CUSTOM;
+	prop.VisibleNodeMask = 1;
+
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Alignment = 0;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+	resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+	resourceDesc.Height = 1;
+	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.SampleDesc = { 1, 0 };
+	resourceDesc.Width = (sizeof(EditTextureInformation) + 0xff) & ~0xff;
+
+	HRESULT hr = device_->CreateCommittedResource(
+		&prop,
+		D3D12_HEAP_FLAG_NONE,
+		&resourceDesc,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		nullptr,
+		IID_PPV_ARGS(&editTextureInformationBuff_));
+
+	// UAVの作成
+	D3D12_UNORDERED_ACCESS_VIEW_DESC viewDesc{};
+
+	viewDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+	viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+	viewDesc.Buffer.NumElements = 1;
+	viewDesc.Buffer.StructureByteStride = sizeof(EditTextureInformation);
+
+	editTextureInformationHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	editTextureInformationHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	editTextureInformationIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+
+	device_->CreateUnorderedAccessView(
+		editTextureInformationBuff_.Get(),
+		nullptr,
+		&viewDesc,
+		editTextureInformationHandleCPU_);
+
+	// リソースのマップ
+	editTextureInformationBuff_->Map(0, nullptr, reinterpret_cast<void**>(&editTextureInformationMap_));
+
+	editTextureInformationMap_->top = 0;
+	editTextureInformationMap_->bottom = kTextureHeight;
+	editTextureInformationMap_->left = 0;
+	editTextureInformationMap_->right = kTextureWidth;
+
+}
+
+void PostEffect::SetThreadId()
+{
+
+	// 定数設定
+	computeParametersMap_->threadIdOffsetX = editTextureInformationMap_->left; // スレッドのオフセットX
+	computeParametersMap_->threadIdTotalX = editTextureInformationMap_->right; // スレッドの総数X
+	computeParametersMap_->threadIdOffsetY = editTextureInformationMap_->top; // スレッドのオフセットY
+	computeParametersMap_->threadIdTotalY = editTextureInformationMap_->bottom; // スレッドの総数Y
+
+	// ディスパッチ数
+	threadGroupCount_.x = (
+		(computeParametersMap_->threadIdTotalX - computeParametersMap_->threadIdOffsetX)
+		+ kNumThreadX - 1) / kNumThreadX;
+	threadGroupCount_.y = (
+		(computeParametersMap_->threadIdTotalY - computeParametersMap_->threadIdOffsetY)
+		+ kNumThreadY - 1) / kNumThreadY;
+	threadGroupCount_.z = 1;
+
 
 }

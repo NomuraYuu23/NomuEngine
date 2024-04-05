@@ -145,6 +145,11 @@ void GameScene::Initialize() {
 
 	testManyObject_->Update();
 
+	PostEffect::GetInstance()->SetClearColor({ 0.8f, 0.8f, 0.0f, 1.0f });
+	PostEffect::GetInstance()->SetThreshold(0.4f);
+	PostEffect::GetInstance()->SetKernelSize(33);
+	PostEffect::GetInstance()->SetSigma(30.0f);
+
 }
 
 /// <summary>
@@ -351,9 +356,6 @@ void GameScene::Draw() {
 	PostEffect::GetInstance()->BloomCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		kernelSize,
-		sigma,
-		0.2f,
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);

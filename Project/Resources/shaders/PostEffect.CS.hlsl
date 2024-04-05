@@ -15,14 +15,24 @@ struct ComputeParameters {
 	float32_t sigma; // 標準偏差
 };
 
+// 編集するテクスチャ情報
+struct EditTextureInformation {
+	uint32_t top; // 上
+	uint32_t bottom; // 下
+	uint32_t left; // 左
+	uint32_t right; // 右
+};
+
 // 定数データ
 ConstantBuffer<ComputeParameters> gComputeConstants : register(b0);
-// ソースR
+// ソース0
 Texture2D<float32_t4> sourceImage0 : register(t0);
-// ソースI
+// ソース1
 Texture2D<float32_t4> sourceImage1 : register(t1);
-// 行先R
+// 行先
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
+// 編集するテクスチャ情報
+RWStructuredBuffer<EditTextureInformation> gEditTextureInformation : register(u1);
 
 void Copy(float32_t2 index) {
 
@@ -260,6 +270,8 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 		BrightnessThreshold(dispatchId.xy);
 
 	}
+
+	gEditTextureInformation[0].top = 1;;
 
 }
 
