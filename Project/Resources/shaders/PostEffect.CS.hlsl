@@ -271,8 +271,7 @@ void Add(float32_t2 index) {
 	float32_t alphaSum = sourceImage0[index].a + sourceImage1[index].a;
 
 	if (alphaSum == 0.0f) {
-		float32_t3 col = sourceImage0[index].rgb;
-		destinationImage0[index] = float32_t4(col, 1.0f);
+		destinationImage0[index] = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	else {
 		float32_t a1 = sourceImage0[index].a / alphaSum;

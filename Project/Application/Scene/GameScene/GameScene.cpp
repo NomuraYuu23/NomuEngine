@@ -286,6 +286,16 @@ void GameScene::Draw() {
 
 #pragma endregion
 
+	renderTargetTexture_->ChangePixelShaderResource(0);
+
+	PostEffect::GetInstance()->BloomCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	
 #pragma region 線描画
 	// 前景スプライト描画前処理
 	DrawLine::PreDraw(dxCommon_->GetCommadList());
@@ -344,22 +354,6 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
-
-	renderTargetTexture_->ChangePixelShaderResource(0);
-	//glare_->Execution(
-	//	renderTargetTexture_->GetSrvGPUHandle(0),
-	//	0.2f,
-	//	0.2f,
-	//	Glare::kImageForGlareIndexHalo,
-	//	dxCommon_->GetCommadList());
-
-	PostEffect::GetInstance()->BloomCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
-	);
-	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

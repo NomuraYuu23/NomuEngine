@@ -343,7 +343,7 @@ void GraphicsPipelineState::CreateForSwapChain()
 
 	createPSODesc.depthStencilState = DepthStencilStateSetting(
 		true,
-		D3D12_DEPTH_WRITE_MASK_ALL,
+		D3D12_DEPTH_WRITE_MASK_ZERO,
 		D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
 	createPSODesc.inputLayoutDesc = InputLayoutSetting(
