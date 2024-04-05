@@ -281,8 +281,6 @@ void Add(float32_t2 index) {
 		destinationImage0[index] = float32_t4(col, min(alphaSum, 1.0f));
 	}
 
-	//destinationImage0[index] = float32_t4(col, min(alphaSum, 1.0f));
-
 }
 
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
