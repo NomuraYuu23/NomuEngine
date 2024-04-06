@@ -404,6 +404,65 @@ void PostEffect::RTTCorrectionCommand(
 
 }
 
+void PostEffect::MotionBlurCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& motionBlurGPUHandle, 
+	ID3D12Resource* velocityBuff)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexMotionBlur].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 修正する画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
+	// 編集する画像セット
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+	// 速度パラメータ
+	commandList_->SetComputeRootConstantBufferView(4, velocityBuff->GetGPUVirtualAddress());
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBloomAdd].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 加算する画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
+	// 加算する画像をセット
+	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 2);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
 void PostEffect::CreateRootSignature()
 {
 
@@ -428,16 +487,9 @@ void PostEffect::CreateRootSignature()
 	descriptorRangeSouce1[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SAVを使う
 	descriptorRangeSouce1[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
-	// 行き先
-	D3D12_DESCRIPTOR_RANGE descriptorRangeDestination[1] = {};
-	descriptorRangeDestination[0].BaseShaderRegister = 0;//0から始まる
-	descriptorRangeDestination[0].NumDescriptors = 1;//数は一つ
-	descriptorRangeDestination[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
-	descriptorRangeDestination[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
-
 	// 編集するテクスチャ情報
 	D3D12_DESCRIPTOR_RANGE descriptorRangeEditTextureInformation[1] = {};
-	descriptorRangeEditTextureInformation[0].BaseShaderRegister = 1;//0から始まる
+	descriptorRangeEditTextureInformation[0].BaseShaderRegister = 0;//0から始まる
 	descriptorRangeEditTextureInformation[0].NumDescriptors = 1;//数は一つ
 	descriptorRangeEditTextureInformation[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
 	descriptorRangeEditTextureInformation[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
@@ -464,14 +516,13 @@ void PostEffect::CreateRootSignature()
 	// 行先画像テクスチャ
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRangeDestination;//Tableの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeDestination);//Tableで利用する数
+	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRangeEditTextureInformation;//Tableの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeEditTextureInformation);//Tableで利用する数
 
-	// 行先画像テクスチャ
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[4].DescriptorTable.pDescriptorRanges = descriptorRangeEditTextureInformation;//Tableの中身の配列を指定
-	rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeEditTextureInformation);//Tableで利用する数
+	// 速度バッファ
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
+	rootParameters[4].Descriptor.ShaderRegister = 1;                  //レジスタ番号1とバインド
 
 	descriptionRootsignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootsignature.NumParameters = _countof(rootParameters); //配列の長さ

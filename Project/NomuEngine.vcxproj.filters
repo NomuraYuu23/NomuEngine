@@ -987,6 +987,9 @@
     <ClInclude Include="Engine\3D\LocalMatrix.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Velocity2DData.h">
+      <Filter>Engine\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

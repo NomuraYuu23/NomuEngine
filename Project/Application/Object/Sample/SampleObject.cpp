@@ -39,14 +39,14 @@ void SampleObject::Initialize(Model* model)
 		initScalings[i] = { 1.0f, 1.0f, 1.0f };
 	}
 
-	animation_.Initialize(
-		model_->GetNodeAnimationData(),
-		initPositions,
-		initRotations,
-		initScalings,
-		worldtransform_.GetNodeNames());
+	//animation_.Initialize(
+	//	model_->GetNodeAnimationData(),
+	//	initPositions,
+	//	initRotations,
+	//	initScalings,
+	//	worldtransform_.GetNodeNames());
 
-	animation_.StartAnimation(0, true);
+	//animation_.StartAnimation(0, true);
 	//animation_.startAnimation(1, true);
 
 	enableLighting_ = 0;
@@ -72,6 +72,14 @@ void SampleObject::Initialize(Model* model)
 	//Quaternion angularAcceleration; // 角加速度
 	rigidBody_.angularMomentum = { 0.0f,0.0f,0.0f }; // 角運動量
 
+
+	velocity2DDataBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(Velocity2DData) + 0xff) & ~0xff));
+	velocity2DDataBuff_->Map(0, nullptr, reinterpret_cast<void**>(&velocity2DDataMap_));
+
+	velocity2DDataMap_->velocity = { 1.0f, 0.0f };
+
+	velocity_ = { 1.0f,0.0f,0.0f };
+
 }
 
 void SampleObject::Update()
@@ -79,7 +87,7 @@ void SampleObject::Update()
 
 	ApplyGlobalVariables();
 
-	worldtransform_.SetNodeLocalMatrix(animation_.AnimationUpdate());
+	//worldtransform_.SetNodeLocalMatrix(animation_.AnimationUpdate());
 
 	//rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
 
@@ -105,6 +113,10 @@ void SampleObject::Update()
 void SampleObject::Draw(BaseCamera camera)
 {
 
+	Vector3 velocity = Matrix4x4::TransformNormal(velocity_, camera.GetViewMatrix());
+
+	velocity2DDataMap_->velocity = { velocity.x, velocity.y };
+
 	model_->Draw(worldtransform_, camera, material_.get());
 
 }
@@ -126,6 +138,9 @@ void SampleObject::ImGuiDraw()
 	ImGui::RadioButton("BlinnPhongReflection", &enableLighting_, EnableLighting::BlinnPhongReflection);
 
 	ImGui::DragFloat("shininess", &shininess_);
+
+	ImGui::Text("velocity");
+	ImGui::DragFloat3("value", &velocity_.x, 0.01f);
 
 	ImGui::End();
 

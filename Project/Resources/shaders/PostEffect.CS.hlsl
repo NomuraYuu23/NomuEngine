@@ -17,6 +17,15 @@ struct ComputeParameters {
 
 // 定数データ
 ConstantBuffer<ComputeParameters> gComputeConstants : register(b0);
+
+// 速度データ
+struct VelocityParameters {
+	float32_t2 values; // 値
+};
+
+// 速度データ
+ConstantBuffer<VelocityParameters> gVelocityConstants: register(b1);
+
 // ソース0
 Texture2D<float32_t4> sourceImage0 : register(t0);
 // ソース1
@@ -370,6 +379,90 @@ void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		RTTCorrection(dispatchId.xy);
+
+	}
+
+}
+
+void MotionBlur(float32_t2 index) {
+
+	// 入力色
+	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	// 速度
+	float32_t x = gVelocityConstants.values.x;
+	float32_t y = gVelocityConstants.values.y;
+
+	//y = ax;
+	// x != 0 
+	float32_t coefficient = 0.0f;
+
+	float32_t2 dir = float32_t2(0.0f, 0.0f);
+	if (x != 0) {
+		coefficient = y / x;
+		dir.x = x;
+		dir.y = dir.x * coefficient;
+	}
+	else if (y != 0.0f) {
+		dir.x = 0.0f;
+		dir.y = y;
+	}
+	else {
+		destinationImage0[index] = sourceImage0[index];
+		return;
+	}
+
+	for (int32_t i = 0; i < gComputeConstants.kernelSize / 2; i++) {
+
+		// インデックス
+		indexTmp = index;
+
+		indexTmp.x += float32_t(i) * dir.x;
+		indexTmp.y += float32_t(i) * dir.y;
+
+		input = sourceImage0[indexTmp];
+
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+		// 色確認
+		if ((input.a != 0.0f) ||
+			(i == 0)) {
+			// outputに加算
+			output += input * weight;
+			// 重みの合計に加算
+			weightSum += weight;
+		}
+	}
+
+
+	// 重みの合計分割る
+	output *= (1.0f / weightSum);
+
+	// 代入
+	destinationImage0[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainMotionBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		MotionBlur(dispatchId.xy);
 
 	}
 

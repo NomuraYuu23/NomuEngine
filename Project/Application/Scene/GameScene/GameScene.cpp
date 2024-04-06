@@ -301,10 +301,17 @@ void GameScene::Draw() {
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 
+	PostEffect::GetInstance()->MotionBlurCommand(
+		dxCommon_->GetCommadList(),
+		3,
+		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU(),
+		sampleObj_->GetVelocity2DData()
+	);
+
 	PostEffect::GetInstance()->CopyCommand(
 		dxCommon_->GetCommadList(),
 		2,
-		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()
+		PostEffect::GetInstance()->GetEditTextures(3)->GetUavHandleGPU()
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);
 
@@ -480,7 +487,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/Model/Spear", "Spear.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
