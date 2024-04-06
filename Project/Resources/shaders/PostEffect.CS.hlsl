@@ -413,11 +413,11 @@ void MotionBlur(float32_t2 index) {
 	if (x != 0) {
 		coefficient = y / x;
 		dir.x = x;
-		dir.y = dir.x * coefficient;
+		dir.y = dir.x * coefficient * -1.0f;
 	}
 	else if (y != 0.0f) {
 		dir.x = 0.0f;
-		dir.y = y;
+		dir.y = y * -1.0f;
 	}
 	else {
 		destinationImage0[index] = sourceImage0[index];
@@ -431,6 +431,9 @@ void MotionBlur(float32_t2 index) {
 
 		indexTmp.x += float32_t(i) * dir.x;
 		indexTmp.y += float32_t(i) * dir.y;
+		if ((indexTmp.x < 0.0f) || (indexTmp.y < 0.0f)) {
+			continue;
+		}
 
 		input = sourceImage0[indexTmp];
 
