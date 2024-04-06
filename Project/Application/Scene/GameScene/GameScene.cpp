@@ -145,7 +145,7 @@ void GameScene::Initialize() {
 
 	testManyObject_->Update();
 
-	PostEffect::GetInstance()->SetClearColor({ 0.8f, 0.8f, 0.0f, 1.0f });
+	PostEffect::GetInstance()->SetClearColor({ 0.0f, 1.0f, 0.0f, 1.0f });
 	PostEffect::GetInstance()->SetThreshold(0.4f);
 	PostEffect::GetInstance()->SetKernelSize(33);
 	PostEffect::GetInstance()->SetSigma(30.0f);
@@ -257,13 +257,32 @@ void GameScene::Draw() {
 
 	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
-	//3Dオブジェクトはここ
+	// スカイドーム
+	skydome_->Draw(camera_);
+
+	Model::PostDraw();
+
+	renderTargetTexture_->ChangePixelShaderResource(0);
+
+	PostEffect::GetInstance()->RTTCorrectionCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+
+	PostEffect::GetInstance()->CopyCommand(
+		dxCommon_->GetCommadList(),
+		1,
+		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->ClearRenderTarget(0);
+
+
+	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
 	//Obj
 	sampleObj_->Draw(camera_);
-
-	// スカイドーム
-	skydome_->Draw(camera_);
 
 #ifdef _DEBUG
 
@@ -273,6 +292,32 @@ void GameScene::Draw() {
 #endif // _DEBUG
 
 	Model::PostDraw();
+
+	renderTargetTexture_->ChangePixelShaderResource(0);
+
+	PostEffect::GetInstance()->RTTCorrectionCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+
+	PostEffect::GetInstance()->CopyCommand(
+		dxCommon_->GetCommadList(),
+		2,
+		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+
+	renderTargetTexture_->ClearRenderTarget(0);
+
+	PostEffect::GetInstance()->OverwriteCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		PostEffect::GetInstance()->GetEditTextures(1)->GetUavHandleGPU(),
+		PostEffect::GetInstance()->GetEditTextures(2)->GetUavHandleGPU()
+	);
+
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 #pragma endregion
 
@@ -285,16 +330,6 @@ void GameScene::Draw() {
 	Model::PostDraw();
 
 #pragma endregion
-
-	renderTargetTexture_->ChangePixelShaderResource(0);
-
-	PostEffect::GetInstance()->BloomCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
-	);
-	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 	
 #pragma region 線描画
 	// 前景スプライト描画前処理

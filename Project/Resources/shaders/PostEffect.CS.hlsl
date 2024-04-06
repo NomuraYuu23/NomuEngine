@@ -284,13 +284,92 @@ void Add(float32_t2 index) {
 }
 
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
+void mainBloomAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
 {
 
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		Add(dispatchId.xy);
+
+	}
+
+}
+
+void Overwrite(float32_t2 index) {
+
+	float32_t4 input = sourceImage1[index];
+	float32_t4 output = sourceImage0[index];
+
+	if (input.a == 1.0f) {
+		destinationImage0[index] = input;
+	}
+	else if (input.a == 0.0f) {
+		destinationImage0[index] = output;
+	}
+	else {
+		
+		float32_t alphaOut = 1.0f - input.a;
+
+		alphaOut = min(alphaOut, output.a);
+
+		destinationImage0[index] = input;
+
+		if (output.a != 0.0f) {
+			float32_t a = min(alphaOut / output.a, 1.0f);
+
+			float32_t4 color =
+				float32_t4(
+					output.r * a,
+					output.g * a,
+					output.b * a,
+					alphaOut);
+
+			destinationImage0[index] += color;
+
+		}
+
+	}
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainOverwrite(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Overwrite(dispatchId.xy);
+
+	}
+
+}
+
+void RTTCorrection(float32_t2 index) {
+
+
+	float32_t4 output = sourceImage0[index];
+
+	if (output.r == gComputeConstants.clearColor.r &&
+		output.g == gComputeConstants.clearColor.g && 
+		output.b == gComputeConstants.clearColor.b &&
+		output.a == gComputeConstants.clearColor.a) {
+		output = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+	destinationImage0[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
+{
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		RTTCorrection(dispatchId.xy);
 
 	}
 

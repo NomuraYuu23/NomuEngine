@@ -181,7 +181,7 @@ void RenderTargetTexture::ClearRenderTarget(uint32_t resourceIndex)
 {
 
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
+	float clearColor[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 	commandList_->ClearRenderTargetView(rtvHandles_[resourceIndex], clearColor, 0, nullptr);
 
 }
