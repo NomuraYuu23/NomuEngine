@@ -541,6 +541,9 @@
     <ClCompile Include="Engine\base\TextureUAV.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp">
+      <Filter>Engine\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">

@@ -113,9 +113,7 @@ void SampleObject::Update()
 void SampleObject::Draw(BaseCamera camera)
 {
 
-	Vector3 velocity = Matrix4x4::TransformNormal(velocity_, camera.GetViewMatrix());
-
-	velocity2DDataMap_->velocity = { velocity.x, velocity.y };
+	velocity2DDataMap_->SetVelocity(velocity_, camera.GetViewMatrix());
 
 	model_->Draw(worldtransform_, camera, material_.get());
 

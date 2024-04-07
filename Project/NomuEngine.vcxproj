@@ -185,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Physics\RigidBody.cpp" />
     <ClCompile Include="Engine\PostEffect\Glare.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp" />
     <ClCompile Include="Engine\SceneTransition\ISceneTransition\ISceneTransition.cpp" />
     <ClCompile Include="Application\SceneTransition\SceneTransitionBlackOut\SceneTransitionBlackOut.cpp" />
     <ClCompile Include="Application\SceneTransition\SceneTransitionFactory\SceneTransitionFactory.cpp" />
