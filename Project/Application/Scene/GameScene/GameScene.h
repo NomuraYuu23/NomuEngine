@@ -141,5 +141,8 @@ private:
 	int32_t kernelSize = 7;
 	float sigma = 3.0f;
 	float time = 40.0f;
+	Vector2 rShift = { 0.0f,0.0f }; // Rずらし
+	Vector2 gShift = { 0.0f,0.0f }; // Gずらし
+	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
 	
 };

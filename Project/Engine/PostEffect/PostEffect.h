@@ -22,11 +22,17 @@ public: // サブクラス
 		uint32_t threadIdOffsetZ; // スレッドのオフセットZ
 		uint32_t threadIdTotalZ; // スレッドの総数Z
 		float padding[2]; // パディング
+
 		Vector4 clearColor; // クリアするときの色
 		float threshold; // 明度のしきい値
 		int32_t kernelSize; // カーネルサイズ
 		float sigma; // 標準偏差
 		float time; // 時間
+
+		Vector2 rShift; // Rずらし
+		Vector2 gShift; // Gずらし
+		Vector2 bShift; // Bずらし
+
 	};
 
 	/// <summary>
@@ -45,6 +51,7 @@ public: // サブクラス
 		kPipelineIndexMotionBlur, // モーションブラー
 		kPipliineIndexWhiteNoise, // ホワイトノイズ
 		kPipliineIndexScanLine, // 走査線
+		kPipliineIndexRGBShift, // RGBずらし
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -64,7 +71,8 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRTTCorrection"}, // レンダーターゲット画像の修正
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"} // 走査線
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"}, // 走査線
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRGBShift"} // RGBずらし
 	};
 	
 	// 画像の幅
@@ -212,6 +220,18 @@ public: // 関数
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& scanLineGPUHandle);
 
+	/// <summary>
+	/// RGBずらし
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="rgbShiftGPUHandle">画像のGPUハンドル</param>
+	void RGBShift(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& rgbShiftGPUHandle);
+
+
 private: // 関数
 
 	/// <summary>
@@ -265,6 +285,24 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="time">時間</param>
 	void SetTime(float time) { computeParametersMap_->time = time; }
+
+	/// <summary>
+	/// Rずらし設定
+	/// </summary>
+	/// <param name="rShift">Rずらし</param>
+	void SetRShift(const Vector2& rShift) { computeParametersMap_->rShift = rShift; }
+	
+	/// <summary>
+	/// Gずらし設定
+	/// </summary>
+	/// <param name="gShift">Gずらし</param>
+	void SetGShift(const Vector2& gShift) { computeParametersMap_->gShift = gShift; }
+
+	/// <summary>
+	/// Bずらし設定
+	/// </summary>
+	/// <param name="bShift">Bずらし</param>
+	void SetBShift(const Vector2& bShift) { computeParametersMap_->bShift = bShift; }
 
 private: // 変数
 

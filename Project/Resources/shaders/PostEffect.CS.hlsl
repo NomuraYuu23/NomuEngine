@@ -14,6 +14,9 @@ struct ComputeParameters {
 	int32_t kernelSize; // カーネルサイズ
 	float32_t sigma; // 標準偏差
 	float32_t time; // 時間
+	float32_t2 rShift; // Rずらし
+	float32_t2 gShift; // Gずらし
+	float32_t2 bShift; // Bずらし
 };
 
 // 定数データ
@@ -532,3 +535,30 @@ void mainScanLine(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	}
 
 }
+
+void RGBShift(float32_t2 index) {
+
+
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	output.r = sourceImage0[index + gComputeConstants.rShift].r;
+	output.g = sourceImage0[index + gComputeConstants.gShift].g;
+	output.b = sourceImage0[index + gComputeConstants.bShift].b;
+	output.a = sourceImage0[index].a;
+
+	destinationImage0[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		RGBShift(dispatchId.xy);
+
+	}
+
+}
+

@@ -145,11 +145,6 @@ void GameScene::Initialize() {
 
 	testManyObject_->Update();
 
-	PostEffect::GetInstance()->SetClearColor({ 0.0f, 1.0f, 0.0f, 1.0f });
-	PostEffect::GetInstance()->SetThreshold(0.4f);
-	PostEffect::GetInstance()->SetKernelSize(33);
-	PostEffect::GetInstance()->SetSigma(30.0f);
-
 	segment1_ = std::make_unique<Segment2D>();
 	segment1_->Initialize({ 640.0f, 360.0f }, { 0.0f, 0.0f }, nullptr);
 	segment2_ = std::make_unique<Segment2D>();
@@ -239,8 +234,13 @@ void GameScene::Update() {
 	//アウトライン
 	outline_.Map();
 
-
+	PostEffect::GetInstance()->SetThreshold(0.4f);
+	PostEffect::GetInstance()->SetKernelSize(kernelSize);
+	PostEffect::GetInstance()->SetSigma(sigma);
 	PostEffect::GetInstance()->SetTime(time);
+	PostEffect::GetInstance()->SetRShift(rShift);
+	PostEffect::GetInstance()->SetGShift(gShift);
+	PostEffect::GetInstance()->SetBShift(bShift);
 
 }
 
@@ -311,11 +311,11 @@ void GameScene::Draw() {
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 
-	PostEffect::GetInstance()->MotionBlurCommand(
+	PostEffect::GetInstance()->RGBShift(
 		dxCommon_->GetCommadList(),
 		3,
-		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU(),
-		sampleObj_->GetVelocity2DData()
+		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()//,
+		//sampleObj_->GetVelocity2DData()
 	);
 
 	PostEffect::GetInstance()->CopyCommand(
@@ -442,6 +442,9 @@ void GameScene::ImguiDraw(){
 	ImGui::DragInt("kernelSize", &kernelSize);
 	ImGui::DragFloat("sigma", &sigma, 0.01f);
 	ImGui::DragFloat("time", &time, 0.01f);
+	ImGui::DragFloat2("rShift", &rShift.x, 0.01f);
+	ImGui::DragFloat2("gShift", &gShift.x, 0.01f);
+	ImGui::DragFloat2("bShift", &bShift.x, 0.01f);
 	ImGui::End();
 
 	//Obj
