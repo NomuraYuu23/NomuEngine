@@ -39,11 +39,12 @@ public: // サブクラス
 		kPipelineIndexGaussianBlurHorizontal, // ガウスブラー水平
 		kPipelineIndexGaussianBlurVertical, // ガウスブラー垂直
 		kPipelineIndexBrightnessThreshold, // 明度分け
-		kPipelineIndexBloomAdd, // ブルーム用加算
+		kPipelineIndexBlurAdd, // ブラー用加算
 		kPipelineIndexOverwrite, // 上書き
 		kPipelineIndexRTTCorrection, // レンダーターゲット画像の修正
 		kPipelineIndexMotionBlur, // モーションブラー
 		kPipliineIndexWhiteNoise, // ホワイトノイズ
+		kPipliineIndexScanLine, // 走査線
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -58,11 +59,12 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBrightnessThreshold"}, // 明度分け
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBloomAdd"}, // ブルーム用加算
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBlurAdd"}, // ブラー用加算
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainOverwrite"}, // 上書き
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRTTCorrection"}, // レンダーターゲット画像の修正
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"} // ホワイトノイズ
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"} // 走査線
 	};
 	
 	// 画像の幅
@@ -198,6 +200,17 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& whiteNoizeGPUHandle);
+
+	/// <summary>
+	/// 走査線
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="whiteNoizeGPUHandle">画像のGPUハンドル</param>
+	void ScanLineCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& scanLineGPUHandle);
 
 private: // 関数
 

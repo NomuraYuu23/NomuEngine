@@ -403,7 +403,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->WhiteNoizeCommand(
+	PostEffect::GetInstance()->ScanLineCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)

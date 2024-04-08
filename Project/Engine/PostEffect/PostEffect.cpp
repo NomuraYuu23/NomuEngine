@@ -302,7 +302,7 @@ void PostEffect::BloomCommand(
 	commandList_->Dispatch(x, y, z);
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBloomAdd].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -446,7 +446,7 @@ void PostEffect::MotionBlurCommand(
 	commandList_->Dispatch(x, y, z);
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBloomAdd].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -493,8 +493,49 @@ void PostEffect::WhiteNoizeCommand(
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 修正する画像をセット
+	// ノイズを掛ける画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, whiteNoizeGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::ScanLineCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& scanLineGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexScanLine].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 走査線を掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, scanLineGPUHandle);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 
