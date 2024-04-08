@@ -234,6 +234,8 @@ void GameScene::Update() {
 	//アウトライン
 	outline_.Map();
 
+
+	time = std::fmodf(time + kDeltaTime_, 50.0f);
 	PostEffect::GetInstance()->SetThreshold(0.4f);
 	PostEffect::GetInstance()->SetKernelSize(kernelSize);
 	PostEffect::GetInstance()->SetSigma(sigma);
@@ -243,6 +245,10 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetBShift(bShift);
 	PostEffect::GetInstance()->SetDistortion(distortion);
 	PostEffect::GetInstance()->SetVignetteSize(vignetteSize);
+	PostEffect::GetInstance()->SetHorzGlitchPase(horzGlitchPase);
+	PostEffect::GetInstance()->SetVertGlitchPase(vertGlitchPase);
+	PostEffect::GetInstance()->SetGlitchStepValue(glitchStepValue);
+
 }
 
 /// <summary>
@@ -411,7 +417,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->VignetteCommand(
+	PostEffect::GetInstance()->GlitchCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)
@@ -442,12 +448,15 @@ void GameScene::ImguiDraw(){
 	ImGui::Begin("GaussianBlur");
 	ImGui::DragInt("kernelSize", &kernelSize);
 	ImGui::DragFloat("sigma", &sigma, 0.01f);
-	ImGui::DragFloat("time", &time, 0.01f);
+	//ImGui::DragFloat("time", &time, 0.01f);
 	ImGui::DragFloat2("rShift", &rShift.x, 0.01f);
 	ImGui::DragFloat2("gShift", &gShift.x, 0.01f);
 	ImGui::DragFloat2("bShift", &bShift.x, 0.01f);
 	ImGui::DragFloat("distortion", &distortion, 0.01f);
 	ImGui::DragFloat("vignetteSize", &vignetteSize, 0.01f);
+	ImGui::DragFloat("horzGlitchPase", &horzGlitchPase, 0.01f);
+	ImGui::DragFloat("vertGlitchPase", &vertGlitchPase, 0.01f);
+	ImGui::DragFloat("glitchStepValue", &glitchStepValue, 0.01f);
 	ImGui::End();
 
 	//Obj

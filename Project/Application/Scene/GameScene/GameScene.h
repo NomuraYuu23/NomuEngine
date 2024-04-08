@@ -146,5 +146,8 @@ private:
 	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
 	float distortion = 0.0f; // 歪み
 	float vignetteSize = 0.0f; // ビネットの大きさ
+	float horzGlitchPase = 0.0f; // グリッチの水平
+	float vertGlitchPase = 0.0f; // グリッチの垂直
+	float glitchStepValue = 0.0f; // グリッチのステップ値
 	
 };

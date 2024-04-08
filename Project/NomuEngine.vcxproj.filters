@@ -1091,6 +1091,9 @@
     <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
       <Filter>shaders\PostEffect\Glare</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectCalc.CS.hlsl">
+      <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">
