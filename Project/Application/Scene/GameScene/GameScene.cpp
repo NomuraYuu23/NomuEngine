@@ -146,7 +146,7 @@ void GameScene::Initialize() {
 	testManyObject_->Update();
 
 	segment1_ = std::make_unique<Segment2D>();
-	segment1_->Initialize({ 640.0f, 360.0f }, { 0.0f, 0.0f }, nullptr);
+	segment1_->Initialize({ 0.0f, 0.0f }, { 0.0f, 0.0f }, nullptr);
 	segment2_ = std::make_unique<Segment2D>();
 	segment2_->Initialize({ 1280.0f, 1280.0f }, { 0.0f, 0.0f }, nullptr);
 
@@ -197,25 +197,25 @@ void GameScene::Update() {
 
 	float radius = 160.0f;
 
-	box_->Update(boxCenter_, radius, radius, 60.0f);
-	box1_->Update(box1Center_, radius, radius, 45.0f);
+	box_->Update(boxCenter_, radius, radius, 50.0f);
+	box1_->Update(box1Center_, radius, radius, 5.0f);
 	circle_->Update(circleCenter_, radius);
 	circle1_->Update(circle1Center_, radius);
 
 	collision2DManager_->ListClear();
-	collision2DManager_->ListRegister(box_.get());
+	collision2DManager_->ListRegister(box_.get());/*
 	collision2DManager_->ListRegister(box1_.get());
 	collision2DManager_->ListRegister(circle_.get());
-	collision2DManager_->ListRegister(circle1_.get());
-	collision2DManager_->ListRegister(segment1_.get());
-	collision2DManager_->ListRegister(segment2_.get());
+	collision2DManager_->ListRegister(circle1_.get());*/
+	collision2DManager_->ListRegister(segment1_.get());/*
+	collision2DManager_->ListRegister(segment2_.get());*/
 	collision2DManager_->CheakAllCollision();
 
 	collision2DDebugDraw_->Clear();
-	collision2DDebugDraw_->Register(box_.get());
+	collision2DDebugDraw_->Register(box_.get());/*
 	collision2DDebugDraw_->Register(box1_.get());
 	collision2DDebugDraw_->Register(circle_.get());
-	collision2DDebugDraw_->Register(circle1_.get());
+	collision2DDebugDraw_->Register(circle1_.get());*/
 	
 	// 影
 	ShadowUpdate();

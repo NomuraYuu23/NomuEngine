@@ -289,18 +289,20 @@ bool Collision2D::IsCollision(const Box& box, const Segment2D& segment)
 	b1LeftBottom += box.position_;
 	b1Point.push_back(b1LeftBottom);
 
-	Segment2D segmentTmp;	
+	Vector2 point = segment.origin_;
 	for (uint32_t i = 0; i < 4; ++i) {
-		segmentTmp.origin_ = b1Point[i];
+
+		Vector2 origin = b1Point[i];
+		Vector2 diff;
 		if (i == 3) {
-			segmentTmp.length_ = b1Point[0] - b1Point[3];
+			diff = b1Point[0];
 		}
 		else {
-			segmentTmp.length_ = b1Point[i + 1] - b1Point[i];
+			diff = b1Point[i + 1];
 		}
 
-		Vector2 v1 = Vector2::Subtract(Vector2::Add(segmentTmp.origin_, segmentTmp.length_), segmentTmp.origin_);
-		Vector2 v2 = Vector2::Subtract(segment.origin_, segmentTmp.origin_);
+		Vector2 v1 = diff - origin;
+		Vector2 v2 = point - origin;
 
 		float v = Vector2::Cross(v1, v2);
 
@@ -314,17 +316,20 @@ bool Collision2D::IsCollision(const Box& box, const Segment2D& segment)
 
 	}
 
+	point = Vector2::Add(segment.origin_, segment.length_);
 	for (uint32_t i = 0; i < 4; ++i) {
-		segmentTmp.origin_ = b1Point[i];
+
+		Vector2 origin = b1Point[i];
+		Vector2 diff;
 		if (i == 3) {
-			segmentTmp.length_ = b1Point[0] - b1Point[3];
+			diff = b1Point[0];
 		}
 		else {
-			segmentTmp.length_ = b1Point[i + 1] - b1Point[i];
+			diff = b1Point[i + 1];
 		}
 
-		Vector2 v1 = Vector2::Subtract(Vector2::Add(segmentTmp.origin_, segmentTmp.length_), segmentTmp.origin_);
-		Vector2 v2 = Vector2::Subtract(Vector2::Add(segment.origin_, segment.length_), segmentTmp.origin_);
+		Vector2 v1 = diff - origin;
+		Vector2 v2 = point - origin;
 
 		float v = Vector2::Cross(v1, v2);
 
