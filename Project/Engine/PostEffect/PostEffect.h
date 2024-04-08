@@ -26,6 +26,7 @@ public: // サブクラス
 		float threshold; // 明度のしきい値
 		int32_t kernelSize; // カーネルサイズ
 		float sigma; // 標準偏差
+		float time; // 時間
 	};
 
 	/// <summary>
@@ -41,7 +42,8 @@ public: // サブクラス
 		kPipelineIndexBloomAdd, // ブルーム用加算
 		kPipelineIndexOverwrite, // 上書き
 		kPipelineIndexRTTCorrection, // レンダーターゲット画像の修正
-		kPipelineIndexMotionBlur, // モーションブラー水平
+		kPipelineIndexMotionBlur, // モーションブラー
+		kPipliineIndexWhiteNoise, // ホワイトノイズ
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -60,6 +62,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainOverwrite"}, // 上書き
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRTTCorrection"}, // レンダーターゲット画像の修正
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"} // ホワイトノイズ
 	};
 	
 	// 画像の幅
@@ -185,6 +188,17 @@ public: // 関数
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& motionBlurGPUHandle,
 		ID3D12Resource* velocityBuff);
 
+	/// <summary>
+	/// ホワイトノイズ
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="whiteNoizeGPUHandle">画像のGPUハンドル</param>
+	void WhiteNoizeCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& whiteNoizeGPUHandle);
+
 private: // 関数
 
 	/// <summary>
@@ -232,6 +246,12 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="sigma">標準偏差</param>
 	void SetSigma(float sigma) { computeParametersMap_->sigma = sigma; }
+
+	/// <summary>
+	/// 時間設定
+	/// </summary>
+	/// <param name="time">時間</param>
+	void SetTime(float time) { computeParametersMap_->time = time; }
 
 private: // 変数
 

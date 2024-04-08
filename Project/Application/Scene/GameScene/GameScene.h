@@ -137,5 +137,6 @@ private:
 
 	int32_t kernelSize = 7;
 	float sigma = 3.0f;
+	float time = 40.0f;
 	
 };

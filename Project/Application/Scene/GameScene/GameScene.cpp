@@ -232,6 +232,9 @@ void GameScene::Update() {
 	//アウトライン
 	outline_.Map();
 
+
+	PostEffect::GetInstance()->SetTime(time);
+
 }
 
 /// <summary>
@@ -397,6 +400,18 @@ void GameScene::Draw() {
 
 #pragma endregion
 
+
+	renderTargetTexture_->ChangePixelShaderResource(0);
+
+	PostEffect::GetInstance()->WhiteNoizeCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)
+	);
+	renderTargetTexture_->ChangeRenderTarget(0);
+
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+
 }
 
 void GameScene::ImguiDraw(){
@@ -419,6 +434,7 @@ void GameScene::ImguiDraw(){
 	ImGui::Begin("GaussianBlur");
 	ImGui::DragInt("kernelSize", &kernelSize);
 	ImGui::DragFloat("sigma", &sigma, 0.01f);
+	ImGui::DragFloat("time", &time, 0.01f);
 	ImGui::End();
 
 	//Obj

@@ -35,6 +35,8 @@ void PostEffect::Initialize()
 	computeParametersMap_->kernelSize = 7; // カーネルサイズ
 	computeParametersMap_->sigma = 1.0f; // 標準偏差
 
+	computeParametersMap_->time = 0.0f;
+
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -452,6 +454,47 @@ void PostEffect::MotionBlurCommand(
 	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
 	// 加算する画像をセット
 	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 2);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::WhiteNoizeCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& whiteNoizeGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexWhiteNoise].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 修正する画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, whiteNoizeGPUHandle);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 

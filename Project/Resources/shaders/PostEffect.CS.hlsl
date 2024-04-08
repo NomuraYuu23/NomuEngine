@@ -13,6 +13,7 @@ struct ComputeParameters {
 	float32_t threshold; // しきい値
 	int32_t kernelSize; // カーネルサイズ
 	float32_t sigma; // 標準偏差
+	float32_t time; // 時間
 };
 
 // 定数データ
@@ -466,6 +467,36 @@ void mainMotionBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		MotionBlur(dispatchId.xy);
+
+	}
+
+}
+
+void WhiteNoise(float32_t2 index) {
+
+	float32_t4 output = sourceImage0[index];
+
+	float32_t2 texcoord = float32_t2(
+		index.x / gComputeConstants.threadIdTotalX,
+		index.y / gComputeConstants.threadIdTotalY);
+
+	float32_t noise = frac(sin(dot(texcoord * gComputeConstants.time, float32_t2(8.7819f, 3.255f))) * 437.645) - 0.5f;
+
+	output.r += noise;
+	output.g += noise;
+	output.b += noise;
+
+	destinationImage0[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainWhiteNoise(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		WhiteNoise(dispatchId.xy);
 
 	}
 
