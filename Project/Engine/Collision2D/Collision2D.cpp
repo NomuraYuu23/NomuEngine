@@ -249,22 +249,110 @@ bool Collision2D::IsCollision(const Circle& circle, const Box& box)
 	return IsCollision(box, circle);
 }
 
-bool Collision2D::IsCollision(const Box& box, const Segment2D& circle)
+bool Collision2D::IsCollision(const Box& box, const Segment2D& segment)
+{
+
+	float thata = box.rotation_ * static_cast<float>(std::numbers::pi) / 180.0f;
+	Matrix3x3 boxRotationMatrix = Matrix3x3::MakeRotateMatrix(thata);
+
+	std::vector<Vector2> b1Point;
+
+	Vector2 b1LeftTop = {
+		-box.scale_.x / 2.0f,
+		-box.scale_.y / 2.0f };
+
+	b1LeftTop = Matrix3x3::Transform(b1LeftTop, boxRotationMatrix);
+	b1LeftTop += box.position_;
+	b1Point.push_back(b1LeftTop);
+
+	Vector2 b1RightTop = {
+		+box.scale_.x / 2.0f,
+		-box.scale_.y / 2.0f };
+
+	b1RightTop = Matrix3x3::Transform(b1RightTop, boxRotationMatrix);
+	b1RightTop += box.position_;
+	b1Point.push_back(b1RightTop);
+
+	Vector2 b1RightBottom = {
+		+box.scale_.x / 2.0f,
+		+box.scale_.y / 2.0f };
+
+	b1RightBottom = Matrix3x3::Transform(b1RightBottom, boxRotationMatrix);
+	b1RightBottom += box.position_;
+	b1Point.push_back(b1RightBottom);
+
+	Vector2 b1LeftBottom = {
+		-box.scale_.x / 2.0f,
+		+box.scale_.y / 2.0f };
+
+	b1LeftBottom = Matrix3x3::Transform(b1LeftBottom, boxRotationMatrix);
+	b1LeftBottom += box.position_;
+	b1Point.push_back(b1LeftBottom);
+
+	Segment2D segmentTmp;	
+	for (uint32_t i = 0; i < 4; ++i) {
+		segmentTmp.origin_ = b1Point[i];
+		if (i == 3) {
+			segmentTmp.length_ = b1Point[0] - b1Point[3];
+		}
+		else {
+			segmentTmp.length_ = b1Point[i + 1] - b1Point[i];
+		}
+
+		Vector2 v1 = Vector2::Subtract(Vector2::Add(segmentTmp.origin_, segmentTmp.length_), segmentTmp.origin_);
+		Vector2 v2 = Vector2::Subtract(segment.origin_, segmentTmp.origin_);
+
+		float v = Vector2::Cross(v1, v2);
+
+		if (v < 0.0f) {
+			break;
+		}
+
+		if (i == 3) {
+			return true;
+		}
+
+	}
+
+	for (uint32_t i = 0; i < 4; ++i) {
+		segmentTmp.origin_ = b1Point[i];
+		if (i == 3) {
+			segmentTmp.length_ = b1Point[0] - b1Point[3];
+		}
+		else {
+			segmentTmp.length_ = b1Point[i + 1] - b1Point[i];
+		}
+
+		Vector2 v1 = Vector2::Subtract(Vector2::Add(segmentTmp.origin_, segmentTmp.length_), segmentTmp.origin_);
+		Vector2 v2 = Vector2::Subtract(Vector2::Add(segment.origin_, segment.length_), segmentTmp.origin_);
+
+		float v = Vector2::Cross(v1, v2);
+
+		if (v < 0.0f) {
+			break;
+		}
+
+		if (i == 3) {
+			return true;
+		}
+
+	}
+
+	return false;
+
+}
+
+bool Collision2D::IsCollision(const Segment2D& segment, const Box& box)
+{
+	return IsCollision(box, segment);
+}
+
+bool Collision2D::IsCollision(const Circle& circle, const Segment2D& segment)
 {
 	return false;
 }
 
-bool Collision2D::IsCollision(const Segment2D& circle, const Box& box)
+bool Collision2D::IsCollision(const Segment2D& segment, const Circle& circle)
 {
-	return false;
-}
-
-bool Collision2D::IsCollision(const Circle& box, const Segment2D& circle)
-{
-	return false;
-}
-
-bool Collision2D::IsCollision(const Segment2D& circle, const Circle& box)
-{
-	return false;
+	return IsCollision(circle, segment);
 }

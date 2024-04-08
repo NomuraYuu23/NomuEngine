@@ -151,9 +151,9 @@ void GameScene::Initialize() {
 	PostEffect::GetInstance()->SetSigma(30.0f);
 
 	segment1_ = std::make_unique<Segment2D>();
-	segment1_->Initialize({ -1.0f, 1.0f }, { 2.0f, -2.0f }, nullptr);
+	segment1_->Initialize({ 1200.0f, 0.0f }, { 0.0f, 0.0f }, nullptr);
 	segment2_ = std::make_unique<Segment2D>();
-	segment2_->Initialize({ 1.0f, 1.0f }, { -2.0f, -2.0f }, nullptr);
+	segment2_->Initialize({ 1200.0f, 0.0f }, { 0.0f, 0.0f }, nullptr);
 
 }
 
