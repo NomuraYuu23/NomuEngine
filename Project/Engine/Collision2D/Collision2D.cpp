@@ -349,7 +349,37 @@ bool Collision2D::IsCollision(const Segment2D& segment, const Box& box)
 
 bool Collision2D::IsCollision(const Circle& circle, const Segment2D& segment)
 {
+
+	Vector2 endPos = Vector2::Add(segment.origin_, segment.length_);
+
+	Vector2 centerFromOrigin = Vector2::Subtract(circle.position_, segment.origin_);
+	Vector2 endPosFromOrigin = Vector2::Subtract(endPos, segment.origin_);
+	Vector2 centerFromEndPos = Vector2::Subtract(circle.position_, endPos);
+
+	// 線分と円の中心の最短の長さ
+	float length = Vector2::Cross(Vector2::Normalize(endPosFromOrigin), centerFromOrigin);
+
+	// 当たっていない
+	if (length > circle.radius_) {
+		return false;
+	}
+
+	// 線分内に円があるか調べる
+	float a = Vector2::Dot(centerFromOrigin, endPosFromOrigin);
+	float b = Vector2::Dot(centerFromEndPos, endPosFromOrigin);
+	
+	if (a * b < 0.0f) {
+		return true;
+	}
+
+	// 線分の末端が円の範囲内か調べる
+	if ((Vector2::Length(centerFromOrigin) < circle.radius_) ||
+		(Vector2::Length(centerFromEndPos) < circle.radius_)) {
+		return true;
+	}
+
 	return false;
+
 }
 
 bool Collision2D::IsCollision(const Segment2D& segment, const Circle& circle)
