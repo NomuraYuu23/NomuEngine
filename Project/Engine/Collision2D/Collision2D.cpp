@@ -131,6 +131,26 @@ bool Collision2D::IsCollision(const Circle& circle1, const Circle& circle2)
 
 }
 
+bool Collision2D::IsCollision(const Segment2D& segment1, const Segment2D& segment2)
+{
+
+	Vector2 s1 = Vector2::Subtract(Vector2::Add(segment1.origin_, segment1.length_), segment1.origin_);
+	Vector2 s2 = Vector2::Subtract(segment2.origin_, segment1.origin_);
+
+	float s = Vector2::Cross(s1, s2);
+
+	Vector2 t1 = Vector2::Subtract(Vector2::Add(segment1.origin_, segment1.length_), segment1.origin_);
+	Vector2 t2 = Vector2::Subtract(Vector2::Add(segment2.origin_, segment2.length_), segment1.origin_);
+
+	float t = Vector2::Cross(t1, t2);
+
+	if (s * t < 0.0f) {
+		return true;
+	}
+
+	return false;
+}
+
 bool Collision2D::IsCollision(const Box& box, const Circle& circle)
 {
 	
@@ -227,4 +247,24 @@ bool Collision2D::IsCollision(const Box& box, const Circle& circle)
 bool Collision2D::IsCollision(const Circle& circle, const Box& box)
 {
 	return IsCollision(box, circle);
+}
+
+bool Collision2D::IsCollision(const Box& box, const Segment2D& circle)
+{
+	return false;
+}
+
+bool Collision2D::IsCollision(const Segment2D& circle, const Box& box)
+{
+	return false;
+}
+
+bool Collision2D::IsCollision(const Circle& box, const Segment2D& circle)
+{
+	return false;
+}
+
+bool Collision2D::IsCollision(const Segment2D& circle, const Circle& box)
+{
+	return false;
 }

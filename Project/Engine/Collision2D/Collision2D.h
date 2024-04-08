@@ -12,9 +12,20 @@ public: // メンバ関数
 	// Circle Circle
 	static bool IsCollision(const Circle& circle1, const Circle& circle2);
 
+	// Segment2D Segment2D
+	static bool IsCollision(const Segment2D& segment1, const Segment2D& segment2);
+
 	// Box Circle
 	static bool IsCollision(const Box& box, const Circle& circle);
 	static bool IsCollision(const Circle& circle, const Box& box);
+
+	// Box Segment2D
+	static bool IsCollision(const Box& box, const Segment2D& circle);
+	static bool IsCollision(const Segment2D& circle, const Box& box);
+
+	// Circle Segment2D
+	static bool IsCollision(const Circle& box, const Segment2D& circle);
+	static bool IsCollision(const Segment2D& circle, const Circle& box);
 
 };
 

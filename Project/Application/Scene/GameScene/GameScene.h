@@ -126,6 +126,9 @@ private:
 	std::unique_ptr<Circle> circle1_;
 	Vector2 circle1Center_;
 
+	std::unique_ptr<Segment2D> segment1_;
+	std::unique_ptr<Segment2D> segment2_;
+
 	std::unique_ptr<DrawLine> line_;
 	Vector3 linePos0_ = { 0.0f,0.0f,0.0f};
 	Vector3 linePos1_ = { 10.0f,0.0f,0.0f };

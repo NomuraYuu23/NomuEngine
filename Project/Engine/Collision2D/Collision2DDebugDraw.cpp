@@ -158,6 +158,9 @@ void Collision2DDebugDraw::Register(ColliderShape2D collider)
 		collider2DDebugDrawForGPUMap_[collider2DDebugDrawForGPUNumCount_].textureNum = 1;
 		
 	}
+	else {
+		return;
+	}
 
 	Matrix4x4 transformMatrix = Matrix4x4::MakeAffineMatrix(scale, roate, traslate);
 

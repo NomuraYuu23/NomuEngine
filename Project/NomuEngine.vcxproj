@@ -151,6 +151,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Collider2D\Circle.cpp" />
     <ClCompile Include="Engine\Collider2D\Collider2D.cpp" />
     <ClCompile Include="Engine\Collider2D\Box.cpp" />
+    <ClCompile Include="Engine\Collider2D\Segment2D.cpp" />
     <ClCompile Include="Engine\Collider\Capsule\Capsule.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2D.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp" />
@@ -279,6 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Collider2D\Collider2DDebugDrawForGPU.h" />
     <ClInclude Include="Engine\Collider2D\ColliderShape2D.h" />
     <ClInclude Include="Engine\Collider2D\Box.h" />
+    <ClInclude Include="Engine\Collider2D\Segment2D.h" />
     <ClInclude Include="Engine\Collider\Capsule\Capsule.h" />
     <ClInclude Include="Engine\Collider\ColliderShape.h" />
     <ClInclude Include="Engine\Collision2D\Collision2D.h" />

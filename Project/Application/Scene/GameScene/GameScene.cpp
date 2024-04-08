@@ -150,6 +150,11 @@ void GameScene::Initialize() {
 	PostEffect::GetInstance()->SetKernelSize(33);
 	PostEffect::GetInstance()->SetSigma(30.0f);
 
+	segment1_ = std::make_unique<Segment2D>();
+	segment1_->Initialize({ -1.0f, 1.0f }, { 2.0f, -2.0f }, nullptr);
+	segment2_ = std::make_unique<Segment2D>();
+	segment2_->Initialize({ 1.0f, 1.0f }, { -2.0f, -2.0f }, nullptr);
+
 }
 
 /// <summary>
@@ -207,6 +212,8 @@ void GameScene::Update() {
 	collision2DManager_->ListRegister(box1_.get());
 	collision2DManager_->ListRegister(circle_.get());
 	collision2DManager_->ListRegister(circle1_.get());
+	collision2DManager_->ListRegister(segment1_.get());
+	collision2DManager_->ListRegister(segment2_.get());
 	collision2DManager_->CheakAllCollision();
 
 	collision2DDebugDraw_->Clear();
