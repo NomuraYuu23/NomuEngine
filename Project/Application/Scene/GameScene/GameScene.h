@@ -144,5 +144,6 @@ private:
 	Vector2 rShift = { 0.0f,0.0f }; // Rずらし
 	Vector2 gShift = { 0.0f,0.0f }; // Gずらし
 	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
+	float distortion = 0.0f; // 歪み
 	
 };

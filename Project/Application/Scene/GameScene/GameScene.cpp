@@ -241,6 +241,7 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetRShift(rShift);
 	PostEffect::GetInstance()->SetGShift(gShift);
 	PostEffect::GetInstance()->SetBShift(bShift);
+	PostEffect::GetInstance()->SetDistortion(distortion);
 
 }
 
@@ -311,7 +312,7 @@ void GameScene::Draw() {
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 
-	PostEffect::GetInstance()->RGBShift(
+	PostEffect::GetInstance()->RGBShiftCommand(
 		dxCommon_->GetCommadList(),
 		3,
 		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()//,
@@ -410,7 +411,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->ScanLineCommand(
+	PostEffect::GetInstance()->BarrelCurvedCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)
@@ -445,6 +446,7 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat2("rShift", &rShift.x, 0.01f);
 	ImGui::DragFloat2("gShift", &gShift.x, 0.01f);
 	ImGui::DragFloat2("bShift", &bShift.x, 0.01f);
+	ImGui::DragFloat("distortion", &distortion, 0.01f);
 	ImGui::End();
 
 	//Obj

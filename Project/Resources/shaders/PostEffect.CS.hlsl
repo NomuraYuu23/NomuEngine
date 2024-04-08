@@ -17,6 +17,7 @@ struct ComputeParameters {
 	float32_t2 rShift; // Rずらし
 	float32_t2 gShift; // Gずらし
 	float32_t2 bShift; // Bずらし
+	float32_t distortion; // 歪み
 };
 
 // 定数データ
@@ -557,6 +558,36 @@ void mainRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		RGBShift(dispatchId.xy);
+
+	}
+
+}
+
+void BarrelCurved(float32_t2 index) {
+
+	float32_t2 texcoord = float32_t2(
+		index.x / gComputeConstants.threadIdTotalX,
+		index.y / gComputeConstants.threadIdTotalY);
+
+	texcoord -= float32_t2(0.5f, 0.5f);
+	float32_t distPower = pow(length(texcoord), gComputeConstants.distortion);
+	texcoord *= float32_t2(distPower, distPower);
+	texcoord += float32_t2(0.5f, 0.5f);
+
+	float32_t2 newIndex = float32_t2(
+		texcoord.x * gComputeConstants.threadIdTotalX,
+		texcoord.y * gComputeConstants.threadIdTotalY);
+
+	destinationImage0[index] = sourceImage0[newIndex];
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainBarrelCurved(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		BarrelCurved(dispatchId.xy);
 
 	}
 
