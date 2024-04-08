@@ -242,7 +242,7 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetGShift(gShift);
 	PostEffect::GetInstance()->SetBShift(bShift);
 	PostEffect::GetInstance()->SetDistortion(distortion);
-
+	PostEffect::GetInstance()->SetVignetteSize(vignetteSize);
 }
 
 /// <summary>
@@ -411,7 +411,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->BarrelCurvedCommand(
+	PostEffect::GetInstance()->VignetteCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)
@@ -447,6 +447,7 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat2("gShift", &gShift.x, 0.01f);
 	ImGui::DragFloat2("bShift", &bShift.x, 0.01f);
 	ImGui::DragFloat("distortion", &distortion, 0.01f);
+	ImGui::DragFloat("vignetteSize", &vignetteSize, 0.01f);
 	ImGui::End();
 
 	//Obj

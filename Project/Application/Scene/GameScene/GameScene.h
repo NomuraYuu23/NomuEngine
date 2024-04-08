@@ -145,5 +145,6 @@ private:
 	Vector2 gShift = { 0.0f,0.0f }; // Gずらし
 	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
 	float distortion = 0.0f; // 歪み
+	float vignetteSize = 0.0f; // ビネットの大きさ
 	
 };

@@ -34,6 +34,7 @@ public: // サブクラス
 		Vector2 bShift; // Bずらし
 
 		float distortion; // 歪み
+		float vignetteSize; // ビネットの大きさ
 
 	};
 
@@ -55,6 +56,7 @@ public: // サブクラス
 		kPipliineIndexScanLine, // 走査線
 		kPipliineIndexRGBShift, // RGBずらし
 		kPipliineIndexBarrelCurved, // 樽状湾曲
+		kPipliineIndexVignette, // ビネット
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -76,7 +78,9 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"}, // 走査線
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRGBShift"}, // RGBずらし
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBarrelCurved"} // 樽状湾曲
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBarrelCurved"}, // 樽状湾曲
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainVignette"} // ビネット
+
 	};
 	
 	// 画像の幅
@@ -246,6 +250,17 @@ public: // 関数
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& barrelCurvedGPUHandle);
 
+	/// <summary>
+	/// ビネット
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="barrelCurvedGPUHandle">画像のGPUハンドル</param>
+	void VignetteCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& vignetteGPUHandle);
+
 private: // 関数
 
 	/// <summary>
@@ -323,6 +338,12 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="distortion">歪み</param>
 	void SetDistortion(float distortion) { computeParametersMap_->distortion = distortion; }
+
+	/// <summary>
+	/// ビネットの大きさ設定
+	/// </summary>
+	/// <param name="vignetteSize">ビネットの大きさ</param>
+	void SetVignetteSize(float vignetteSize) { computeParametersMap_->vignetteSize = vignetteSize; }
 
 private: // 変数
 

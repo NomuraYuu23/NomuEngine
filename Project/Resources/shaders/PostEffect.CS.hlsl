@@ -18,6 +18,7 @@ struct ComputeParameters {
 	float32_t2 gShift; // Gずらし
 	float32_t2 bShift; // Bずらし
 	float32_t distortion; // 歪み
+	float32_t vignetteSize; // ビネットの大きさ
 };
 
 // 定数データ
@@ -593,3 +594,29 @@ void mainBarrelCurved(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+void Vignette(float32_t2 index) {
+
+	float32_t2 texcoord = float32_t2(
+		index.x / gComputeConstants.threadIdTotalX,
+		index.y / gComputeConstants.threadIdTotalY);
+
+	float32_t vignette = length(float32_t2(0.5f, 0.5f) - texcoord);
+
+	vignette = clamp(vignette - gComputeConstants.vignetteSize, 0.0f, 1.0f);
+
+	destinationImage0[index] = sourceImage0[index];
+	destinationImage0[index].rgb -= vignette;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainVignette(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Vignette(dispatchId.xy);
+
+	}
+
+}
