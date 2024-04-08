@@ -289,7 +289,14 @@ bool Collision2D::IsCollision(const Box& box, const Segment2D& segment)
 	b1LeftBottom += box.position_;
 	b1Point.push_back(b1LeftBottom);
 
-	Vector2 point = segment.origin_;
+	bool isCross = false;
+
+	bool isOriginLeft = true;
+
+	bool isDiffLeft = true;
+
+	Vector2 pointOrigin = segment.origin_;
+	Vector2 pointDiff = Vector2::Add(segment.origin_, segment.length_);
 	for (uint32_t i = 0; i < 4; ++i) {
 
 		Vector2 origin = b1Point[i];
@@ -302,48 +309,33 @@ bool Collision2D::IsCollision(const Box& box, const Segment2D& segment)
 		}
 
 		Vector2 v1 = diff - origin;
-		Vector2 v2 = point - origin;
+		Vector2 v2 = pointOrigin - origin;
 
-		float v = Vector2::Cross(v1, v2);
+		float vOrigin = Vector2::Cross(v1, v2);
 
-		if (v < 0.0f) {
-			break;
+		if (vOrigin < 0.0f) {
+			isOriginLeft = false;
 		}
 
-		if (i == 3) {
-			return true;
+		Vector2 v3 = pointDiff - origin;
+
+		float vDiff = Vector2::Cross(v1, v3);
+		
+		if (vDiff < 0.0f) {
+			isDiffLeft = false;
 		}
 
-	}
+		Segment2D boxSegment;
+		boxSegment.origin_ = origin;
+		boxSegment.length_ = v1;
 
-	point = Vector2::Add(segment.origin_, segment.length_);
-	for (uint32_t i = 0; i < 4; ++i) {
-
-		Vector2 origin = b1Point[i];
-		Vector2 diff;
-		if (i == 3) {
-			diff = b1Point[0];
-		}
-		else {
-			diff = b1Point[i + 1];
-		}
-
-		Vector2 v1 = diff - origin;
-		Vector2 v2 = point - origin;
-
-		float v = Vector2::Cross(v1, v2);
-
-		if (v < 0.0f) {
-			break;
-		}
-
-		if (i == 3) {
-			return true;
+		if (IsCollision(segment, boxSegment)) {
+			isCross = true;
 		}
 
 	}
 
-	return false;
+	return isOriginLeft || isDiffLeft || isCross;
 
 }
 
