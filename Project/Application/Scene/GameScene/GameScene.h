@@ -146,8 +146,12 @@ private:
 	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
 	float distortion = 0.0f; // 歪み
 	float vignetteSize = 0.0f; // ビネットの大きさ
-	float horzGlitchPase = 0.0f; // グリッチの水平
-	float vertGlitchPase = 0.0f; // グリッチの垂直
-	float glitchStepValue = 0.0f; // グリッチのステップ値
+	float horzGlitchPase = 0.1f; // グリッチの水平
+	float vertGlitchPase = 0.1f; // グリッチの垂直
+	float glitchStepValue = 0.1f; // グリッチのステップ値
+
+	uint32_t radialBlurSamples = 8; // ブラーのサンプル回数
+	Vector2 center = { 0.5f,0.5f }; // 中心座標
+	float strength = 0.0f; // ブラーの広がる強さ
 	
 };

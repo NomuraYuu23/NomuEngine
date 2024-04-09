@@ -33,6 +33,10 @@ struct ComputeParameters {
 	float32_t vertGlitchPase; //垂直
 	float32_t glitchStepValue; // グリッチのステップ値
 
+	int32_t radialBlurSamples; // ブラーのサンプル回数
+	float32_t2 center; // 中心座標
+	float32_t strength; // ブラーの広がる強さ
+
 };
 
 // 定数データ
@@ -678,6 +682,55 @@ void mainGlitch(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		Glitch(dispatchId.xy);
+
+	}
+
+}
+
+void RadialBlur(float32_t2 index) {
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// uv
+	float32_t2 texcoord = float32_t2(
+		index.x / gComputeConstants.threadIdTotalX,
+		index.y / gComputeConstants.threadIdTotalY);
+
+	// 中心を基準にした位置
+	float32_t2 position = texcoord - gComputeConstants.center;
+
+	// 中心からの距離
+	float32_t distance = length(position);
+
+	//
+	float32_t factor = gComputeConstants.strength / float32_t(gComputeConstants.radialBlurSamples) * distance;
+	// 新しいインデックス
+	float32_t2 newIndex = float32_t2(0.0f, 0.0f);
+	//
+	for (int32_t i = 0; i < gComputeConstants.radialBlurSamples; ++i) {
+		float32_t uvOffset = 1.0f - factor * float32_t(i);
+		newIndex = position * uvOffset + gComputeConstants.center;
+		newIndex.x *= gComputeConstants.threadIdTotalX;
+		newIndex.y *= gComputeConstants.threadIdTotalY;
+		output += sourceImage0[newIndex];
+	}
+
+	// 平均を求める
+	output /= float32_t(gComputeConstants.radialBlurSamples);
+	// 出力
+	destinationImage0[index] = output;
+
+}
+
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		RadialBlur(dispatchId.xy);
 
 	}
 

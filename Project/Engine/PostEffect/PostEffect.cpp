@@ -41,6 +41,18 @@ void PostEffect::Initialize()
 	computeParametersMap_->gShift = { 0.0f,0.0f }; // Gずらし
 	computeParametersMap_->bShift = { 0.0f,0.0f }; // Bずらし
 
+	computeParametersMap_->distortion = 0.0f; // 歪み
+
+	computeParametersMap_->vignetteSize = 0.0f; // ビネットの大きさ
+
+	computeParametersMap_->horzGlitchPase = 0.1f; //水平
+	computeParametersMap_->vertGlitchPase = 0.1f; //垂直
+	computeParametersMap_->glitchStepValue = 0.1f; // グリッチのステップ値
+
+	computeParametersMap_->radialBlurSamples = 8; // ブラーのサンプル回数
+	computeParametersMap_->center = { 0.5f,0.5f }; // 中心座標
+	computeParametersMap_->strength = 0.0f; // ブラーの広がる強さ
+
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -704,6 +716,47 @@ void PostEffect::GlitchCommand(
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// ビネットを掛ける画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, glitchGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::RadialBlurCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& radialBlurGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexRadialBlur].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// ビネットを掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, radialBlurGPUHandle);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 

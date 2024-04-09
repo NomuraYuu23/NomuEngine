@@ -248,6 +248,9 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetHorzGlitchPase(horzGlitchPase);
 	PostEffect::GetInstance()->SetVertGlitchPase(vertGlitchPase);
 	PostEffect::GetInstance()->SetGlitchStepValue(glitchStepValue);
+	PostEffect::GetInstance()->SetRadialBlurSamples(radialBlurSamples);
+	PostEffect::GetInstance()->SetCenter(center);
+	PostEffect::GetInstance()->SetStrength(strength);
 
 }
 
@@ -417,7 +420,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->GlitchCommand(
+	PostEffect::GetInstance()->RadialBlurCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)
@@ -457,6 +460,9 @@ void GameScene::ImguiDraw(){
 	ImGui::DragFloat("horzGlitchPase", &horzGlitchPase, 0.01f);
 	ImGui::DragFloat("vertGlitchPase", &vertGlitchPase, 0.01f);
 	ImGui::DragFloat("glitchStepValue", &glitchStepValue, 0.01f);
+	//radialBlurSamples
+	ImGui::DragFloat2("center", &center.x, 0.01f);
+	ImGui::DragFloat("strength", &strength, 0.01f);
 	ImGui::End();
 
 	//Obj

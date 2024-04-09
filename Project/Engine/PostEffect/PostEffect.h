@@ -40,6 +40,10 @@ public: // サブクラス
 		float vertGlitchPase; // グリッチの垂直
 		float glitchStepValue; // グリッチのステップ値
 
+		int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
+		Vector2 center; // 中心座標
+		float strength; // ブラーの広がる強さ
+
 	};
 
 	/// <summary>
@@ -62,6 +66,7 @@ public: // サブクラス
 		kPipliineIndexBarrelCurved, // 樽状湾曲
 		kPipliineIndexVignette, // ビネット
 		kPipliineIndexGlitch, // グリッチ
+		kPipliineIndexRadialBlur, // 放射状ブラー
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -85,7 +90,8 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRGBShift"}, // RGBずらし
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBarrelCurved"}, // 樽状湾曲
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainVignette"}, // ビネット
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitch"} // グリッチ
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitch"}, // グリッチ
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
 	};
 	
 	// 画像の幅
@@ -277,6 +283,17 @@ public: // 関数
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchGPUHandle);
 
+	/// <summary>
+	/// 放射状ブラー
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="radialBlurGPUHandle">画像のGPUハンドル</param>
+	void RadialBlurCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& radialBlurGPUHandle);
+
 private: // 関数
 
 	/// <summary>
@@ -378,6 +395,24 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="glitchStepValue">グリッチのステップ値</param>
 	void SetGlitchStepValue(float glitchStepValue) { computeParametersMap_->glitchStepValue = glitchStepValue; }
+
+	/// <summary>
+	/// 放射状ブラーのサンプル回数設定
+	/// </summary>
+	/// <param name="radialBlurSamples">放射状ブラーのサンプル回数</param>
+	void SetRadialBlurSamples(int32_t radialBlurSamples) { computeParametersMap_->radialBlurSamples = radialBlurSamples; }
+
+	/// <summary>
+	/// 中心座標設定
+	/// </summary>
+	/// <param name="center">中心座標</param>
+	void SetCenter(const Vector2& center) { computeParametersMap_->center = center; }
+
+	/// <summary>
+	/// ブラーの広がる強さ設定
+	/// </summary>
+	/// <param name="strength">ブラーの広がる強さ</param>
+	void SetStrength(float strength) { computeParametersMap_->strength = strength; }
 
 private: // 変数
 
