@@ -68,6 +68,7 @@ public: // サブクラス
 		kPipliineIndexVignette, // ビネット
 		kPipliineIndexGlitch, // グリッチ
 		kPipliineIndexRadialBlur, // 放射状ブラー
+		kPipliineIndexShockWave, // 衝撃波
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -93,6 +94,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainVignette"}, // ビネット
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitch"}, // グリッチ
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
 	};
 	
 	// 画像の幅
@@ -299,6 +301,19 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& radialBlurGPUHandle);
+
+	/// <summary>
+	/// 衝撃波
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="radialBlurGPUHandle">画像のGPUハンドル</param>
+	/// <param name="shockWaveBuff">衝撃波バッファ</param>
+	void ShockWaveCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& shockWaveGPUHandle,
+		ID3D12Resource* shockWaveBuff);
 
 private: // 関数
 

@@ -102,7 +102,6 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat("radialBlurMask", &computeParametersMap_->radialBlurMask, 0.01f);
 	ImGui::End();
 
-
 }
 
 void PostEffect::CopyCommand(
@@ -741,7 +740,7 @@ void PostEffect::GlitchCommand(
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ビネットを掛ける画像をセット
+	// グリッチを掛ける画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, glitchGPUHandle);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
@@ -782,10 +781,54 @@ void PostEffect::RadialBlurCommand(
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ビネットを掛ける画像をセット
+	// 放射状ブラーを掛ける画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, radialBlurGPUHandle);
 	// 編集する画像セット
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::ShockWaveCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& shockWaveGPUHandle,
+	ID3D12Resource* shockWaveBuff)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexShockWave].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 衝撃波を掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, shockWaveGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+	// 衝撃波パラメータ
+	commandList_->SetComputeRootConstantBufferView(5, shockWaveBuff->GetGPUVirtualAddress());
 
 	// 実行
 	commandList_->Dispatch(x, y, z);
@@ -827,7 +870,7 @@ void PostEffect::CreateRootSignature()
 	descriptorRangeEditTextureInformation[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
 	// ルートパラメータ
-	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	D3D12_ROOT_PARAMETER rootParameters[6] = {};
 	// 定数バッファ
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
@@ -855,6 +898,11 @@ void PostEffect::CreateRootSignature()
 	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
 	rootParameters[4].Descriptor.ShaderRegister = 1;                  //レジスタ番号1とバインド
+
+	// 衝撃波バッファ
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
+	rootParameters[5].Descriptor.ShaderRegister = 2;                  //レジスタ番号1とバインド
 
 	descriptionRootsignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootsignature.NumParameters = _countof(rootParameters); //配列の長さ

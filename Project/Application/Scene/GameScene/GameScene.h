@@ -7,6 +7,7 @@
 #include "../../ShadowManager/ShadowManager.h"
 
 #include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
+#include "../../../Engine/PostEffect/ShockWaveManager.h"
 
 class GameScene : public IScene
 {
@@ -138,5 +139,8 @@ private:
 	std::unique_ptr<Model> testModel_;
 
 	float time = 40.0f;
+
+	// 衝撃波
+	std::unique_ptr<ShockWaveManager> shockWaveManager_;
 
 };

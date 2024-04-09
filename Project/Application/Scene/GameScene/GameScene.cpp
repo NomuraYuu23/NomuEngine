@@ -150,6 +150,9 @@ void GameScene::Initialize() {
 	segment2_ = std::make_unique<Segment2D>();
 	segment2_->Initialize({ 1280.0f, 1280.0f }, { 0.0f, 0.0f }, nullptr);
 
+	shockWaveManager_ = std::make_unique<ShockWaveManager>();
+	shockWaveManager_->Initialize();
+
 }
 
 /// <summary>
@@ -406,10 +409,11 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 
-	PostEffect::GetInstance()->RadialBlurCommand(
+	PostEffect::GetInstance()->ShockWaveCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
+		renderTargetTexture_->GetSrvGPUHandle(0),
+		shockWaveManager_->GetShockWaveData()
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);
 
@@ -435,6 +439,8 @@ void GameScene::ImguiDraw(){
 	ImGui::End();
 
 	PostEffect::GetInstance()->ImGuiDraw();
+
+	shockWaveManager_->ImGuiDraw();
 
 	//Obj
 	sampleObj_->ImGuiDraw();

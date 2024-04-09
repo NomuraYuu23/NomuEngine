@@ -51,6 +51,19 @@ struct VelocityParameters {
 // 速度データ
 ConstantBuffer<VelocityParameters> gVelocityConstants: register(b1);
 
+// 衝撃波データ
+struct ShockWaveParameters {
+
+	float32_t2 center; // 中心
+	float32_t distortion; // 歪み
+	float32_t radius; // 半径
+	float32_t thickness; // 厚み
+
+};
+
+// 衝撃波データ
+ConstantBuffer<ShockWaveParameters> gShockWaveConstants: register(b2);
+
 // ソース0
 Texture2D<float32_t4> sourceImage0 : register(t0);
 // ソース1
@@ -726,7 +739,6 @@ void RadialBlur(float32_t2 index) {
 
 }
 
-
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
 void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
@@ -734,6 +746,52 @@ void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		RadialBlur(dispatchId.xy);
+
+	}
+
+}
+
+void ShockWave(float32_t2 index) {
+
+	// uv
+	float32_t2 texcoord = float32_t2(
+		index.x / gComputeConstants.threadIdTotalX,
+		index.y / gComputeConstants.threadIdTotalY);
+	
+	// 比率
+	float32_t ratio = float32_t(gComputeConstants.threadIdTotalY) / float32_t(gComputeConstants.threadIdTotalX);
+
+	// テクスチャ比率に依存しない真円
+	float32_t2 scaleUV = (texcoord - float32_t2(0.5f, 0.0f)) / float32_t2(ratio, 1.0f) + float32_t2(0.5f, 0.0f);
+
+	// 中心を基準にした位置
+	float32_t2 position = scaleUV - gShockWaveConstants.center;
+
+	// マスク
+	float32_t mask =
+		(1.0f - smoothstep(gShockWaveConstants.radius - 0.1f, gShockWaveConstants.radius, length(position))) *
+		smoothstep(gShockWaveConstants.radius - gShockWaveConstants.thickness - 0.1f, gShockWaveConstants.radius - gShockWaveConstants.thickness, length(position));
+
+	// 歪み
+	float32_t2 distortion = normalize(position) * gShockWaveConstants.distortion * mask;
+	
+	// 新しいインデックス
+	float32_t2 newIndex = texcoord - distortion;
+	newIndex.x *= gComputeConstants.threadIdTotalX;
+	newIndex.y *= gComputeConstants.threadIdTotalY;
+	
+	// 出力
+	destinationImage0[index] = sourceImage0[newIndex];
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainShockWave(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		ShockWave(dispatchId.xy);
 
 	}
 
