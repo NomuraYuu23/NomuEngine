@@ -41,8 +41,9 @@ public: // サブクラス
 		float glitchStepValue; // グリッチのステップ値
 
 		int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
-		Vector2 center; // 中心座標
-		float strength; // ブラーの広がる強さ
+		Vector2 radialBlurCenter; // 放射状ブラーの中心座標
+		float radialBlurStrength; // 放射状ブラーの広がる強さ
+		float radialBlurMask; // 放射状ブラーが適用されないサイズ
 
 	};
 
@@ -118,6 +119,11 @@ public: // 関数
 	/// 初期化
 	/// </summary>
 	void Initialize();
+
+	/// <summary>
+	/// imGui描画
+	/// </summary>
+	void ImGuiDraw();
 
 	/// <summary>
 	/// 編集する画像取得
@@ -405,14 +411,20 @@ public: // アクセッサ
 	/// <summary>
 	/// 中心座標設定
 	/// </summary>
-	/// <param name="center">中心座標</param>
-	void SetCenter(const Vector2& center) { computeParametersMap_->center = center; }
+	/// <param name="radialBlurCenter">中心座標</param>
+	void SetRadialBlurCenter(const Vector2& radialBlurCenter) { computeParametersMap_->radialBlurCenter = radialBlurCenter; }
 
 	/// <summary>
 	/// ブラーの広がる強さ設定
 	/// </summary>
-	/// <param name="strength">ブラーの広がる強さ</param>
-	void SetStrength(float strength) { computeParametersMap_->strength = strength; }
+	/// <param name="radialBlurStrength">ブラーの広がる強さ</param>
+	void SetRadialBlurStrength(float radialBlurStrength) { computeParametersMap_->radialBlurStrength = radialBlurStrength; }
+
+	/// <summary>
+	/// 放射状ブラーが適用されないサイズ設定
+	/// </summary>
+	/// <param name="radialBlurMask">放射状ブラーが適用されないサイズ</param>
+	void SetRadialBlurMask(float radialBlurMask) { computeParametersMap_->radialBlurMask = radialBlurMask; }
 
 private: // 変数
 

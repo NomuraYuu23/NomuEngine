@@ -33,9 +33,10 @@ struct ComputeParameters {
 	float32_t vertGlitchPase; //垂直
 	float32_t glitchStepValue; // グリッチのステップ値
 
-	int32_t radialBlurSamples; // ブラーのサンプル回数
-	float32_t2 center; // 中心座標
-	float32_t strength; // ブラーの広がる強さ
+	int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
+	float32_t2 radialBlurCenter; // 放射状ブラーの中心座標
+	float32_t radialBlurStrength; // 放射状ブラーの広がる強さ
+	float32_t radialBlurMask; // 放射状ブラーが適用されないサイズ
 
 };
 
@@ -698,19 +699,21 @@ void RadialBlur(float32_t2 index) {
 		index.y / gComputeConstants.threadIdTotalY);
 
 	// 中心を基準にした位置
-	float32_t2 position = texcoord - gComputeConstants.center;
+	float32_t2 position = texcoord - gComputeConstants.radialBlurCenter;
 
 	// 中心からの距離
 	float32_t distance = length(position);
-
-	//
-	float32_t factor = gComputeConstants.strength / float32_t(gComputeConstants.radialBlurSamples) * distance;
+	float32_t factor = gComputeConstants.radialBlurStrength / float32_t(gComputeConstants.radialBlurSamples) * distance;
+	
+	// ブラーが適用されない範囲を計算, 0.1の範囲をぼかす
+	factor *= smoothstep(gComputeConstants.radialBlurMask - 0.1f, gComputeConstants.radialBlurMask, distance);
+	
 	// 新しいインデックス
 	float32_t2 newIndex = float32_t2(0.0f, 0.0f);
-	//
+	// サンプル分回す
 	for (int32_t i = 0; i < gComputeConstants.radialBlurSamples; ++i) {
 		float32_t uvOffset = 1.0f - factor * float32_t(i);
-		newIndex = position * uvOffset + gComputeConstants.center;
+		newIndex = position * uvOffset + gComputeConstants.radialBlurCenter;
 		newIndex.x *= gComputeConstants.threadIdTotalX;
 		newIndex.y *= gComputeConstants.threadIdTotalY;
 		output += sourceImage0[newIndex];

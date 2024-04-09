@@ -137,21 +137,6 @@ private:
 	std::unique_ptr<LargeNumberOfObjects> testManyObject_;
 	std::unique_ptr<Model> testModel_;
 
-
-	int32_t kernelSize = 7;
-	float sigma = 3.0f;
 	float time = 40.0f;
-	Vector2 rShift = { 0.0f,0.0f }; // Rずらし
-	Vector2 gShift = { 0.0f,0.0f }; // Gずらし
-	Vector2 bShift = { 0.0f,0.0f }; // Bずらし
-	float distortion = 0.0f; // 歪み
-	float vignetteSize = 0.0f; // ビネットの大きさ
-	float horzGlitchPase = 0.1f; // グリッチの水平
-	float vertGlitchPase = 0.1f; // グリッチの垂直
-	float glitchStepValue = 0.1f; // グリッチのステップ値
 
-	uint32_t radialBlurSamples = 8; // ブラーのサンプル回数
-	Vector2 center = { 0.5f,0.5f }; // 中心座標
-	float strength = 0.0f; // ブラーの広がる強さ
-	
 };

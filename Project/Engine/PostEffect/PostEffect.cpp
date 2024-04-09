@@ -4,6 +4,7 @@
 #include "../base/CompileShader.h"
 #include <fstream>
 #include <cmath>
+#include "../2D/ImguiManager.h"
 
 PostEffect* PostEffect::GetInstance()
 {
@@ -50,8 +51,9 @@ void PostEffect::Initialize()
 	computeParametersMap_->glitchStepValue = 0.1f; // グリッチのステップ値
 
 	computeParametersMap_->radialBlurSamples = 8; // ブラーのサンプル回数
-	computeParametersMap_->center = { 0.5f,0.5f }; // 中心座標
-	computeParametersMap_->strength = 0.0f; // ブラーの広がる強さ
+	computeParametersMap_->radialBlurCenter = { 0.5f,0.5f }; // 中心座標
+	computeParametersMap_->radialBlurStrength = 0.0f; // ブラーの広がる強さ
+	computeParametersMap_->radialBlurMask = 0.0f; // 放射状ブラーが適用されないサイズ
 
 	// ルートシグネチャ
 	CreateRootSignature();
@@ -75,6 +77,31 @@ void PostEffect::Initialize()
 			kTextureWidth,
 			kTextureHeight);
 	}
+
+}
+
+void PostEffect::ImGuiDraw()
+{
+
+	ImGui::Begin("PostEffect");
+	ImGui::Text("time %6.2f", computeParametersMap_->time);
+	ImGui::DragFloat("threshold", &computeParametersMap_->threshold);
+	ImGui::DragInt("kernelSize", &computeParametersMap_->kernelSize, 2, 1, 55);
+	ImGui::DragFloat("sigma", &computeParametersMap_->sigma, 0.01f);
+	ImGui::DragFloat2("rShift", &computeParametersMap_->rShift.x, 0.01f);
+	ImGui::DragFloat2("gShift", &computeParametersMap_->gShift.x, 0.01f);
+	ImGui::DragFloat2("bShift", &computeParametersMap_->bShift.x, 0.01f);
+	ImGui::DragFloat("distortion", &computeParametersMap_->distortion, 0.01f);
+	ImGui::DragFloat("vignetteSize", &computeParametersMap_->vignetteSize, 0.01f);
+	ImGui::DragFloat("horzGlitchPase", &computeParametersMap_->horzGlitchPase, 0.01f);
+	ImGui::DragFloat("vertGlitchPase", &computeParametersMap_->vertGlitchPase, 0.01f);
+	ImGui::DragFloat("glitchStepValue", &computeParametersMap_->glitchStepValue, 0.01f);
+	ImGui::DragInt("radialBlurSamples", &computeParametersMap_->radialBlurSamples, 2, 2, 32);
+	ImGui::DragFloat2("radialBlurCenter", &computeParametersMap_->radialBlurCenter.x, 0.01f);
+	ImGui::DragFloat("radialBlurStrength", &computeParametersMap_->radialBlurStrength, 0.01f);
+	ImGui::DragFloat("radialBlurMask", &computeParametersMap_->radialBlurMask, 0.01f);
+	ImGui::End();
+
 
 }
 

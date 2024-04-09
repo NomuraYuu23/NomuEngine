@@ -236,21 +236,7 @@ void GameScene::Update() {
 
 
 	time = std::fmodf(time + kDeltaTime_, 50.0f);
-	PostEffect::GetInstance()->SetThreshold(0.4f);
-	PostEffect::GetInstance()->SetKernelSize(kernelSize);
-	PostEffect::GetInstance()->SetSigma(sigma);
 	PostEffect::GetInstance()->SetTime(time);
-	PostEffect::GetInstance()->SetRShift(rShift);
-	PostEffect::GetInstance()->SetGShift(gShift);
-	PostEffect::GetInstance()->SetBShift(bShift);
-	PostEffect::GetInstance()->SetDistortion(distortion);
-	PostEffect::GetInstance()->SetVignetteSize(vignetteSize);
-	PostEffect::GetInstance()->SetHorzGlitchPase(horzGlitchPase);
-	PostEffect::GetInstance()->SetVertGlitchPase(vertGlitchPase);
-	PostEffect::GetInstance()->SetGlitchStepValue(glitchStepValue);
-	PostEffect::GetInstance()->SetRadialBlurSamples(radialBlurSamples);
-	PostEffect::GetInstance()->SetCenter(center);
-	PostEffect::GetInstance()->SetStrength(strength);
 
 }
 
@@ -448,22 +434,7 @@ void GameScene::ImguiDraw(){
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	ImGui::Begin("GaussianBlur");
-	ImGui::DragInt("kernelSize", &kernelSize);
-	ImGui::DragFloat("sigma", &sigma, 0.01f);
-	//ImGui::DragFloat("time", &time, 0.01f);
-	ImGui::DragFloat2("rShift", &rShift.x, 0.01f);
-	ImGui::DragFloat2("gShift", &gShift.x, 0.01f);
-	ImGui::DragFloat2("bShift", &bShift.x, 0.01f);
-	ImGui::DragFloat("distortion", &distortion, 0.01f);
-	ImGui::DragFloat("vignetteSize", &vignetteSize, 0.01f);
-	ImGui::DragFloat("horzGlitchPase", &horzGlitchPase, 0.01f);
-	ImGui::DragFloat("vertGlitchPase", &vertGlitchPase, 0.01f);
-	ImGui::DragFloat("glitchStepValue", &glitchStepValue, 0.01f);
-	//radialBlurSamples
-	ImGui::DragFloat2("center", &center.x, 0.01f);
-	ImGui::DragFloat("strength", &strength, 0.01f);
-	ImGui::End();
+	PostEffect::GetInstance()->ImGuiDraw();
 
 	//Obj
 	sampleObj_->ImGuiDraw();
