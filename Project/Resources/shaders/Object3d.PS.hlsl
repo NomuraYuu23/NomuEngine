@@ -44,11 +44,19 @@ struct SpotLight {
 	bool used; // 使用している
 };
 
+struct Fog {
+	float32_t4 color; // 色
+	float32_t fagNear; // 開始位置
+	float32_t fagFar; // 終了位置
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
 ConstantBuffer<Camera> gCamera : register(b2);
+
+ConstantBuffer<Fog> gFog : register(b3);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 
@@ -452,6 +460,13 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	else {
 		output.color = gMaterial.color * textureColor;
 	}
+	
+	// 霧処理
+	float32_t d = distance(input.worldPosition, gCamera.worldPosition);
+	float32_t fogT = (gFog.fagFar - d) / (gFog.fagFar - gFog.fagNear);
+	fogT = clamp(fogT, 0.0f, 1.0f);
+
+	output.color.xyz = output.color.xyz * fogT + gFog.color.xyz * (1.0f - fogT);
 
 	// textureかoutput.colorのα値が0の時にPixelを棄却
 	if (textureColor.a == 0.0 || output.color.a == 0.0) {

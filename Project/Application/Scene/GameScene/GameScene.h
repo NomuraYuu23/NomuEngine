@@ -8,6 +8,7 @@
 
 #include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
 #include "../../../Engine/PostEffect/ShockWaveManager.h"
+#include "../../../Engine/3D/FogManager.h"
 
 class GameScene : public IScene
 {
@@ -142,5 +143,8 @@ private:
 
 	// 衝撃波
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
+
+	// 霧
+	std::unique_ptr<FogManager> fogManager_;
 
 };

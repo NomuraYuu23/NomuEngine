@@ -27,8 +27,8 @@ void FogManager::ImGuiDraw()
 
 	ImGui::Begin("Fog");
 	ImGui::ColorEdit3("color", &fogDataMap_->color.x);
-	ImGui::DragFloat("distortion", &fogDataMap_->fagNear, 0.01f);
-	ImGui::DragFloat("radius", &fogDataMap_->fagFar, 0.01f);
+	ImGui::DragFloat("fagNear", &fogDataMap_->fagNear, 0.01f);
+	ImGui::DragFloat("fagFar", &fogDataMap_->fagFar, 0.01f);
 	ImGui::End();
 
 }
