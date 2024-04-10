@@ -840,8 +840,8 @@ void FlarePara(float32_t2 index) {
 	float32_t para = 1.0f - clamp(length(paraLength), 0.0f, 1.0f);
 	
 	// 出力
-	output.rgb *= lerp(float32_t3(1.0f, 1.0f, 1.0f), gComputeConstants.paraColor.rgb, para);
-	output.rgb += lerp(float32_t3(0.0f, 0.0f, 0.0f), gComputeConstants.flareColor.rgb, flare);
+	output.rgb *= lerp(float32_t3(1.0f, 1.0f, 1.0f), gComputeConstants.paraColor.rgb, para) * gComputeConstants.paraColor.a;
+	output.rgb += lerp(float32_t3(0.0f, 0.0f, 0.0f), gComputeConstants.flareColor.rgb, flare) * gComputeConstants.flareColor.a;
 	destinationImage0[index] = output;
 
 }

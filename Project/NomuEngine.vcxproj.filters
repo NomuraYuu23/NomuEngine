@@ -172,9 +172,6 @@
     <Filter Include="shaders\Sprite">
       <UniqueIdentifier>{bcd03177-6322-4dc5-96fb-0dfe0a3f1def}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\SwapChain">
-      <UniqueIdentifier>{30140878-4e83-4bd0-aeca-3a4709ae9343}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\PostEffect">
       <UniqueIdentifier>{bb8c5e74-1d42-431a-a81b-b1a379c467cc}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="Engine\PostEffect">
       <UniqueIdentifier>{c33a6266-7178-4232-9219-9a698fd35354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\WindowSprite">
+      <UniqueIdentifier>{30140878-4e83-4bd0-aeca-3a4709ae9343}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1042,7 +1042,7 @@
       <Filter>shaders\Sprite</Filter>
     </None>
     <None Include="Resources\shaders\WindowSprite.hlsli">
-      <Filter>shaders\SwapChain</Filter>
+      <Filter>shaders\WindowSprite</Filter>
     </None>
     <None Include="Resources\shaders\Glare.hlsl">
       <Filter>shaders\PostEffect\Glare</Filter>
@@ -1092,10 +1092,10 @@
       <Filter>shaders\Sprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\WindowSprite.VS.hlsl">
-      <Filter>shaders\SwapChain</Filter>
+      <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\WindowSprite.PS.hlsl">
-      <Filter>shaders\SwapChain</Filter>
+      <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyModels.VS.hlsl">
       <Filter>shaders\Object3d</Filter>

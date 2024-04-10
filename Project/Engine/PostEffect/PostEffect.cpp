@@ -93,9 +93,9 @@ void PostEffect::ImGuiDraw()
 
 	ImGui::Begin("PostEffect");
 	ImGui::Text("time %6.2f", computeParametersMap_->time);
-	ImGui::DragFloat("threshold", &computeParametersMap_->threshold);
-	ImGui::DragInt("kernelSize", &computeParametersMap_->kernelSize, 2, 1, 55);
-	ImGui::DragFloat("sigma", &computeParametersMap_->sigma, 0.01f);
+	ImGui::DragFloat("threshold", &computeParametersMap_->threshold, 0.01f, 0.0f, 1.0f);
+	ImGui::DragInt("kernelSize", &computeParametersMap_->kernelSize, 2, 3, 55);
+	ImGui::DragFloat("sigma", &computeParametersMap_->sigma, 0.01f, 0.0f);
 	ImGui::DragFloat2("rShift", &computeParametersMap_->rShift.x, 0.01f);
 	ImGui::DragFloat2("gShift", &computeParametersMap_->gShift.x, 0.01f);
 	ImGui::DragFloat2("bShift", &computeParametersMap_->bShift.x, 0.01f);
@@ -108,10 +108,10 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("radialBlurCenter", &computeParametersMap_->radialBlurCenter.x, 0.01f);
 	ImGui::DragFloat("radialBlurStrength", &computeParametersMap_->radialBlurStrength, 0.01f);
 	ImGui::DragFloat("radialBlurMask", &computeParametersMap_->radialBlurMask, 0.01f);
-	ImGui::ColorEdit3("flareColor", &computeParametersMap_->flareColor.x);
+	ImGui::ColorEdit4("flareColor", &computeParametersMap_->flareColor.x);
 	ImGui::DragFloat2("flareSize", &computeParametersMap_->flareSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("flarePosition", &computeParametersMap_->flarePosition.x, 0.01f);
-	ImGui::ColorEdit3("paraColor", &computeParametersMap_->paraColor.x);
+	ImGui::ColorEdit4("paraColor", &computeParametersMap_->paraColor.x);
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 	ImGui::End();
