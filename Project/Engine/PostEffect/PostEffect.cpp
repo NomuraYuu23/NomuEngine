@@ -55,6 +55,14 @@ void PostEffect::Initialize()
 	computeParametersMap_->radialBlurStrength = 0.0f; // ブラーの広がる強さ
 	computeParametersMap_->radialBlurMask = 0.0f; // 放射状ブラーが適用されないサイズ
 
+	computeParametersMap_->flareColor = { 0.7f, 0.7f, 0.7f, 0.7f }; // フレアの色
+	computeParametersMap_->flareSize = { 0.3f, 0.3f }; // フレアの大きさ
+	computeParametersMap_->flarePosition = { 0.0f, 0.0f }; // フレアの位置
+
+	computeParametersMap_->paraColor = { 0.2f, 0.2f, 0.2f, 0.7f };  // パラの色
+	computeParametersMap_->paraSize = { 0.3f, 0.3f };// パラの大きさ
+	computeParametersMap_->paraPosition = { 1280.0f, 720.0f }; // パラの位置
+
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -100,6 +108,12 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("radialBlurCenter", &computeParametersMap_->radialBlurCenter.x, 0.01f);
 	ImGui::DragFloat("radialBlurStrength", &computeParametersMap_->radialBlurStrength, 0.01f);
 	ImGui::DragFloat("radialBlurMask", &computeParametersMap_->radialBlurMask, 0.01f);
+	ImGui::ColorEdit3("flareColor", &computeParametersMap_->flareColor.x);
+	ImGui::DragFloat2("flareSize", &computeParametersMap_->flareSize.x, 0.01f, 0.0f);
+	ImGui::DragFloat2("flarePosition", &computeParametersMap_->flarePosition.x, 0.01f);
+	ImGui::ColorEdit3("paraColor", &computeParametersMap_->paraColor.x);
+	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
+	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 	ImGui::End();
 
 }
@@ -829,6 +843,47 @@ void PostEffect::ShockWaveCommand(
 	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 	// 衝撃波パラメータ
 	commandList_->SetComputeRootConstantBufferView(5, shockWaveBuff->GetGPUVirtualAddress());
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
+void PostEffect::FlareParaCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& flareParaGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexFlarePara].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 衝撃波を掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, flareParaGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
 
 	// 実行
 	commandList_->Dispatch(x, y, z);

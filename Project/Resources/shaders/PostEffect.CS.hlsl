@@ -38,6 +38,14 @@ struct ComputeParameters {
 	float32_t radialBlurStrength; // 放射状ブラーの広がる強さ
 	float32_t radialBlurMask; // 放射状ブラーが適用されないサイズ
 
+	float32_t4 flareColor; // フレアの色
+	float32_t2 flareSize; // フレアの大きさ
+	float32_t2 flarePosition; // フレアの位置
+
+	float32_t4 paraColor; // パラの色
+	float32_t2 paraSize; // パラの大きさ
+	float32_t2 paraPosition; // パラの位置
+
 };
 
 // 定数データ
@@ -362,8 +370,6 @@ void Overwrite(float32_t2 index) {
 
 		alphaOut = min(alphaOut, output.a);
 
-		destinationImage0[index] = input;
-
 		if (output.a != 0.0f) {
 			float32_t a = min(alphaOut / output.a, 1.0f);
 
@@ -374,8 +380,11 @@ void Overwrite(float32_t2 index) {
 					output.b * a,
 					alphaOut);
 
-			destinationImage0[index] += color;
+			destinationImage0[index] = input + color;
 
+		}
+		else {
+			destinationImage0[index] = input;
 		}
 
 	}
@@ -804,6 +813,46 @@ void mainShockWave(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		ShockWave(dispatchId.xy);
+
+	}
+
+}
+
+void FlarePara(float32_t2 index) {
+
+	// アウトプットにソース画像を入れる
+	float32_t4 output = sourceImage0[index];
+
+	// フレアの距離
+	float32_t2 flareLength = index - gComputeConstants.flarePosition;
+	flareLength.x = flareLength.x / gComputeConstants.flareSize.x / gComputeConstants.threadIdTotalY;
+	flareLength.y = flareLength.y / gComputeConstants.flareSize.y / gComputeConstants.threadIdTotalY;
+
+	// フレア
+	float32_t flare = 1.0f - clamp(length(flareLength), 0.0f, 1.0f);
+
+	// パラの距離
+	float32_t2 paraLength = index - gComputeConstants.paraPosition;
+	paraLength.x = paraLength.x / gComputeConstants.paraSize.x / gComputeConstants.threadIdTotalY;
+	paraLength.y = paraLength.y / gComputeConstants.paraSize.y / gComputeConstants.threadIdTotalY;
+
+	// パラ
+	float32_t para = 1.0f - clamp(length(paraLength), 0.0f, 1.0f);
+	
+	// 出力
+	output.rgb *= lerp(float32_t3(1.0f, 1.0f, 1.0f), gComputeConstants.paraColor.rgb, para);
+	output.rgb += lerp(float32_t3(0.0f, 0.0f, 0.0f), gComputeConstants.flareColor.rgb, flare);
+	destinationImage0[index] = output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainFlarePara(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		FlarePara(dispatchId.xy);
 
 	}
 

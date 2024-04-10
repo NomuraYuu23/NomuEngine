@@ -45,6 +45,14 @@ public: // サブクラス
 		float radialBlurStrength; // 放射状ブラーの広がる強さ
 		float radialBlurMask; // 放射状ブラーが適用されないサイズ
 
+		Vector4 flareColor; // フレアの色
+		Vector2 flareSize; // フレアの大きさ
+		Vector2 flarePosition; // フレアの位置
+
+		Vector4 paraColor; // パラの色
+		Vector2 paraSize; // パラの大きさ
+		Vector2 paraPosition; // パラの位置
+
 	};
 
 	/// <summary>
@@ -69,6 +77,7 @@ public: // サブクラス
 		kPipliineIndexGlitch, // グリッチ
 		kPipliineIndexRadialBlur, // 放射状ブラー
 		kPipliineIndexShockWave, // 衝撃波
+		kPipliineIndexFlarePara, // フレア パラ
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -95,6 +104,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitch"}, // グリッチ
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
 	};
 	
 	// 画像の幅
@@ -315,6 +325,18 @@ public: // 関数
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& shockWaveGPUHandle,
 		ID3D12Resource* shockWaveBuff);
 
+	/// <summary>
+	/// フレアパラ
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="flareParaGPUHandle">画像のGPUハンドル</param>
+	void FlareParaCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& flareParaGPUHandle);
+
+
 private: // 関数
 
 	/// <summary>
@@ -440,6 +462,43 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="radialBlurMask">放射状ブラーが適用されないサイズ</param>
 	void SetRadialBlurMask(float radialBlurMask) { computeParametersMap_->radialBlurMask = radialBlurMask; }
+	
+	/// <summary>
+	/// フレアの色設定
+	/// </summary>
+	/// <param name="flareColor">フレアの色</param>
+	void SetFlareColor(const Vector4& flareColor) { computeParametersMap_->flareColor = flareColor; }
+	
+	/// <summary>
+	/// フレアの大きさ設定
+	/// </summary>
+	/// <param name="flareSize">フレアの大きさ</param>
+	void SetFlareSize(const Vector2& flareSize) { computeParametersMap_->flareSize = flareSize; }
+	
+	/// <summary>
+	/// フレアの位置設定
+	/// </summary>
+	/// <param name="flarePosition">フレアの位置</param>
+	void SetFlarePosition(const Vector2& flarePosition) { computeParametersMap_->flarePosition = flarePosition; }
+
+	/// <summary>
+	/// パラの色設定
+	/// </summary>
+	/// <param name="paraColor">パラの色</param>
+	void SetParaColor(const Vector4& paraColor) { computeParametersMap_->paraColor = paraColor; }
+	
+	/// <summary>
+	/// パラの大きさ設定
+	/// </summary>
+	/// <param name="paraSize">パラの大きさ</param>
+	void SetParaSize(const Vector2& paraSize) { computeParametersMap_->paraSize = paraSize; }
+	
+	/// <summary>
+	/// パラの位置設定
+	/// </summary>
+	/// <param name="paraPosition">パラの位置</param>
+	void SetParaPosition(const Vector2& paraPosition) { computeParametersMap_->paraPosition = paraPosition; }
+
 
 private: // 変数
 
