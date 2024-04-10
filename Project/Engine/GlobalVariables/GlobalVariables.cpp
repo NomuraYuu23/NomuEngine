@@ -374,8 +374,8 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		// float型の値を保持していれば
 		else if (itItem->is_number_float()) {
 			// float型の値を登録
-			double value = itItem->get<double>();
-			SetValue(groupName, itemName, static_cast<float>(value));
+			float value = itItem->get<float>();
+			SetValue(groupName, itemName, value);
 		}
 		// 要素数2の配列であれば
 		else if (itItem->is_array() && itItem->size() == 2) {
@@ -462,7 +462,7 @@ uint32_t GlobalVariables::GetUIntValue(const std::string& groupName, const std::
 
 	assert(group.find(key) != group.end());
 
-	return static_cast<uint32_t>(std::get<0>(group[key]));
+	return std::get<1>(group[key]);
 }
 
 // 値の取得(float)
