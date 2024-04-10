@@ -42,7 +42,7 @@ void RootParameterManager::RootParameterInitializeForModel()
 {
 
 	//RootParameter作成
-	D3D12_ROOT_PARAMETER rootParameters[12] = {};
+	D3D12_ROOT_PARAMETER rootParameters[13] = {};
 	
 	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
@@ -105,7 +105,10 @@ void RootParameterManager::RootParameterInitializeForModel()
 	rootParameters[11].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexSpotLight].data();//Tableの中身の配列を指定
 	rootParameters[11].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexSpotLight].size());//Tableで利用する数
 
-	// 
+	// 霧
+	rootParameters[12].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[12].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[12].Descriptor.ShaderRegister = 3;
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexModel].push_back(rootParameters[i]);
