@@ -29,6 +29,32 @@ public: // 関数
 	/// <returns></returns>
 	ID3D12Resource* GetShockWaveDataBuff() { return shockWaveDataBuff_.Get(); }
 
+public: // アクセッサ
+
+	/// <summary>
+	/// 中心設定
+	/// </summary>
+	/// <param name="center">中心</param>
+	void SetCenter(const Vector2& center) { shockWaveDataMap_->center = center; }
+
+	/// <summary>
+	/// 歪み設定
+	/// </summary>
+	/// <param name="distortion">歪み</param>
+	void SetDistortion(float distortion) { shockWaveDataMap_->distortion = distortion; }
+
+	/// <summary>
+	/// 半径設定
+	/// </summary>
+	/// <param name="radius">半径</param>
+	void SetRadius(float radius) { shockWaveDataMap_->radius = radius; }
+
+	/// <summary>
+	/// 厚み設定
+	/// </summary>
+	/// <param name="thickness">厚み</param>
+	void SetThickness(float thickness) { shockWaveDataMap_->thickness = thickness; }
+
 private: //変数
 
 	// デバイス
@@ -38,6 +64,9 @@ private: //変数
 	Microsoft::WRL::ComPtr<ID3D12Resource> shockWaveDataBuff_;
 	// ShockWaveマップ
 	ShockWaveData* shockWaveDataMap_;
+
+	float radiusMax_; // 半径最大
+	float radiusAddValue_; // 半径の加算値
 
 };
 

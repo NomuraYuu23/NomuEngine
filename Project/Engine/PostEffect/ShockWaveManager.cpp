@@ -17,12 +17,15 @@ void ShockWaveManager::Initialize()
 	shockWaveDataMap_->radius = 0.0f;
 	shockWaveDataMap_->thickness = 0.01f;
 
+	radiusMax_ = 1.0f;
+	radiusAddValue_ = 0.02f;
+
 }
 
 void ShockWaveManager::Update()
 {
 
-	shockWaveDataMap_->radius = std::fmodf(shockWaveDataMap_->radius + 0.02f, 1.0f);
+	shockWaveDataMap_->radius = std::fmodf(shockWaveDataMap_->radius + radiusAddValue_, radiusMax_);
 
 }
 
@@ -34,6 +37,8 @@ void ShockWaveManager::ImGuiDraw()
 	ImGui::DragFloat("distortion", &shockWaveDataMap_->distortion, 0.01f);
 	ImGui::DragFloat("radius", &shockWaveDataMap_->radius, 0.01f);
 	ImGui::DragFloat("thickness", &shockWaveDataMap_->thickness, 0.01f);
+	ImGui::DragFloat("radiusMax", &radiusMax_, 0.01f);
+	ImGui::DragFloat("radiusAddValue", &radiusAddValue_, 0.01f);
 	ImGui::End();
 
 }
