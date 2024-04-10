@@ -264,7 +264,7 @@ void RootParameterManager::RootParameterInitializeForManyModels()
 {
 
 	//RootParameter作成
-	D3D12_ROOT_PARAMETER rootParameters[12] = {};
+	D3D12_ROOT_PARAMETER rootParameters[13] = {};
 	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -323,6 +323,11 @@ void RootParameterManager::RootParameterInitializeForManyModels()
 	rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
 	rootParameters[11].Descriptor.ShaderRegister = 0;
+
+	// 霧
+	rootParameters[12].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[12].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[12].Descriptor.ShaderRegister = 3;
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexManyModels].push_back(rootParameters[i]);
