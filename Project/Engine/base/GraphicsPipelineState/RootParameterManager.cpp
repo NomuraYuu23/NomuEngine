@@ -255,7 +255,7 @@ void RootParameterManager::RootParameterInitializeForSwapChain()
 
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
-		rootParameters_[kRootParameterIndexSwapChain].push_back(rootParameters[i]);
+		rootParameters_[kRootParameterIndexWindowSprite].push_back(rootParameters[i]);
 	}
 
 }

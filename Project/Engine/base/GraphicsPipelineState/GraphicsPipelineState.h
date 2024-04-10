@@ -25,7 +25,7 @@ public: // 変数
 		kPipelineStateNameOutLine, //アウトライン
 		kPipelineStateNameCollision2DDebugDraw, // コライダーデバッグ2D
 		kPipelineStateNameLine, // 線
-		kPipelineStateNameSwapChain, // スワップチェーン
+		kPipelineStateNameWindowSprite, // スワップチェーン
 		kPipelineStateNameManyModels, // たくさんのモデル
 		kPipelineStateNameOfCount // 使わない
 	};

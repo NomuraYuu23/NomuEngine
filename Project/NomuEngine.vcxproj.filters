@@ -1041,7 +1041,7 @@
     <None Include="Resources\shaders\Sprite.hlsli">
       <Filter>shaders\Sprite</Filter>
     </None>
-    <None Include="Resources\shaders\SwapChain.hlsli">
+    <None Include="Resources\shaders\WindowSprite.hlsli">
       <Filter>shaders\SwapChain</Filter>
     </None>
     <None Include="Resources\shaders\Glare.hlsl">
@@ -1091,10 +1091,10 @@
     <FxCompile Include="Resources\shaders\Sprite.PS.hlsl">
       <Filter>shaders\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\SwapChain.VS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite.VS.hlsl">
       <Filter>shaders\SwapChain</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\SwapChain.PS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite.PS.hlsl">
       <Filter>shaders\SwapChain</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyModels.VS.hlsl">

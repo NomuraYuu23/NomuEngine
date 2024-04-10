@@ -35,7 +35,7 @@ enum RootParameterIndex {
 	kRootParameterIndexOutLine, // アウトライン
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
 	kRootParameterIndexLine, // 線
-	kRootParameterIndexSwapChain, // スワップチェーン
+	kRootParameterIndexWindowSprite, // ウィンドウスプライト
 	kRootParameterIndexManyModels, // 多くのオブジェクト
 	kRootParameterIndexOfCount,
 };

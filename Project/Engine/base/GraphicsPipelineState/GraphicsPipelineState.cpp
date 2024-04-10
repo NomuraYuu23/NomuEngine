@@ -334,12 +334,12 @@ void GraphicsPipelineState::CreateForSwapChain()
 	CreatePSODesc createPSODesc;
 
 	RootsignatureSetting(
-		kPipelineStateNameSwapChain,
+		kPipelineStateNameWindowSprite,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
-		kRootParameterIndexSwapChain,
+		kRootParameterIndexWindowSprite,
 		kSamplerIndexPostEffect);
 
-	createPSODesc.pipelineStateName = kPipelineStateNameSwapChain;
+	createPSODesc.pipelineStateName = kPipelineStateNameWindowSprite;
 
 	createPSODesc.depthStencilState = DepthStencilStateSetting(
 		true,
@@ -353,9 +353,9 @@ void GraphicsPipelineState::CreateForSwapChain()
 
 	createPSODesc.rasterizerDesc = ResiterzerStateSetting(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
-	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/SwapChain.VS.hlsl",
+	createPSODesc.vertexShaderBlob = CompileShader::Compile(L"Resources/shaders/WindowSprite.VS.hlsl",
 		L"vs_6_0");
-	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/SwapChain.PS.hlsl",
+	createPSODesc.pixelShaderBlob = CompileShader::Compile(L"Resources/shaders/WindowSprite.PS.hlsl",
 		L"ps_6_0");
 
 	//書き込むRTVの情報
