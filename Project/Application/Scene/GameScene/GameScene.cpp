@@ -240,6 +240,7 @@ void GameScene::Update() {
 
 	time = std::fmodf(time + kDeltaTime_, 50.0f);
 	PostEffect::GetInstance()->SetTime(time);
+	shockWaveManager_->Update();
 
 }
 
@@ -413,7 +414,7 @@ void GameScene::Draw() {
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0),
-		shockWaveManager_->GetShockWaveData()
+		shockWaveManager_->GetShockWaveDataBuff()
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);
 

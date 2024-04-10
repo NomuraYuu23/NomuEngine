@@ -21,6 +21,9 @@ void ShockWaveManager::Initialize()
 
 void ShockWaveManager::Update()
 {
+
+	shockWaveDataMap_->radius = std::fmodf(shockWaveDataMap_->radius + 0.02f, 1.0f);
+
 }
 
 void ShockWaveManager::ImGuiDraw()
