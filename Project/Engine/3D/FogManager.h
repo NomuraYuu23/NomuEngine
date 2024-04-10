@@ -9,6 +9,11 @@ class FogManager
 public: // 関数
 
 	/// <summary>
+	/// インスタンス取得
+	/// </summary>
+	static FogManager* GetInstance();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize();
@@ -58,6 +63,12 @@ private: //変数
 	Microsoft::WRL::ComPtr<ID3D12Resource> fogDataBuff_;
 	// ShockWaveマップ
 	FogData* fogDataMap_;
+
+private: // シングルトン
+	FogManager() = default;
+	~FogManager() = default;
+	FogManager(const FogManager&) = delete;
+	const FogManager& operator=(const FogManager&) = delete;
 
 };
 

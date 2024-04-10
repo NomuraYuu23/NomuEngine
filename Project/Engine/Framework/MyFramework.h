@@ -50,6 +50,9 @@
 // PostEffect
 #include "../PostEffect/PostEffect.h"
 
+// FogManager
+#include "../3D/FogManager.h"
+
 class MyFramework
 {
 

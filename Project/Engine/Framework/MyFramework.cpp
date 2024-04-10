@@ -58,6 +58,9 @@ void MyFramework::Initialize()
 	// ポストエフェクト
 	PostEffect::GetInstance()->Initialize();
 
+	// 霧
+	FogManager::GetInstance()->Initialize();
+
 	//サウンド
 	audio = Audio::GetInstance();
 	audio->Initialize();

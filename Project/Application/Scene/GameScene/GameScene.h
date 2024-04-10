@@ -144,7 +144,4 @@ private:
 	// 衝撃波
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
 
-	// 霧
-	std::unique_ptr<FogManager> fogManager_;
-
 };

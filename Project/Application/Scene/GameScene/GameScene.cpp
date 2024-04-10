@@ -153,9 +153,6 @@ void GameScene::Initialize() {
 	shockWaveManager_ = std::make_unique<ShockWaveManager>();
 	shockWaveManager_->Initialize();
 
-	fogManager_ = std::make_unique<FogManager>();
-	fogManager_->Initialize();
-
 }
 
 /// <summary>
@@ -270,8 +267,6 @@ void GameScene::Draw() {
 
 	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
-	dxCommon_->GetCommadList()->SetGraphicsRootConstantBufferView(12, fogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
-
 	// スカイドーム
 	skydome_->Draw(camera_);
 
@@ -347,7 +342,7 @@ void GameScene::Draw() {
 
 	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
-	//testManyObject_->Draw(camera_);
+	testManyObject_->Draw(camera_);
 
 	Model::PostDraw();
 
@@ -447,7 +442,7 @@ void GameScene::ImguiDraw(){
 	PostEffect::GetInstance()->ImGuiDraw();
 
 	shockWaveManager_->ImGuiDraw();
-	fogManager_->ImGuiDraw();
+	FogManager::GetInstance()->ImGuiDraw();
 
 	//Obj
 	sampleObj_->ImGuiDraw();

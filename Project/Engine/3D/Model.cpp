@@ -8,6 +8,7 @@
 #include <format>
 #include "../base/BufferResource.h"
 #include "ModelLoader.h"
+#include "FogManager.h"
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -260,6 +261,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 		spotLightManager_->Draw(sCommandList, 11);
 	}
 
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
@@ -311,6 +315,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 		spotLightManager_->Draw(sCommandList, 11);
 	}
 
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
@@ -359,6 +366,9 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	if (spotLightManager_) {
 		spotLightManager_->Draw(sCommandList, 11);
 	}
+
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -418,6 +428,9 @@ void Model::Draw(
 	// ローカル
 	sCommandList->SetGraphicsRootDescriptorTable(1, localMatrixesHandle);
 
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
 
@@ -476,6 +489,9 @@ void Model::Draw(
 	// ローカル
 	sCommandList->SetGraphicsRootDescriptorTable(1, localMatrixesHandle);
 
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
 
@@ -532,6 +548,9 @@ void Model::Draw(
 	sCommandList->SetGraphicsRootDescriptorTable(10, transformationMatrixesHandle);
 	// ローカル
 	sCommandList->SetGraphicsRootDescriptorTable(1, localMatrixesHandle);
+
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), numInstance, 0, 0);
