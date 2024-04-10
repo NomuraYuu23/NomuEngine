@@ -311,7 +311,7 @@ void GameScene::Draw() {
 		renderTargetTexture_->GetSrvGPUHandle(0)
 	);
 
-	PostEffect::GetInstance()->RGBShiftCommand(
+	PostEffect::GetInstance()->BloomCommand(
 		dxCommon_->GetCommadList(),
 		3,
 		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()//,

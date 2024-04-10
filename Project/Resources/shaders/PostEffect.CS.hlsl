@@ -71,6 +71,7 @@ Texture2D<float32_t4> sourceImage1 : register(t1);
 // 行先
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
 
+// コピー
 void Copy(float32_t2 index) {
 
 	destinationImage0[index] = sourceImage0[index];
@@ -90,6 +91,7 @@ void mainCopy(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// クリア(グリーン)
 void Clear(float32_t2 index) {
 
 	destinationImage0[index] = gComputeConstants.clearColor;
@@ -109,6 +111,7 @@ void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// 明度の高いところを白で書き込む、それ以外は黒を書き込む
 void BinaryThreshold(float32_t2 index) {
 
 	float32_t3 input = sourceImage0[index].rgb;
@@ -136,12 +139,7 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
-float32_t Gauss(float32_t i, float32_t sigma) {
-
-	return 1.0f / (2.0f * PI * sigma * sigma) * exp(-(i * i) / (2.0f * sigma * sigma));
-
-}
-
+// ガウシアンブラー
 void GaussianBlur(float32_t2 index, float32_t2 dir) {
 
 	// 出力色
@@ -208,6 +206,7 @@ void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// ブルーム
 void Bloom(float32_t2 index, float32_t2 dir) {
 
 	// 入力色
@@ -283,6 +282,7 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// 明度の高いところをその色で書き込む、それ以外は透明を書き込む
 void BrightnessThreshold(float32_t2 index) {
 
 	float32_t4 input = sourceImage0[index];
@@ -310,6 +310,7 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// ブラー画像との合成
 void BlurAdd(float32_t2 index) {
 
 	float32_t3 input1 = sourceImage0[index].rgb;
@@ -343,6 +344,7 @@ void mainBlurAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// 画像の上に画像を書き込む
 void Overwrite(float32_t2 index) {
 
 	float32_t4 input = sourceImage1[index];
@@ -393,6 +395,7 @@ void mainOverwrite(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// レンダーターゲット画像の書き込まれていない部分を透明に
 void RTTCorrection(float32_t2 index) {
 
 
@@ -422,6 +425,7 @@ void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 }
 
+// モーションブラー
 void MotionBlur(float32_t2 index) {
 
 	// 入力色
@@ -509,6 +513,7 @@ void mainMotionBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// ホワイトノイズ
 void WhiteNoise(float32_t2 index) {
 
 	float32_t4 output = sourceImage0[index];
@@ -537,6 +542,7 @@ void mainWhiteNoise(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// 走査線
 void ScanLine(float32_t2 index) {
 
 	float32_t4 output = sourceImage0[index];
@@ -570,6 +576,7 @@ void mainScanLine(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// RGBずらし
 void RGBShift(float32_t2 index) {
 
 
@@ -596,6 +603,7 @@ void mainRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// 樽状湾曲
 void BarrelCurved(float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
@@ -626,6 +634,7 @@ void mainBarrelCurved(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// ビネット
 void Vignette(float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
@@ -653,6 +662,7 @@ void mainVignette(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// グリッチ
 void Glitch(float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
@@ -701,6 +711,7 @@ void mainGlitch(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// 放射状ブラー
 void RadialBlur(float32_t2 index) {
 
 	// 出力色
@@ -751,6 +762,7 @@ void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+// 衝撃波
 void ShockWave(float32_t2 index) {
 
 	// uv
