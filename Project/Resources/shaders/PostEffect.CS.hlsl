@@ -741,7 +741,7 @@ void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // 衝撃波
-void ShockWave(float32_t2 index) {
+float32_t4 ShockWave(float32_t2 index) {
 
 	// uv
 	float32_t2 texcoord = float32_t2(
@@ -771,7 +771,7 @@ void ShockWave(float32_t2 index) {
 	newIndex.y *= gComputeConstants.threadIdTotalY;
 	
 	// 出力
-	destinationImage0[index] = sourceImage0[newIndex];
+	return sourceImage0[newIndex];
 
 }
 
@@ -781,16 +781,16 @@ void mainShockWave(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		ShockWave(dispatchId.xy);
+		destinationImage0[dispatchId.xy] =  ShockWave(dispatchId.xy);
 
 	}
 
 }
 
-void FlarePara(float32_t2 index) {
+float32_t4 FlarePara(float32_t4 input, float32_t2 index) {
 
 	// アウトプットにソース画像を入れる
-	float32_t4 output = sourceImage0[index];
+	float32_t4 output = input;
 
 	// フレアの距離
 	float32_t2 flareLength = index - gComputeConstants.flarePosition;
@@ -811,7 +811,7 @@ void FlarePara(float32_t2 index) {
 	// 出力
 	output.rgb *= lerp(float32_t3(1.0f, 1.0f, 1.0f), gComputeConstants.paraColor.rgb, para) * gComputeConstants.paraColor.a;
 	output.rgb += lerp(float32_t3(0.0f, 0.0f, 0.0f), gComputeConstants.flareColor.rgb, flare) * gComputeConstants.flareColor.a;
-	destinationImage0[index] = output;
+	return output;
 
 }
 
@@ -821,7 +821,8 @@ void mainFlarePara(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		FlarePara(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = FlarePara(input, dispatchId.xy);
 
 	}
 
