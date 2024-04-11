@@ -79,17 +79,13 @@ void PostEffect::Initialize()
 			device_,
 			kTextureWidth,
 			kTextureHeight);
+	}
+	for (uint32_t i = 0; i < 3; ++i) {
 		internalEditTextures_[i] = std::make_unique<TextureUAV>();
 		internalEditTextures_[i]->Initialize(
 			device_,
 			kTextureWidth,
 			kTextureHeight);
-
-		reductionEditTextures_[i] = std::make_unique<TextureUAV>();
-		reductionEditTextures_[i]->Initialize(
-			device_,
-			kTextureWidth / 4,
-			kTextureHeight / 4);
 	}
 
 }

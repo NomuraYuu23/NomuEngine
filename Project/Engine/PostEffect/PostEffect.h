@@ -538,7 +538,7 @@ private: // 変数
 	std::unique_ptr<TextureUAV> editTextures_[8];
 
 	// 内部編集画像
-	std::unique_ptr<TextureUAV> internalEditTextures_[8];
+	std::unique_ptr<TextureUAV> internalEditTextures_[3];
 
 	//computeParameters用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;
@@ -551,9 +551,6 @@ private: // 変数
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	// シェーダー情報
 	std::array<Microsoft::WRL::ComPtr<IDxcBlob>, kPipelineIndexOfCount> shaders_;
-
-	// 縮小編集画像
-	std::unique_ptr<TextureUAV> reductionEditTextures_[8];
 
 private: // シングルトン
 	PostEffect() = default;

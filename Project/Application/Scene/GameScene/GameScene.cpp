@@ -238,8 +238,8 @@ void GameScene::Update() {
 	outline_.Map();
 
 
-	time = std::fmodf(time + kDeltaTime_, 50.0f);
-	PostEffect::GetInstance()->SetTime(time);
+	time = std::fmodf(time + kDeltaTime_  * 10.0f, 50.0f);
+	PostEffect::GetInstance()->SetTime(time + 40.0f);
 	shockWaveManager_->Update();
 
 }
@@ -272,23 +272,6 @@ void GameScene::Draw() {
 
 	Model::PostDraw();
 
-	renderTargetTexture_->ChangePixelShaderResource(0);
-
-	PostEffect::GetInstance()->RTTCorrectionCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
-	);
-
-	PostEffect::GetInstance()->CopyCommand(
-		dxCommon_->GetCommadList(),
-		1,
-		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()
-	);
-	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->ClearRenderTarget(0);
-
-
 	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
 	//Obj
@@ -302,39 +285,6 @@ void GameScene::Draw() {
 #endif // _DEBUG
 
 	Model::PostDraw();
-
-	renderTargetTexture_->ChangePixelShaderResource(0);
-
-	PostEffect::GetInstance()->RTTCorrectionCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
-	);
-
-	PostEffect::GetInstance()->BloomCommand(
-		dxCommon_->GetCommadList(),
-		3,
-		PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU()//,
-		//sampleObj_->GetVelocity2DData()
-	);
-
-	PostEffect::GetInstance()->CopyCommand(
-		dxCommon_->GetCommadList(),
-		2,
-		PostEffect::GetInstance()->GetEditTextures(3)->GetUavHandleGPU()
-	);
-	renderTargetTexture_->ChangeRenderTarget(0);
-
-	renderTargetTexture_->ClearRenderTarget(0);
-
-	PostEffect::GetInstance()->OverwriteCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		PostEffect::GetInstance()->GetEditTextures(1)->GetUavHandleGPU(),
-		PostEffect::GetInstance()->GetEditTextures(2)->GetUavHandleGPU()
-	);
-
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 #pragma endregion
 
@@ -409,20 +359,40 @@ void GameScene::Draw() {
 
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
-
-	PostEffect::GetInstance()->ReductionCommand(
+	
+	PostEffect::GetInstance()->WhiteNoizeCommand(
 		dxCommon_->GetCommadList(),
-		4,
+		1,
 		renderTargetTexture_->GetSrvGPUHandle(0)//,
 		//shockWaveManager_->GetShockWaveDataBuff()
 	);
-	PostEffect::GetInstance()->ExpansionCommand(
+	PostEffect::GetInstance()->RGBShiftCommand(
+		dxCommon_->GetCommadList(),
+		2,
+		PostEffect::GetInstance()->GetEditTextures(1)->GetUavHandleGPU()//,
+		//shockWaveManager_->GetShockWaveDataBuff()
+	);
+	PostEffect::GetInstance()->ScanLineCommand(
+		dxCommon_->GetCommadList(),
+		3,
+		PostEffect::GetInstance()->GetEditTextures(2)->GetUavHandleGPU()//,
+		//shockWaveManager_->GetShockWaveDataBuff()
+	);
+	PostEffect::GetInstance()->ShockWaveCommand(
+		dxCommon_->GetCommadList(),
+		4,
+		PostEffect::GetInstance()->GetEditTextures(3)->GetUavHandleGPU(),
+		shockWaveManager_->GetShockWaveDataBuff()
+	);
+	PostEffect::GetInstance()->BloomCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		PostEffect::GetInstance()->GetEditTextures(4)->GetUavHandleGPU()//,
 		//shockWaveManager_->GetShockWaveDataBuff()
 	);
+
 	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->ClearDepthBuffer();
 
 	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
