@@ -79,6 +79,7 @@ public: // サブクラス
 		kPipliineIndexShockWave, // 衝撃波
 		kPipliineIndexFlarePara, // フレア パラ
 		kPipliineIndexReduction, // 縮小
+		kPipliineIndexExpansion, // 拡大(縮小したものをもとに戻す)
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -107,6 +108,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainReduction"}, // 縮小
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainExpansion"}, // 拡大(縮小したものをもとに戻す)
 	};
 	
 	// 画像の幅
@@ -348,6 +350,17 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& reductionGPUHandle);
+
+	/// <summary>
+	/// 拡大
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="expansionGPUHandle">画像のGPUハンドル</param>
+	void ExpansionCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& expansionGPUHandle);
 
 
 private: // 関数

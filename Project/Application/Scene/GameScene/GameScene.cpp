@@ -412,8 +412,14 @@ void GameScene::Draw() {
 
 	PostEffect::GetInstance()->ReductionCommand(
 		dxCommon_->GetCommadList(),
-		0,
+		4,
 		renderTargetTexture_->GetSrvGPUHandle(0)//,
+		//shockWaveManager_->GetShockWaveDataBuff()
+	);
+	PostEffect::GetInstance()->ExpansionCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		PostEffect::GetInstance()->GetEditTextures(4)->GetUavHandleGPU()//,
 		//shockWaveManager_->GetShockWaveDataBuff()
 	);
 	renderTargetTexture_->ChangeRenderTarget(0);

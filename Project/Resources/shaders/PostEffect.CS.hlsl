@@ -861,7 +861,7 @@ void mainFlarePara(uint32_t3 dispatchId : SV_DispatchThreadID) {
 void Reduction(float32_t2 index) {
 
 	// 定数
-	float32_t ratio = 4.0f;
+	float32_t ratio = 8.0f;
 	
 	// 新しいインデックス
 	float32_t2 newIndex = index / ratio;
@@ -877,6 +877,30 @@ void mainReduction(uint32_t3 dispatchId : SV_DispatchThreadID) {
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		Reduction(dispatchId.xy);
+
+	}
+
+}
+
+void Expansion(float32_t2 index) {
+
+	// 定数
+	float32_t ratio = 8.0f;
+
+	// 新しいインデックス
+	float32_t2 newIndex = index / ratio;
+
+	destinationImage0[index] = sourceImage0[newIndex];
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainExpansion(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		Expansion(dispatchId.xy);
 
 	}
 
