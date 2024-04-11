@@ -360,34 +360,10 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 	
-	PostEffect::GetInstance()->WhiteNoizeCommand(
-		dxCommon_->GetCommadList(),
-		1,
-		renderTargetTexture_->GetSrvGPUHandle(0)//,
-		//shockWaveManager_->GetShockWaveDataBuff()
-	);
-	PostEffect::GetInstance()->RGBShiftCommand(
-		dxCommon_->GetCommadList(),
-		2,
-		PostEffect::GetInstance()->GetEditTextures(1)->GetUavHandleGPU()//,
-		//shockWaveManager_->GetShockWaveDataBuff()
-	);
-	PostEffect::GetInstance()->ScanLineCommand(
-		dxCommon_->GetCommadList(),
-		3,
-		PostEffect::GetInstance()->GetEditTextures(2)->GetUavHandleGPU()//,
-		//shockWaveManager_->GetShockWaveDataBuff()
-	);
-	PostEffect::GetInstance()->ShockWaveCommand(
-		dxCommon_->GetCommadList(),
-		4,
-		PostEffect::GetInstance()->GetEditTextures(3)->GetUavHandleGPU(),
-		shockWaveManager_->GetShockWaveDataBuff()
-	);
 	PostEffect::GetInstance()->BloomCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		PostEffect::GetInstance()->GetEditTextures(4)->GetUavHandleGPU()//,
+		renderTargetTexture_->GetSrvGPUHandle(0)//,
 		//shockWaveManager_->GetShockWaveDataBuff()
 	);
 

@@ -80,32 +80,20 @@ Texture2D<float32_t4> sourceImage1 : register(t1);
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
 
 // コピー
-void Copy(float32_t2 index) {
-
-	destinationImage0[index] = sourceImage0[index];
-
-}
-
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
 void mainCopy(uint32_t3 dispatchId : SV_DispatchThreadID)
 {
 
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
-		Copy(dispatchId.xy);
+		
+		destinationImage0[dispatchId.xy] = sourceImage0[dispatchId.xy];
 
 	}
 
 }
 
 // クリア(グリーン)
-void Clear(float32_t2 index) {
-
-	destinationImage0[index] = gComputeConstants.clearColor;
-
-}
-
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
 void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
 {
@@ -113,16 +101,14 @@ void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		Clear(dispatchId.xy);
+		destinationImage0[dispatchId.xy] = gComputeConstants.clearColor;
 
 	}
 
 }
 
 // 明度の高いところを白で書き込む、それ以外は黒を書き込む
-void BinaryThreshold(float32_t2 index) {
-
-	float32_t3 input = sourceImage0[index].rgb;
+float32_t4 BinaryThreshold(float32_t4 input) {
 
 	float32_t3 col = float32_t3(0.0, 0.0, 0.0);
 
@@ -130,7 +116,7 @@ void BinaryThreshold(float32_t2 index) {
 		col = float32_t3(1.0, 1.0, 1.0);
 	}
 
-	destinationImage0[index] = float32_t4(col, 1.0f);
+	return float32_t4(col, 1.0f);
 
 }
 
@@ -141,14 +127,15 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		BinaryThreshold(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = BinaryThreshold(input);
 
 	}
 
 }
 
 // ガウシアンブラー
-void GaussianBlur(float32_t2 index, float32_t2 dir) {
+float32_t4 GaussianBlur(float32_t2 index, float32_t2 dir) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -184,7 +171,7 @@ void GaussianBlur(float32_t2 index, float32_t2 dir) {
 	output *= (1.0f / weightSum);
 
 	// 代入
-	destinationImage0[index] = output;
+	return output;
 
 }
 
@@ -195,7 +182,7 @@ void mainGaussianBlurHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage0[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
 
 	}
 
@@ -208,14 +195,14 @@ void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		GaussianBlur(dispatchId.xy, float32_t2(0.0f, 1.0f));
+		destinationImage0[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(0.0f, 1.0f));
 
 	}
 
 }
 
 // ブルーム
-void Bloom(float32_t2 index, float32_t2 dir) {
+float32_t4 Bloom(float32_t2 index, float32_t2 dir) {
 
 	// 入力色
 	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
@@ -260,7 +247,7 @@ void Bloom(float32_t2 index, float32_t2 dir) {
 	output *= (1.0f / weightSum);
 
 	// 代入
-	destinationImage0[index] = output;
+	return output;
 
 }
 
@@ -271,7 +258,7 @@ void mainBloomHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage0[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
 
 	}
 
@@ -284,16 +271,14 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
+		destinationImage0[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
 
 	}
 
 }
 
 // 明度の高いところをその色で書き込む、それ以外は透明を書き込む
-void BrightnessThreshold(float32_t2 index) {
-
-	float32_t4 input = sourceImage0[index];
+float32_t4 BrightnessThreshold(float32_t4 input) {
 
 	float32_t4 col = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -301,7 +286,7 @@ void BrightnessThreshold(float32_t2 index) {
 		col = input;
 	}
 
-	destinationImage0[index] = col;
+	return col;
 
 }
 
@@ -312,30 +297,28 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		BrightnessThreshold(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = BrightnessThreshold(input);
 
 	}
 
 }
 
 // ブラー画像との合成
-void BlurAdd(float32_t2 index) {
+float32_t4 BlurAdd(float32_t4 input1, float32_t4 input2) {
 
-	float32_t3 input1 = sourceImage0[index].rgb;
-	float32_t3 input2 = sourceImage1[index].rgb;
+	float32_t alphaSum = input1.a + input2.a;
 
-	float32_t alphaSum = sourceImage0[index].a + sourceImage1[index].a;
+	if(alphaSum != 0.0f) {
+		float32_t a1 = input1.a / alphaSum;
+		float32_t a2 = input2.a / alphaSum;
 
-	if (alphaSum == 0.0f) {
-		destinationImage0[index] = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+		float32_t3 col = input1.rgb * a1 + input2.rgb * a2;
+		
+		return float32_t4(col, min(alphaSum, 1.0f));
 	}
-	else {
-		float32_t a1 = sourceImage0[index].a / alphaSum;
-		float32_t a2 = sourceImage1[index].a / alphaSum;
 
-		float32_t3 col = input1 * a1 + input2 * a2;
-		destinationImage0[index] = float32_t4(col, min(alphaSum, 1.0f));
-	}
+	return float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 
 }
 
@@ -346,7 +329,9 @@ void mainBlurAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		BlurAdd(dispatchId.xy);
+		float32_t4 input1 = sourceImage0[dispatchId.xy];
+		float32_t4 input2 = sourceImage1[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = BlurAdd(input1, input2);
 
 	}
 

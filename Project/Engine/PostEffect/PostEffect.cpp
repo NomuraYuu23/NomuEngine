@@ -280,8 +280,6 @@ void PostEffect::GaussianBlurCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
 	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// ガウスブラーを掛ける画像をセット
 	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
 	// 編集する画像セット
@@ -336,8 +334,6 @@ void PostEffect::BloomCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
 	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// ガウスブラーを掛ける画像をセット
 	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
 	// 編集する画像セット
@@ -349,8 +345,6 @@ void PostEffect::BloomCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
 	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// ガウスブラーを掛ける画像をセット
 	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 1);
 	// 編集する画像セット
@@ -362,8 +356,6 @@ void PostEffect::BloomCommand(
 	// パイプライン
 	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
 	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
 	// 加算する画像をセット
 	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
 	// 加算する画像をセット
