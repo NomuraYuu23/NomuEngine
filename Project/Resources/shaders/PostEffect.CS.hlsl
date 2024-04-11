@@ -486,9 +486,9 @@ void mainMotionBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // ホワイトノイズ
-void WhiteNoise(float32_t2 index) {
+float32_t4 WhiteNoise(float32_t4 input, float32_t2 index) {
 
-	float32_t4 output = sourceImage0[index];
+	float32_t4 output = input;
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -498,7 +498,7 @@ void WhiteNoise(float32_t2 index) {
 
 	output.rgb += noise;
 
-	destinationImage0[index] = output;
+	return output;
 
 }
 
@@ -508,16 +508,17 @@ void mainWhiteNoise(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		WhiteNoise(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = WhiteNoise(input, dispatchId.xy);
 
 	}
 
 }
 
 // 走査線
-void ScanLine(float32_t2 index) {
+float32_t4 ScanLine(float32_t4 input, float32_t2 index) {
 
-	float32_t4 output = sourceImage0[index];
+	float32_t4 output = input;
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -532,7 +533,7 @@ void ScanLine(float32_t2 index) {
 
 	output.rgb += steped * 0.1f;
 
-	destinationImage0[index] = output;
+	 return output;
 
 }
 
@@ -542,24 +543,24 @@ void mainScanLine(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		ScanLine(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = ScanLine(input, dispatchId.xy);
 
 	}
 
 }
 
-// RGBずらし
-void RGBShift(float32_t2 index) {
+// RGBずらし (RGB)
+float32_t3 RGBShift(float32_t2 index) {
 
 
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
 
-	output.r = sourceImage0[index + gComputeConstants.rShift].r;
-	output.g = sourceImage0[index + gComputeConstants.gShift].g;
-	output.b = sourceImage0[index + gComputeConstants.bShift].b;
-	output.a = sourceImage0[index].a;
+	output.r = sourceImage0[index - gComputeConstants.rShift].r;
+	output.g = sourceImage0[index - gComputeConstants.gShift].g;
+	output.b = sourceImage0[index - gComputeConstants.bShift].b;
 
-	destinationImage0[index] = output;
+	return output.rgb;
 
 }
 
@@ -569,14 +570,15 @@ void mainRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		RGBShift(dispatchId.xy);
+		float32_t a = sourceImage0[dispatchId.xy].a;
+		destinationImage0[dispatchId.xy] = float32_t4(RGBShift(dispatchId.xy), a);
 
 	}
 
 }
 
 // 樽状湾曲
-void BarrelCurved(float32_t2 index) {
+float32_t4 BarrelCurved(float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -591,7 +593,8 @@ void BarrelCurved(float32_t2 index) {
 		texcoord.x * gComputeConstants.threadIdTotalX,
 		texcoord.y * gComputeConstants.threadIdTotalY);
 
-	destinationImage0[index] = sourceImage0[newIndex];
+	return sourceImage0[newIndex];
+
 }
 
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
@@ -600,14 +603,14 @@ void mainBarrelCurved(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		BarrelCurved(dispatchId.xy);
+		destinationImage0[dispatchId.xy] = BarrelCurved(dispatchId.xy);
 
 	}
 
 }
 
 // ビネット
-void Vignette(float32_t2 index) {
+float32_t4 Vignette(float32_t4 input, float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -617,8 +620,10 @@ void Vignette(float32_t2 index) {
 
 	vignette = clamp(vignette - gComputeConstants.vignetteSize, 0.0f, 1.0f);
 
-	destinationImage0[index] = sourceImage0[index];
-	destinationImage0[index].rgb -= vignette;
+	float32_t4 output = input;
+	output.rgb -= vignette;
+
+	return output;
 
 }
 
@@ -628,14 +633,15 @@ void mainVignette(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		Vignette(dispatchId.xy);
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = Vignette(input, dispatchId.xy);
 
 	}
 
 }
 
 // グリッチ
-void Glitch(float32_t2 index) {
+float32_t4 Glitch(float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -667,7 +673,7 @@ void Glitch(float32_t2 index) {
 
 	float32_t2 newIndex = index + timeFrac * (horz + vert);
 
-	destinationImage0[index] = sourceImage0[newIndex];
+	return sourceImage0[newIndex];
 
 }
 
@@ -677,14 +683,14 @@ void mainGlitch(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		Glitch(dispatchId.xy);
+		destinationImage0[dispatchId.xy] = Glitch(dispatchId.xy);
 
 	}
 
 }
 
 // 放射状ブラー
-void RadialBlur(float32_t2 index) {
+float32_t4 RadialBlur(float32_t2 index) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -718,7 +724,7 @@ void RadialBlur(float32_t2 index) {
 	// 平均を求める
 	output /= float32_t(gComputeConstants.radialBlurSamples);
 	// 出力
-	destinationImage0[index] = output;
+	return output;
 
 }
 
@@ -728,7 +734,7 @@ void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		RadialBlur(dispatchId.xy);
+		destinationImage0[dispatchId.xy] = RadialBlur(dispatchId.xy);
 
 	}
 

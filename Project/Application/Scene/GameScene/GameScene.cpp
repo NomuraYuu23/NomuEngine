@@ -360,12 +360,12 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 	
-	PostEffect::GetInstance()->MotionBlurCommand(
+	PostEffect::GetInstance()->RadialBlurCommand(
 		dxCommon_->GetCommadList(),
 		0,
-		renderTargetTexture_->GetSrvGPUHandle(0),
+		renderTargetTexture_->GetSrvGPUHandle(0)//,
 		//shockWaveManager_->GetShockWaveDataBuff()
-		sampleObj_->GetVelocity2DData()
+		//sampleObj_->GetVelocity2DData()
 	);
 
 	renderTargetTexture_->ChangeRenderTarget(0);
