@@ -17,7 +17,17 @@ public:
 	/// </summary>
 	virtual void Update();
 
+	/// <summary>
+	/// 死んでいるか
+	/// </summary>
+	/// <returns></returns>
 	bool IsDead() { return isDead_; }
+
+	/// <summary>
+	/// ワールドポジション取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition() { return Vector3(worldMatrix_.m[3][0], worldMatrix_.m[3][1], worldMatrix_.m[3][2]); }
 
 public:
 
