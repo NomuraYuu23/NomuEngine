@@ -53,6 +53,8 @@ public: // サブクラス
 		Vector2 paraSize; // パラの大きさ
 		Vector2 paraPosition; // パラの位置
 
+		float magnificationER; // 拡大縮小倍率
+
 	};
 
 	/// <summary>
@@ -525,6 +527,11 @@ public: // アクセッサ
 	/// <param name="paraPosition">パラの位置</param>
 	void SetParaPosition(const Vector2& paraPosition) { computeParametersMap_->paraPosition = paraPosition; }
 
+	/// <summary>
+	/// 拡大縮小倍率設定
+	/// </summary>
+	/// <param name="magnificationER">拡大縮小倍率</param>
+	void SetMagnificationER(float magnificationER) { computeParametersMap_->magnificationER = magnificationER; }
 
 private: // 変数
 

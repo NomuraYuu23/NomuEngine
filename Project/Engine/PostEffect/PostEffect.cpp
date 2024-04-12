@@ -63,6 +63,8 @@ void PostEffect::Initialize()
 	computeParametersMap_->paraSize = { 0.3f, 0.3f };// パラの大きさ
 	computeParametersMap_->paraPosition = { 1280.0f, 720.0f }; // パラの位置
 
+	computeParametersMap_->magnificationER = 2.0f; // 拡大縮小倍率
+
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -116,6 +118,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::ColorEdit4("paraColor", &computeParametersMap_->paraColor.x);
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
+	ImGui::DragFloat("magnificationER", &computeParametersMap_->magnificationER, 0.01f, 1.0f);
 	ImGui::End();
 
 }

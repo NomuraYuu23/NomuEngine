@@ -46,6 +46,8 @@ struct ComputeParameters {
 	float32_t2 paraSize; // パラの大きさ
 	float32_t2 paraPosition; // パラの位置
 
+	float32_t magnificationER; // 拡大縮小倍率
+
 };
 
 // 定数データ
@@ -829,12 +831,9 @@ void mainFlarePara(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 void Reduction(float32_t2 index) {
-
-	// 定数
-	float32_t ratio = 8.0f;
 	
 	// 新しいインデックス
-	float32_t2 newIndex = index / ratio;
+	float32_t2 newIndex = index / gComputeConstants.magnificationER;
 
 	destinationImage0[newIndex] = sourceImage0[index];
 
@@ -854,11 +853,8 @@ void mainReduction(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 void Expansion(float32_t2 index) {
 
-	// 定数
-	float32_t ratio = 8.0f;
-
 	// 新しいインデックス
-	float32_t2 newIndex = index / ratio;
+	float32_t2 newIndex = index / gComputeConstants.magnificationER;
 
 	destinationImage0[index] = sourceImage0[newIndex];
 

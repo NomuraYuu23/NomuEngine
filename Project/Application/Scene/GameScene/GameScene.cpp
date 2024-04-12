@@ -360,7 +360,7 @@ void GameScene::Draw() {
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
 	
-	PostEffect::GetInstance()->FlareParaCommand(
+	PostEffect::GetInstance()->ReductionCommand(
 		dxCommon_->GetCommadList(),
 		0,
 		renderTargetTexture_->GetSrvGPUHandle(0)//,
