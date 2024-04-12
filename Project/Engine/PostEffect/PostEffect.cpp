@@ -1013,6 +1013,47 @@ void PostEffect::GrayScaleCommand(
 
 }
 
+void PostEffect::SepiaCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& sepiaGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexSepia].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 衝撃波を掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, sepiaGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+}
+
 void PostEffect::CreateRootSignature()
 {
 

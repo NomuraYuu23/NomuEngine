@@ -83,6 +83,7 @@ public: // サブクラス
 		kPipliineIndexReduction, // 縮小
 		kPipliineIndexExpansion, // 拡大(縮小したものをもとに戻す)
 		kPipliineIndexGrayScale, // グレイスケール
+		kPipliineIndexSepia, // セピア
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -113,6 +114,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainReduction"}, // 縮小
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainExpansion"}, // 拡大(縮小したものをもとに戻す)
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
 	};
 	
 	// 画像の幅
@@ -376,6 +378,17 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& grayScaleGPUHandle);
+
+	/// <summary>
+	/// セピア
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="sepiaGPUHandle">画像のGPUハンドル</param>
+	void SepiaCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& sepiaGPUHandle);
 
 private: // 関数
 

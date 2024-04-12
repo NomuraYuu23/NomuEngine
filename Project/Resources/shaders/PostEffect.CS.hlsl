@@ -892,3 +892,24 @@ void mainGrayScale(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	}
 
 }
+
+float32_t4 Sepia(in const float32_t4 input) {
+
+	float32_t value = dot(input.rgb, float32_t3(0.2125f, 0.7154f, 0.0721f));
+
+	return float32_t4(value, value * 74.0f / 107.0f, value * 43.0f / 107.0f, input.a);
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainSepia(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		float32_t4 input = sourceImage0[dispatchId.xy];
+		destinationImage0[dispatchId.xy] = Sepia(input);
+
+	}
+
+}
