@@ -110,7 +110,7 @@ void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // 明度の高いところを白で書き込む、それ以外は黒を書き込む
-float32_t4 BinaryThreshold(float32_t4 input) {
+float32_t4 BinaryThreshold(in const float32_t4 input) {
 
 	float32_t3 col = float32_t3(0.0, 0.0, 0.0);
 
@@ -137,7 +137,7 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // ガウシアンブラー
-float32_t4 GaussianBlur(float32_t2 index, float32_t2 dir) {
+float32_t4 GaussianBlur(in const float32_t2 index, in const float32_t2 dir) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -204,7 +204,7 @@ void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // ブルーム
-float32_t4 Bloom(float32_t2 index, float32_t2 dir) {
+float32_t4 Bloom(in const float32_t2 index, in const  float32_t2 dir) {
 
 	// 入力色
 	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
@@ -280,7 +280,7 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // 明度の高いところをその色で書き込む、それ以外は透明を書き込む
-float32_t4 BrightnessThreshold(float32_t4 input) {
+float32_t4 BrightnessThreshold(in const float32_t4 input) {
 
 	float32_t4 col = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -307,7 +307,7 @@ void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // ブラー画像との合成
-float32_t4 BlurAdd(float32_t4 input0, float32_t4 input1) {
+float32_t4 BlurAdd(in const float32_t4 input0, in const float32_t4 input1) {
 
 	float32_t alphaSum = input0.a + input1.a;
 
@@ -340,7 +340,7 @@ void mainBlurAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // 画像の上に画像を書き込む
-float32_t4 Overwrite(float32_t4 input0, float32_t4 input1) {
+float32_t4 Overwrite(in const float32_t4 input0, in const float32_t4 input1) {
 
 	if (input1.a == 1.0f) {
 		return input1;
@@ -387,7 +387,7 @@ void mainOverwrite(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // レンダーターゲット画像の書き込まれていない部分を透明に
-float32_t4 RTTCorrection(float32_t4 input) {
+float32_t4 RTTCorrection(in const float32_t4 input) {
 
 	float32_t4 clear = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -417,7 +417,7 @@ void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
 }
 
 // モーションブラー
-float32_t4 MotionBlur(float32_t2 index) {
+float32_t4 MotionBlur(in const float32_t2 index) {
 
 	// ブラーかからない
 	if (gVelocityConstants.values.x == 0 && 
@@ -488,7 +488,7 @@ void mainMotionBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // ホワイトノイズ
-float32_t4 WhiteNoise(float32_t4 input, float32_t2 index) {
+float32_t4 WhiteNoise(in const float32_t4 input, in const float32_t2 index) {
 
 	float32_t4 output = input;
 
@@ -518,7 +518,7 @@ void mainWhiteNoise(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // 走査線
-float32_t4 ScanLine(float32_t4 input, float32_t2 index) {
+float32_t4 ScanLine(in const float32_t4 input, in const float32_t2 index) {
 
 	float32_t4 output = input;
 
@@ -553,7 +553,7 @@ void mainScanLine(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // RGBずらし (RGB)
-float32_t3 RGBShift(float32_t2 index) {
+float32_t3 RGBShift(in const float32_t2 index) {
 
 
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -580,7 +580,7 @@ void mainRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // 樽状湾曲
-float32_t4 BarrelCurved(float32_t2 index) {
+float32_t4 BarrelCurved(in const float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -612,7 +612,7 @@ void mainBarrelCurved(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // ビネット
-float32_t4 Vignette(float32_t4 input, float32_t2 index) {
+float32_t4 Vignette(in const float32_t4 input, in const float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -643,7 +643,7 @@ void mainVignette(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // グリッチ
-float32_t4 Glitch(float32_t2 index) {
+float32_t4 Glitch(in const float32_t2 index) {
 
 	float32_t2 texcoord = float32_t2(
 		index.x / gComputeConstants.threadIdTotalX,
@@ -692,7 +692,7 @@ void mainGlitch(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // 放射状ブラー
-float32_t4 RadialBlur(float32_t2 index) {
+float32_t4 RadialBlur(in const float32_t2 index) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -743,7 +743,7 @@ void mainRadialBlur(uint32_t3 dispatchId : SV_DispatchThreadID) {
 }
 
 // 衝撃波
-float32_t4 ShockWave(float32_t2 index) {
+float32_t4 ShockWave(in const float32_t2 index) {
 
 	// uv
 	float32_t2 texcoord = float32_t2(
@@ -789,7 +789,7 @@ void mainShockWave(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
-float32_t4 FlarePara(float32_t4 input, float32_t2 index) {
+float32_t4 FlarePara(in const float32_t4 input, in const float32_t2 index) {
 
 	// アウトプットにソース画像を入れる
 	float32_t4 output = input;
@@ -830,7 +830,7 @@ void mainFlarePara(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
-void Reduction(float32_t2 index) {
+void Reduction(in const float32_t2 index) {
 	
 	// 新しいインデックス
 	float32_t2 newIndex = index / gComputeConstants.magnificationER;
@@ -851,7 +851,7 @@ void mainReduction(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
-void Expansion(float32_t2 index) {
+void Expansion(in const float32_t2 index) {
 
 	// 新しいインデックス
 	float32_t2 newIndex = index / gComputeConstants.magnificationER;
