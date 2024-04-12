@@ -27,7 +27,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~LargeNumberOfObjects();
+	virtual ~LargeNumberOfObjects();
 
 	/// <summary>
 	/// 初期化
@@ -82,7 +82,7 @@ protected: // トランスフォーム関係
 	uint32_t transformationMatrixesIndexDescriptorHeap_ = 0;
 
 	// オブジェクト一つ
-	std::list<OneOfManyObjects*> objects_;
+	std::list<std::unique_ptr<OneOfManyObjects>> objects_;
 	
 	//インスタンス数
 	uint32_t numInstance_ = 0;

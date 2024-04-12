@@ -4,10 +4,8 @@
 LargeNumberOfObjects::~LargeNumberOfObjects()
 {
 
-	objects_.remove_if([](OneOfManyObjects* object) {
-		delete object;
-		return true;
-		});
+
+	objects_.clear();
 
 	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(transformationMatrixesIndexDescriptorHeap_);
 	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(localMatrixesIndexDescriptorHeap_);
@@ -80,9 +78,9 @@ void LargeNumberOfObjects::Initialize(Model* model)
 void LargeNumberOfObjects::Update()
 {
 
-	std::list<OneOfManyObjects*>::iterator itr = objects_.begin();
+	std::list<std::unique_ptr<OneOfManyObjects>>::iterator itr = objects_.begin();
 	for (; itr != objects_.end(); ++itr) {
-		OneOfManyObjects* obj = *itr;
+		OneOfManyObjects* obj = itr->get();
 		obj->Update();
 	}
 
@@ -107,10 +105,10 @@ void LargeNumberOfObjects::Map()
 
 	}
 
-	std::list<OneOfManyObjects*>::iterator itr = objects_.begin();
+	std::list<std::unique_ptr<OneOfManyObjects>>::iterator itr = objects_.begin();
 	uint32_t i = 0;
 	for (; itr != objects_.end(); ++itr) {
-		OneOfManyObjects* obj = *itr;
+		OneOfManyObjects* obj = itr->get();
 		transformationMatrixesMap_[i].World = obj->worldMatrix_;
 		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Transpose(obj->worldMatrix_);
 		i++;
@@ -156,9 +154,9 @@ void LargeNumberOfObjects::SetNodeDatas(const ModelNode& modelNode, int32_t pare
 void LargeNumberOfObjects::DeadDelete()
 {
 
-	objects_.remove_if([](OneOfManyObjects* object) {
+	objects_.remove_if([](std::unique_ptr<OneOfManyObjects>& object) {
 		if (object->IsDead()) {
-			delete object;
+			object.reset();
 			return true;
 		}
 		return false;
@@ -169,6 +167,8 @@ void LargeNumberOfObjects::DeadDelete()
 void LargeNumberOfObjects::AddObject(OneOfManyObjects* object)
 {
 
-	objects_.push_back(object);
+	std::unique_ptr<OneOfManyObjects> object_;
+	object_.reset(object);
+	objects_.push_back(std::move(object_));
 
 }
