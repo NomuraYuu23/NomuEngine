@@ -178,9 +178,6 @@
     <Filter Include="Engine\ContactRecord">
       <UniqueIdentifier>{da06b69f-bf0a-4607-b8fc-126c64b47f4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\PostEffect\Glare">
-      <UniqueIdentifier>{774ce521-7247-4be2-ac67-97e9ab113ea5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Base">
       <UniqueIdentifier>{54c51a6a-0bf9-4e7d-bbe2-ee1301fc3c45}</UniqueIdentifier>
     </Filter>
@@ -522,9 +519,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
       <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\PostEffect\Glare.cpp">
-      <Filter>Engine\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
       <Filter>Engine\PostEffect</Filter>
@@ -972,9 +966,6 @@
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\PostEffect\Glare.h">
-      <Filter>Engine\PostEffect</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
@@ -1032,12 +1023,6 @@
     <None Include="Resources\shaders\WindowSprite.hlsli">
       <Filter>shaders\WindowSprite</Filter>
     </None>
-    <None Include="Resources\shaders\Glare.hlsl">
-      <Filter>shaders\PostEffect\Glare</Filter>
-    </None>
-    <None Include="Resources\shaders\Complex.hlsl">
-      <Filter>shaders\PostEffect\Glare</Filter>
-    </None>
     <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
@@ -1093,9 +1078,6 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
-      <Filter>shaders\PostEffect\Glare</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectCalc.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>

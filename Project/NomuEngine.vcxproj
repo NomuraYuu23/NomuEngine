@@ -183,7 +183,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Physics\InertiaTensor.cpp" />
     <ClCompile Include="Engine\Physics\MassPoint.cpp" />
     <ClCompile Include="Engine\Physics\RigidBody.cpp" />
-    <ClCompile Include="Engine\PostEffect\Glare.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\PostEffect\ShockWaveManager.cpp" />
     <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp" />
@@ -322,7 +321,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Physics\InertiaTensor.h" />
     <ClInclude Include="Engine\Physics\MassPoint.h" />
     <ClInclude Include="Engine\Physics\RigidBody.h" />
-    <ClInclude Include="Engine\PostEffect\Glare.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\PostEffect\ShockWaveData.h" />
     <ClInclude Include="Engine\PostEffect\ShockWaveManager.h" />
@@ -393,12 +391,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\shaders\Collider2DDebug.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="Resources\shaders\Complex.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="Resources\shaders\Glare.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
     <None Include="Resources\shaders\Line.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </None>
@@ -422,13 +414,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shaders\Glare.CS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
