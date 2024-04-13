@@ -135,7 +135,7 @@ void SwapChain::PreDraw(ID3D12GraphicsCommandList* commandList)
 
 	// 全画面クリア
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };//青っぽい色。RGBAの順
+	float clearColor[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
 
 	// 深度値クリア

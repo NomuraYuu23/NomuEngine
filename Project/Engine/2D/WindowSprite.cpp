@@ -21,7 +21,7 @@ void WindowSprite::Initialize(
 	commandList_ = commandList;
 
 	//Sprite用の頂点リソースを作る
-	vertBuff_ = BufferResource::CreateBufferResource(device_, sizeof(SpriteVertex) * kVertNum);
+	vertBuff_ = BufferResource::CreateBufferResource(device_, ((sizeof(SpriteVertex) + 0xff) & ~0xff) * kVertNum);
 
 	//リソースの先頭のアドレスから使う
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
@@ -34,7 +34,7 @@ void WindowSprite::Initialize(
 	vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap));
 
 	//インデックスリソースを作る
-	indexBuff_ = BufferResource::CreateBufferResource(device_, sizeof(uint32_t) * kVertNum);
+	indexBuff_ = BufferResource::CreateBufferResource(device_, ((sizeof(uint32_t) + 0xff) & ~0xff) * kVertNum);
 
 	//インデックスバッファビュー
 	//リソースの先頭のアドレスから使う
