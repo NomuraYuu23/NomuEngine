@@ -532,14 +532,14 @@
     <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp">
       <Filter>Engine\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\FogManager.cpp">
+      <Filter>Engine\3D</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Collider2D\Segment2D.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Collider2D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\ShockWaveManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\FogManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -981,20 +981,20 @@
     <ClInclude Include="Engine\PostEffect\Velocity2DData.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collider2D\Segment2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\PostEffect\ShockWaveData.h">
       <Filter>Engine\PostEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\PostEffect\ShockWaveManager.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\FogData.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\FogManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider2D\Segment2D.h">
+      <Filter>Engine\Collider2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\ShockWaveManager.h">
+      <Filter>Engine\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
