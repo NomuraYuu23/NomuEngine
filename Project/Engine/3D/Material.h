@@ -51,7 +51,7 @@ public:
 
 public: //アクセッサ
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetMaterialBuff() { return materialBuff_; }
+	ID3D12Resource* GetMaterialBuff() { return materialBuff_.Get(); }
 
 	MaterialData* GetMaterialMap() { return materialMap_; }
 
