@@ -24,6 +24,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 		SRVDescriptorHerpManager::descriptorHeap_.Get(),
 		SRVDescriptorHerpManager::GetCPUDescriptorHandle(),
 		SRVDescriptorHerpManager::GetGPUDescriptorHandle());
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 
 	static const ImWchar glyphRangesJapanese[] = {
@@ -555,6 +556,7 @@ void ImGuiManager::Finalize()
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 }
 
 void ImGuiManager::Begin()

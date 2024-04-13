@@ -79,7 +79,7 @@ bool DrawLine::Initialize()
 	assert(sDevice);
 
 	//Sprite用の頂点リソースを作る
-	vertBuff_ = BufferResource::CreateBufferResource(sDevice, sizeof(ColorVertexData) * kVertNum);
+	vertBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(ColorVertexData) + 0xff) & ~0xff) * kVertNum);
 
 	//リソースの先頭のアドレスから使う
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();

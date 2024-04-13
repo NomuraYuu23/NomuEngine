@@ -177,12 +177,12 @@ bool Sprite::Initialize() {
 	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
 
 	//Sprite用の頂点リソースを作る
-	vertBuff_ = BufferResource::CreateBufferResource(sDevice, sizeof(SpriteVertex) * 6);
+	vertBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(SpriteVertex) + 0xff) & ~0xff) * kVertNum);
 
 	//リソースの先頭のアドレスから使う
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点6つ分のサイズ
-	vbView_.SizeInBytes = sizeof(SpriteVertex) * 6;
+	vbView_.SizeInBytes = sizeof(SpriteVertex) * kVertNum;
 	//1頂点あたりのサイズ
 	vbView_.StrideInBytes = sizeof(SpriteVertex);
 
@@ -190,13 +190,13 @@ bool Sprite::Initialize() {
 	vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap));
 
 	//インデックスリソースを作る
-	indexBuff_ = BufferResource::CreateBufferResource(sDevice, sizeof(uint32_t) * 6);
+	indexBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(uint32_t) + 0xff) & ~0xff) * kVertNum);
 
 	//インデックスバッファビュー
 	//リソースの先頭のアドレスから使う
 	ibView_.BufferLocation = indexBuff_->GetGPUVirtualAddress();
 	//使用するリソースのサイズはインデックス6つ分のサイズ
-	ibView_.SizeInBytes = sizeof(uint32_t) * 6;
+	ibView_.SizeInBytes = sizeof(uint32_t) * kVertNum;
 	//インデックスはuint32_tとする
 	ibView_.Format = DXGI_FORMAT_R32_UINT;
 

@@ -46,6 +46,8 @@ private:
 
 	DirectXCommon* dxCommon_ = nullptr;
 
+	uint32_t indexDescriptorHeap_;
+
 private:
 	ImGuiManager() = default;
 	~ImGuiManager() = default;
