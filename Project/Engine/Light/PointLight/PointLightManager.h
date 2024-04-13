@@ -1,6 +1,13 @@
 #pragma once
 #include <cstdint>
-#include "PointLight.h"
+#include "PointLightData.h"
+#include <Windows.h>
+#include <d3d12.h>
+#include <string>
+#include <wrl.h>
+#include <dxcapi.h>
+
+#pragma comment(lib, "dxcompiler.lib")
 
 class Model;
 class BaseCamera;
