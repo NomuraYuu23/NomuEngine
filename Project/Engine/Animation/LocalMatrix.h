@@ -3,5 +3,8 @@
 
 struct LocalMatrix
 {
+
 	Matrix4x4 matrix;
+	Matrix4x4 matrixInverseTranspose;
+
 };

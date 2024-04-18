@@ -45,18 +45,8 @@ void LocalMatrixManager::Map(const std::vector<NodeData>& nodeDatas)
 {
 
 	for (uint32_t i = 0; i < nodeDatas.size(); ++i) {
-
-		//if (nodeDatas_[i].parentIndex >= 0) {
-		//	nodeDatas_[i].matrix = Matrix4x4::Multiply(
-		//		nodeDatas_[i].localMatrix,
-		//		nodeDatas_[nodeDatas_[i].parentIndex].matrix);
-		//}
-		//else {
-		//	nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
-		//}
-
 		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas[i].offsetMatrix,nodeDatas[i].matrix);
-
+		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
 	}
 
 }

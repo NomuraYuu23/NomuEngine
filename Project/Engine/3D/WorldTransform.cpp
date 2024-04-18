@@ -134,13 +134,11 @@ void WorldTransform::Map()
 			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
 		}
 
-		//localMatrixesMap_[i].matrix = nodeDatas_[i].offsetMatrix * nodeDatas_[i].matrix;
-
 	}
 
 
 	transformationMatrixMap_->World = worldMatrix_;
-	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(worldMatrix_);
+	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(worldMatrix_));
 
 }
 

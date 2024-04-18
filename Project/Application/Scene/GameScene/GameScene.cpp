@@ -358,20 +358,20 @@ void GameScene::Draw() {
 #pragma endregion
 
 
-	renderTargetTexture_->ChangePixelShaderResource(0);
-	
-	PostEffect::GetInstance()->SepiaCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)//,
-		//shockWaveManager_->GetShockWaveDataBuff()
-		//sampleObj_->GetVelocity2DData()
-	);
+	//renderTargetTexture_->ChangePixelShaderResource(0);
+	//
+	//PostEffect::GetInstance()->SepiaCommand(
+	//	dxCommon_->GetCommadList(),
+	//	0,
+	//	renderTargetTexture_->GetSrvGPUHandle(0)//,
+	//	//shockWaveManager_->GetShockWaveDataBuff()
+	//	//sampleObj_->GetVelocity2DData()
+	//);
 
-	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->ClearDepthBuffer();
+	//renderTargetTexture_->ChangeRenderTarget(0);
+	//renderTargetTexture_->ClearDepthBuffer();
 
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	//renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 
@@ -463,7 +463,8 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	//sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));

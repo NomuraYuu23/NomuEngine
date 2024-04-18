@@ -2,6 +2,7 @@
 
 struct LocalMatrix {
 	float32_t4x4 Matrix;
+	float32_t4x4 MatrixInverseTranspose;
 };
 
 struct TransformationMatrix {
@@ -37,20 +38,22 @@ VertexShaderOutput main(VertexShaderInput input) {
 	float32_t w[4] = { input.weight.x, input.weight.y, input.weight.z, input.weight.w };
 	uint32_t id[4] = { input.index.x, input.index.y, input.index.z, input.index.w };
 	float32_t4x4 comb = (float32_t4x4)0;
+	float32_t4x4 combInverseTranspose = (float32_t4x4)0;
 
 	for (int i = 0; i < 4; ++i) {
 		comb += gLocalMatrixes[id[i]].Matrix * w[i];
+		combInverseTranspose += gLocalMatrixes[id[i]].MatrixInverseTranspose * w[i];
 	}
 
 	input.position.w = 1.0f;
 
 	output.position = mul(input.position, comb);
-	//output.position = input.position;
 	output.position = mul(output.position, gTransformationMatrix.World);
 	output.position = mul(output.position, gViewProjectionMatrix.Matrix);
 
-	float32_t4x4 worldInverseTranspose = comb * gTransformationMatrix.WorldInverseTranspose;
+	float32_t4x4 worldInverseTranspose = mul(combInverseTranspose,gTransformationMatrix.WorldInverseTranspose);
 	output.normal = normalize(mul(input.normal, (float32_t3x3)worldInverseTranspose));
+	//output.normal = input.normal;
 	
 	float32_t4 worldPosition = mul(input.position, comb);
 	worldPosition.w = 1.0f;
