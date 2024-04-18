@@ -292,7 +292,7 @@ void GameScene::Draw() {
 
 	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
 
 	Model::PostDraw();
 
@@ -463,7 +463,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));

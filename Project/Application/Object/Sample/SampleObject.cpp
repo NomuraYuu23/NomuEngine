@@ -39,14 +39,14 @@ void SampleObject::Initialize(Model* model)
 		initScalings[i] = { 1.0f, 1.0f, 1.0f };
 	}
 
-	//animation_.Initialize(
-	//	model_->GetNodeAnimationData(),
-	//	initPositions,
-	//	initRotations,
-	//	initScalings,
-	//	worldtransform_.GetNodeNames());
+	animation_.Initialize(
+		model_->GetNodeAnimationData(),
+		initPositions,
+		initRotations,
+		initScalings,
+		worldtransform_.GetNodeNames());
 
-	//animation_.StartAnimation(0, true);
+	animation_.StartAnimation(0, true);
 	//animation_.startAnimation(1, true);
 
 	enableLighting_ = 0;
@@ -87,7 +87,7 @@ void SampleObject::Update()
 
 	ApplyGlobalVariables();
 
-	//worldtransform_.SetNodeLocalMatrix(animation_.AnimationUpdate());
+	worldtransform_.SetNodeLocalMatrix(animation_.AnimationUpdate());
 
 	//rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
 

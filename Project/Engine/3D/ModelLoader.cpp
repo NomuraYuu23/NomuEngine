@@ -57,15 +57,19 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				}
 				aiString name = bone[i]->mName;
 				aiMatrix4x4 aiMatrix = bone[i]->mOffsetMatrix;
-				aiMatrix.Transpose();
+
+				aiVector3D scale, translate;
+				aiQuaternion rotate;
+				aiMatrix.Decompose(scale, rotate, translate);
 
 				std::pair<std::string, Matrix4x4> boneOffsetMatrix;
 				boneOffsetMatrix.first = name.C_Str();
-				for (uint32_t y = 0; y < 4; ++y) {
-					for (uint32_t x = 0; x < 4; ++x) {
-						boneOffsetMatrix.second.m[y][x] = aiMatrix[y][x];
-					}
-				}
+				boneOffsetMatrix.second =
+					Matrix4x4::MakeAffineMatrix(
+						{ scale.x, scale.y, scale.z },
+						{ rotate.x, -rotate.y, -rotate.z, rotate.w },
+						{ -translate.x,translate.y, translate.z }
+				);
 				boneOffsetMatrixes_.push_back(boneOffsetMatrix);
 
 			}
@@ -84,8 +88,8 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 
 				VertexData vertex;
-				vertex.position = { position.x, position.y, position.z, 1.0f };
-				vertex.normal = { normal.x, normal.y, normal.z };
+				vertex.position = { -position.x, position.y, position.z, 1.0f };
+				vertex.normal = { -normal.x, normal.y, normal.z };
 				vertex.texcoord = { texcoord.x, texcoord.y };
 
 				// テクスチャを移動
@@ -205,12 +209,16 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 	ModelNode result;
 
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation; // nodeのlocalMatrixを取得
-	aiLocalMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
-	for (uint32_t y = 0; y < 4; ++y) {
-		for (uint32_t x = 0; x < 4; ++x) {
-			result.localMatrix.m[y][x] = aiLocalMatrix[y][x];
-		}
-	}
+	aiVector3D scale, translate;
+	aiQuaternion rotate;
+	aiLocalMatrix.Decompose(scale, rotate, translate);
+
+	result.localMatrix =
+		Matrix4x4::MakeAffineMatrix(
+			{ scale.x, scale.y, scale.z },
+			{ rotate.x, -rotate.y, -rotate.z, rotate.w },
+			{ -translate.x,translate.y, translate.z }
+	);
 
 	result.offsetMatrix = Matrix4x4::MakeIdentity4x4();
 	if (!boneOffsetMatrixes_.empty()) {
