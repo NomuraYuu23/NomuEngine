@@ -100,59 +100,47 @@ Model::ModelData ModelLoader::LoadModelFile(const std::string& directoryPath, co
 					vertex.texcoord.x += mesh->mMaterialIndex * 2.0f;
 				}
 
+				VertexInfluence vertexInfluence;
+
 				// ボーン情報取得
 				if (mesh->HasBones()) {
-					vertex.wegiht0 = 0.0f;
-					vertex.wegiht1 = 0.0f;
-					vertex.wegiht2 = 0.0f;
-					vertex.matrixIndex0 = 1000;
-					vertex.matrixIndex1 = 1000;
-					vertex.matrixIndex2 = 1000;
-					vertex.matrixIndex3 = 1000;
+					for (uint32_t i = 0; i < kNumMaxInfluence; ++i) {
+						vertexInfluence.weights[i] = 0.0f;
+						vertexInfluence.indecis[i] = 1000;
+					}
+
 					// 重みデータ
 					for (uint32_t i = 0; i < boneDatas.size(); ++i) {
 						for (uint32_t j = 0; j < boneDatas[i].size(); ++j) {
 							if (boneDatas[i][j].first == vertexIndex) {
 								// 空いている場所
-								if (vertex.matrixIndex0 == 1000) {
-									vertex.matrixIndex0 = i + scene->mNumMeshes + 1;
-									vertex.wegiht0 = boneDatas[i][j].second;
-									break;
-								}
-								else if (vertex.matrixIndex1 == 1000) {
-									vertex.matrixIndex1 = i + scene->mNumMeshes + 1;
-									vertex.wegiht1 = boneDatas[i][j].second;
-									break;
-								}
-								else if (vertex.matrixIndex2 == 1000) {
-									vertex.matrixIndex2 = i + scene->mNumMeshes + 1;
-									vertex.wegiht2 = boneDatas[i][j].second;
-									break;
-								}
-								else if (vertex.matrixIndex3 == 1000) {
-									vertex.matrixIndex3 = i + scene->mNumMeshes + 1;
-									break;
+								for (uint32_t k = 0; k < kNumMaxInfluence; ++k) {
+									if (vertexInfluence.weights[k] == 0.0f) {
+										vertexInfluence.weights[k] = boneDatas[i][j].second;
+										vertexInfluence.indecis[k] = i + scene->mNumMeshes + 1;
+										break;
+									}
 								}
 							}
 						}
 					}
 				}
 				else {
-					vertex.wegiht0 = 1.0f;
-					vertex.wegiht1 = 0.0f;
-					vertex.wegiht2 = 0.0f;
+					for (uint32_t i = 1; i < kNumMaxInfluence; ++i) {
+						vertexInfluence.weights[i] = 0.0f;
+						vertexInfluence.indecis[i] = 1000;
+					}
+					vertexInfluence.weights[0] = 1.0f;
 					if (scene->mNumMeshes == 1) {
-						vertex.matrixIndex0 = meshIndex; // 親ノード分＋1
+						vertexInfluence.indecis[0] = meshIndex; // 親ノード分＋1
 					}
 					else {
-						vertex.matrixIndex0 = meshIndex + 1; // 親ノード分＋1
+						vertexInfluence.indecis[0] = meshIndex + 1; // 親ノード分＋1
 					}
-					vertex.matrixIndex1 = 1000;
-					vertex.matrixIndex2 = 1000;
-					vertex.matrixIndex3 = 1000;
 				}
 
 				modelData.vertices.push_back(vertex);
+				modelData.vertexInfluences.push_back(vertexInfluence);
 
 			}
 

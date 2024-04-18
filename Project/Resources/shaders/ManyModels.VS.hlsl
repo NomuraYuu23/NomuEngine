@@ -23,13 +23,8 @@ struct VertexShaderInput {
 	float32_t4 position : POSITION0;
 	float32_t2 texcoord : TEXCOORD0;
 	float32_t3 normal : NORMAL0;
-	float32_t blend0 : BLENDWEIGHT0;
-	float32_t blend1 : BLENDWEIGHT1;
-	float32_t blend2 : BLENDWEIGHT2;
-	uint32_t idx0 : BLENDINDICES0;
-	uint32_t idx1 : BLENDINDICES1;
-	uint32_t idx2 : BLENDINDICES2;
-	uint32_t idx3 : BLENDINDICES3;
+	float32_t4 weight : WEIGHT0;
+	int32_t4 index : INDEX0;
 };
 
 VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID, uint32_t instanceId : SV_InstanceID) {
@@ -39,14 +34,13 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 	output.texcoord = input.texcoord;
 
 	// comb
-	float32_t w[3] = { input.blend0, input.blend1, input.blend2 };
-	uint32_t id[4] = { input.idx0, input.idx1, input.idx2, input.idx3 };
+	float32_t w[4] = { input.weight.x, input.weight.y, input.weight.z, input.weight.w };
+	uint32_t id[4] = { input.index.x, input.index.y, input.index.z, input.index.w };
 	float32_t4x4 comb = (float32_t4x4)0;
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		comb += gLocalMatrixes[id[i]].Matrix * w[i];
 	}
-	comb += gLocalMatrixes[id[3]].Matrix * (1.0f - w[0] - w[1] - w[2]);
 
 	input.position.w = 1.0f;
 

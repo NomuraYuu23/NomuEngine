@@ -9,6 +9,7 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 #include "VertexData.h"
+#include "VertexInfluence.h"
 
 class Mesh
 {
@@ -18,13 +19,22 @@ public:
 	/// <summary>
 	/// メッシュデータ生成
 	/// </summary>
-	void CreateMesh(ID3D12Device* sDevice, const std::vector<VertexData>& vertices);
+	void CreateMesh(
+		ID3D12Device* sDevice,
+		const std::vector<VertexData>& vertices,
+		const std::vector<VertexInfluence>& vertexInfluences);
 
 	/// <summary>
 	///  頂点バッファビュー
 	/// </summary>
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetVbView() { return &vbView_; }
+
+	/// <summary>
+	///  インフルエンスバッファビュー
+	/// </summary>
+	/// <returns></returns>
+	D3D12_VERTEX_BUFFER_VIEW* GetInfluenceView() { return &influenceView_; }
 
 private:
 
@@ -34,6 +44,13 @@ private:
 	VertexData* vertMap = nullptr;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
+
+	// インフルエンスバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> influenceBuff_;
+	// インフルエンスバッファマップ
+	VertexInfluence* influenceMap = nullptr;
+	// インフルエンスバッファビュー
+	D3D12_VERTEX_BUFFER_VIEW influenceView_{};
 
 };
 

@@ -996,6 +996,9 @@
     <ClInclude Include="Engine\PostEffect\ShockWaveManager.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\3D\VertexInfluence.h">
+      <Filter>Engine\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

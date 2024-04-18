@@ -253,6 +253,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\Mesh.h" />
     <ClInclude Include="Engine\3D\ModelNodeData.h" />
     <ClInclude Include="Engine\3D\OneOfManyObjects.h" />
+    <ClInclude Include="Engine\3D\VertexInfluence.h" />
     <ClInclude Include="Engine\Animation\NodeAnimationData.h" />
     <ClInclude Include="Engine\3D\ModelLoader.h" />
     <ClInclude Include="Engine\3D\ModelNode.h" />

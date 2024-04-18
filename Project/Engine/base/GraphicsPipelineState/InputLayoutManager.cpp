@@ -38,7 +38,7 @@ void InputLayoutManager::Initialize()
 	inputLayouts_[kInputLayoutIndexNormal].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexNormal].size());
 
 	//Model
-	D3D12_INPUT_ELEMENT_DESC inputElementModelDescs[10] = {};
+	D3D12_INPUT_ELEMENT_DESC inputElementModelDescs[5] = {};
 	inputElementModelDescs[0].SemanticName = "POSITION";
 	inputElementModelDescs[0].SemanticIndex = 0;
 	inputElementModelDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -52,42 +52,20 @@ void InputLayoutManager::Initialize()
 	inputElementModelDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementModelDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	inputElementModelDescs[3].SemanticName = "BLENDWEIGHT";
+	inputElementModelDescs[3].SemanticName = "WEIGHT";
 	inputElementModelDescs[3].SemanticIndex = 0;
-	inputElementModelDescs[3].Format = DXGI_FORMAT_R32_FLOAT; // float
+	inputElementModelDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // float
+	inputElementModelDescs[3].InputSlot = 1;
 	inputElementModelDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	inputElementModelDescs[4].SemanticName = "BLENDWEIGHT";
-	inputElementModelDescs[4].SemanticIndex = 1;
-	inputElementModelDescs[4].Format = DXGI_FORMAT_R32_FLOAT; // float
+	inputElementModelDescs[4].SemanticName = "INDEX";
+	inputElementModelDescs[4].SemanticIndex = 0;
+	inputElementModelDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT; // int
+	inputElementModelDescs[4].InputSlot = 1;
 	inputElementModelDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	inputElementModelDescs[5].SemanticName = "BLENDWEIGHT";
-	inputElementModelDescs[5].SemanticIndex = 2;
-	inputElementModelDescs[5].Format = DXGI_FORMAT_R32_FLOAT; // float
-	inputElementModelDescs[5].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	inputElementModelDescs[6].SemanticName = "BLENDINDICES";
-	inputElementModelDescs[6].SemanticIndex = 0;
-	inputElementModelDescs[6].Format = DXGI_FORMAT_R32_UINT;
-	inputElementModelDescs[6].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputElementModelDescs[7].SemanticName = "BLENDINDICES";
-	inputElementModelDescs[7].SemanticIndex = 1;
-	inputElementModelDescs[7].Format = DXGI_FORMAT_R32_UINT;
-	inputElementModelDescs[7].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputElementModelDescs[8].SemanticName = "BLENDINDICES";
-	inputElementModelDescs[8].SemanticIndex = 2;
-	inputElementModelDescs[8].Format = DXGI_FORMAT_R32_UINT;
-	inputElementModelDescs[8].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputElementModelDescs[9].SemanticName = "BLENDINDICES";
-	inputElementModelDescs[9].SemanticIndex = 3;
-	inputElementModelDescs[9].Format = DXGI_FORMAT_R32_UINT;
-	inputElementModelDescs[9].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	for (uint32_t i = 0; i < 10; i++) {
+	for (uint32_t i = 0; i < 5; i++) {
 		inputElementDescs_[kInputLayoutIndexModel].push_back(inputElementModelDescs[i]);
 	}
 

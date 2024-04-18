@@ -15,6 +15,7 @@
 #include "../Math/Vector4.h"
 #include "../Math/Matrix4x4.h"
 #include "VertexData.h"
+#include "VertexInfluence.h"
 #include "TransformationMatrix.h"
 #include "TransformStructure.h"
 
@@ -53,6 +54,7 @@ public:
 
 		// 頂点
 		std::vector<VertexData> vertices;
+		std::vector<VertexInfluence> vertexInfluences;
 		// マテリアル
 		MaterialData material;
 		// ノード

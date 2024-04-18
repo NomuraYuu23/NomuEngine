@@ -194,7 +194,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 
 	//メッシュ生成
 	mesh_ = std::make_unique<Mesh>();
-	mesh_->CreateMesh(sDevice,modelData_.vertices);
+	mesh_->CreateMesh(sDevice,modelData_.vertices,modelData_.vertexInfluences);
 
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
 		// テクスチャハンドル
@@ -226,7 +226,12 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 
 	worldTransform.Map();
 
-	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		*mesh_->GetVbView(),
+		*mesh_->GetInfluenceView()
+	};
+
+	sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
 
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
@@ -280,7 +285,12 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	worldTransform.Map();
 
-	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		*mesh_->GetVbView(),
+		*mesh_->GetInfluenceView()
+	};
+
+	sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
 
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
@@ -334,7 +344,12 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	worldTransform.Map();
 
-	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		*mesh_->GetVbView(),
+		*mesh_->GetInfluenceView()
+	};
+
+	sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
 
 	//マテリアルCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
