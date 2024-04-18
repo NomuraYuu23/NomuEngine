@@ -42,6 +42,9 @@ private:
 	// ワールドトランスフォーム
 	WorldTransform worldtransform_;
 
+	// ローカル行列
+	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
+
 	// 
 	int32_t enableLighting_;
 

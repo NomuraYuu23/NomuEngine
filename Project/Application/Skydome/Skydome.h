@@ -39,6 +39,8 @@ private:
 	Model* model_ = nullptr;
 	//マテリアル
 	std::unique_ptr<Material> material_ = nullptr;
+	// ローカル行列
+	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
 
 	// 回転速度
 	float rotateSpeed_ = 0.001f;

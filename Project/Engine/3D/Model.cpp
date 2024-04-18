@@ -250,7 +250,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	// ローカル行列
-	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
+	//worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
 
 	//テクスチャ
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
@@ -277,7 +277,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 /// <summary>
 /// 描画
 /// </summary>
-void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material) {
+void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material, LocalMatrixManager* localMatrixManager) {
 
 	// nullptrチェック
 	assert(sDevice);
@@ -309,7 +309,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	// ローカル行列
-	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
+	localMatrixManager->SetGraphicsRootDescriptorTable(sCommandList, 5);
 
 	//テクスチャ
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
@@ -336,7 +336,11 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 /// <summary>
 /// 描画
 /// </summary>
-void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material,uint32_t textureHandle) {
+void Model::Draw(
+	WorldTransform& worldTransform,
+	BaseCamera& camera, 
+	Material* material,
+	uint32_t textureHandle) {
 
 	// nullptrチェック
 	assert(sDevice);
@@ -368,7 +372,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	// ローカル行列
-	worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
+	//worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
 
 	//テクスチャ
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6, textureHandle);

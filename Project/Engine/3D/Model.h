@@ -40,6 +40,7 @@
 #include "ModelNode.h"
 #include "../Animation/NodeAnimationData.h"
 #include "../Animation/AnimationData.h"
+#include "../Animation/LocalMatrixManager.h"
 
 class Model
 {
@@ -167,7 +168,7 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(WorldTransform& worldTransform, BaseCamera& camera);
-	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material);
+	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material, LocalMatrixManager* localMatrixManager);
 	void Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* material,uint32_t textureHandle);
 
 	void Draw(

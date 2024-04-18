@@ -126,7 +126,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp" />
     <ClCompile Include="Engine\2D\WindowSprite.cpp" />
     <ClCompile Include="Engine\3D\Mesh.cpp" />
+    <ClCompile Include="Engine\3D\ModelDraw.cpp" />
     <ClCompile Include="Engine\3D\OneOfManyObjects.cpp" />
+    <ClCompile Include="Engine\Animation\LocalMatrixManager.cpp" />
     <ClCompile Include="Engine\Animation\NodeAnimationData.cpp" />
     <ClCompile Include="Engine\3D\ModelLoader.cpp" />
     <ClCompile Include="Engine\3D\ModelNode.cpp" />
@@ -251,9 +253,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h" />
     <ClInclude Include="Engine\2D\WindowSprite.h" />
     <ClInclude Include="Engine\3D\Mesh.h" />
+    <ClInclude Include="Engine\3D\ModelDraw.h" />
     <ClInclude Include="Engine\3D\ModelNodeData.h" />
     <ClInclude Include="Engine\3D\OneOfManyObjects.h" />
     <ClInclude Include="Engine\3D\VertexInfluence.h" />
+    <ClInclude Include="Engine\Animation\LocalMatrixManager.h" />
     <ClInclude Include="Engine\Animation\NodeAnimationData.h" />
     <ClInclude Include="Engine\3D\ModelLoader.h" />
     <ClInclude Include="Engine\3D\ModelNode.h" />
@@ -374,7 +378,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\3D\VertexData.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
-    <ClInclude Include="Engine\3D\LocalMatrix.h" />
+    <ClInclude Include="Engine\Animation\LocalMatrix.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Camera\ViewProjectionMatrix.h" />
   </ItemGroup>

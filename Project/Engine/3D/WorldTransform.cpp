@@ -11,8 +11,6 @@ ID3D12GraphicsCommandList* WorldTransform::sCommandList = nullptr;
 WorldTransform::~WorldTransform()
 {
 
-	Finalize();
-
 }
 
 void WorldTransform::Initialize()
@@ -57,16 +55,7 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 	transformationMatrixMap_->World = Matrix4x4::MakeIdentity4x4();
 	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
 
-	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * nodeCount);
-	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
-
-	for (uint32_t i = 0; i < nodeCount; ++i) {
-		localMatrixesMap_[nodeDatas_[i].meshNum].matrix = Matrix4x4::MakeIdentity4x4();
-	}
-
 	UpdateMatrix();
-
-	SRVCreate();
 
 }
 
@@ -145,54 +134,13 @@ void WorldTransform::Map()
 			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
 		}
 
-		localMatrixesMap_[i].matrix = nodeDatas_[i].offsetMatrix * nodeDatas_[i].matrix;
+		//localMatrixesMap_[i].matrix = nodeDatas_[i].offsetMatrix * nodeDatas_[i].matrix;
 
 	}
 
 
 	transformationMatrixMap_->World = worldMatrix_;
 	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(worldMatrix_);
-
-}
-
-void WorldTransform::SRVCreate()
-{
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
-	localMatrixesSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	localMatrixesSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	localMatrixesSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	localMatrixesSrvDesc.Buffer.FirstElement = 0;
-	localMatrixesSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-
-	if (nodeDatas_.size() == 0){
-		assert(0);
-	}
-	else {
-		localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
-	}
-
-	localMatrixesSrvDesc.Buffer.StructureByteStride = sizeof(LocalMatrix);
-	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
-	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
-	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &localMatrixesSrvDesc, localMatrixesHandleCPU_);
-
-}
-
-void WorldTransform::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex)
-{
-
-	assert(sCommandList == nullptr);
-	assert(nodeDatas_.size() > 0);
-
-	sCommandList = cmdList;
-
-	sCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, localMatrixesHandleGPU_);
-
-	// コマンドリストを解除
-	sCommandList = nullptr;
 
 }
 
@@ -212,15 +160,6 @@ void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentInde
 
 	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
 		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
-	}
-
-}
-
-void WorldTransform::Finalize()
-{
-
-	if (nodeDatas_.size() > 0) {
-		SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
 	}
 
 }

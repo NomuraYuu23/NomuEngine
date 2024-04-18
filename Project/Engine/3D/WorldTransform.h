@@ -3,7 +3,6 @@
 #include "../Math/Matrix4x4.h"
 
 #include "TransformationMatrix.h"
-#include "LocalMatrix.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include "ModelNode.h"
@@ -52,27 +51,10 @@ public:
 	void Map();
 
 	/// <summary>
-	/// SRVを作る
-	/// </summary>
-	void SRVCreate();
-
-	/// <summary>
-	/// GPUに送る
-	/// </summary>
-	/// <param name="cmdList">コマンドリスト</param>
-	/// <param name="rootParameterIndex">ルートパラメータインデックス</param>
-	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
-
-	/// <summary>
 	/// ノードデータ設定
 	/// </summary>
 	/// <param name="modelNode">モデルのノード</param>
 	void SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex);
-
-	/// <summary>
-	/// 消す前に行う処理
-	/// </summary>
-	void Finalize();
 
 	/// <summary>
 	/// ワールドポジション取得
@@ -137,18 +119,6 @@ public:
 	
 	//書き込むためのアドレスを取得
 	TransformationMatrix* transformationMatrixMap_{};
-
-	// local
-	Microsoft::WRL::ComPtr<ID3D12Resource> localMatrixesBuff_;
-	//書き込むためのアドレスを取得
-	LocalMatrix* localMatrixesMap_{};
-	// CPUハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE localMatrixesHandleCPU_;
-	// GPUハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE localMatrixesHandleGPU_;
-
-	// ディスクリプタヒープの位置
-	uint32_t indexDescriptorHeap_ = 0;
 
 	// ノードデータ
 	std::vector<NodeData> nodeDatas_;

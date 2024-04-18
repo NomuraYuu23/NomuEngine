@@ -1,0 +1,76 @@
+#include "LocalMatrixManager.h"
+
+#include "../base/BufferResource.h"
+#include "../base/WinApp.h"
+#include "../base/DirectXCommon.h"
+#include "../base/SRVDescriptorHerpManager.h"
+
+// コマンドリスト
+ID3D12GraphicsCommandList* LocalMatrixManager::sCommandList = nullptr;
+
+LocalMatrixManager::~LocalMatrixManager()
+{
+
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+
+}
+
+void LocalMatrixManager::Initialize(const std::vector<NodeData>& nodeDatas)
+{
+	
+	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * nodeDatas.size());
+	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
+
+	for (uint32_t i = 0; i < nodeDatas.size(); ++i) {
+		localMatrixesMap_[nodeDatas[i].meshNum].matrix = Matrix4x4::MakeIdentity4x4();
+	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
+	localMatrixesSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	localMatrixesSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	localMatrixesSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	localMatrixesSrvDesc.Buffer.FirstElement = 0;
+	localMatrixesSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas.size());
+	localMatrixesSrvDesc.Buffer.StructureByteStride = sizeof(LocalMatrix);
+	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &localMatrixesSrvDesc, localMatrixesHandleCPU_);
+
+}
+
+void LocalMatrixManager::Map(const std::vector<NodeData>& nodeDatas)
+{
+
+	for (uint32_t i = 0; i < nodeDatas.size(); ++i) {
+
+		//if (nodeDatas_[i].parentIndex >= 0) {
+		//	nodeDatas_[i].matrix = Matrix4x4::Multiply(
+		//		nodeDatas_[i].localMatrix,
+		//		nodeDatas_[nodeDatas_[i].parentIndex].matrix);
+		//}
+		//else {
+		//	nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
+		//}
+
+		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas[i].offsetMatrix,nodeDatas[i].matrix);
+
+	}
+
+}
+
+void LocalMatrixManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex)
+{
+
+	assert(sCommandList == nullptr);
+
+	sCommandList = cmdList;
+
+	sCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, localMatrixesHandleGPU_);
+
+	// コマンドリストを解除
+	sCommandList = nullptr;
+
+}

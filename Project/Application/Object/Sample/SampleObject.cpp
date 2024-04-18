@@ -19,6 +19,9 @@ void SampleObject::Initialize(Model* model)
 
 	worldtransform_.Initialize(model_->GetRootNode());
 
+	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
+	localMatrixManager_->Initialize(worldtransform_.GetNodeDatas());
+
 	// 初期ローカル座標
 	std::vector<Vector3> initPositions;
 	initPositions.resize(worldtransform_.GetNodeDatas().size());
@@ -89,6 +92,8 @@ void SampleObject::Update()
 
 	worldtransform_.SetNodeLocalMatrix(animation_.AnimationUpdate());
 
+	localMatrixManager_->Map(worldtransform_.GetNodeDatas());
+
 	//rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
 
 	//rigidBody_.inertiaTensor = RigidBody::InertiaTensorCalc(rigidBody_.postureMatrix, rigidBody_.basicPostureInertiaTensor);
@@ -115,7 +120,7 @@ void SampleObject::Draw(BaseCamera camera)
 
 	velocity2DDataMap_->SetVelocity(velocity_, camera.GetViewMatrix());
 
-	model_->Draw(worldtransform_, camera, material_.get());
+	model_->Draw(worldtransform_, camera, material_.get(), localMatrixManager_.get());
 
 }
 

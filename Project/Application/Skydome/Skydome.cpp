@@ -23,6 +23,10 @@ void Skydome::Initialize(Model* model) {
 
 	// ワールド変換データの初期化
 	worldTransform_.Initialize(model_->GetRootNode());
+
+	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
+	localMatrixManager_->Initialize(worldTransform_.GetNodeDatas());
+
 }
 
 /// <summary>
@@ -34,6 +38,8 @@ void Skydome::Update() {
 
 	worldTransform_.UpdateMatrix();
 
+	localMatrixManager_->Map(worldTransform_.GetNodeDatas());
+
 }
 
 /// <summary>
@@ -42,7 +48,7 @@ void Skydome::Update() {
 /// <param name="viewProjection">ビュープロジェクション</param>
 void Skydome::Draw(BaseCamera& camera) {
 
-	model_->Draw(worldTransform_, camera, material_.get());
+	model_->Draw(worldTransform_, camera, material_.get(), localMatrixManager_.get());
 
 }
 
