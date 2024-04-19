@@ -103,29 +103,6 @@ public:
 	/// </summary>
 	void Initialize(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager);
 
-	///// <summary>
-	///// 描画
-	///// </summary>
-
-	//void Draw(
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
-	//	BaseCamera& camera,
-	//	uint32_t numInstance);
-	//void Draw(
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
-	//	BaseCamera& camera,
-	//	uint32_t numInstance,
-	//	Material* material);
-	//void Draw(
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& localMatrixesHandle,
-	//	const D3D12_GPU_DESCRIPTOR_HANDLE& transformationMatrixesHandle,
-	//	BaseCamera& camera,
-	//	uint32_t numInstance,
-	//	Material* material,
-	//	uint32_t textureHandle);
-
 	/// <summary>
 	/// テクスチャハンドルの設定
 	/// </summary>
