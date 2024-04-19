@@ -33,57 +33,6 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 }
 
-//void Model::PreParticleDraw(ID3D12GraphicsCommandList* cmdList, const Matrix4x4& viewProjectionMatrix)
-//{
-//
-//	assert(sCommandList == nullptr);
-//
-//	sCommandList = cmdList;
-//
-//	//RootSignatureを設定。
-//	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameParticle]);//PS0を設定
-//	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameParticle]);
-//
-//	// SRV
-//	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
-//	sCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-//
-//	//形状を設定。PS0に設定しているものとは別。
-//	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//
-//	ParticleManager* particleManager = ParticleManager::GetInstance();
-//	particleManager->Map(viewProjectionMatrix);
-//
-//}
-//
-//void Model::PreManyModelsDraw(
-//	ID3D12GraphicsCommandList* cmdList, 
-//	PointLightManager* pointLightManager, 
-//	SpotLightManager* spotLightManager,
-//	DirectionalLight* directionalLight)
-//{
-//
-//	assert(sCommandList == nullptr);
-//
-//	sCommandList = cmdList;
-//
-//	//RootSignatureを設定。
-//	sCommandList->SetPipelineState(sPipelineState[PipelineStateName::kPipelineStateNameManyModels]);//PS0を設定
-//	sCommandList->SetGraphicsRootSignature(sRootSignature[PipelineStateName::kPipelineStateNameManyModels]);
-//
-//	// SRV
-//	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
-//	sCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-//
-//	//形状を設定。PS0に設定しているものとは別。
-//	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//
-//	pointLightManager_ = pointLightManager;
-//	spotLightManager_ = spotLightManager;
-//	directionalLight_ = directionalLight;
-//
-//}
-
 /// <summary>
 /// 3Dモデル生成
 /// </summary>
@@ -305,34 +254,6 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 //
 //}
 //
-//void Model::ParticleDraw()
-//{
-//
-//	// nullptrチェック
-//	assert(sDevice);
-//	assert(sCommandList);
-//
-//	ParticleManager* particleManager = ParticleManager::GetInstance();
-//
-//	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
-//
-//	//マテリアルCBufferの場所を設定
-//	sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
-//
-//	//マテリアルCBufferの場所を設定
-//	sCommandList->SetGraphicsRootConstantBufferView(4, particleManager->GetCurrentStartInstanceIdBuff()->GetGPUVirtualAddress());
-//
-//	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-//	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
-//		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandles_[i]);
-//	}
-//
-//	sCommandList->SetGraphicsRootDescriptorTable(1, particleManager->GetInstancingSrvHandleGPU());
-//
-//	//描画
-//	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), particleManager->GetCurrentInstanceIndex(), 0, 0);
-//
-//}
 
 /// <summary>
 /// テクスチャハンドルの設定

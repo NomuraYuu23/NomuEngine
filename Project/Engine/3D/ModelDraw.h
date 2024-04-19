@@ -15,7 +15,7 @@ public: // サブクラス
 	enum PipelineStateIndex {
 		kPipelineStateIndexAnimObject, // アニメーションオブジェクト
 		kPipelineStateIndexParticle, // パーティクル
-		//kPipelineStateNameManyModels,
+		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト
 		kPipelineStateIndexOfCount
 	};
 	
@@ -41,10 +41,23 @@ public: // サブクラス
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
 	};
 
+	// パーティクル引数
 	struct ParticleDesc 
 	{
 		Model* model; //モデル
 		ParticleManager* particleManager; // パーティクルマネージャー
+	};
+
+	// 複数のアニメーションオブジェクト
+	struct ManyAnimObjectsDesc
+	{
+		Model* model; //モデル
+		D3D12_GPU_DESCRIPTOR_HANDLE* localMatrixesHandle;
+		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
+		BaseCamera* camera;
+		uint32_t numInstance;
+		Material* material;
+		std::vector<UINT> textureHandles;
 	};
 
 public:
@@ -94,7 +107,17 @@ public: // 描画
 	/// <param name="desc">アニメーションオブジェクト引数</param>
 	static void AnimObjectDraw(AnimObjectDesc& desc);
 
+	/// <summary>
+	/// パーティクル
+	/// </summary>
+	/// <param name="desc">パーティクル引数</param>
 	static void ParticleDraw(ParticleDesc& desc);
+
+	/// <summary>
+	/// 複数のアニメーションオブジェクト
+	/// </summary>
+	/// <param name="desc">複数のアニメーションオブジェクト引数</param>
+	static void ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc);
 
 };
 

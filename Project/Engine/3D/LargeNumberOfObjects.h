@@ -43,7 +43,7 @@ public:
 	/// <summary>
 	/// マッピング
 	/// </summary>
-	void Map();
+	void Map(const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
 	/// 描画

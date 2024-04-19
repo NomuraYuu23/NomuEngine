@@ -320,15 +320,10 @@ void RootParameterManager::RootParameterInitializeForManyModels()
 	rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDexcriptorRangeIndexTransformationMatrix].data();//Tableの中身の配列を指定
 	rootParameters[10].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDexcriptorRangeIndexTransformationMatrix].size());//Tableで利用する数
 
-	// ビュープロジェクション
-	rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-	rootParameters[11].Descriptor.ShaderRegister = 0;
-
 	// 霧
-	rootParameters[12].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[12].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParameters[12].Descriptor.ShaderRegister = 3;
+	rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParameters[11].Descriptor.ShaderRegister = 3;
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexManyModels].push_back(rootParameters[i]);

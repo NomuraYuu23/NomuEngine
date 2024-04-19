@@ -164,3 +164,58 @@ void ModelDraw::ParticleDraw(ParticleDesc& desc)
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), particleManager->GetCurrentInstanceIndex(), 0, 0);
 
 }
+
+void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
+{
+
+	// nullptrチェック
+	assert(sCommandList);
+
+	//VBVを設定 (インフルエンスと合体)
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		*(desc.model->GetMesh())->GetVbView(),
+		*(desc.model->GetMesh())->GetInfluenceView()
+	};
+	sCommandList->IASetVertexBuffers(0, 2, vbvs);
+
+	//マテリアルCBufferの場所を設定
+	if (desc.material) {
+		sCommandList->SetGraphicsRootConstantBufferView(0, desc.material->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+	else {
+		sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+
+	// カメラCBufferの場所を設定
+	sCommandList->SetGraphicsRootConstantBufferView(7, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
+
+
+	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
+	for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+	}
+
+	// ポイントライト
+	if (sPointLightManager_) {
+		sPointLightManager_->Draw(sCommandList, 8);
+	}
+	// スポットライト
+	if (sSpotLightManager_) {
+		sSpotLightManager_->Draw(sCommandList, 9);
+	}
+	// 平行光源
+	if (sDirectionalLight_) {
+		sDirectionalLight_->Draw(sCommandList, 6);
+	}
+
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootDescriptorTable(10, *desc.transformationMatrixesHandle);
+	// ローカル
+	sCommandList->SetGraphicsRootDescriptorTable(1, *desc.localMatrixesHandle);
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(11, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+
+	//描画
+	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
+
+}

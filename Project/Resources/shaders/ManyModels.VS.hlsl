@@ -2,22 +2,18 @@
 
 struct LocalMatrix {
 	float32_t4x4 Matrix;
+	float32_t4x4 MatrixInverseTranspose;
 };
 
 struct TransformationMatrix {
+	float32_t4x4 WVP;
 	float32_t4x4 World;
 	float32_t4x4 WorldInverseTranspose;
-};
-
-struct ViewProjectionMatrix {
-	float32_t4x4 Matrix;
 };
 
 StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t0);
 
 StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t1);
-
-ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b0);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;
@@ -37,18 +33,21 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 	float32_t w[4] = { input.weight.x, input.weight.y, input.weight.z, input.weight.w };
 	uint32_t id[4] = { input.index.x, input.index.y, input.index.z, input.index.w };
 	float32_t4x4 comb = (float32_t4x4)0;
+	float32_t4x4 combInverseTranspose = (float32_t4x4)0;
 
 	for (int i = 0; i < 4; ++i) {
 		comb += gLocalMatrixes[id[i]].Matrix * w[i];
+		combInverseTranspose += gLocalMatrixes[id[i]].MatrixInverseTranspose * w[i];
 	}
 
 	input.position.w = 1.0f;
 
-	output.position = mul(input.position, comb);
-	output.position = mul(output.position, gTransformationMatrixes[instanceId].World);
-	output.position = mul(output.position, gViewProjectionMatrix.Matrix);
 
-	float32_t4x4 worldInverseTranspose = comb * gTransformationMatrixes[instanceId].WorldInverseTranspose;
+
+	output.position = mul(input.position, comb);
+	output.position = mul(output.position, gTransformationMatrixes[instanceId].WVP);
+
+	float32_t4x4 worldInverseTranspose = mul(combInverseTranspose, gTransformationMatrixes[instanceId].WorldInverseTranspose);
 	output.normal = normalize(mul(input.normal, (float32_t3x3)worldInverseTranspose));
 
 	float32_t4 worldPosition = mul(input.position, comb);

@@ -291,6 +291,16 @@ void GameScene::Draw() {
 	ModelDraw::PostDraw();
 
 #pragma endregion
+
+#pragma region 複数のモデル描画
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexManyAnimObjects;
+	ModelDraw::PreDraw(preDrawDesc);
+
+	testManyObject_->Draw(camera_);
+
+	ModelDraw::PostDraw();
+
+#pragma endregion
 	
 #pragma region 線描画
 	// 前景スプライト描画前処理

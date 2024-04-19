@@ -1,5 +1,6 @@
 #include "LargeNumberOfObjects.h"
 #include "../base/SRVDescriptorHerpManager.h"
+#include "ModelDraw.h"
 
 LargeNumberOfObjects::~LargeNumberOfObjects()
 {
@@ -86,7 +87,7 @@ void LargeNumberOfObjects::Update()
 
 }
 
-void LargeNumberOfObjects::Map()
+void LargeNumberOfObjects::Map(const Matrix4x4& viewProjectionMatrix)
 {
 
 	// ノードデータ
@@ -101,7 +102,8 @@ void LargeNumberOfObjects::Map()
 			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
 		}
 
-		localMatrixesMap_[i].matrix = nodeDatas_[i].offsetMatrix * nodeDatas_[i].matrix;
+		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, nodeDatas_[i].matrix);
+		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
 
 	}
 
@@ -109,6 +111,7 @@ void LargeNumberOfObjects::Map()
 	uint32_t i = 0;
 	for (; itr != objects_.end(); ++itr) {
 		OneOfManyObjects* obj = itr->get();
+		transformationMatrixesMap_[i].WVP = obj->worldMatrix_ * viewProjectionMatrix;
 		transformationMatrixesMap_[i].World = obj->worldMatrix_;
 		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Transpose(obj->worldMatrix_);
 		i++;
@@ -120,7 +123,7 @@ void LargeNumberOfObjects::Map()
 void LargeNumberOfObjects::Draw(BaseCamera& camera)
 {
 
-	Map();
+	Map(camera.GetViewProjectionMatrix());
 
 	//model_->Draw(
 	//	localMatrixesHandleGPU_,
@@ -128,6 +131,15 @@ void LargeNumberOfObjects::Draw(BaseCamera& camera)
 	//	camera,
 	//	numInstance_,
 	//	material_.get());
+	ModelDraw::ManyAnimObjectsDesc desc;
+	desc.camera = &camera;
+	desc.localMatrixesHandle = &localMatrixesHandleGPU_;
+	desc.material = material_.get();
+	desc.model = model_;
+	desc.numInstance = numInstance_;
+	//desc.textureHandles;
+	desc.transformationMatrixesHandle = &transformationMatrixesHandleGPU_;
+	ModelDraw::ManyAnimObjectsDraw(desc);
 
 }
 
