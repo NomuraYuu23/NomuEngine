@@ -40,7 +40,7 @@ private:
 	// マテリアル
 	std::unique_ptr<Material> material_ = nullptr;
 	// ワールドトランスフォーム
-	WorldTransform worldtransform_;
+	WorldTransform worldTransform_;
 
 	// ローカル行列
 	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;

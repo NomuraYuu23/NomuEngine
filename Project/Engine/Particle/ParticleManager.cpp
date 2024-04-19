@@ -81,10 +81,10 @@ void ParticleManager::Update(BaseCamera& camera)
 void ParticleManager::Draw()
 {
 
-	for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
-		currentModel_ = i;
-		particleDatas_[i].model_->ParticleDraw();
-	}
+	//for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
+	//	currentModel_ = i;
+	//	particleDatas_[i].model_->ParticleDraw();
+	//}
 
 }
 

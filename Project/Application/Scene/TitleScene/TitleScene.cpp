@@ -1,4 +1,5 @@
 #include "TitleScene.h"
+#include "../../../Engine/3D/ModelDraw.h"
 
 TitleScene::~TitleScene()
 {
@@ -85,19 +86,21 @@ void TitleScene::Draw()
 
 #pragma endregion
 
-	Model::PreDraw(dxCommon_->GetCommadList());
+	ModelDraw::PreDrawDesc preDrawDesc;
+	preDrawDesc.commandList = dxCommon_->GetCommadList();
+	preDrawDesc.directionalLight = nullptr;
+	preDrawDesc.fogManager = FogManager::GetInstance();
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimObject;
+	preDrawDesc.pointLightManager = nullptr;
+	preDrawDesc.spotLightManager = nullptr;
 
-	//3Dオブジェクトはここ
+	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
-	if (isDrawSkydome_) {
-		skydome_->Draw(camera_);
-	}
+	skydome_->Draw(camera_);
 
-	Model::PostDraw();
-	Model::PreDrawOutLine(dxCommon_->GetCommadList());
+	ModelDraw::PostDraw();
 
-	Model::PostDraw();
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(dxCommon_->GetCommadList());
@@ -109,22 +112,6 @@ void TitleScene::Draw()
 	Sprite::PostDraw();
 
 #pragma endregion
-
-	renderTargetTexture_->ChangePixelShaderResource(0);
-	//glare_->Execution(
-	//	renderTargetTexture_->GetSrvGPUHandle(0),
-	//	0.2f,
-	//	0.2f,
-	//	Glare::kImageForGlareIndexHalo,
-	//	dxCommon_->GetCommadList());
-	
-	PostEffect::GetInstance()->GaussianBlurCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)
-	);
-	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

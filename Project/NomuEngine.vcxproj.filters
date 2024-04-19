@@ -388,9 +388,6 @@
     <ClCompile Include="Engine\3D\OutLineData.cpp">
       <Filter>Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
-      <Filter>Engine\Base\GraphicsPipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
@@ -546,6 +543,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\ModelDraw.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "../../Particle/EmitterName.h"
+#include "../../../Engine/3D/ModelDraw.h"
 
 GameScene::~GameScene()
 {
@@ -260,19 +261,22 @@ void GameScene::Draw() {
 	// 深度バッファクリア
 	renderTargetTexture_->ClearDepthBuffer();
 
-
 #pragma endregion
 
 #pragma region モデル描画
 
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
+	ModelDraw::PreDrawDesc preDrawDesc;
+	preDrawDesc.commandList = dxCommon_->GetCommadList();
+	preDrawDesc.directionalLight = directionalLight_.get();
+	preDrawDesc.fogManager = FogManager::GetInstance();
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimObject;
+	preDrawDesc.pointLightManager = pointLightManager_.get();
+	preDrawDesc.spotLightManager = spotLightManager_.get();
+
+	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
 	skydome_->Draw(camera_);
-
-	Model::PostDraw();
-
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
 	//Obj
 	sampleObj_->Draw(camera_);
@@ -284,17 +288,7 @@ void GameScene::Draw() {
 
 #endif // _DEBUG
 
-	Model::PostDraw();
-
-#pragma endregion
-
-#pragma region 多量モデル描画
-
-	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
-
-	//testManyObject_->Draw(camera_);
-
-	Model::PostDraw();
+	ModelDraw::PostDraw();
 
 #pragma endregion
 	
@@ -312,25 +306,18 @@ void GameScene::Draw() {
 
 #pragma endregion
 	
-#pragma region アウトライン描画
-	Model::PreDrawOutLine(dxCommon_->GetCommadList());
-	
-	Model::PostDraw();
-
-#pragma endregion
-
-#pragma region パーティクル描画
-	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
-
-	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
-
-	// パーティクルはここ
-	particleManager_->Draw();
-
-	Model::PostDraw();
-
-#pragma endregion
+//#pragma region パーティクル描画
+//	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
+//
+//	//光源
+//	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
+//
+//	// パーティクルはここ
+//	particleManager_->Draw();
+//
+//	Model::PostDraw();
+//
+//#pragma endregion
 
 #ifdef _DEBUG
 #pragma region コライダー2d描画

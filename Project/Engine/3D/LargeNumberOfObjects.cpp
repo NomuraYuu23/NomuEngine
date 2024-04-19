@@ -122,12 +122,12 @@ void LargeNumberOfObjects::Draw(BaseCamera& camera)
 
 	Map();
 
-	model_->Draw(
-		localMatrixesHandleGPU_,
-		transformationMatrixesHandleGPU_,
-		camera,
-		numInstance_,
-		material_.get());
+	//model_->Draw(
+	//	localMatrixesHandleGPU_,
+	//	transformationMatrixesHandleGPU_,
+	//	camera,
+	//	numInstance_,
+	//	material_.get());
 
 }
 

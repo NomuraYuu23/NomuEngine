@@ -53,6 +53,9 @@
 // FogManager
 #include "../3D/FogManager.h"
 
+// モデル描画
+#include "../3D/ModelDraw.h"
+
 class MyFramework
 {
 
