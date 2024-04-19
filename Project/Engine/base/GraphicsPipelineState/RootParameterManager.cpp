@@ -142,25 +142,30 @@ void RootParameterManager::RootParameterInitializeForParticle()
 
 	//RootParameter作成。複数設定できるので配列。今回は1つだけなので長さ1の配列
 	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	
+	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
+	
+	// インスタンシング
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
 	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexInstancing].data();//Tableの中身の配列を指定
 	rootParameters[1].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexInstancing].size());//Tableで利用する数
+	
+	// テクスチャ
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDescriptorRangeIndexTexture0].data();//Tableの中身の配列を指定
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDescriptorRangeIndexTexture0].size());//Tableで利用する数
+	
+	// 開始位置
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParameters[3].Descriptor.ShaderRegister = 1;
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-	rootParameters[4].Descriptor.ShaderRegister = 0;
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+	rootParameters[3].Descriptor.ShaderRegister = 0;
 
-	for (uint32_t i = 0; i < 5; ++i) {
+	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexParticle].push_back(rootParameters[i]);
 	}
 

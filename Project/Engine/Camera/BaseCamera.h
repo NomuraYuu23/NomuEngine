@@ -74,7 +74,7 @@ public:
 	/// ビュープロジェクション行列バッファ取得
 	/// </summary>
 	/// <returns>ビュープロジェクション行列バッファ</returns>
-	ID3D12Resource* GetViewProjectionMatriBuff() { return viewProjectionMatrixBuff_.Get(); }
+	ID3D12Resource* GetViewProjectionMatrixBuff() { return viewProjectionMatrixBuff_.Get(); }
 
 	/// <summary>
 	/// FovY設定

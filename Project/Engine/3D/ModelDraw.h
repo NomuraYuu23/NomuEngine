@@ -14,7 +14,7 @@ public: // サブクラス
 	// パイプライン番号
 	enum PipelineStateIndex {
 		kPipelineStateIndexAnimObject, // アニメーションオブジェクト
-		//kPipelineStateNameParticle,
+		kPipelineStateIndexParticle, // パーティクル
 		//kPipelineStateNameManyModels,
 		kPipelineStateIndexOfCount
 	};
@@ -30,6 +30,7 @@ public: // サブクラス
 		FogManager* fogManager; // 霧マネージャー
 	};
 
+	// アニメーションオブジェクト引数
 	struct AnimObjectDesc
 	{
 		Model* model; //モデル
@@ -38,6 +39,12 @@ public: // サブクラス
 		BaseCamera* camera; // カメラ
 		Material* material; // マテリアル(なくてもいい)
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
+	};
+
+	struct ParticleDesc 
+	{
+		Model* model; //モデル
+		ParticleManager* particleManager; // パーティクルマネージャー
 	};
 
 public:
@@ -81,7 +88,13 @@ public: //関数（描画以外）
 
 public: // 描画
 
+	/// <summary>
+	/// アニメーションオブジェクト
+	/// </summary>
+	/// <param name="desc">アニメーションオブジェクト引数</param>
 	static void AnimObjectDraw(AnimObjectDesc& desc);
+
+	static void ParticleDraw(ParticleDesc& desc);
 
 };
 

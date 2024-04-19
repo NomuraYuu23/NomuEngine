@@ -117,7 +117,7 @@ void DrawLine::Draw(
 	sCommandList->IASetVertexBuffers(0, 1, &vbView_);
 
 	//VP CBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(0, camera.GetViewProjectionMatrixBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(kVertNum, 1, 0, 0);

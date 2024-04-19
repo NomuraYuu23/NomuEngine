@@ -306,18 +306,17 @@ void GameScene::Draw() {
 
 #pragma endregion
 	
-//#pragma region パーティクル描画
-//	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
-//
-//	//光源
-//	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
-//
-//	// パーティクルはここ
-//	particleManager_->Draw();
-//
-//	Model::PostDraw();
-//
-//#pragma endregion
+#pragma region パーティクル描画
+
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexParticle;
+	ModelDraw::PreDraw(preDrawDesc);
+
+	// パーティクルはここ
+	particleManager_->Draw(camera_.GetViewProjectionMatrix());
+
+	ModelDraw::PostDraw();
+
+#pragma endregion
 
 #ifdef _DEBUG
 #pragma region コライダー2d描画

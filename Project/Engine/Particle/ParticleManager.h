@@ -69,13 +69,13 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="viewProjection"></param>
-	void Draw();
+	/// <param name="viewProjection">ビュープロジェクション</param>
+	void Draw(const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
 	/// マッピング
 	/// </summary>
-	/// <param name="viewProjection"></param>
+	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Map(const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
