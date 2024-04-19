@@ -185,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Physics\InertiaTensor.cpp" />
     <ClCompile Include="Engine\Physics\MassPoint.cpp" />
     <ClCompile Include="Engine\Physics\RigidBody.cpp" />
+    <ClCompile Include="Engine\Physics\Spring.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\PostEffect\ShockWaveManager.cpp" />
     <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp" />
@@ -326,6 +327,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Physics\InertiaTensor.h" />
     <ClInclude Include="Engine\Physics\MassPoint.h" />
     <ClInclude Include="Engine\Physics\RigidBody.h" />
+    <ClInclude Include="Engine\Physics\Spring.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\PostEffect\ShockWaveData.h" />
     <ClInclude Include="Engine\PostEffect\ShockWaveManager.h" />
