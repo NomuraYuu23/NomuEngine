@@ -6,19 +6,14 @@ struct LocalMatrix {
 };
 
 struct TransformationMatrix {
+	float32_t4x4 WVP;
 	float32_t4x4 World;
 	float32_t4x4 WorldInverseTranspose;
-};
-
-struct ViewProjectionMatrix {
-	float32_t4x4 Matrix;
 };
 
 StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t0);
 
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
-
-ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b1);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;
@@ -48,12 +43,10 @@ VertexShaderOutput main(VertexShaderInput input) {
 	input.position.w = 1.0f;
 
 	output.position = mul(input.position, comb);
-	output.position = mul(output.position, gTransformationMatrix.World);
-	output.position = mul(output.position, gViewProjectionMatrix.Matrix);
+	output.position = mul(output.position, gTransformationMatrix.WVP);
 
 	float32_t4x4 worldInverseTranspose = mul(combInverseTranspose,gTransformationMatrix.WorldInverseTranspose);
 	output.normal = normalize(mul(input.normal, (float32_t3x3)worldInverseTranspose));
-	//output.normal = input.normal;
 	
 	float32_t4 worldPosition = mul(input.position, comb);
 	worldPosition.w = 1.0f;

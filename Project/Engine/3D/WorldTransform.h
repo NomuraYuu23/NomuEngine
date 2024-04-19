@@ -48,7 +48,7 @@ public:
 	/// <summary>
 	/// マップ
 	/// </summary>
-	void Map();
+	void Map(const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
 	/// ノードデータ設定

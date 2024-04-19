@@ -220,57 +220,57 @@ void Model::Update() {
 /// </summary>
 void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera) {
 
-	// nullptrチェック
-	assert(sDevice);
-	assert(sCommandList);
+	//// nullptrチェック
+	//assert(sDevice);
+	//assert(sCommandList);
 
-	worldTransform.Map();
+	//worldTransform.Map();
 
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		*mesh_->GetVbView(),
-		*mesh_->GetInfluenceView()
-	};
+	//D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+	//	*mesh_->GetVbView(),
+	//	*mesh_->GetInfluenceView()
+	//};
 
-	sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
+	//sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
 
-	//マテリアルCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
+	////マテリアルCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(0, defaultMaterial_->GetMaterialBuff()->GetGPUVirtualAddress());
 
-	// 平行光源
-	if (directionalLight_) {
-		directionalLight_->Draw(sCommandList, 1);
-	}
+	//// 平行光源
+	//if (directionalLight_) {
+	//	directionalLight_->Draw(sCommandList, 1);
+	//}
 
-	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(2, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
-	
-	// ワールドトランスフォーム
-	sCommandList->SetGraphicsRootConstantBufferView(3, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
-	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	//// カメラCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(2, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+	//
+	//// ワールドトランスフォーム
+	//sCommandList->SetGraphicsRootConstantBufferView(3, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
+	//// ビュープロジェクション
+	//sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
-	// ローカル行列
-	//worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
+	//// ローカル行列
+	////worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
 
-	//テクスチャ
-	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
-		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6 + static_cast<UINT>(i), textureHandles_[i]);
-	}
+	////テクスチャ
+	//for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
+	//	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6 + static_cast<UINT>(i), textureHandles_[i]);
+	//}
 
-	// ポイントライト
-	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 10);
-	}
-	// スポットライト
-	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 11);
-	}
+	//// ポイントライト
+	//if (pointLightManager_) {
+	//	pointLightManager_->Draw(sCommandList, 10);
+	//}
+	//// スポットライト
+	//if (spotLightManager_) {
+	//	spotLightManager_->Draw(sCommandList, 11);
+	//}
 
-	// 霧
-	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+	//// 霧
+	//sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
 
-	//描画
-	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	////描画
+	//sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
 }
 
@@ -283,7 +283,7 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 	assert(sDevice);
 	assert(sCommandList);
 
-	worldTransform.Map();
+	worldTransform.Map(camera.GetViewProjectionMatrix());
 
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 		*mesh_->GetVbView(),
@@ -305,28 +305,26 @@ void Model::Draw(WorldTransform& worldTransform, BaseCamera& camera, Material* m
 
 	// ワールドトランスフォーム
 	sCommandList->SetGraphicsRootConstantBufferView(3, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
-	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
 	// ローカル行列
-	localMatrixManager->SetGraphicsRootDescriptorTable(sCommandList, 5);
+	localMatrixManager->SetGraphicsRootDescriptorTable(sCommandList, 4);
 
 	//テクスチャ
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
-		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6 + static_cast<UINT>(i), textureHandles_[i]);
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 5 + static_cast<UINT>(i), textureHandles_[i]);
 	}
 
 	// ポイントライト
 	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 10);
+		pointLightManager_->Draw(sCommandList, 9);
 	}
 	// スポットライト
 	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 11);
+		spotLightManager_->Draw(sCommandList, 10);
 	}
 
 	// 霧
-	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(11, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -342,55 +340,55 @@ void Model::Draw(
 	Material* material,
 	uint32_t textureHandle) {
 
-	// nullptrチェック
-	assert(sDevice);
-	assert(sCommandList);
+	//// nullptrチェック
+	//assert(sDevice);
+	//assert(sCommandList);
 
-	worldTransform.Map();
+	//worldTransform.Map();
 
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		*mesh_->GetVbView(),
-		*mesh_->GetInfluenceView()
-	};
+	//D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+	//	*mesh_->GetVbView(),
+	//	*mesh_->GetInfluenceView()
+	//};
 
-	sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
+	//sCommandList->IASetVertexBuffers(0, 2, vbvs); //VBVを設定
 
-	//マテリアルCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
+	////マテリアルCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(0, material->GetMaterialBuff()->GetGPUVirtualAddress());
 
-	// 平行光源
-	if (directionalLight_) {
-		directionalLight_->Draw(sCommandList, 1);
-	}
+	//// 平行光源
+	//if (directionalLight_) {
+	//	directionalLight_->Draw(sCommandList, 1);
+	//}
 
-	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(2, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
+	//// カメラCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(2, camera.GetWorldPositionBuff()->GetGPUVirtualAddress());
 
-	// ワールドトランスフォーム
-	sCommandList->SetGraphicsRootConstantBufferView(3, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
-	// ビュープロジェクション
-	sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
+	//// ワールドトランスフォーム
+	//sCommandList->SetGraphicsRootConstantBufferView(3, worldTransform.GetTransformationMatrixBuff()->GetGPUVirtualAddress());
+	//// ビュープロジェクション
+	//sCommandList->SetGraphicsRootConstantBufferView(4, camera.GetViewProjectionMatriBuff()->GetGPUVirtualAddress());
 
-	// ローカル行列
-	//worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
+	//// ローカル行列
+	////worldTransform.SetGraphicsRootDescriptorTable(sCommandList, 5);
 
-	//テクスチャ
-	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6, textureHandle);
+	////テクスチャ
+	//TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 6, textureHandle);
 
-	// ポイントライト
-	if (pointLightManager_) {
-		pointLightManager_->Draw(sCommandList, 10);
-	}
-	// スポットライト
-	if (spotLightManager_) {
-		spotLightManager_->Draw(sCommandList, 11);
-	}
+	//// ポイントライト
+	//if (pointLightManager_) {
+	//	pointLightManager_->Draw(sCommandList, 10);
+	//}
+	//// スポットライト
+	//if (spotLightManager_) {
+	//	spotLightManager_->Draw(sCommandList, 11);
+	//}
 
-	// 霧
-	sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
+	//// 霧
+	//sCommandList->SetGraphicsRootConstantBufferView(12, FogManager::GetInstance()->GetFogDataBuff()->GetGPUVirtualAddress());
 
-	//描画
-	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	////描画
+	//sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
 }
 
@@ -606,26 +604,26 @@ void Model::ParticleDraw()
 }
 
 void Model::OutLineDraw(WorldTransform& worldTransform, BaseCamera& camera, OutLineData& outLineData) {
-	// nullptrチェック
-	assert(sDevice);
-	assert(sCommandList);
-	assert(0);
+	//// nullptrチェック
+	//assert(sDevice);
+	//assert(sCommandList);
+	//assert(0);
 
-	worldTransform.Map();
-	sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
+	//worldTransform.Map();
+	//sCommandList->IASetVertexBuffers(0, 1, mesh_->GetVbView()); //VBVを設定
 
-	//wvp用のCBufferの場所を設定
-	//sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
+	////wvp用のCBufferの場所を設定
+	////sCommandList->SetGraphicsRootConstantBufferView(1, worldTransform.transformationMatrixBuff_->GetGPUVirtualAddress());
 
-	//マテリアルCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, outLineData.forPSResource_->GetGPUVirtualAddress());
+	////マテリアルCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(0, outLineData.forPSResource_->GetGPUVirtualAddress());
 
-	//マテリアルCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(2, outLineData.forVSResource_->GetGPUVirtualAddress());
+	////マテリアルCBufferの場所を設定
+	//sCommandList->SetGraphicsRootConstantBufferView(2, outLineData.forVSResource_->GetGPUVirtualAddress());
 
-	
-	//描画
-	sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	//
+	////描画
+	//sCommandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
 }
 
