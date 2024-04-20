@@ -117,20 +117,42 @@ void String::Initialize(Model* model, const Vector3& anchor, float naturalLength
 
 void String::Update()
 {
+
+	std::vector<StructuralSpring> spring = spring_;
+
 	//0番目更新
-	spring_[0].SetPoint1(spring_[1].GetPoint0());
+	spring_[0].SetPoint1(spring[1].GetPoint0());
 	spring_[0].Update();
 
 	// それ以外を更新
 	for (uint32_t i = 1; i < spring_.size() - 1; ++i) {
-		spring_[i].SetPoint0(spring_[i - 1].GetPoint1());
-		spring_[i].SetPoint1(spring_[i + 1].GetPoint0());
+		spring_[i].SetPoint0(spring[i - 1].GetPoint1());
+		spring_[i].SetPoint1(spring[i + 1].GetPoint0());
 		spring_[i].Update();
 	}
 
 	//最後を更新
-	spring_[spring_.size() - 1].SetPoint0(spring_[spring_.size() - 2].GetPoint1());
+	spring_[spring_.size() - 1].SetPoint0(spring_[spring.size() - 2].GetPoint1());
 	spring_[spring_.size() - 1].Update();
+
+	// ずれを直す
+	MassPoint massPointTmp;
+	MassPoint massPoint1Tmp;
+	MassPoint massPoint0Tmp;
+	for (uint32_t i = 0; i < spring_.size() - 1; ++i) {
+		massPoint1Tmp = spring_[i].GetPoint1();
+		massPoint0Tmp = spring_[i + 1].GetPoint0();
+
+		massPointTmp.position = (massPoint1Tmp.position + massPoint0Tmp.position) *  0.5f;
+		massPointTmp.acceleration = (massPoint1Tmp.acceleration + massPoint0Tmp.acceleration) * 0.5f;
+		massPointTmp.velocity = (massPoint1Tmp.velocity + massPoint0Tmp.velocity) * 0.5f;
+		massPointTmp.force = (massPoint1Tmp.force + massPoint0Tmp.force) * 0.5f;
+		massPointTmp.mass = (massPoint1Tmp.mass + massPoint0Tmp.mass) * 0.5f;
+
+		spring_[i].SetPoint1(massPointTmp);
+		spring_[i + 1].SetPoint0(massPointTmp);
+
+	}
 
 	// 行列計算
 	std::vector<Matrix4x4> matrixes;
@@ -145,7 +167,7 @@ void String::Update()
 
 	for (uint32_t i = kExtraMatrixNum; i < matrixes.size(); ++i) {
 		matrixes[i] = Matrix4x4::MakeTranslateMatrix(spring_[i - kExtraMatrixNum].GetPoint0().position - basePosition);
-		basePosition += spring_[i - kExtraMatrixNum].GetPoint0().position - basePosition;
+		basePosition = spring_[i - kExtraMatrixNum].GetPoint0().position;
 	}
 
 	// ワールドトランスフォーム

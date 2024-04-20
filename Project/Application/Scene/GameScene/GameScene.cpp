@@ -164,7 +164,7 @@ void GameScene::Initialize() {
 	testString_->Initialize(
 		testStringModel_.get(),
 		{ 0.0f,0.0f,0.0f },
-		0.01f, 50.0f, 2.0f, 0.5f
+		0.01f, 100.0f, 1.0f, 0.2f
 	);
 
 	testString_->SetAnchor(0, true);
@@ -352,7 +352,7 @@ void GameScene::Draw() {
 	//	Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
 	//	camera_);
 
-	//testString_->DebugDraw(camera_);
+	testString_->DebugDraw(camera_);
 
 	// 前景スプライト描画後処理
 	DrawLine::PostDraw();
