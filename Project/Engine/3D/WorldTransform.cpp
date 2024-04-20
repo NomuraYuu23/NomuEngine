@@ -52,6 +52,7 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 	//書き込むためのアドレスを取得
 	transformationMatrixBuff_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixMap_));
 
+	transformationMatrixMap_->WVP = Matrix4x4::MakeIdentity4x4();
 	transformationMatrixMap_->World = Matrix4x4::MakeIdentity4x4();
 	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::MakeIdentity4x4();
 
@@ -120,7 +121,7 @@ void WorldTransform::UpdateMatrix(const Matrix4x4& rotateMatrix)
 
 }
 
-void WorldTransform::Map()
+void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 {
 
 	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
@@ -136,7 +137,7 @@ void WorldTransform::Map()
 
 	}
 
-
+	transformationMatrixMap_->WVP = worldMatrix_ * viewProjectionMatrix;
 	transformationMatrixMap_->World = worldMatrix_;
 	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(worldMatrix_));
 

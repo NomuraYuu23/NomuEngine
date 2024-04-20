@@ -388,9 +388,6 @@
     <ClCompile Include="Engine\3D\OutLineData.cpp">
       <Filter>Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
-      <Filter>Engine\Base\GraphicsPipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClCompile>
@@ -541,11 +538,14 @@
     <ClCompile Include="Engine\PostEffect\ShockWaveManager.cpp">
       <Filter>Engine\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
+      <Filter>Engine\Base\GraphicsPipelineState</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Animation\LocalMatrixManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\ModelDraw.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Physics\Spring.cpp">
       <Filter>ソース ファイル</Filter>
@@ -1005,14 +1005,14 @@
     <ClInclude Include="Engine\3D\VertexInfluence.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\LocalMatrixManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Animation\LocalMatrix.h">
       <Filter>Engine\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Animation\LocalMatrixManager.h">
+      <Filter>Engine\Animation</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\3D\ModelDraw.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Physics\Spring.h">
       <Filter>ヘッダー ファイル</Filter>

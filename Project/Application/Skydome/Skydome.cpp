@@ -2,6 +2,7 @@
 #include <cassert>
 #include "../../Engine/2D/ImguiManager.h"
 #include <numbers>
+#include "../../Engine/3D/ModelDraw.h"
 
 Skydome::~Skydome()
 {
@@ -48,7 +49,13 @@ void Skydome::Update() {
 /// <param name="viewProjection">ビュープロジェクション</param>
 void Skydome::Draw(BaseCamera& camera) {
 
-	model_->Draw(worldTransform_, camera, material_.get(), localMatrixManager_.get());
+	ModelDraw::AnimObjectDesc desc;
+	desc.camera = &camera;
+	desc.localMatrixManager = localMatrixManager_.get();
+	desc.material = material_.get();
+	desc.model = model_;
+	desc.worldTransform = &worldTransform_;
+	ModelDraw::AnimObjectDraw(desc);
 
 }
 

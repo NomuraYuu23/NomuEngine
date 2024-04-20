@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "../../Particle/EmitterName.h"
+#include "../../../Engine/3D/ModelDraw.h"
 
 GameScene::~GameScene()
 {
@@ -260,19 +261,22 @@ void GameScene::Draw() {
 	// 深度バッファクリア
 	renderTargetTexture_->ClearDepthBuffer();
 
-
 #pragma endregion
 
 #pragma region モデル描画
 
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
+	ModelDraw::PreDrawDesc preDrawDesc;
+	preDrawDesc.commandList = dxCommon_->GetCommadList();
+	preDrawDesc.directionalLight = directionalLight_.get();
+	preDrawDesc.fogManager = FogManager::GetInstance();
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimObject;
+	preDrawDesc.pointLightManager = pointLightManager_.get();
+	preDrawDesc.spotLightManager = spotLightManager_.get();
+
+	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
 	skydome_->Draw(camera_);
-
-	Model::PostDraw();
-
-	Model::PreDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
 
 	//Obj
 	sampleObj_->Draw(camera_);
@@ -284,17 +288,17 @@ void GameScene::Draw() {
 
 #endif // _DEBUG
 
-	Model::PostDraw();
+	ModelDraw::PostDraw();
 
 #pragma endregion
 
-#pragma region 多量モデル描画
-
-	Model::PreManyModelsDraw(dxCommon_->GetCommadList(), pointLightManager_.get(), spotLightManager_.get(), directionalLight_.get());
+#pragma region 複数のモデル描画
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexManyAnimObjects;
+	ModelDraw::PreDraw(preDrawDesc);
 
 	//testManyObject_->Draw(camera_);
 
-	Model::PostDraw();
+	ModelDraw::PostDraw();
 
 #pragma endregion
 	
@@ -312,23 +316,15 @@ void GameScene::Draw() {
 
 #pragma endregion
 	
-#pragma region アウトライン描画
-	Model::PreDrawOutLine(dxCommon_->GetCommadList());
-	
-	Model::PostDraw();
-
-#pragma endregion
-
 #pragma region パーティクル描画
-	Model::PreParticleDraw(dxCommon_->GetCommadList(), camera_.GetViewProjectionMatrix());
 
-	//光源
-	directionalLight_->Draw(dxCommon_->GetCommadList(), 6);
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexParticle;
+	ModelDraw::PreDraw(preDrawDesc);
 
 	// パーティクルはここ
-	particleManager_->Draw();
+	particleManager_->Draw(camera_.GetViewProjectionMatrix());
 
-	Model::PostDraw();
+	ModelDraw::PostDraw();
 
 #pragma endregion
 
@@ -463,8 +459,8 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	//sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
-	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));

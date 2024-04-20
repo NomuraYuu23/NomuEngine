@@ -5,6 +5,7 @@
 #include "../Math/DeltaTime.h"
 #include "../../Application/Particle/MakeEmitter.h"
 #include "../base/SRVDescriptorHerpManager.h"
+#include "../3D/ModelDraw.h"
 
 uint32_t ParticleManager::kNumInstanceMax_ = 32768;
 
@@ -78,12 +79,17 @@ void ParticleManager::Update(BaseCamera& camera)
 
 }
 
-void ParticleManager::Draw()
+void ParticleManager::Draw(const Matrix4x4& viewProjectionMatrix)
 {
 
+	Map(viewProjectionMatrix);
+
+	ModelDraw::ParticleDesc desc;
+	desc.particleManager = this;
 	for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
 		currentModel_ = i;
-		particleDatas_[i].model_->ParticleDraw();
+		desc.model = particleDatas_[i].model_;
+		ModelDraw::ParticleDraw(desc);
 	}
 
 }
