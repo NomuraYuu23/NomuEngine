@@ -152,5 +152,6 @@ private:
 	// 
 	std::unique_ptr<String> testString_;
 	Vector3 testStringAnchor_;
+	std::unique_ptr<Model> testStringModel_;
 
 };

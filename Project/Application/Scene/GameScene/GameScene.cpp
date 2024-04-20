@@ -162,12 +162,12 @@ void GameScene::Initialize() {
 	testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
 	testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
 	testString_->Initialize(
+		testStringModel_.get(),
 		{ 0.0f,0.0f,0.0f },
-		0.5f, 50.0f, 2.0f, 0.5f,
-		{ 0.6f,0.0f,0.0f },5
+		0.01f, 50.0f, 2.0f, 0.5f
 	);
 
-	testString_->SetAnchor(5, true);
+	testString_->SetAnchor(0, true);
 
 	testStringAnchor_ = { 0.0f,0.0f,0.0f };
 
@@ -277,7 +277,7 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetTime(time + 40.0f);
 	shockWaveManager_->Update();
 
-	testString_->SetPosition(5, testStringAnchor_);
+	testString_->SetPosition(0, testStringAnchor_);
 	testString_->Update();
 	//testSpring_->Update();
 
@@ -319,6 +319,9 @@ void GameScene::Draw() {
 	//Obj
 	//sampleObj_->Draw(camera_);
 
+	// 紐
+	testString_->Draw(camera_);
+
 #ifdef _DEBUG
 
 	// デバッグ描画
@@ -349,7 +352,7 @@ void GameScene::Draw() {
 	//	Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
 	//	camera_);
 
-	testString_->DebugDraw(camera_);
+	//testString_->DebugDraw(camera_);
 
 	// 前景スプライト描画後処理
 	DrawLine::PostDraw();
@@ -509,6 +512,9 @@ void GameScene::ModelCreate()
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
+
+	// テスト 紐
+	testStringModel_.reset(Model::Create("Resources/Model/SpearRibbon_R/", "SpearRibbon_R.gltf", dxCommon_, textureHandleManager_.get()));
 
 }
 

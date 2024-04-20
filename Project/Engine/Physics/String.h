@@ -2,9 +2,15 @@
 #include <vector>
 #include "StructuralSpring.h"
 #include "../2D/DrawLine.h"
+#include "../3D/Model.h"
 
 class String
 {
+
+public: // 定数
+
+	// 余分な行列
+	static const uint32_t kExtraMatrixNum = 2;
 
 public:
 
@@ -28,9 +34,32 @@ public:
 		uint32_t springNum);
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="model">モデル</param>
+	/// <param name="anchor">アンカー</param>
+	/// <param name="naturalLength">自然長</param>
+	/// <param name="stiffness">剛性。バネ定数k</param>
+	/// <param name="dampingCoefficient">減衰係数</param>
+	/// <param name="mass">質量(質点)</param>
+	void Initialize(
+		Model* model,
+		const Vector3& anchor,
+		float naturalLength,
+		float stiffness,
+		float dampingCoefficient,
+		float mass);
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	void Draw(BaseCamera& camera);
 
 	/// <summary>
 	/// デバッグ描画
@@ -60,6 +89,17 @@ private: // 変数
 
 	//バネ
 	std::vector<StructuralSpring> spring_;
+
+private: // 変数(モデル)
+
+	// モデル
+	Model* model_ = nullptr;
+	// マテリアル
+	std::unique_ptr<Material> material_ = nullptr;
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
+	// ローカル行列
+	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
 
 private: // デバッグ
 

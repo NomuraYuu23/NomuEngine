@@ -18,11 +18,14 @@ LocalMatrixManager::~LocalMatrixManager()
 void LocalMatrixManager::Initialize(const std::vector<NodeData>& nodeDatas)
 {
 	
-	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * nodeDatas.size());
+	num_ = static_cast<uint32_t>(nodeDatas.size());
+
+	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * num_);
 	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
 
-	for (uint32_t i = 0; i < nodeDatas.size(); ++i) {
-		localMatrixesMap_[nodeDatas[i].meshNum].matrix = Matrix4x4::MakeIdentity4x4();
+	for (uint32_t i = 0; i < num_; ++i) {
+		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas[i].offsetMatrix, nodeDatas[i].matrix);
+		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
 	}
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
@@ -31,7 +34,7 @@ void LocalMatrixManager::Initialize(const std::vector<NodeData>& nodeDatas)
 	localMatrixesSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	localMatrixesSrvDesc.Buffer.FirstElement = 0;
 	localMatrixesSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas.size());
+	localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(num_);
 	localMatrixesSrvDesc.Buffer.StructureByteStride = sizeof(LocalMatrix);
 	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
 	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
