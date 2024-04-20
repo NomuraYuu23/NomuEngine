@@ -154,37 +154,39 @@ void GameScene::Initialize() {
 	shockWaveManager_ = std::make_unique<ShockWaveManager>();
 	shockWaveManager_->Initialize();
 
-	//testString_ = std::make_unique<String>();
-	//MassPoint testSpringMassPoint;
-	//testSpringMassPoint.position = { 1.2f,0.0f,0.0f };
-	//testSpringMassPoint.mass = 0.5f;
-	//testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
-	//testString_->Initialize(
-	//	{ 0.0f,0.0f,0.0f },
-	//	1.0f, 50.0f, 10.0f, 0.5f,
-	//	{ 1.2f,0.0f,0.0f },3
-	//);
-
-	//testStringAnchor_ = { 0.0f,0.0f,0.0f };
-
-	testSpring_ = std::make_unique<StructuralSpring>();
+	testString_ = std::make_unique<String>();
 	MassPoint testSpringMassPoint;
-	testSpringMassPoint.position = { 0.0f,0.0f,0.0f };
+	testSpringMassPoint.position = { 1.2f,0.0f,0.0f };
 	testSpringMassPoint.mass = 0.5f;
 	testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
 	testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
 	testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
-	MassPoint testSpringMassPoint1;
-	testSpringMassPoint1.position = { 1.2f,0.0f,0.0f };
-	testSpringMassPoint1.mass = 0.5f;
-	testSpringMassPoint1.acceleration = { 0.0f,0.0f,0.0f };
-	testSpringMassPoint1.velocity = { 0.0f,0.0f,0.0f };
-	testSpringMassPoint1.force = { 0.0f,0.0f,0.0f };
-	testSpring_->Initialize(testSpringMassPoint, testSpringMassPoint1,
-		1.0f, 50.0f, 10.0f);
-	testSpring_->SetFixPoint1(true);
+	testString_->Initialize(
+		{ 0.0f,0.0f,0.0f },
+		0.5f, 50.0f, 2.0f, 0.5f,
+		{ 0.6f,0.0f,0.0f },5
+	);
+
+	testString_->SetAnchor(5, true);
+
+	testStringAnchor_ = { 0.0f,0.0f,0.0f };
+
+	//testSpring_ = std::make_unique<StructuralSpring>();
+	//MassPoint testSpringMassPoint;
+	//testSpringMassPoint.position = { 0.0f,0.0f,0.0f };
+	//testSpringMassPoint.mass = 0.5f;
+	//testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
+	//testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
+	//testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
+	//MassPoint testSpringMassPoint1;
+	//testSpringMassPoint1.position = { 1.2f,0.0f,0.0f };
+	//testSpringMassPoint1.mass = 0.5f;
+	//testSpringMassPoint1.acceleration = { 0.0f,0.0f,0.0f };
+	//testSpringMassPoint1.velocity = { 0.0f,0.0f,0.0f };
+	//testSpringMassPoint1.force = { 0.0f,0.0f,0.0f };
+	//testSpring_->Initialize(testSpringMassPoint, testSpringMassPoint1,
+	//	1.0f, 50.0f, 10.0f);
+	//testSpring_->SetFixPoint1(true);
 
 }
 
@@ -275,8 +277,9 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetTime(time + 40.0f);
 	shockWaveManager_->Update();
 
-	//testString_->Update(testStringAnchor_);
-	testSpring_->Update();
+	testString_->SetPosition(5, testStringAnchor_);
+	testString_->Update();
+	//testSpring_->Update();
 
 }
 
@@ -341,12 +344,12 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	DrawLine::PreDraw(dxCommon_->GetCommadList());
 
-	line_->Draw(testSpring_->GetPoint0().position, testSpring_->GetPoint1().position,
-		Vector4{ 1.0f, 1.0f, 1.0f, 1.0f},
-		Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
-		camera_);
+	//line_->Draw(testSpring_->GetPoint0().position, testSpring_->GetPoint1().position,
+	//	Vector4{ 1.0f, 1.0f, 1.0f, 1.0f},
+	//	Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
+	//	camera_);
 
-	//testString_->DebugDraw(camera_);
+	testString_->DebugDraw(camera_);
 
 	// 前景スプライト描画後処理
 	DrawLine::PostDraw();
@@ -427,7 +430,7 @@ void GameScene::ImguiDraw(){
 	
 
 	ImGui::Begin("testString");
-	//ImGui::DragFloat3("Anchor", &testStringAnchor_.x, 0.01f);
+	ImGui::DragFloat3("Anchor", &testStringAnchor_.x, 0.01f);
 	ImGui::End();
 
 	PostEffect::GetInstance()->ImGuiDraw();

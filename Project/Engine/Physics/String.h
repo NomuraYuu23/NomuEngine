@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Spring.h"
+#include "StructuralSpring.h"
 #include "../2D/DrawLine.h"
 
 class String
@@ -30,8 +30,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="anchor">アンカー</param>
-	void Update(const Vector3& anchor);
+	void Update();
 
 	/// <summary>
 	/// デバッグ描画
@@ -39,14 +38,28 @@ public:
 	/// <param name="camera">カメラ</param>
 	void DebugDraw(BaseCamera& camera);
 
+	/// <summary>
+	/// アンカー設定
+	/// </summary>
+	/// <param name="pointIndex">インデックス</param>
+	/// <param name="fixPoint">固定するか</param>
+	void SetAnchor(uint32_t pointIndex, bool fixPoint);
+
+	/// <summary>
+	/// 位置設定
+	/// </summary>
+	/// <param name="pointIndex">インデックス</param>
+	/// <param name="position">位置</param>
+	void SetPosition(uint32_t pointIndex, const Vector3& position);
+
 public: // アクセッサ
 
-	std::vector<Spring> GetSpring() { return spring_; }
+	std::vector<StructuralSpring> GetSpring() { return spring_; }
 
 private: // 変数
 
 	//バネ
-	std::vector<Spring> spring_;
+	std::vector<StructuralSpring> spring_;
 
 private: // デバッグ
 

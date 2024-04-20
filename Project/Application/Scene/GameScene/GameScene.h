@@ -148,9 +148,9 @@ private:
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
 
 
-	std::unique_ptr<StructuralSpring>testSpring_;
+	//std::unique_ptr<StructuralSpring>testSpring_;
 	// 
-	//std::unique_ptr<String> testString_;
-	//Vector3 testStringAnchor_;
+	std::unique_ptr<String> testString_;
+	Vector3 testStringAnchor_;
 
 };
