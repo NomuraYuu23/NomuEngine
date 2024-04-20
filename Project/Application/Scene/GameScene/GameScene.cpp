@@ -154,6 +154,19 @@ void GameScene::Initialize() {
 	shockWaveManager_ = std::make_unique<ShockWaveManager>();
 	shockWaveManager_->Initialize();
 
+	testSpring_ = std::make_unique<Spring>();
+	MassPoint testSpringMassPoint;
+	testSpringMassPoint.position = { 1.2f,0.0f,0.0f };
+	testSpringMassPoint.mass = 2.0f;
+	testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
+	testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
+	testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
+	testSpring_->initialize(
+		{0.0f,0.0f,0.0f},
+		1.0f,100.0f,2.0f,
+		testSpringMassPoint
+	);
+
 }
 
 /// <summary>
@@ -243,6 +256,8 @@ void GameScene::Update() {
 	PostEffect::GetInstance()->SetTime(time + 40.0f);
 	shockWaveManager_->Update();
 
+	testSpring_->Update();
+
 }
 
 /// <summary>
@@ -279,7 +294,7 @@ void GameScene::Draw() {
 	skydome_->Draw(camera_);
 
 	//Obj
-	sampleObj_->Draw(camera_);
+	//sampleObj_->Draw(camera_);
 
 #ifdef _DEBUG
 
@@ -306,7 +321,7 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	DrawLine::PreDraw(dxCommon_->GetCommadList());
 
-	line_->Draw(linePos0_, linePos1_, 
+	line_->Draw(testSpring_->GetAnchor(), testSpring_->GetMassPoint().position,
 		Vector4{ 1.0f, 1.0f, 1.0f, 1.0f},
 		Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
 		camera_);
@@ -322,7 +337,7 @@ void GameScene::Draw() {
 	ModelDraw::PreDraw(preDrawDesc);
 
 	// パーティクルはここ
-	particleManager_->Draw(camera_.GetViewProjectionMatrix());
+	//particleManager_->Draw(camera_.GetViewProjectionMatrix());
 
 	ModelDraw::PostDraw();
 

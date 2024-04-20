@@ -9,6 +9,7 @@
 #include "../../Object/Sample/SampleObject.h" // サンプルオブジェクト
 #include "../../../Engine/PostEffect/ShockWaveManager.h"
 #include "../../../Engine/3D/FogManager.h"
+#include "../../../Engine/Physics/Spring.h"
 
 class GameScene : public IScene
 {
@@ -143,5 +144,8 @@ private:
 
 	// 衝撃波
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
+
+	// 
+	std::unique_ptr<Spring> testSpring_;
 
 };
