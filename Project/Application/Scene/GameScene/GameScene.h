@@ -11,6 +11,7 @@
 #include "../../../Engine/3D/FogManager.h"
 #include "../../../Engine/Physics/Spring.h"
 #include "../../../Engine/Physics/String.h"
+#include "../../../Engine/Physics/StructuralSpring.h"
 
 class GameScene : public IScene
 {
@@ -146,8 +147,10 @@ private:
 	// 衝撃波
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
 
+
+	std::unique_ptr<StructuralSpring>testSpring_;
 	// 
-	std::unique_ptr<String> testString_;
-	Vector3 testStringAnchor_;
+	//std::unique_ptr<String> testString_;
+	//Vector3 testStringAnchor_;
 
 };
