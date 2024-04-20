@@ -38,7 +38,7 @@ private: // メンバ変数
 	// ファイル名
 	std::array<const std::string, ClearAudioNameIndex::kClearAudioNameIndexOfCount> audioNames_ =
 	{
-		"default/Alarm01.wav",
+		"default/Alarm01.mp3",
 	};
 
 

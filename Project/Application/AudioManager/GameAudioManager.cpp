@@ -12,7 +12,7 @@ void GameAudioManager::Initialize()
 
 	// 全体の初期設定
 	for (uint32_t i = 0; i < GameAudioNameIndex::kGameAudioNameIndexOfCount; ++i) {
-		audioDatas_[i].handle_ = audio_->LoadWave(audioNames_[i]);
+		audioDatas_[i].handle_ = audio_->LoadAudio(audioNames_[i]);
 		audioDatas_[i].isLoop_ = false;
 		audioDatas_[i].volume_ = 1.0f;
 		audioDatas_[i].isBGM_ = false;

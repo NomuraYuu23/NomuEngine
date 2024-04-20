@@ -10,6 +10,11 @@
 #include <list>
 #include <cstdint>
 
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
+
+
 class Audio {
 public:
 
@@ -67,6 +72,13 @@ public:
 	/// <param name="fileName">WAVファイル名</param>
 	/// <returns>サウンドデータハンドル</returns>
 	uint32_t LoadWave(const std::string& fileName);
+
+	/// <summary>
+	/// 音声読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <returns>サウンドデータハンドル</returns>
+	uint32_t LoadAudio(const std::string& fileName);
 
 	/// <summary>
 	/// サウンドデータの解放

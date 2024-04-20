@@ -1,4 +1,11 @@
 #include "Audio.h"
+#include "../base/Log.h"
+#include <vector>
+
+#pragma comment(lib, "Mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "Mfreadwrite.lib")
+#pragma comment(lib, "mfuuid.lib")
 
 //インスタンス
 Audio* Audio::GetInstance() {
@@ -25,6 +32,9 @@ void Audio::Initialize(const std::string& directoryPath) {
 	result = xAudio2_->CreateMasteringVoice(&masterVoice);
 	assert(SUCCEEDED(result));
 
+	// Media Foundation
+	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+
 	indexSoundData_ = 0u;
 
 }
@@ -40,6 +50,9 @@ void Audio::Finalize() {
 	for (auto& soundData : soundDatas_) {
 		Unload(&soundData);
 	}
+
+	//Media Foundation
+	MFShutdown();
 
 }
 
@@ -137,6 +150,97 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 	soundData.name = fileName;
 
 	indexSoundData_++;
+
+	return handle;
+
+}
+
+uint32_t Audio::LoadAudio(const std::string& fileName)
+{
+
+	//サウンドデータが最大数を超えていないか
+	assert(indexSoundData_ < kMaxSoundData);
+	uint32_t handle = indexSoundData_;
+	// 読み込み済みサウンドデータを検索
+	auto it = std::find_if(soundDatas_.begin(), soundDatas_.end(), [&](const auto& soundData) {
+		return soundData.name == fileName;
+		});
+	if (it != soundDatas_.end()) {
+		// 読み込み済みサウンドデータの要素番号を取得
+		handle = static_cast<uint32_t>(std::distance(soundDatas_.begin(), it));
+		return handle;
+	}
+
+	// ディレクトリパスとファイル名を連結してフルパスを得る
+	std::wstring fullpath = Log::ConvertString(directoryPath_ + fileName);
+
+	HRESULT result = 0;
+
+	IMFSourceReader* pMFSourceReader{nullptr};
+	MFCreateSourceReaderFromURL(fullpath.c_str(), NULL, &pMFSourceReader);
+
+	IMFMediaType* pMFMediaType{ nullptr };
+	MFCreateMediaType(&pMFMediaType);
+	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
+	pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType);
+
+	pMFMediaType->Release();
+	pMFMediaType = nullptr;
+	pMFSourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pMFMediaType);
+	
+	WAVEFORMATEX* waveFormat{ nullptr };
+	MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
+
+	std::vector<BYTE> mediaData;
+
+	while (1) {
+
+		IMFSample* pMFSample{ nullptr };
+		DWORD dwStreamFlags{ 0 };
+		pMFSourceReader->ReadSample(
+			MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+			0, nullptr,
+			&dwStreamFlags, nullptr,
+			&pMFSample);
+
+		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
+			break;
+		}
+
+		IMFMediaBuffer* pMFMediaBuffer{ nullptr };
+		pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
+
+		BYTE* pBuffer{ nullptr };
+		DWORD cbCurrentLength{ 0 };
+		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
+
+		mediaData.resize(mediaData.size() + cbCurrentLength);
+		memcpy(mediaData.data() + mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+
+		pMFMediaBuffer->Unlock();
+
+		pMFMediaBuffer->Release();
+		pMFSample->Release();
+
+	}
+
+	// returnする為の音声データ
+	SoundData& soundData = soundDatas_.at(handle);
+
+	BYTE* pBuffer = new BYTE[mediaData.size()];
+	memcpy(pBuffer, mediaData.data(), mediaData.size());
+
+	soundData.wfex = *waveFormat;
+	soundData.pBuffer = pBuffer;
+	soundData.bufferSize = static_cast<uint32_t>(mediaData.size());
+	soundData.name = fileName;
+
+	indexSoundData_++;
+
+	//CoTaskMemFree(waveFormat);
+	pMFMediaType->Release();
+	pMFSourceReader->Release();
 
 	return handle;
 

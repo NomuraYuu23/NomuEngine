@@ -188,6 +188,8 @@ void GameScene::Initialize() {
 	//	1.0f, 50.0f, 10.0f);
 	//testSpring_->SetFixPoint1(true);
 
+	audioManager_->PlayWave(kGameAudioNameIndexSample);
+
 }
 
 /// <summary>
