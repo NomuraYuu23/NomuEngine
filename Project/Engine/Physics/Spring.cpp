@@ -1,7 +1,7 @@
 #include "Spring.h"
 #include "../Math/DeltaTime.h"
 
-void Spring::initialize(
+void Spring::Initialize(
 	const Vector3& anchor, 
 	float naturalLength, 
 	float stiffness, 
@@ -33,7 +33,8 @@ void Spring::Update()
 		Vector3 restoringForce = Vector3::Multiply(-stiffness_,displacement);
 		Vector3 dampingForce = Vector3::Multiply(-dampingCoefficient_,massPoint_.velocity);
 		Vector3 force = restoringForce + dampingForce;
-		massPoint_.acceleration = Vector3::Multiply(force, 1.0f / massPoint_.mass);
+		massPoint_.acceleration = Vector3::Multiply(force, 1.0f / massPoint_.mass)
+			+ Vector3{ 0.0f, -9.8f, 0.0f } * massPoint_.mass;
 	}
 
 	massPoint_.velocity = massPoint_.velocity + massPoint_.acceleration * kDeltaTime_;

@@ -15,7 +15,7 @@ public: // 関数
 	/// <param name="stiffness">剛性。バネ定数k</param>
 	/// <param name="dampingCoefficient">減衰係数</param>
 	/// <param name="massPoint">質点</param>
-	void initialize(
+	void Initialize(
 		const Vector3& anchor,
 		float naturalLength,
 		float stiffness,

@@ -10,6 +10,7 @@
 #include "../../../Engine/PostEffect/ShockWaveManager.h"
 #include "../../../Engine/3D/FogManager.h"
 #include "../../../Engine/Physics/Spring.h"
+#include "../../../Engine/Physics/String.h"
 
 class GameScene : public IScene
 {
@@ -146,6 +147,7 @@ private:
 	std::unique_ptr<ShockWaveManager> shockWaveManager_;
 
 	// 
-	std::unique_ptr<Spring> testSpring_;
+	std::unique_ptr<String> testString_;
+	Vector3 testStringAnchor_;
 
 };
