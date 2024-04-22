@@ -27,11 +27,11 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="AnimationData">アニメーションデータ</param>
-	/// <param name="initTransform">初期トランスフォーム(ノード数)</param>
+	/// <param name="initTransforms">初期トランスフォーム(ノード数)</param>
 	/// <param name="nodeNames">ノード名前</param>
 	void Initialize(
 		const std::vector<AnimationData>& animationDatas,
-		const std::vector<QuaternionTransform>& initTransform,
+		const std::vector<QuaternionTransform>& initTransforms,
 		const std::vector<std::string>& nodeNames);
 
 	/// <summary>
@@ -90,12 +90,8 @@ private:
 	// ノード数
 	uint32_t nodeNum_;
 
-	// 位置 初期行列と同じ分だけ
-	std::vector <Vector3> positions_;
-	// 回転 初期行列と同じ分だけ
-	std::vector <Quaternion> rotations_;
-	// 大きさ 初期行列と同じ分だけ
-	std::vector <Vector3> scalings_;
+	// トランスフォーム
+	std::vector<QuaternionTransform> transforms_;
 
 	// アニメーション速度
 	double animationSpeed_;

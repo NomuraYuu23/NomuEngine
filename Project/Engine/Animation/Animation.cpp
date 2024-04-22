@@ -4,7 +4,7 @@
 
 void Animation::Initialize(
 	const std::vector<AnimationData>& animationDatas,
-	const std::vector<QuaternionTransform>& initTransform,
+	const std::vector<QuaternionTransform>& initTransforms,
 	const std::vector<std::string>& nodeNames)
 {
 
@@ -22,17 +22,11 @@ void Animation::Initialize(
 	}
 
 	// 初期データ
-	nodeNum_ = static_cast<uint32_t>(initTransform.size());
+	nodeNum_ = static_cast<uint32_t>(initTransforms.size());
 
 	// 計算データ
-	positions_.resize(initTransform.size());
-	rotations_.resize(initTransform.size());
-	scalings_.resize(initTransform.size());
-	for (uint32_t i = 0; i < nodeNum_; ++i) {
-		positions_[i] = initTransform[i].translate;
-		rotations_[i] = initTransform[i].rotate;
-		scalings_[i] = initTransform[i].scale;
-	}
+	transforms_.resize(initTransforms.size());
+	transforms_ = initTransforms;
 
 	// その他
 	animationSpeed_ = static_cast<double>(kDeltaTime_);
@@ -112,7 +106,7 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 			targetPositions_[i] *= (1.0f / positionAddCount_[i]);
 		}
 		else {
-			targetPositions_[i] = positions_[i];
+			targetPositions_[i] = transforms_[i].translate;
 		}
 
 		// カウントされている
@@ -120,7 +114,7 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 			targetRotations_[i] *= (1.0f / rotationAddCount_[i]);
 		}
 		else {
-			targetRotations_[i] = rotations_[i];
+			targetRotations_[i] = transforms_[i].rotate;
 		}
 
 		// カウントされている
@@ -128,15 +122,15 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 			targetScalings_[i] *= (1.0f / scalingAddCount_[i]);
 		}
 		else {
-			targetScalings_[i] = scalings_[i];
+			targetScalings_[i] = transforms_[i].scale;
 		}
 
-		positions_[i] = Ease::Easing(Ease::EaseName::Lerp, positions_[i], targetPositions_[i], moveT_);
-		rotations_[i] = Quaternion::Slerp(rotations_[i], targetRotations_[i], moveT_);
-		scalings_[i] = Ease::Easing(Ease::EaseName::Lerp, scalings_[i], targetScalings_[i], moveT_);
+		transforms_[i].translate = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].translate, targetPositions_[i], moveT_);
+		transforms_[i].rotate = Quaternion::Slerp(transforms_[i].rotate, targetRotations_[i], moveT_);
+		transforms_[i].scale = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].scale, targetScalings_[i], moveT_);
 
 		// 行列
-		result[i] = Matrix4x4::MakeAffineMatrix(scalings_[i], rotations_[i], positions_[i]);
+		result[i] = Matrix4x4::MakeAffineMatrix(transforms_[i].scale, transforms_[i].rotate, transforms_[i].translate);
 
 	}
 
