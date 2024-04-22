@@ -3,6 +3,7 @@
 #include <d3d12.h>
 #include "LocalMatrix.h"
 #include "../3D/ModelNodeData.h"
+#include "../3D/ModelNode.h"
 
 class LocalMatrixManager
 {
@@ -22,14 +23,13 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="nodeDatas"></param>
-	void Initialize(const std::vector<NodeData>& nodeDatas);
+	/// <param name="modelNode">モデルのノード</param>
+	void Initialize(const ModelNode& modelNode);
 
 	/// <summary>
 	/// マップ
 	/// </summary>
-	/// <param name="nodeDatas"></param>
-	void Map(const std::vector<NodeData>& nodeDatas);
+	void Map();
 	
 	/// <summary>
 	/// GPUに送る
@@ -37,6 +37,30 @@ public:
 	/// <param name="cmdList">コマンドリスト</param>
 	/// <param name="rootParameterIndex">ルートパラメータインデックス</param>
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
+
+	/// <summary>
+	/// ノードデータ設定
+	/// </summary>
+	/// <param name="modelNode">モデルのノード</param>
+	void SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex);
+
+	/// <summary>
+	/// ノードの名前
+	/// </summary>
+	/// <returns></returns>
+	std::vector<std::string> GetNodeNames();
+
+	/// <summary>
+	/// ローカル行列設定
+	/// </summary>
+	/// <param name="matrix">行列</param>
+	void SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix);
+
+	/// <summary>
+	/// ノードデータ取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<NodeData> GetNodeDatas() { return nodeDatas_; }
 
 	/// <summary>
 	/// 数取得
@@ -59,6 +83,9 @@ public:
 
 	//数
 	uint32_t num_;
+
+	// ノードデータ
+	std::vector<NodeData> nodeDatas_;
 
 };
 

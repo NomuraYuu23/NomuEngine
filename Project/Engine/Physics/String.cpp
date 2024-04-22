@@ -67,7 +67,7 @@ void String::Initialize(Model* model, const Vector3& anchor, float naturalLength
 	worldTransform_.Initialize(model_->GetRootNode());
 
 	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
-	localMatrixManager_->Initialize(worldTransform_.GetNodeDatas());
+	localMatrixManager_->Initialize(model_->GetRootNode());
 
 
 	assert(localMatrixManager_->GetNum() > kExtraMatrixNum + 1);
@@ -173,9 +173,9 @@ void String::Update(
 	}
 
 	// ワールドトランスフォーム
-	worldTransform_.SetNodeLocalMatrix(matrixes);
+	localMatrixManager_->SetNodeLocalMatrix(matrixes);
 
-	localMatrixManager_->Map(worldTransform_.GetNodeDatas());
+	localMatrixManager_->Map();
 	worldTransform_.transform_.translate = structuralSpring_[0].GetPoint0().position;
 	worldTransform_.UpdateMatrix();
 

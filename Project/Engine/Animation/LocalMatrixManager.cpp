@@ -15,18 +15,17 @@ LocalMatrixManager::~LocalMatrixManager()
 
 }
 
-void LocalMatrixManager::Initialize(const std::vector<NodeData>& nodeDatas)
+void LocalMatrixManager::Initialize(const ModelNode& modelNode)
 {
 	
-	num_ = static_cast<uint32_t>(nodeDatas.size());
+	SetNodeDatas(modelNode, -1);
+
+	num_ = static_cast<uint32_t>(nodeDatas_.size());
 
 	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * num_);
 	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
 
-	for (uint32_t i = 0; i < num_; ++i) {
-		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas[i].offsetMatrix, nodeDatas[i].matrix);
-		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
-	}
+	Map();
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
 	localMatrixesSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -44,11 +43,21 @@ void LocalMatrixManager::Initialize(const std::vector<NodeData>& nodeDatas)
 
 }
 
-void LocalMatrixManager::Map(const std::vector<NodeData>& nodeDatas)
+void LocalMatrixManager::Map()
 {
 
-	for (uint32_t i = 0; i < nodeDatas.size(); ++i) {
-		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas[i].offsetMatrix,nodeDatas[i].matrix);
+	for (uint32_t i = 0; i < num_; ++i) {
+
+		if (nodeDatas_[i].parentIndex >= 0) {
+			nodeDatas_[i].matrix = Matrix4x4::Multiply(
+				nodeDatas_[i].localMatrix,
+				nodeDatas_[nodeDatas_[i].parentIndex].matrix);
+		}
+		else {
+			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
+		}
+		
+		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, nodeDatas_[i].matrix);
 		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
 	}
 
@@ -65,5 +74,49 @@ void LocalMatrixManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandLis
 
 	// コマンドリストを解除
 	sCommandList = nullptr;
+
+}
+
+void LocalMatrixManager::SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex)
+{
+
+	NodeData nodeData;
+
+	nodeData.localMatrix = modelNode.localMatrix;
+	nodeData.meshNum = modelNode.meshNum;
+	nodeData.name = modelNode.name;
+	nodeData.parentIndex = parentIndex;
+	nodeData.offsetMatrix = modelNode.offsetMatrix;
+	nodeDatas_.push_back(std::move(nodeData));
+
+	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
+
+	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
+		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
+	}
+
+}
+
+std::vector<std::string> LocalMatrixManager::GetNodeNames()
+{
+
+	std::vector<std::string> result;
+
+	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
+		result.push_back(nodeDatas_[i].name);
+	}
+
+	return result;
+
+}
+
+void LocalMatrixManager::SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix)
+{
+
+	assert(matrix.size() == nodeDatas_.size());
+
+	for (uint32_t i = 0; i < matrix.size(); ++i) {
+		nodeDatas_[i].localMatrix = matrix[i];
+	}
 
 }

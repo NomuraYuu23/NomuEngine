@@ -51,12 +51,6 @@ public:
 	void Map(const Matrix4x4& viewProjectionMatrix);
 
 	/// <summary>
-	/// ノードデータ設定
-	/// </summary>
-	/// <param name="modelNode">モデルのノード</param>
-	void SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex);
-
-	/// <summary>
 	/// ワールドポジション取得
 	/// </summary>
 	/// <returns></returns>
@@ -67,23 +61,6 @@ public:
 	/// </summary>
 	/// <param name="parent"></param>
 	void SetParent(WorldTransform* parent) { parent_ = parent; }
-
-	/// <summary>
-	/// ノードデータ取得
-	/// </summary>
-	/// <returns></returns>
-	std::vector<NodeData> GetNodeDatas() { return nodeDatas_; }
-
-	/// <summary>
-	/// ノード名前
-	/// </summary>
-	/// <returns></returns>
-	std::vector<std::string> GetNodeNames();
-
-	/// <summary>
-	/// ローカル行列設定
-	/// </summary>
-	void SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix);
 
 	/// <summary>
 	/// トランスフォームバッファ取得
@@ -119,8 +96,5 @@ public:
 	
 	//書き込むためのアドレスを取得
 	TransformationMatrix* transformationMatrixMap_{};
-
-	// ノードデータ
-	std::vector<NodeData> nodeDatas_;
 
 };

@@ -26,7 +26,7 @@ void Skydome::Initialize(Model* model) {
 	worldTransform_.Initialize(model_->GetRootNode());
 
 	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
-	localMatrixManager_->Initialize(worldTransform_.GetNodeDatas());
+	localMatrixManager_->Initialize(model_->GetRootNode());
 
 }
 
@@ -39,7 +39,7 @@ void Skydome::Update() {
 
 	worldTransform_.UpdateMatrix();
 
-	localMatrixManager_->Map(worldTransform_.GetNodeDatas());
+	localMatrixManager_->Map();
 
 }
 

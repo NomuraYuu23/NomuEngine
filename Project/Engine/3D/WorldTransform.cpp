@@ -32,8 +32,6 @@ void WorldTransform::Initialize()
 void WorldTransform::Initialize(const ModelNode& modelNode)
 {
 
-	SetNodeDatas(modelNode, -1);
-
 	// 回転行列
 	rotateMatrix_ = Matrix4x4::MakeRotateXYZMatrix(transform_.rotate);
 
@@ -42,10 +40,6 @@ void WorldTransform::Initialize(const ModelNode& modelNode)
 
 	// スケールを考えない
 	parentMatrix_ = Matrix4x4::MakeAffineMatrix(Vector3{ 1.0f,1.0f,1.0f }, transform_.rotate, transform_.translate);
-
-	// ノードカウント
-	uint32_t nodeCount = static_cast<uint32_t>(nodeDatas_.size());
-	assert(nodeCount);
 
 	//WVP用のリソースを作る。
 	transformationMatrixBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(TransformationMatrix) + 0xff) & ~0xff));
@@ -124,42 +118,9 @@ void WorldTransform::UpdateMatrix(const Matrix4x4& rotateMatrix)
 void WorldTransform::Map(const Matrix4x4& viewProjectionMatrix)
 {
 
-	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
-
-		if (nodeDatas_[i].parentIndex >= 0) {
-			nodeDatas_[i].matrix = Matrix4x4::Multiply(
-				nodeDatas_[i].localMatrix ,
-				nodeDatas_[nodeDatas_[i].parentIndex].matrix);
-		}
-		else {
-			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
-		}
-
-	}
-
 	transformationMatrixMap_->WVP = worldMatrix_ * viewProjectionMatrix;
 	transformationMatrixMap_->World = worldMatrix_;
 	transformationMatrixMap_->WorldInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(worldMatrix_));
-
-}
-
-void WorldTransform::SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex)
-{
-
-	NodeData nodeData;
-
-	nodeData.localMatrix = modelNode.localMatrix;
-	nodeData.meshNum = modelNode.meshNum;
-	nodeData.name = modelNode.name;
-	nodeData.parentIndex = parentIndex;
-	nodeData.offsetMatrix = modelNode.offsetMatrix;
-	nodeDatas_.push_back(std::move(nodeData));
-
-	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
-
-	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
-		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
-	}
 
 }
 
@@ -176,26 +137,3 @@ Vector3 WorldTransform::GetWorldPosition()
 
 }
 
-std::vector<std::string> WorldTransform::GetNodeNames()
-{
-
-	std::vector<std::string> result;
-
-	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
-		result.push_back(nodeDatas_[i].name);
-	}
-
-	return result;
-
-}
-
-void WorldTransform::SetNodeLocalMatrix(const std::vector<Matrix4x4> matrix)
-{
-
-	assert(matrix.size() == nodeDatas_.size());
-
-	for (uint32_t i = 0; i < matrix.size(); ++i) {
-		nodeDatas_[i].localMatrix = matrix[i];
-	}
-
-}
