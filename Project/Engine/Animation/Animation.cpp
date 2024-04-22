@@ -25,12 +25,24 @@ void Animation::Initialize(
 	nodeNum_ = static_cast<uint32_t>(initTransforms.size());
 
 	// 計算データ
-	transforms_.resize(initTransforms.size());
+	transforms_.resize(nodeNum_);
 	transforms_ = initTransforms;
 
 	// その他
 	animationSpeed_ = static_cast<double>(kDeltaTime_);
 	nodeNames_ = nodeNames;
+
+	// カウント
+	positionAddCount_.clear();
+	positionAddCount_.resize(nodeNum_);
+	rotationAddCount_.clear();
+	rotationAddCount_.resize(nodeNum_);
+	scalingAddCount_.clear();
+	scalingAddCount_.resize(nodeNum_);
+
+	// ターゲット
+	targetTransforms_.clear();
+	targetTransforms_.resize(nodeNum_);
 
 }
 
@@ -43,26 +55,13 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 		result[i] = Matrix4x4::MakeIdentity4x4();
 	}
 
-	// 位置 初期行列と同じ分だけ
-	targetPositions_.clear();
-	targetPositions_.resize(nodeNum_);
-	positionAddCount_.clear();
-	positionAddCount_.resize(nodeNum_);
-	// 回転 初期行列と同じ分だけ
-	targetRotations_.clear();
-	targetRotations_.resize(nodeNum_);
-	rotationAddCount_.clear();
-	rotationAddCount_.resize(nodeNum_);
-	// 大きさ 初期行列と同じ分だけ
-	targetScalings_.clear();
-	targetScalings_.resize(nodeNum_);
-	scalingAddCount_.clear();
-	scalingAddCount_.resize(nodeNum_);
-
 	for (uint32_t i = 0; i < nodeNum_; ++i) {
 		positionAddCount_[i] = 0;
 		rotationAddCount_[i] = 0;
 		scalingAddCount_[i] = 0;
+		targetTransforms_[i].scale = { 0.0f,0.0f,0.0f };
+		targetTransforms_[i].rotate = { 0.0f,0.0f,0.0f,0.0f };
+		targetTransforms_[i].translate = { 0.0f,0.0f,0.0f };
 	}
 
 	for (uint32_t i = 0; i < animationCalcDataNum_; ++i) {
@@ -103,31 +102,31 @@ std::vector<Matrix4x4> Animation::AnimationUpdate()
 
 		// カウントされている
 		if (positionAddCount_[i] != 0) {
-			targetPositions_[i] *= (1.0f / positionAddCount_[i]);
+			targetTransforms_[i].translate *= (1.0f / positionAddCount_[i]);
 		}
 		else {
-			targetPositions_[i] = transforms_[i].translate;
+			targetTransforms_[i].translate = transforms_[i].translate;
 		}
 
 		// カウントされている
 		if (rotationAddCount_[i] != 0) {
-			targetRotations_[i] *= (1.0f / rotationAddCount_[i]);
+			targetTransforms_[i].rotate *= (1.0f / rotationAddCount_[i]);
 		}
 		else {
-			targetRotations_[i] = transforms_[i].rotate;
+			targetTransforms_[i].rotate = transforms_[i].rotate;
 		}
 
 		// カウントされている
 		if (scalingAddCount_[i] != 0) {
-			targetScalings_[i] *= (1.0f / scalingAddCount_[i]);
+			targetTransforms_[i].scale *= (1.0f / scalingAddCount_[i]);
 		}
 		else {
-			targetScalings_[i] = transforms_[i].scale;
+			targetTransforms_[i].scale = transforms_[i].scale;
 		}
 
-		transforms_[i].translate = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].translate, targetPositions_[i], moveT_);
-		transforms_[i].rotate = Quaternion::Slerp(transforms_[i].rotate, targetRotations_[i], moveT_);
-		transforms_[i].scale = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].scale, targetScalings_[i], moveT_);
+		transforms_[i].translate = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].translate, targetTransforms_[i].translate, moveT_);
+		transforms_[i].rotate = Quaternion::Slerp(transforms_[i].rotate, targetTransforms_[i].rotate, moveT_);
+		transforms_[i].scale = Ease::Easing(Ease::EaseName::Lerp, transforms_[i].scale, targetTransforms_[i].scale, moveT_);
 
 		// 行列
 		result[i] = Matrix4x4::MakeAffineMatrix(transforms_[i].scale, transforms_[i].rotate, transforms_[i].translate);
@@ -203,7 +202,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 					name = k;
 				}
 			}
-			targetPositions_[name] += position;
+			targetTransforms_[name].translate += position;
 			positionAddCount_[name]++;
 		}
 		// データが一つ以上
@@ -230,7 +229,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 							name = k;
 						}
 					}
-					targetPositions_[name] += position;
+					targetTransforms_[name].translate += position;
 					positionAddCount_[name]++;
 					break;
 				}
@@ -250,7 +249,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 					name = k;
 				}
 			}
-			targetRotations_[name] += rotation;
+			targetTransforms_[name].rotate += rotation;
 			rotationAddCount_[name]++;
 		}
 		// データが一つ以上
@@ -278,7 +277,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 						}
 					}
 
-					targetRotations_[name] += rotation;
+					targetTransforms_[name].rotate += rotation;
 					rotationAddCount_[name]++;
 					break;
 				}
@@ -298,7 +297,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 					name = k;
 				}
 			}
-			targetScalings_[name] += scaling;
+			targetTransforms_[name].scale += scaling;
 			scalingAddCount_[name]++;
 		}
 		// データが一つ以上
@@ -326,7 +325,7 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 							name = k;
 						}
 					}
-					targetScalings_[name] += scaling;
+					targetTransforms_[name].scale += scaling;
 					scalingAddCount_[name]++;
 					break;
 				}

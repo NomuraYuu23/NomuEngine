@@ -100,14 +100,17 @@ private:
 	std::vector<std::string> nodeNames_;
 
 	// 目指す位置 初期行列と同じ分だけ
-	std::vector<Vector3> targetPositions_;
+	//std::vector<Vector3> targetPositions_;
 	std::vector<uint32_t> positionAddCount_;
 	// 目指す回転 初期行列と同じ分だけ
-	std::vector<Quaternion> targetRotations_;
+	//std::vector<Quaternion> targetRotations_;
 	std::vector<uint32_t> rotationAddCount_;
 	// 目指す大きさ 初期行列と同じ分だけ
-	std::vector<Vector3> targetScalings_;
+	//std::vector<Vector3> targetScalings_;
 	std::vector<uint32_t> scalingAddCount_;
+
+	// 目指すトランスフォーム
+	std::vector<QuaternionTransform> targetTransforms_;
 
 	// 移動補間係数
 	float moveT_ = 0.2f;
