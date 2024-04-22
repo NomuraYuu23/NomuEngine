@@ -24,7 +24,10 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	/// <param name="wind">風</param>
+	/// <param name="gravity">重力</param>
+	void Update(const Vector3& wind = Vector3{ 0.0f,0.0f,0.0f },
+		const Vector3& gravity = Vector3{ 0.0f,-9.8f,0.0f });
 
 public: // アクセッサ
 

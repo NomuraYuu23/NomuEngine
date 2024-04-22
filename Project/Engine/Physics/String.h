@@ -53,7 +53,8 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(const Vector3& wind = Vector3{ 0.0f,0.0f,0.0f },
+		const Vector3& gravity = Vector3{ 0.0f,-9.8f,0.0f });
 
 	/// <summary>
 	/// 描画
@@ -83,12 +84,12 @@ public:
 
 public: // アクセッサ
 
-	std::vector<StructuralSpring> GetSpring() { return spring_; }
+	std::vector<StructuralSpring> GetSpring() { return structuralSpring_; }
 
 private: // 変数
 
 	//バネ
-	std::vector<StructuralSpring> spring_;
+	std::vector<StructuralSpring> structuralSpring_;
 
 private: // 変数(モデル)
 

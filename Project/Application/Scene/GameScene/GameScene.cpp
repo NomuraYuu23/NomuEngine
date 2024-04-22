@@ -164,12 +164,14 @@ void GameScene::Initialize() {
 	testString_->Initialize(
 		testStringModel_.get(),
 		{ 0.0f,0.0f,0.0f },
-		0.001f, 100.0f, 1.0f, 0.5f
+		0.001f, 500.0f, 2.0f, 0.5f
 	);
 
 	testString_->SetAnchor(0, true);
 
 	testStringAnchor_ = { 0.0f,0.0f,0.0f };
+
+	stringWind = { 0.0f,0.0f,0.0f };
 
 	//testSpring_ = std::make_unique<StructuralSpring>();
 	//MassPoint testSpringMassPoint;
@@ -188,7 +190,7 @@ void GameScene::Initialize() {
 	//	1.0f, 50.0f, 10.0f);
 	//testSpring_->SetFixPoint1(true);
 
-	audioManager_->PlayWave(kGameAudioNameIndexSample);
+	//audioManager_->PlayWave(kGameAudioNameIndexSample);
 
 }
 
@@ -280,7 +282,7 @@ void GameScene::Update() {
 	shockWaveManager_->Update();
 
 	testString_->SetPosition(0, testStringAnchor_);
-	testString_->Update();
+	testString_->Update(stringWind);
 	//testSpring_->Update();
 
 }
@@ -436,6 +438,7 @@ void GameScene::ImguiDraw(){
 
 	ImGui::Begin("testString");
 	ImGui::DragFloat3("Anchor", &testStringAnchor_.x, 0.01f);
+	ImGui::DragFloat3("stringWind", &stringWind.x, 0.01f);
 	ImGui::End();
 
 	PostEffect::GetInstance()->ImGuiDraw();

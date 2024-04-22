@@ -154,4 +154,6 @@ private:
 	Vector3 testStringAnchor_;
 	std::unique_ptr<Model> testStringModel_;
 
+	Vector3 stringWind;
+
 };

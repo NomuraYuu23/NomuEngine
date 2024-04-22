@@ -27,12 +27,13 @@ void StructuralSpring::Initialize(
 
 }
 
-void StructuralSpring::Update()
+void StructuralSpring::Update(
+	const Vector3& wind,
+	const Vector3& gravity)
 {
 
 	MassPoint point0 = point0_;
 	MassPoint point1 = point1_;
-	Vector3 gravity = Vector3{ 0.0f, -9.8f, 0.0f };
 
 	// point0_
 	if (!fixPoint0_) {
@@ -47,7 +48,7 @@ void StructuralSpring::Update()
 			Vector3 force = restoringForce + dampingForce;
 
 			point0_.acceleration = Vector3::Multiply(force, 1.0f / point0_.mass)
-				+ gravity * point0_.mass;
+				+ (Vector3::Add(gravity, wind)) * point0_.mass;
 		}
 		point0_.velocity = point0_.velocity + point0_.acceleration * kDeltaTime_;
 	}
@@ -68,7 +69,7 @@ void StructuralSpring::Update()
 			Vector3 force = restoringForce + dampingForce;
 
 			point1_.acceleration = Vector3::Multiply(force, 1.0f / point1_.mass)
-				+ gravity * point1_.mass;
+				+ (Vector3::Add(gravity, wind)) * point1_.mass;
 		}
 		point1_.velocity = point1_.velocity + point1_.acceleration * kDeltaTime_;
 	}
