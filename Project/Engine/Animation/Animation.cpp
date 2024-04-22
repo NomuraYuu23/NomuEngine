@@ -187,7 +187,6 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 	Quaternion rotation; // 回転
 	Vector3 scaling; // 大きさ
 
-
 	// アニメーション
 	for (uint32_t i = 0; i < animationDatas_[index].animation.nodeAnimationNum_ ; ++i) {
 
@@ -195,91 +194,145 @@ void Animation::NodeAnimationUpdate(uint32_t index, double timer)
 
 		// どのデータを持ってくるか
 		// 位置
-		for (uint32_t j = 1; j < data.positionKeyNum_; ++j) {
-			if (data.positions_[j].time_ > timer) {
-				// 補間係数
-				float t = static_cast<float>(
-					(timer -
-						data.positions_[j - 1].time_) /
-					(data.positions_[j].time_ -
-						data.positions_[j - 1].time_));
-				// 値
-				position =
-					Ease::Easing(Ease::EaseName::Lerp,
-						data.positions_[j - 1].value_,
-						data.positions_[j].value_,
-						t);
-
-				// ノードの名前がヒット
-				uint32_t name = 0;
-				for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
-					if (nodeNames_[k] == data.nodeName_) {
-						name = k;
-					}
+		
+		// データが一つしかない
+		if (data.positionKeyNum_ == 1) {
+			// 値
+			position = data.positions_[0].value_;
+			// ノードの名前がヒット
+			uint32_t name = 0;
+			for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+				if (nodeNames_[k] == data.nodeName_) {
+					name = k;
 				}
-				targetPositions_[name] += position;
-				positionAddCount_[name]++;
-				break;
+			}
+			targetPositions_[name] += position;
+			positionAddCount_[name]++;
+		}
+		// データが一つ以上
+		else {
+			for (uint32_t j = 1; j < data.positionKeyNum_; ++j) {
+				if (data.positions_[j].time_ > timer) {
+					// 補間係数
+					float t = static_cast<float>(
+						(timer -
+							data.positions_[j - 1].time_) /
+						(data.positions_[j].time_ -
+							data.positions_[j - 1].time_));
+					// 値
+					position =
+						Ease::Easing(Ease::EaseName::Lerp,
+							data.positions_[j - 1].value_,
+							data.positions_[j].value_,
+							t);
+
+					// ノードの名前がヒット
+					uint32_t name = 0;
+					for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+						if (nodeNames_[k] == data.nodeName_) {
+							name = k;
+						}
+					}
+					targetPositions_[name] += position;
+					positionAddCount_[name]++;
+					break;
+				}
 			}
 		}
 
 		// 回転
-		for (uint32_t j = 1; j < data.rotationKeyNum_; ++j) {
-			if (data.rotations_[j].time_ > timer) {
-				// 補間係数
-				float t = static_cast<float>(
-					(timer -
-						data.rotations_[j - 1].time_) /
-					(data.rotations_[j].time_ -
-						data.rotations_[j - 1].time_));
-				// 値
-				rotation =
-					Quaternion::Slerp(
-						data.rotations_[j - 1].value_,
-						data.rotations_[j].value_,
-						t);
 
-				// ノードの名前がヒット
-				uint32_t name = 0;
-				for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
-					if (nodeNames_[k] == data.nodeName_) {
-						name = k;
-					}
+		// データが一つしかない
+		if (data.rotationKeyNum_ == 1) {
+			// 値
+			rotation = data.rotations_[0].value_;
+			// ノードの名前がヒット
+			uint32_t name = 0;
+			for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+				if (nodeNames_[k] == data.nodeName_) {
+					name = k;
 				}
+			}
+			targetRotations_[name] += rotation;
+			rotationAddCount_[name]++;
+		}
+		// データが一つ以上
+		else {
+			for (uint32_t j = 1; j < data.rotationKeyNum_; ++j) {
+				if (data.rotations_[j].time_ > timer) {
+					// 補間係数
+					float t = static_cast<float>(
+						(timer -
+							data.rotations_[j - 1].time_) /
+						(data.rotations_[j].time_ -
+							data.rotations_[j - 1].time_));
+					// 値
+					rotation =
+						Quaternion::Slerp(
+							data.rotations_[j - 1].value_,
+							data.rotations_[j].value_,
+							t);
 
-				targetRotations_[name] += rotation;
-				rotationAddCount_[name]++;
-				break;
+					// ノードの名前がヒット
+					uint32_t name = 0;
+					for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+						if (nodeNames_[k] == data.nodeName_) {
+							name = k;
+						}
+					}
+
+					targetRotations_[name] += rotation;
+					rotationAddCount_[name]++;
+					break;
+				}
 			}
 		}
 
 		// 大きさ
-		for (uint32_t j = 1; j < data.scalingKeyNum_; ++j) {
-			if (data.scalings_[j].time_ > timer) {
-
-				// 補間係数
-				float t = static_cast<float>(
-					(timer -
-						data.scalings_[j - 1].time_) /
-					(data.scalings_[j].time_ -
-						data.scalings_[j - 1].time_));
-				// 値
-				scaling =
-					Ease::Easing(Ease::EaseName::Lerp,
-						data.scalings_[j - 1].value_,
-						data.scalings_[j].value_,
-						t);
-
-				// ノードの名前がヒット
-				uint32_t name = 0;
-				for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
-					if (nodeNames_[k] == data.nodeName_) {
-						name = k;
-					}
+		
+		// データが一つしかない
+		if (data.scalingKeyNum_ == 1) {
+			// 値
+			scaling = data.scalings_[0].value_;
+			// ノードの名前がヒット
+			uint32_t name = 0;
+			for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+				if (nodeNames_[k] == data.nodeName_) {
+					name = k;
 				}
-				targetScalings_[name] += scaling;
-				scalingAddCount_[name]++;
-				break;
+			}
+			targetScalings_[name] += scaling;
+			scalingAddCount_[name]++;
+		}
+		// データが一つ以上
+		else {
+			for (uint32_t j = 1; j < data.scalingKeyNum_; ++j) {
+				if (data.scalings_[j].time_ > timer) {
+
+					// 補間係数
+					float t = static_cast<float>(
+						(timer -
+							data.scalings_[j - 1].time_) /
+						(data.scalings_[j].time_ -
+							data.scalings_[j - 1].time_));
+					// 値
+					scaling =
+						Ease::Easing(Ease::EaseName::Lerp,
+							data.scalings_[j - 1].value_,
+							data.scalings_[j].value_,
+							t);
+
+					// ノードの名前がヒット
+					uint32_t name = 0;
+					for (uint32_t k = 0; k < nodeNames_.size(); ++k) {
+						if (nodeNames_[k] == data.nodeName_) {
+							name = k;
+						}
+					}
+					targetScalings_[name] += scaling;
+					scalingAddCount_[name]++;
+					break;
+				}
 			}
 		}
 

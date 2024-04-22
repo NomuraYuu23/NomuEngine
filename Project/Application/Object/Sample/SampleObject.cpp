@@ -50,8 +50,8 @@ void SampleObject::Initialize(Model* model)
 		initScalings,
 		worldTransform_.GetNodeNames());
 
-	//animation_.StartAnimation(0, true);
-	animation_.StartAnimation(1, true);
+	animation_.StartAnimation(0, true);
+	//animation_.StartAnimation(1, true);
 
 	enableLighting_ = 0;
 

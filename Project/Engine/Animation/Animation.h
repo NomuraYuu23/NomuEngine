@@ -120,5 +120,3 @@ private:
 	float moveT_ = 0.2f;
 
 };
-
-
