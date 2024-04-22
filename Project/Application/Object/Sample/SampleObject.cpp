@@ -45,13 +45,11 @@ void SampleObject::Initialize(Model* model)
 
 	animation_.Initialize(
 		model_->GetNodeAnimationData(),
-		initPositions,
-		initRotations,
-		initScalings,
+		localMatrixManager_->GetInitTransform(),
 		localMatrixManager_->GetNodeNames());
 
-	animation_.StartAnimation(0, true);
-	//animation_.StartAnimation(1, true);
+	//animation_.StartAnimation(0, true);
+	animation_.StartAnimation(1, true);
 
 	enableLighting_ = 0;
 

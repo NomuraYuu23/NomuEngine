@@ -396,7 +396,7 @@ void Sprite::SetTextureLeftTop(const Vector2& textureLeftTop)
 	SetTextureRange();
 }
 
-void Sprite::SetUvTransform(const TransformStructure& uvTransform)
+void Sprite::SetUvTransform(const EulerTransform& uvTransform)
 {
 
 	uvTransform_ = uvTransform;

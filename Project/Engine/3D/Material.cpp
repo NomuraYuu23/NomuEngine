@@ -71,7 +71,7 @@ void Material::Initialize() {
 /// <summary>
 /// 更新
 /// </summary>
-void Material::Update(const TransformStructure& uvTransform, const Vector4& color, int enableLighting, float shininess) {
+void Material::Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess) {
 
 	uvTransform_ = uvTransform;
 	color_ = color;
@@ -89,7 +89,7 @@ void Material::Update(const TransformStructure& uvTransform, const Vector4& colo
 
 }
 
-void Material::SetUvTransform(const TransformStructure& uvTransform)
+void Material::SetUvTransform(const EulerTransform& uvTransform)
 {
 	
 	uvTransform_ = uvTransform;

@@ -2,7 +2,10 @@
 #include "../Math/DeltaTime.h"
 #include "../Math/Ease.h"
 
-void Animation::Initialize(const std::vector<AnimationData>& animationDatas, const std::vector<Vector3>& initPositions, const std::vector<Quaternion>& initRotations, const std::vector<Vector3>& initScalings, const std::vector<std::string>& nodeNames)
+void Animation::Initialize(
+	const std::vector<AnimationData>& animationDatas,
+	const std::vector<QuaternionTransform>& initTransform,
+	const std::vector<std::string>& nodeNames)
 {
 
 	// アニメーションデータ
@@ -19,16 +22,16 @@ void Animation::Initialize(const std::vector<AnimationData>& animationDatas, con
 	}
 
 	// 初期データ
-	nodeNum_ = static_cast<uint32_t>(initPositions.size());
+	nodeNum_ = static_cast<uint32_t>(initTransform.size());
 
 	// 計算データ
-	positions_.resize(initPositions.size());
-	rotations_.resize(initRotations.size());
-	scalings_.resize(initScalings.size());
+	positions_.resize(initTransform.size());
+	rotations_.resize(initTransform.size());
+	scalings_.resize(initTransform.size());
 	for (uint32_t i = 0; i < nodeNum_; ++i) {
-		positions_[i] = initPositions[i];
-		rotations_[i] = initRotations[i];
-		scalings_[i] = initScalings[i];
+		positions_[i] = initTransform[i].translate;
+		rotations_[i] = initTransform[i].rotate;
+		scalings_[i] = initTransform[i].scale;
 	}
 
 	// その他

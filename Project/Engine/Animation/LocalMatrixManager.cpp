@@ -87,6 +87,7 @@ void LocalMatrixManager::SetNodeDatas(const ModelNode& modelNode, int32_t parent
 	nodeData.name = modelNode.name;
 	nodeData.parentIndex = parentIndex;
 	nodeData.offsetMatrix = modelNode.offsetMatrix;
+	nodeData.initTransform = modelNode.initTransform;
 	nodeDatas_.push_back(std::move(nodeData));
 
 	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
@@ -104,6 +105,19 @@ std::vector<std::string> LocalMatrixManager::GetNodeNames()
 
 	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
 		result.push_back(nodeDatas_[i].name);
+	}
+
+	return result;
+
+}
+
+std::vector<QuaternionTransform> LocalMatrixManager::GetInitTransform()
+{
+
+	std::vector<QuaternionTransform> result;
+
+	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
+		result.push_back(nodeDatas_[i].initTransform);
 	}
 
 	return result;

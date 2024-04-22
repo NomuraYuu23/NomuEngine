@@ -1,15 +1,16 @@
 #pragma once
 #include "../Math/Vector3.h"
+#include "../Math/Quaternion.h"
 #include "../../externals/nlohmann/json.hpp"
 
-//Transform構造体
-struct TransformStructure {
+// オイラー
+struct EulerTransform {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
 };
 
-inline void to_json(nlohmann::json& json, const TransformStructure& value) {
+inline void to_json(nlohmann::json& json, const EulerTransform& value) {
 	json = nlohmann::json{
 		{"scale",value.scale },
 		{"rotate",value.rotate },
@@ -17,7 +18,7 @@ inline void to_json(nlohmann::json& json, const TransformStructure& value) {
 	};
 }
 
-inline void from_json(const nlohmann::json& json, TransformStructure& value) {
+inline void from_json(const nlohmann::json& json, EulerTransform& value) {
 
     // キーを確認
     if (json.contains("scale") && json["scale"].is_array() &&
@@ -30,3 +31,10 @@ inline void from_json(const nlohmann::json& json, TransformStructure& value) {
     }
 
 }
+
+// クォータニオン
+struct QuaternionTransform {
+	Vector3 scale;
+	Quaternion rotate;
+	Vector3 translate;
+};

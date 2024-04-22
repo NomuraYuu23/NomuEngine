@@ -25,7 +25,7 @@ void TutorialScene::Initialize() {
 	TextureLoad();
 
 	// ビュープロジェクション
-	TransformStructure baseCameraTransform = {
+	EulerTransform baseCameraTransform = {
 		1.0f, 1.0f, 1.0f,
 		0.58f,0.0f,0.0f,
 		0.0f, 23.0f, -35.0f };

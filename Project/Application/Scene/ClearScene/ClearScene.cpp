@@ -24,7 +24,7 @@ void ClearScene::Initialize()
 	audioManager_->Initialize();
 
 	// ビュープロジェクション
-	TransformStructure baseCameraTransform = {
+	EulerTransform baseCameraTransform = {
 		1.0f, 1.0f, 1.0f,
 		0.0f,0.0f,0.0f,
 		0.0f, 0.0f, -35.0f };

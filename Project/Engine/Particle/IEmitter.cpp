@@ -2,7 +2,7 @@
 #include "../Math/DeltaTime.h"
 #include "../../Application/Particle/MakeParticle.h"
 
-void IEmitter::Initialize(const TransformStructure& transform, uint32_t instanceCount,
+void IEmitter::Initialize(const EulerTransform& transform, uint32_t instanceCount,
 	float frequency, float lifeTime, uint32_t particleModelNum, uint32_t paeticleName)
 {
 

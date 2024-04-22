@@ -47,7 +47,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(const TransformStructure& uvTransform, const Vector4& color, int enableLighting, float shininess);
+	void Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess);
 
 public: //アクセッサ
 
@@ -59,7 +59,7 @@ public: //アクセッサ
 
 public:
 
-	void SetUvTransform(const TransformStructure& uvTransform);
+	void SetUvTransform(const EulerTransform& uvTransform);
 	void SetColor(const Vector4& color);
 	void SetEnableLighting(const int32_t enableLighting);
 	void SetShininess(const float shininess);
@@ -71,7 +71,7 @@ private:
 
 	MaterialData* materialMap_ = nullptr;
 
-	TransformStructure uvTransform_;
+	EulerTransform uvTransform_;
 
 	Vector4 color_;
 

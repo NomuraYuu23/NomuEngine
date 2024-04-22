@@ -1,5 +1,6 @@
 #pragma once
 #include "AnimationData.h"
+#include "../3D/TransformStructure.h"
 
 class Animation
 {
@@ -26,15 +27,11 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="AnimationData">アニメーションデータ</param>
-	/// <param name="initPositions">初期位置(ノード数)</param>
-	/// <param name="initRotations_">初期回転(ノード数)</param>
-	/// <param name="initScalings">初期大きさ(ノード数)</param>
+	/// <param name="initTransform">初期トランスフォーム(ノード数)</param>
 	/// <param name="nodeNames">ノード名前</param>
 	void Initialize(
 		const std::vector<AnimationData>& animationDatas,
-		const std::vector<Vector3>& initPositions,
-		const std::vector<Quaternion>& initRotations,
-		const std::vector<Vector3>& initScalings,
+		const std::vector<QuaternionTransform>& initTransform,
 		const std::vector<std::string>& nodeNames);
 
 	/// <summary>

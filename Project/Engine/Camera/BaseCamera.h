@@ -50,7 +50,7 @@ public:
 	/// トランスフォーム構造体設定
 	/// </summary>
 	/// <param name="transform">トランスフォーム構造体</param>
-	void SetTransform(const TransformStructure& transform) { transform_ = transform; }
+	void SetTransform(const EulerTransform& transform) { transform_ = transform; }
 
 	/// <summary>
 	/// ローカル位置取得
@@ -123,7 +123,7 @@ protected: // 関数
 protected: // 変数
 
 	// トランスフォーム
-	TransformStructure transform_{ { 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f, 0.0f},{ 0.0f, 0.0f, -10.0f} };
+	EulerTransform transform_{ { 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f, 0.0f},{ 0.0f, 0.0f, -10.0f} };
 
 	// 透視投影で使う
 	float fovY_;

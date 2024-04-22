@@ -217,7 +217,7 @@ private: // メンバ変数(ワールドトランスフォーム)
 
 public: // アクセッサ(マテリアル)
 
-	void SetUvTransform(const TransformStructure& uvTransform);
+	void SetUvTransform(const EulerTransform& uvTransform);
 	void SetUvTransform(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
 	void SetColor(const Vector4& color);
@@ -229,7 +229,7 @@ private: // メンバ変数(マテリアル)
 	// マテリアル
 	std::unique_ptr<Material> material_;
 
-	TransformStructure uvTransform_;
+	EulerTransform uvTransform_;
 	Vector4 color_;
 	int enableLighting_;
 

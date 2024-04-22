@@ -16,7 +16,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize(const TransformStructure& transform, uint32_t instanceCount,
+	virtual void Initialize(const EulerTransform& transform, uint32_t instanceCount,
 		float frequency, float lifeTime, uint32_t particleModelNum, uint32_t paeticleName);
 
 	/// <summary>
@@ -43,7 +43,7 @@ public: // アクセッサ
 protected:
 
 	// トランスフォーム
-	TransformStructure transform_;
+	EulerTransform transform_;
 	// 発生させるインスタンス数
 	uint32_t instanceCount_;
 	// 発生頻度

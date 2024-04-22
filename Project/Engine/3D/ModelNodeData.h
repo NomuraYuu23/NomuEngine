@@ -1,5 +1,6 @@
 #pragma once
 #include "../Math/Matrix4x4.h"
+#include "../3D/TransformStructure.h"
 
 /// <summary>
 /// ノードデータ
@@ -12,4 +13,6 @@ struct NodeData
 	int32_t parentIndex; // 親行列
 	Matrix4x4 matrix; //最終的なワールド行列
 	Matrix4x4 offsetMatrix; // オフセット行列
+	QuaternionTransform initTransform; // 初期トランスフォーム
+
 };

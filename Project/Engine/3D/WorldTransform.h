@@ -71,7 +71,7 @@ public:
 public:
 
 	//トランスフォーム
-	TransformStructure transform_{ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	EulerTransform transform_{ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
 	//ワールド行列
 	Matrix4x4 worldMatrix_;

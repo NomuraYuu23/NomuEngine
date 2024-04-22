@@ -26,7 +26,7 @@ void GameScene::Initialize() {
 	TextureLoad();
 
 	// ビュープロジェクション
-	TransformStructure baseCameraTransform = {
+	EulerTransform baseCameraTransform = {
 		1.0f, 1.0f, 1.0f,
 		0.58f,0.0f,0.0f,
 		0.0f, 23.0f, -35.0f };
@@ -38,7 +38,7 @@ void GameScene::Initialize() {
 	particleModel[ParticleModelIndex::kUvChecker] = particleUvcheckerModel_.get();
 	particleModel[ParticleModelIndex::kCircle] = particleCircleModel_.get();
 	particleManager_->ModelCreate(particleModel);
-	TransformStructure emitter = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{-3.0f,0.0f,0.0f} };
+	EulerTransform emitter = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{-3.0f,0.0f,0.0f} };
 	particleManager_->MakeEmitter(emitter, 1, 0.5f, 300.0f, ParticleModelIndex::kUvChecker, 0, 0);
 	emitter.translate.x = 3.0f;
 	particleManager_->MakeEmitter(emitter, 1, 0.5f, 300.0f, ParticleModelIndex::kCircle, 0, 0);
@@ -512,7 +512,7 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/Model/Player/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
 	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト

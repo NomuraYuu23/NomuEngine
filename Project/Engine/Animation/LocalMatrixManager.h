@@ -51,6 +51,12 @@ public:
 	std::vector<std::string> GetNodeNames();
 
 	/// <summary>
+	/// 初期トランスフォーム取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<QuaternionTransform> GetInitTransform();
+
+	/// <summary>
 	/// ローカル行列設定
 	/// </summary>
 	/// <param name="matrix">行列</param>

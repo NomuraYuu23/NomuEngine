@@ -84,7 +84,7 @@ protected: // メンバ変数
 
 	// 基本的な変数
 	// トランスフォーム
-	TransformStructure transform_;
+	EulerTransform transform_;
 	// 行列
 	Matrix4x4 worldMatrix_;
 	// 速度

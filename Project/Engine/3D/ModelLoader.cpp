@@ -201,11 +201,15 @@ ModelNode ModelLoader::ReadNode(aiNode* node)
 	aiQuaternion rotate;
 	aiLocalMatrix.Decompose(scale, rotate, translate);
 
+	result.initTransform.scale = { scale.x, scale.y, scale.z };
+	result.initTransform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w };
+	result.initTransform.translate = { -translate.x,translate.y, translate.z };
+
 	result.localMatrix =
 		Matrix4x4::MakeAffineMatrix(
-			{ scale.x, scale.y, scale.z },
-			{ rotate.x, -rotate.y, -rotate.z, rotate.w },
-			{ -translate.x,translate.y, translate.z }
+			result.initTransform.scale,
+			result.initTransform.rotate,
+			result.initTransform.translate
 	);
 
 	result.offsetMatrix = Matrix4x4::MakeIdentity4x4();
