@@ -12,7 +12,7 @@ class WindowSprite
 private:
 
 	// 頂点数
-	const int kVertNum = 6;
+	const int kVertNum = 3;
 	// デバイス
 	ID3D12Device* device_;
 	// コマンドリスト
@@ -41,20 +41,6 @@ public:
 	void Draw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle);
 
 private:
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	// 頂点バッファマップ
-	SpriteVertex* vertMap = nullptr;
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
-
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView_{};
-
-	//インデックスリソースにデータを書き込む
-	uint32_t* indexMap = nullptr;
 
 };
 

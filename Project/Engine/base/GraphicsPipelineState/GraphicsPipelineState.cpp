@@ -106,7 +106,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.rootParameterIndex = kRootParameterIndexWindowSprite;
 	desc.samplerIndex = kSamplerIndexPostEffect;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	desc.inputLayoutIndex = kInputLayoutIndexNormal;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
 	desc.blendStateIndex = kBlendStateIndexNormal;
 	desc.cullMode = D3D12_CULL_MODE_NONE;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;

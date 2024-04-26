@@ -89,5 +89,8 @@ void InputLayoutManager::Initialize()
 
 	inputLayouts_[kInputLayoutIndexLine].pInputElementDescs = inputElementDescs_[kInputLayoutIndexLine].data();
 	inputLayouts_[kInputLayoutIndexLine].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexLine].size());
+	
+	inputLayouts_[kInputLayoutIndexNone].pInputElementDescs = nullptr;
+	inputLayouts_[kInputLayoutIndexNone].NumElements = 0;
 
 }
