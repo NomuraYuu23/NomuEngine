@@ -3,6 +3,7 @@
 #include "../../../Engine/Physics/RigidBody.h"
 #include "../../../Engine/Animation/Animation.h"
 #include "../../../Engine/PostEffect/Velocity2DData.h"
+#include "../../../Engine/Animation/LocalMatrixDraw.h"
 
 class SampleObject
 {
@@ -15,9 +16,11 @@ public:
 
 	void Update();
 
-	void Draw(BaseCamera camera);
+	void Draw(BaseCamera& camera);
 
 	void ImGuiDraw();
+
+	void DebugDraw(BaseCamera& camera);
 
 	ID3D12Resource* GetVelocity2DData() { return velocity2DDataBuff_.Get(); }
 
@@ -61,6 +64,9 @@ private:
 	Velocity2DData* velocity2DDataMap_;
 
 	Vector3 velocity_;
+
+	// 仮
+	std::unique_ptr<LocalMatrixDraw> localMatrixDraw_;
 
 };
 

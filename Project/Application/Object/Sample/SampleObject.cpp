@@ -82,6 +82,9 @@ void SampleObject::Initialize(Model* model)
 
 	velocity_ = { 1.0f,0.0f,0.0f };
 
+	localMatrixDraw_ = std::make_unique<LocalMatrixDraw>();
+	localMatrixDraw_->Initialize(localMatrixManager_.get(), &worldTransform_);
+
 }
 
 void SampleObject::Update()
@@ -114,7 +117,7 @@ void SampleObject::Update()
 
 }
 
-void SampleObject::Draw(BaseCamera camera)
+void SampleObject::Draw(BaseCamera& camera)
 {
 
 	velocity2DDataMap_->SetVelocity(velocity_, camera.GetViewMatrix());
@@ -151,6 +154,13 @@ void SampleObject::ImGuiDraw()
 	ImGui::DragFloat3("value", &velocity_.x, 0.01f);
 
 	ImGui::End();
+
+}
+
+void SampleObject::DebugDraw(BaseCamera& camera)
+{
+
+	localMatrixDraw_->Draw(camera);
 
 }
 

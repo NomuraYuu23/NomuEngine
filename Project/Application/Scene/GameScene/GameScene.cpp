@@ -341,7 +341,7 @@ void GameScene::Draw() {
 	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexManyAnimObjects;
 	ModelDraw::PreDraw(preDrawDesc);
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -357,6 +357,7 @@ void GameScene::Draw() {
 	//	camera_);
 
 	testString_->DebugDraw(camera_);
+	sampleObj_->DebugDraw(camera_);
 
 	// 前景スプライト描画後処理
 	DrawLine::PostDraw();

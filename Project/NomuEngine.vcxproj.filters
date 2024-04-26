@@ -559,6 +559,9 @@
     <ClCompile Include="Engine\Physics\Spring.cpp">
       <Filter>Engine\Physics\Spring</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Animation\LocalMatrixDraw.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -1031,6 +1034,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Physics\String.h">
       <Filter>Engine\Physics\Spring</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
