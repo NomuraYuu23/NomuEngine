@@ -23,22 +23,22 @@ void MyFramework::Initialize()
 
 	// スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDevice(), 
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameSprite].Get(), 
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameSprite].Get());
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexSprite].Get(), 
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexSprite].Get());
 
 	// Windowサイズのスプライト
 	WindowSprite::GetInstance()->Initialize(dxCommon->GetDevice(), dxCommon->GetCommadList());
 
 	// モデル静的初期化
 	std::array<ID3D12RootSignature*, ModelDraw::PipelineStateIndex::kPipelineStateIndexOfCount> rootSignature = {
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameModel].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameManyModels].Get() };
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexModel].Get(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexParticle].Get(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexManyModels].Get() };
 
 	std::array<ID3D12PipelineState*, ModelDraw::PipelineStateIndex::kPipelineStateIndexOfCount> pipelineState = {
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameModel].Get(),
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameParticle].Get(),
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameManyModels].Get() };
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexModel].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexParticle].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexManyModels].Get() };
 	
 	Model::StaticInitialize(dxCommon->GetDevice());
 
@@ -47,8 +47,8 @@ void MyFramework::Initialize()
 
 	// 線描画静的初期化
 	DrawLine::StaticInitialize(dxCommon->GetDevice(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameLine].Get(),
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameLine].Get());
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexLine].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexLine].Get());
 
 	// 光源静的初期化
 	DirectionalLight::StaticInitialize(dxCommon->GetDevice());

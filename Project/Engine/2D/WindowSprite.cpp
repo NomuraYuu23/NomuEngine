@@ -90,9 +90,9 @@ void WindowSprite::Draw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle)
 
 	//RootSignatureを設定。
 	commandList_->SetPipelineState(
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateNameWindowSprite].Get());//PS0を設定
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexWindowSprite].Get());//PS0を設定
 	commandList_->SetGraphicsRootSignature(
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateNameWindowSprite].Get());
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexWindowSprite].Get());
 
 	// SRV
 	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
