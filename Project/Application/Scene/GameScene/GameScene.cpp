@@ -341,7 +341,7 @@ void GameScene::Draw() {
 	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexManyAnimObjects;
 	ModelDraw::PreDraw(preDrawDesc);
 
-	//testManyObject_->Draw(camera_);
+	testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -369,7 +369,7 @@ void GameScene::Draw() {
 	ModelDraw::PreDraw(preDrawDesc);
 
 	// パーティクルはここ
-	//particleManager_->Draw(camera_.GetViewProjectionMatrix());
+	particleManager_->Draw(camera_.GetViewProjectionMatrix());
 
 	ModelDraw::PostDraw();
 

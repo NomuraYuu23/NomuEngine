@@ -60,42 +60,6 @@ public: // 関数
 	/// <param name="sDevice">デバイス</param>
 	static void Initialize(ID3D12Device* sDevice);
 
-private: // グラフィックスパイプライン作成関数
-
-	/// <summary>
-	/// モデル
-	/// </summary>
-	static void CreateForModel();
-	/// <summary>
-	/// スプライト
-	/// </summary>
-	static void CreateForSprite();
-	/// <summary>
-	/// パーティクル
-	/// </summary>
-	static void CreateForParticle();
-	/// <summary>
-	/// コライダーデバッグ2D
-	/// </summary>
-	static void CreateForCollision2DDebugDraw();
-	/// <summary>
-	/// 線
-	/// </summary>
-	static void CreateForLine();
-	/// <summary>
-	/// ポストエフェクト
-	/// </summary>
-	static void CreateForSwapChain();
-	/// <summary>
-	/// たくさんのモデル
-	/// </summary>
-	static void CreateForManyModels();
-
-	/// <summary>
-	/// 作成
-	/// </summary>
-	static void Create(const CreateDesc& desc);
-
 private: // 以下パイプラインの変数やenum
 
 	// デバイス
@@ -121,6 +85,11 @@ private: // 以下パイプラインの変数やenum
 	};
 
 private: // パイプラインステートオブジェクト作成
+
+	/// <summary>
+	/// 作成
+	/// </summary>
+	static void Create(const CreateDesc& desc);
 
 	/// <summary>
 	/// RootSignature設定
