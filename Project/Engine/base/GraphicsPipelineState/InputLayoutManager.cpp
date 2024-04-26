@@ -72,24 +72,6 @@ void InputLayoutManager::Initialize()
 	inputLayouts_[kInputLayoutIndexModel].pInputElementDescs = inputElementDescs_[kInputLayoutIndexModel].data();
 	inputLayouts_[kInputLayoutIndexModel].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexModel].size());
 
-	//Line
-	D3D12_INPUT_ELEMENT_DESC inputElementLineDescs[2] = {};
-	inputElementLineDescs[0].SemanticName = "POSITION";
-	inputElementLineDescs[0].SemanticIndex = 0;
-	inputElementLineDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementLineDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementLineDescs[1].SemanticName = "COLOR";
-	inputElementLineDescs[1].SemanticIndex = 0;
-	inputElementLineDescs[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementLineDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	for (uint32_t i = 0; i < 2; i++) {
-		inputElementDescs_[kInputLayoutIndexLine].push_back(inputElementLineDescs[i]);
-	}
-
-	inputLayouts_[kInputLayoutIndexLine].pInputElementDescs = inputElementDescs_[kInputLayoutIndexLine].data();
-	inputLayouts_[kInputLayoutIndexLine].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexLine].size());
-	
 	inputLayouts_[kInputLayoutIndexNone].pInputElementDescs = nullptr;
 	inputLayouts_[kInputLayoutIndexNone].NumElements = 0;
 

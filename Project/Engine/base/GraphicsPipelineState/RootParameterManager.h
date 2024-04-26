@@ -22,6 +22,7 @@ enum DescriptorRangeIndex {
 	kDescriptorRangeIndexLocalMatrix, // ローカル行列
 	kDexcriptorRangeIndexCollider2DDebugDrawForGPU, // コライダーデバッグ2d
 	kDexcriptorRangeIndexTransformationMatrix, // トランスフォーム行列
+	kDexcriptorRangeIndexLineForGPU, // 線描画
 	kDescriptorRangeIndexOfCount,
 };
 

@@ -356,8 +356,8 @@ void GameScene::Draw() {
 	//	Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
 	//	camera_);
 
-	testString_->DebugDraw(camera_);
-	sampleObj_->DebugDraw(camera_);
+	//testString_->DebugDraw(camera_);
+	//sampleObj_->DebugDraw(camera_);
 
 	// 前景スプライト描画後処理
 	DrawLine::PostDraw();

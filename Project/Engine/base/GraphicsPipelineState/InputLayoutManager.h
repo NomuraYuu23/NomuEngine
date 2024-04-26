@@ -14,7 +14,6 @@
 enum InputLayoutIndex {
 	kInputLayoutIndexNormal,
 	kInputLayoutIndexModel,
-	kInputLayoutIndexLine,
 	kInputLayoutIndexNone,
 	kInputLayoutIndexOfCount,
 };
