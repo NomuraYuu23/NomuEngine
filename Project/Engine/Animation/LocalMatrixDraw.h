@@ -18,10 +18,10 @@ public: // 関数
 		WorldTransform* worldTransform);
 
 	/// <summary>
-	/// 描画
+	/// 描画用マップ
 	/// </summary>
-	/// <param name="camera">カメラ</param>
-	void Draw(BaseCamera& camera);
+	/// <param name="drawLine">線描画ポインタ</param>
+	void DrawMap(DrawLine* drawLine);
 
 private: // 変数
 

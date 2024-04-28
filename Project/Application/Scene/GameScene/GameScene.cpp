@@ -171,25 +171,6 @@ void GameScene::Initialize() {
 
 	stringWind = { 0.0f,0.0f,0.0f };
 
-	//testSpring_ = std::make_unique<StructuralSpring>();
-	//MassPoint testSpringMassPoint;
-	//testSpringMassPoint.position = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint.mass = 0.5f;
-	//testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint.velocity = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint.force = { 0.0f,0.0f,0.0f };
-	//MassPoint testSpringMassPoint1;
-	//testSpringMassPoint1.position = { 1.2f,0.0f,0.0f };
-	//testSpringMassPoint1.mass = 0.5f;
-	//testSpringMassPoint1.acceleration = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint1.velocity = { 0.0f,0.0f,0.0f };
-	//testSpringMassPoint1.force = { 0.0f,0.0f,0.0f };
-	//testSpring_->Initialize(testSpringMassPoint, testSpringMassPoint1,
-	//	1.0f, 50.0f, 10.0f);
-	//testSpring_->SetFixPoint1(true);
-
-	//audioManager_->PlayWave(kGameAudioNameIndexSample);
-
 }
 
 /// <summary>
@@ -210,13 +191,6 @@ void GameScene::Update() {
 		return;
 	}
 
-	// リスタート
-	//if () {
-	//	resetScene_ = true;
-	//	isBeingReset_ = true;
-	//	isDecreasingVolume = true;
-	//}
-
 	//光源
 	DirectionalLightData directionalLightData;
 	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
@@ -229,6 +203,7 @@ void GameScene::Update() {
 
 	//Obj
 	sampleObj_->Update();
+	sampleObj_->DebugDrawMap(drawLine_);
 
 	// あたり判定
 	collisionManager_->ListClear();
@@ -241,21 +216,6 @@ void GameScene::Update() {
 	box1_->Update(box1Center_, radius, radius, 5.0f);
 	circle_->Update(circleCenter_, radius);
 	circle1_->Update(circle1Center_, radius);
-
-	collision2DManager_->ListClear();
-	collision2DManager_->ListRegister(box_.get());/*
-	collision2DManager_->ListRegister(box1_.get());
-	collision2DManager_->ListRegister(circle_.get());
-	collision2DManager_->ListRegister(circle1_.get());*/
-	collision2DManager_->ListRegister(segment1_.get());/*
-	collision2DManager_->ListRegister(segment2_.get());*/
-	collision2DManager_->CheakAllCollision();
-
-	collision2DDebugDraw_->Clear();
-	collision2DDebugDraw_->Register(box_.get());/*
-	collision2DDebugDraw_->Register(box1_.get());
-	collision2DDebugDraw_->Register(circle_.get());
-	collision2DDebugDraw_->Register(circle1_.get());*/
 	
 	// 影
 	ShadowUpdate();
@@ -281,7 +241,7 @@ void GameScene::Update() {
 
 	testString_->SetPosition(0, testStringAnchor_);
 	testString_->Update(stringWind);
-	//testSpring_->Update();
+	testString_->DebugDrawMap(drawLine_);
 
 }
 

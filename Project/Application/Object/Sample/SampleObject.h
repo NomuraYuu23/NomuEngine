@@ -20,7 +20,11 @@ public:
 
 	void ImGuiDraw();
 
-	void DebugDraw(BaseCamera& camera);
+	/// <summary>
+	/// デバッグ描画用マッピング
+	/// </summary>
+	/// <param name="drawLine">線描画ポインタ</param>
+	void DebugDrawMap(DrawLine* drawLine);
 
 	ID3D12Resource* GetVelocity2DData() { return velocity2DDataBuff_.Get(); }
 

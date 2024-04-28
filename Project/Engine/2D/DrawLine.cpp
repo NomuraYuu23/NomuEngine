@@ -93,7 +93,7 @@ void DrawLine::Draw(
 void DrawLine::Map(const LineForGPU& lineForGPU)
 {
 
-	assert(numInstance_ == kNumInstanceMax_);
+	assert(numInstance_ != kNumInstanceMax_);
 
 	lineForGPUMap_[numInstance_] = lineForGPU;
 

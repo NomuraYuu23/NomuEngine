@@ -63,10 +63,10 @@ public:
 	void Draw(BaseCamera& camera);
 
 	/// <summary>
-	/// デバッグ描画
+	/// デバッグ描画用マッピング
 	/// </summary>
-	/// <param name="camera">カメラ</param>
-	void DebugDraw(BaseCamera& camera);
+	/// <param name="drawLine">線描画ポインタ</param>
+	void DebugDrawMap(DrawLine* drawLine);
 
 	/// <summary>
 	/// アンカー設定
@@ -101,8 +101,6 @@ private: // 変数(モデル)
 	WorldTransform worldTransform_;
 	// ローカル行列
 	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
-
-private: // デバッグ
 
 };
 

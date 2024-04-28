@@ -157,10 +157,10 @@ void SampleObject::ImGuiDraw()
 
 }
 
-void SampleObject::DebugDraw(BaseCamera& camera)
+void SampleObject::DebugDrawMap(DrawLine* drawLine)
 {
 
-	localMatrixDraw_->Draw(camera);
+	localMatrixDraw_->DrawMap(drawLine);
 
 }
 

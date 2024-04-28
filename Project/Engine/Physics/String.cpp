@@ -182,10 +182,21 @@ void String::Draw(BaseCamera& camera)
 
 }
 
-void String::DebugDraw(BaseCamera& camera)
+void String::DebugDrawMap(DrawLine* drawLine)
 {
 
+	LineForGPU lineForGPU;
 
+	for (uint32_t i = 0; i < structuralSpring_.size(); ++i) {
+
+		lineForGPU.position[0] = structuralSpring_[i].GetPoint0().position;
+		lineForGPU.position[1] = structuralSpring_[i].GetPoint1().position;
+		lineForGPU.color[0] = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+		lineForGPU.color[1] = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+
+		drawLine->Map(lineForGPU);
+
+	}
 
 }
 
