@@ -35,6 +35,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexModel;
 	desc.rootParameterIndex = kRootParameterIndexModel;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	desc.inputLayoutIndex = kInputLayoutIndexModel;
 	desc.blendStateIndex = kBlendStateIndexNormal;
@@ -49,6 +50,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexSprite;
 	desc.rootParameterIndex = kRootParameterIndexSprite;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	desc.inputLayoutIndex = kInputLayoutIndexNormal;
 	desc.blendStateIndex = kBlendStateIndexNormal;
@@ -63,6 +65,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexParticle;
 	desc.rootParameterIndex = kRootParameterIndexParticle;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	desc.inputLayoutIndex = kInputLayoutIndexNormal;
 	desc.blendStateIndex = kBlendStateIndexAdd;
@@ -77,6 +80,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexCollision2DDebugDraw;
 	desc.rootParameterIndex = kRootParameterIndexCollision2DDebugDraw;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = false;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	desc.inputLayoutIndex = kInputLayoutIndexNormal;
 	desc.blendStateIndex = kBlendStateIndexAdd;
@@ -91,6 +95,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexLine;
 	desc.rootParameterIndex = kRootParameterIndexLine;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = false;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	desc.inputLayoutIndex = kInputLayoutIndexNone;
 	desc.blendStateIndex = kBlendStateIndexNormal;
@@ -105,6 +110,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexWindowSprite;
 	desc.rootParameterIndex = kRootParameterIndexWindowSprite;
 	desc.samplerIndex = kSamplerIndexPostEffect;
+	desc.depthEnable = false;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	desc.inputLayoutIndex = kInputLayoutIndexNone;
 	desc.blendStateIndex = kBlendStateIndexNormal;
@@ -119,6 +125,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.pipelineStateIndex = kPipelineStateIndexManyModels;
 	desc.rootParameterIndex = kRootParameterIndexManyModels;
 	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	desc.inputLayoutIndex = kInputLayoutIndexModel;
 	desc.blendStateIndex = kBlendStateIndexNormal;
@@ -145,7 +152,7 @@ void GraphicsPipelineState::Create(const CreateDesc& desc)
 	createPSODesc.pipelineStateIndex = desc.pipelineStateIndex;
 
 	createPSODesc.depthStencilState = DepthStencilStateSetting(
-		true,
+		desc.depthEnable,
 		desc.depthWriteMask,
 		D3D12_COMPARISON_FUNC_LESS_EQUAL);
 

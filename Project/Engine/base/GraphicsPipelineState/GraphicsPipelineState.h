@@ -35,6 +35,7 @@ public: // サブクラス
 		PipelineStateIndex pipelineStateIndex; // パイプラインステートの名前
 		RootParameterIndex rootParameterIndex; // ルートパラメータの名前
 		SamplerIndex samplerIndex; // サンプラーの名前
+		bool depthEnable; // 深度値をとるか
 		D3D12_DEPTH_WRITE_MASK  depthWriteMask; // 深度値マスク
 		InputLayoutIndex inputLayoutIndex; // インプットレイアウトの名前
 		BlendStateIndex blendStateIndex; // ブレンドの名前

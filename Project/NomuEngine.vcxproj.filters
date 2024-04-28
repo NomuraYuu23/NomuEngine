@@ -560,7 +560,7 @@
       <Filter>Engine\Physics\Spring</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Animation\LocalMatrixDraw.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1035,11 +1035,11 @@
     <ClInclude Include="Engine\Physics\String.h">
       <Filter>Engine\Physics\Spring</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\LineForGPU.h">
       <Filter>Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
+      <Filter>Engine\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
