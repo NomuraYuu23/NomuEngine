@@ -9,7 +9,6 @@ LargeNumberOfObjects::~LargeNumberOfObjects()
 	objects_.clear();
 
 	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(transformationMatrixesIndexDescriptorHeap_);
-	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(localMatrixesIndexDescriptorHeap_);
 
 }
 
@@ -22,34 +21,10 @@ void LargeNumberOfObjects::Initialize(Model* model)
 	// マテリアル
 	material_.reset(Material::Create());
 
-	// ノードデータ
-	SetNodeDatas(model_->GetRootNode(), -1);
-	uint32_t nodeCount = static_cast<uint32_t>(nodeDatas_.size());
-	assert(nodeCount);
-
 	// ローカル行列
-	localMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(LocalMatrix) + 0xff) & ~0xff) * nodeCount);
-	localMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&localMatrixesMap_));
-
-	for (uint32_t i = 0; i < nodeCount; ++i) {
-		localMatrixesMap_[nodeDatas_[i].meshNum].matrix = Matrix4x4::MakeIdentity4x4();
-	}
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC localMatrixesSrvDesc{};
-	localMatrixesSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	localMatrixesSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	localMatrixesSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	localMatrixesSrvDesc.Buffer.FirstElement = 0;
-	localMatrixesSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	localMatrixesSrvDesc.Buffer.NumElements = static_cast<UINT>(nodeDatas_.size());
-	localMatrixesSrvDesc.Buffer.StructureByteStride = sizeof(LocalMatrix);
-
-	localMatrixesHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
-	localMatrixesHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
-	localMatrixesIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
-	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(localMatrixesBuff_.Get(), &localMatrixesSrvDesc, localMatrixesHandleCPU_);
-
+	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
+	localMatrixManager_->Initialize(model_->GetRootNode());
+\
 	// トランスフォームマトリックス
 	transformationMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(TransformationMatrix) + 0xff) & ~0xff) * kNumInstanceMax_);
 	transformationMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixesMap_));
@@ -90,22 +65,7 @@ void LargeNumberOfObjects::Update()
 void LargeNumberOfObjects::Map(const Matrix4x4& viewProjectionMatrix)
 {
 
-	// ノードデータ
-	for (uint32_t i = 0; i < nodeDatas_.size(); ++i) {
-
-		if (nodeDatas_[i].parentIndex >= 0) {
-			nodeDatas_[i].matrix = Matrix4x4::Multiply(
-				nodeDatas_[i].localMatrix,
-				nodeDatas_[nodeDatas_[i].parentIndex].matrix);
-		}
-		else {
-			nodeDatas_[i].matrix = nodeDatas_[i].localMatrix;
-		}
-
-		localMatrixesMap_[i].matrix = Matrix4x4::Multiply(nodeDatas_[i].offsetMatrix, nodeDatas_[i].matrix);
-		localMatrixesMap_[i].matrixInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(localMatrixesMap_[i].matrix));
-
-	}
+	localMatrixManager_->Map();
 
 	std::list<std::unique_ptr<OneOfManyObjects>>::iterator itr = objects_.begin();
 	uint32_t i = 0;
@@ -120,46 +80,22 @@ void LargeNumberOfObjects::Map(const Matrix4x4& viewProjectionMatrix)
 
 }
 
-void LargeNumberOfObjects::Draw(BaseCamera& camera)
+void LargeNumberOfObjects::Draw(BaseCamera& camera, std::vector<UINT>* textureHnadles)
 {
 
 	Map(camera.GetViewProjectionMatrix());
 
-	//model_->Draw(
-	//	localMatrixesHandleGPU_,
-	//	transformationMatrixesHandleGPU_,
-	//	camera,
-	//	numInstance_,
-	//	material_.get());
 	ModelDraw::ManyAnimObjectsDesc desc;
 	desc.camera = &camera;
-	desc.localMatrixesHandle = &localMatrixesHandleGPU_;
+	desc.localMatrixesHandle = &localMatrixManager_->localMatrixesHandleGPU_;
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.numInstance = numInstance_;
-	//desc.textureHandles;
+	if (textureHnadles) {
+		desc.textureHandles = *textureHnadles;
+	}
 	desc.transformationMatrixesHandle = &transformationMatrixesHandleGPU_;
 	ModelDraw::ManyAnimObjectsDraw(desc);
-
-}
-
-void LargeNumberOfObjects::SetNodeDatas(const ModelNode& modelNode, int32_t parentIndex)
-{
-
-	NodeData nodeData;
-
-	nodeData.localMatrix = modelNode.localMatrix;
-	nodeData.meshNum = modelNode.meshNum;
-	nodeData.name = modelNode.name;
-	nodeData.parentIndex = parentIndex;
-	nodeData.offsetMatrix = modelNode.offsetMatrix;
-	nodeDatas_.push_back(std::move(nodeData));
-
-	int32_t newParentIndex = static_cast<int32_t>(nodeDatas_.size()) - 1;
-
-	for (uint32_t childIndex = 0; childIndex < modelNode.children.size(); ++childIndex) {
-		SetNodeDatas(modelNode.children[childIndex], newParentIndex);
-	}
 
 }
 

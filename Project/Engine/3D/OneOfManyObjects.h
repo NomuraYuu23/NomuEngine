@@ -1,6 +1,7 @@
 #pragma once
 #include "TransformStructure.h"
 #include "../Math/Matrix4x4.h"
+#include "../3D/WorldTransform.h"
 
 class OneOfManyObjects
 {
@@ -29,6 +30,12 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition() { return Vector3(worldMatrix_.m[3][0], worldMatrix_.m[3][1], worldMatrix_.m[3][2]); }
 
+	/// <summary>
+	/// 親設定
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(WorldTransform* parent) { parent_ = parent; }
+
 public:
 
 	//トランスフォーム
@@ -41,6 +48,10 @@ public:
 	bool usedDirection_;
 	// 方向ベクトル
 	Vector3 direction_ = { 0.0f,0.0f,1.0f };
+	//親
+	WorldTransform* parent_ = nullptr;
+	// スケールを考えない
+	Matrix4x4 parentMatrix_;
 
 	// 死んでるか
 	bool isDead_;
