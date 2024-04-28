@@ -47,12 +47,6 @@ void String::Initialize(
 			dampingCoefficient);
 	}
 
-
-	debugLines_.resize(springNum);
-	for (uint32_t i = 0; i < springNum; ++i) {
-		debugLines_[i].reset(DrawLine::Create());
-	}
-
 }
 
 void String::Initialize(Model* model, const Vector3& anchor, float naturalLength, float stiffness, float dampingCoefficient, float mass)
@@ -105,12 +99,6 @@ void String::Initialize(Model* model, const Vector3& anchor, float naturalLength
 			naturalLength,
 			stiffness,
 			dampingCoefficient);
-	}
-
-
-	debugLines_.resize(structuralSpring_.size());
-	for (uint32_t i = 0; i < structuralSpring_.size(); ++i) {
-		debugLines_[i].reset(DrawLine::Create());
 	}
 
 }
@@ -197,14 +185,7 @@ void String::Draw(BaseCamera& camera)
 void String::DebugDraw(BaseCamera& camera)
 {
 
-	for (uint32_t i = 0; i < debugLines_.size(); ++i) {
-		debugLines_[i]->Draw(
-			structuralSpring_[i].GetPoint0().position,
-			structuralSpring_[i].GetPoint1().position,
-			Vector4{ 1.0f,1.0f,1.0f,1.0f },
-			Vector4{ 0.0f,1.0f,1.0f,1.0f },
-			camera);
-	}
+
 
 }
 

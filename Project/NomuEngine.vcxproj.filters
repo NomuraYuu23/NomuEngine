@@ -1038,6 +1038,9 @@
     <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2D\LineForGPU.h">
+      <Filter>Engine\2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

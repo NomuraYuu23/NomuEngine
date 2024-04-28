@@ -104,7 +104,5 @@ private: // 変数(モデル)
 
 private: // デバッグ
 
-	std::vector<std::unique_ptr<DrawLine>> debugLines_;
-
 };
 

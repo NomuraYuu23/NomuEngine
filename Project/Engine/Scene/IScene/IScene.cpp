@@ -17,6 +17,8 @@ bool IScene::isDebugCameraActive_;
 
 RenderTargetTexture* IScene::renderTargetTexture_;
 
+DrawLine* IScene::drawLine_ = nullptr;
+
 void IScene::StaticInitialize()
 {
 
@@ -33,6 +35,12 @@ void IScene::StaticInitialize()
 	debugCamera_ = std::make_unique<DebugCamera>();
 	debugCamera_->Initialize();
 	isDebugCameraActive_ = false;
+	
+	// 線描画
+	drawLine_ = DrawLine::GetInstance();
+	drawLine_->Initialize(dxCommon_->GetDevice(), 
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexLine].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexLine].Get());
 
 }
 

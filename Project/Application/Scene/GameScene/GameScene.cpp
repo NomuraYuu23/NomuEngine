@@ -132,8 +132,6 @@ void GameScene::Initialize() {
 	circle1_ = std::make_unique<Circle>();
 	circle1_->Initialize(circle1Center_, 160.0f, nullptr);
 
-	line_.reset(DrawLine::Create());
-
 	testManyObject_ = std::make_unique<LargeNumberOfObjects>();
 	testManyObject_->Initialize(testModel_.get());
 
@@ -348,19 +346,8 @@ void GameScene::Draw() {
 #pragma endregion
 	
 #pragma region 線描画
-	// 前景スプライト描画前処理
-	DrawLine::PreDraw(dxCommon_->GetCommadList());
 
-	//line_->Draw(testSpring_->GetPoint0().position, testSpring_->GetPoint1().position,
-	//	Vector4{ 1.0f, 1.0f, 1.0f, 1.0f},
-	//	Vector4{ 1.0f, 0.0f, 0.0f, 1.0f }, 
-	//	camera_);
-
-	//testString_->DebugDraw(camera_);
-	//sampleObj_->DebugDraw(camera_);
-
-	// 前景スプライト描画後処理
-	DrawLine::PostDraw();
+	drawLine_->Draw(dxCommon_->GetCommadList(),camera_);
 
 #pragma endregion
 	

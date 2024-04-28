@@ -231,16 +231,16 @@ void RootParameterManager::RootParameterInitializeForLine()
 {
 
 	//RootParameter作成。複数設定できるので配列。
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 	// VP
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//PixelShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
 	// LineForGPU
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDexcriptorRangeIndexLineForGPU].data();//Tableの中身の配列を指定
-	rootParameters[0].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDexcriptorRangeIndexLineForGPU].size());//Tableで利用する数
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//PixelShaderで使う
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRanges_[kDexcriptorRangeIndexLineForGPU].data();//Tableの中身の配列を指定
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[kDexcriptorRangeIndexLineForGPU].size());//Tableで利用する数
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexLine].push_back(rootParameters[i]);

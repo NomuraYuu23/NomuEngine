@@ -45,11 +45,6 @@ void MyFramework::Initialize()
 	// モデル描画
 	ModelDraw::Initialize(rootSignature, pipelineState);
 
-	// 線描画静的初期化
-	DrawLine::StaticInitialize(dxCommon->GetDevice(),
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexLine].Get(),
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexLine].Get());
-
 	// 光源静的初期化
 	DirectionalLight::StaticInitialize(dxCommon->GetDevice());
 	PointLightManager::StaticInitialize(dxCommon->GetDevice());

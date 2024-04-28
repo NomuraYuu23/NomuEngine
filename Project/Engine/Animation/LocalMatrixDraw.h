@@ -31,8 +31,5 @@ private: // 変数
 	// ワールドトランスフォーム
 	WorldTransform* worldTransform_;
 
-	// 線描画
-	std::vector<std::unique_ptr<DrawLine>> drawLines_;
-
 };
 

@@ -67,6 +67,9 @@ protected: // 静的メンバ変数
 	static std::unique_ptr<DebugCamera> debugCamera_;
 	static bool isDebugCameraActive_;
 
+	// 線描画
+	static DrawLine* drawLine_;
+
 public: // メンバ関数
 
 	/// <summary>

@@ -2,125 +2,101 @@
 #include "../base/WinApp.h"
 #include <cassert>
 #include "../base/BufferResource.h"
+#include "../base/SRVDescriptorHerpManager.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-// デバイス
-ID3D12Device* DrawLine::sDevice = nullptr;
-// コマンドリスト
-ID3D12GraphicsCommandList* DrawLine::sCommandList = nullptr;
-// ルートシグネチャ
-ID3D12RootSignature* DrawLine::sRootSignature;
-// パイプラインステートオブジェクト
-ID3D12PipelineState* DrawLine::sPipelineState;
+DrawLine* DrawLine::GetInstance()
+{
 
-void DrawLine::StaticInitialize(ID3D12Device* device, ID3D12RootSignature* rootSignature, ID3D12PipelineState* pipelineState)
+	static DrawLine instance;
+	return &instance;
+
+}
+
+void DrawLine::Initialize(ID3D12Device* device, ID3D12RootSignature* rootSignature, ID3D12PipelineState* pipelineState)
 {
 
 	assert(device);
+	device_ = device;
 
-	sDevice = device;
+	rootSignature_ = rootSignature;
+	pipelineState_ = pipelineState;
 
-	sRootSignature = rootSignature;
-	sPipelineState = pipelineState;
-
-}
-
-void DrawLine::PreDraw(ID3D12GraphicsCommandList* cmdList)
-{
-
-	assert(DrawLine::sCommandList == nullptr);
-
-	sCommandList = cmdList;
-
-	//RootSignatureを設定。
-	sCommandList->SetPipelineState(sPipelineState);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature);
-	//形状を設定。PS0に設定しているものとは別。
-	sCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-
-}
-
-void DrawLine::PostDraw()
-{
-	//コマンドリストを解除
-	DrawLine::sCommandList = nullptr;
-
-}
-
-DrawLine* DrawLine::Create()
-{
-	
-	// Spriteのインスタンスを生成
-	DrawLine* drawLine = new DrawLine();
-	if (drawLine == nullptr) {
-		return nullptr;
-	}
-
-	// 初期化
-	if (!drawLine->Initialize()) {
-		delete drawLine;
-		assert(0);
-		return nullptr;
-	}
-
-	return drawLine;
-
-}
-
-DrawLine::DrawLine()
-{
-
-}
-
-bool DrawLine::Initialize()
-{
-	assert(sDevice);
-
-	//Sprite用の頂点リソースを作る
-	vertBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(ColorVertexData) + 0xff) & ~0xff) * kVertNum);
-
-	//リソースの先頭のアドレスから使う
-	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点6つ分のサイズ
-	vbView_.SizeInBytes = sizeof(ColorVertexData) * kVertNum;
-	//1頂点あたりのサイズ
-	vbView_.StrideInBytes = sizeof(ColorVertexData);
-
+	// lineForGPU用のリソースを作る。
+	lineForGPUBuff_ = BufferResource::CreateBufferResource(device_, ((sizeof(LineForGPU) + 0xff) & ~0xff) * kNumInstanceMax_);
 	//書き込むためのアドレスを取得
-	vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap));
+	lineForGPUBuff_->Map(0, nullptr, reinterpret_cast<void**>(&lineForGPUMap_));
 
-	vertMap[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	vertMap[0].positon = { 0.0f, 0.0f, 0.0f, 1.0f};
-	vertMap[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	vertMap[1].positon = { 0.0f, 0.0f, 0.0f, 1.0f };
+	for (size_t i = 0; i < kNumInstanceMax_; i++) {
+		lineForGPUMap_[i].position[0] = { 0.0f,0.0f,0.0f };
+		lineForGPUMap_[i].position[1] = { 0.0f,0.0f,0.0f };
+		lineForGPUMap_[i].color[0] = { 1.0f,1.0f,1.0f,1.0f };
+		lineForGPUMap_[i].color[1] = { 1.0f,1.0f,1.0f,1.0f };
+	}
 
-	return true;
+	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
+	instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	instancingSrvDesc.Buffer.FirstElement = 0;
+	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	instancingSrvDesc.Buffer.NumElements = kNumInstanceMax_;
+	instancingSrvDesc.Buffer.StructureByteStride = sizeof(LineForGPU);
+	lineForGPUHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	lineForGPUHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(lineForGPUBuff_.Get(), &instancingSrvDesc, lineForGPUHandleCPU_);
+
+	numInstance_ = 0;
 
 }
 
 void DrawLine::Draw(
-	const Vector3& position0,
-	const Vector3& position1,
-	const Vector4& color0,
-	const Vector4& color1,
+	ID3D12GraphicsCommandList* commandList,
 	BaseCamera& camera)
 {
 
-	vertMap[0].color = color0;
-	vertMap[1].color = color1;
-	vertMap[0].positon = { position0.x, position0.y, position0.z, 1.0f };
-	vertMap[1].positon = { position1.x, position1.y, position1.z, 1.0f };
-	
-	// 頂点バッファの設定
-	sCommandList->IASetVertexBuffers(0, 1, &vbView_);
+	// 表示するものがない
+	if (numInstance_ == 0) {
+		return;
+	}
+
+	assert(commandList_ == nullptr);
+	commandList_ = commandList;
+
+	//RootSignatureを設定。
+	commandList_->SetPipelineState(pipelineState_);//PS0を設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//形状を設定。PS0に設定しているものとは別。
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	//VP CBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, camera.GetViewProjectionMatrixBuff()->GetGPUVirtualAddress());
+	commandList_->SetGraphicsRootConstantBufferView(0, camera.GetViewProjectionMatrixBuff()->GetGPUVirtualAddress());
+
+	// LineForGPU
+	commandList_->SetGraphicsRootDescriptorTable(1, lineForGPUHandleGPU_);
 
 	//描画
-	sCommandList->DrawInstanced(kVertNum, 1, 0, 0);
+	commandList_->DrawInstanced(kVertNum_, numInstance_, 0, 0);
 
+	//コマンドリストを解除
+	DrawLine::commandList_ = nullptr;
+
+	// 次フレームのために0に
+	numInstance_ = 0;
+
+}
+
+void DrawLine::Map(const LineForGPU& lineForGPU)
+{
+
+	assert(numInstance_ == kNumInstanceMax_);
+
+	lineForGPUMap_[numInstance_] = lineForGPU;
+
+	numInstance_++;
 
 }

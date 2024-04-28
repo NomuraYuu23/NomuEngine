@@ -10,91 +10,85 @@
 #include "../2D/ColorVertexData.h"
 #include "../Math/Matrix4x4.h"
 #include "../Camera/BaseCamera.h"
+#include "LineForGPU.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 class DrawLine
 {
 
-public:
+public: // 関数
 
 	/// <summary>
-	/// 静的初期化
+	/// インスタンス取得
+	/// </summary>
+	/// <returns></returns>
+	static DrawLine* GetInstance();
+
+	/// <summary>
+	/// 初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	/// <param name="rootSignature">ルートシグネチャ</param>
 	/// <param name="pipelineState">パイプラインステート</param>
-	static void StaticInitialize(
+	void Initialize(
 		ID3D12Device* device,
 		ID3D12RootSignature* rootSignature,
 		ID3D12PipelineState* pipelineState);
 
 	/// <summary>
-	/// 静的前処理
-	/// </summary>
-	/// <param name="cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
-	static void PostDraw();
-
-	/// <summary>
-	/// 線を作る
-	/// </summary>
-	/// <returns></returns>
-	static DrawLine* Create();
-
-private:
-
-	// 頂点数
-	static const int kVertNum = 2;
-	// デバイス
-	static ID3D12Device* sDevice;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* sCommandList;
-	// ルートシグネチャ
-	static ID3D12RootSignature* sRootSignature;
-	// パイプラインステートオブジェクト
-	static ID3D12PipelineState* sPipelineState;
-
-public:
-	
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	DrawLine();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <returns>成否</returns>
-	bool Initialize();
-
-	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="position1">位置0</param>
-	/// <param name="position2">位置1</param>
-	/// <param name="color0">色0</param>
-	/// <param name="color1">色1</param>
+	/// <param name="commandList">コマンドリスト</param>
 	/// <param name="camera">カメラ</param>
 	void Draw(
-		const Vector3& position0,
-		const Vector3& position1,
-		const Vector4& color0,
-		const Vector4& color1,
+		ID3D12GraphicsCommandList* commandList,
 		BaseCamera& camera);
+
+	/// <summary>
+	/// マップ
+	/// </summary>
+	/// <param name="lineForGPU">線情報</param>
+	void Map(const LineForGPU& lineForGPU);
 
 private:
 
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	// 頂点バッファマップ
-	ColorVertexData* vertMap = nullptr;
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
+	//lineForGPU用のリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> lineForGPUBuff_;
+	//書き込むためのアドレスを取得
+	LineForGPU* lineForGPUMap_{};
+	// CPUハンドル
+	D3D12_CPU_DESCRIPTOR_HANDLE lineForGPUHandleCPU_;
+	// GPUハンドル
+	D3D12_GPU_DESCRIPTOR_HANDLE lineForGPUHandleGPU_;
+	// ディスクリプタヒープの位置
+	uint32_t indexDescriptorHeap_ = 0;
+
+	// 頂点数
+	const int kVertNum_ = 2;
+	// デバイス
+	 ID3D12Device* device_;
+	// コマンドリスト
+	 ID3D12GraphicsCommandList* commandList_;
+	// ルートシグネチャ
+	ID3D12RootSignature* rootSignature_;
+	// パイプラインステートオブジェクト
+	ID3D12PipelineState* pipelineState_;
+	
+	// インスタンス数
+	uint32_t numInstance_;
+
+public: // 静的メンバ変数
+
+	// 線最大数
+	const uint32_t kNumInstanceMax_ = 1024;
+
+private: // メンバ変数
+
+	DrawLine() = default;
+	~DrawLine() = default;
+	DrawLine(const DrawLine&) = delete;
+	const DrawLine& operator=(const DrawLine&) = delete;
 
 };
 
