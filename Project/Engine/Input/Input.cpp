@@ -57,9 +57,6 @@ void Input::Initialize(HINSTANCE hInstance, HWND hwnd) {
 	// ジョイスティックの生成
 	JoystickConnected(hwnd);
 
-	//デッドゾーン設定
-	deadZone = 15000.0f;
-
 }
 
 /// <summary>
@@ -333,24 +330,24 @@ bool Input::ReleaseJoystick(uint8_t joystickNumber) {
 
 }
 
-Vector2 Input::GetLeftAnalogstick() {
+Vector2 Input::GetLeftAnalogstick(float deadZone) {
 	
 	if (usedXInput_) {
-		return XGetLeftAnalogstick();
+		return XGetLeftAnalogstick(deadZone);
 	}
 	else {
-		return DirectGetLeftAnalogstick();
+		return DirectGetLeftAnalogstick(deadZone);
 	}
 
 }
 
-Vector2 Input::GetRightAnalogstick() {
+Vector2 Input::GetRightAnalogstick(float deadZone) {
 	
 	if (usedXInput_) {
-		return XGetRightAnalogstick();
+		return XGetRightAnalogstick(deadZone);
 	}
 	else {
-		return DirectGetRightAnalogstick();
+		return DirectGetRightAnalogstick(deadZone);
 	}
 
 }
@@ -486,17 +483,17 @@ bool Input::XReleaseJoystick(uint8_t joystickNumber)
 
 }
 
-Vector2 Input::XGetLeftAnalogstick()
+Vector2 Input::XGetLeftAnalogstick(float deadZone)
 {
 
 	Vector2 sThumbL = { float(xJoystickState_.Gamepad.sThumbLX), float(-xJoystickState_.Gamepad.sThumbLY) };
 
-	if (sThumbL.x < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-		sThumbL.x > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) {
+	if (sThumbL.x < deadZone &&
+		sThumbL.x > -deadZone) {
 		sThumbL.x = 0.0f;
 	}
-	if (sThumbL.y < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-		sThumbL.y > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) {
+	if (sThumbL.y < deadZone &&
+		sThumbL.y > -deadZone) {
 		sThumbL.y = 0.0f;
 	}
 
@@ -504,17 +501,17 @@ Vector2 Input::XGetLeftAnalogstick()
 
 }
 
-Vector2 Input::XGetRightAnalogstick()
+Vector2 Input::XGetRightAnalogstick(float deadZone)
 {
 
 	Vector2 sThumbR = { float(xJoystickState_.Gamepad.sThumbRX), float(-xJoystickState_.Gamepad.sThumbRY) };
 
-	if (sThumbR.x < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && 
-		sThumbR.x > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
+	if (sThumbR.x < deadZone &&
+		sThumbR.x > -deadZone) {
 		sThumbR.x = 0.0f;
 	}
-	if (sThumbR.y < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
-		sThumbR.y > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
+	if (sThumbR.y < deadZone &&
+		sThumbR.y > -deadZone) {
 		sThumbR.y = 0.0f;
 	}
 
@@ -680,7 +677,7 @@ bool Input::DirectReleaseJoystick(uint8_t joystickNumber) const
 	return false;
 }
 
-Vector2 Input::DirectGetLeftAnalogstick() const
+Vector2 Input::DirectGetLeftAnalogstick(float deadZone) const
 {
 	if (!joystickConnected) {
 		return Vector2(0.0f, 0.0f);
@@ -698,7 +695,7 @@ Vector2 Input::DirectGetLeftAnalogstick() const
 	return result;
 }
 
-Vector2 Input::DirectGetRightAnalogstick() const
+Vector2 Input::DirectGetRightAnalogstick(float deadZone) const
 {
 	if (!joystickConnected) {
 		return Vector2(0.0f, 0.0f);

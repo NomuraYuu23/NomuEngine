@@ -166,14 +166,16 @@ public:
 	/// <summary>
 	/// 左のアナログスティックの状態を取得
 	/// </summary>
-	/// <returns>0~</returns>
-	Vector2 GetLeftAnalogstick();
+	/// <param name="deadZone">デッドゾーン</param>
+	/// <returns></returns>
+	Vector2 GetLeftAnalogstick(float deadZone = static_cast<float>(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE));
 
 	/// <summary>
 	/// 右のアナログスティックの状態を取得
 	/// </summary>
+	/// <param name="deadZone">デッドゾーン</param>
 	/// <returns></returns>
-	Vector2 GetRightAnalogstick();
+	Vector2 GetRightAnalogstick(float deadZone = static_cast<float>(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE));
 
 	/// <summary>
 	/// 左右のトリガーの状態を取得()
@@ -243,14 +245,16 @@ private: //XInput
 	/// <summary>
 	/// 左のアナログスティックの状態を取得
 	/// </summary>
+	/// <param name="deadZone">デッドゾーン</param>
 	/// <returns>0~</returns>
-	Vector2 XGetLeftAnalogstick();
+	Vector2 XGetLeftAnalogstick(float deadZone);
 
 	/// <summary>
 	/// 右のアナログスティックの状態を取得
 	/// </summary>
+	/// <param name="deadZone">デッドゾーン</param>
 	/// <returns></returns>
-	Vector2 XGetRightAnalogstick();
+	Vector2 XGetRightAnalogstick(float deadZone);
 
 	/// <summary>
 	/// 
@@ -316,14 +320,16 @@ private: //directInput
 	/// <summary>
 	/// 左のアナログスティックの状態を取得
 	/// </summary>
-	/// <returns>0~</returns>
-	Vector2 DirectGetLeftAnalogstick() const;
-
+	/// <param name="deadZone">デッドゾーン</param>
+	/// <returns></returns>
+	Vector2 DirectGetLeftAnalogstick(float deadZone) const;
+	
 	/// <summary>
 	/// 右のアナログスティックの状態を取得
 	/// </summary>
+	/// <param name="deadZone">デッドゾーン</param>
 	/// <returns></returns>
-	Vector2 DirectGetRightAnalogstick() const;
+	Vector2 DirectGetRightAnalogstick(float deadZone) const;
 
 	/// <summary>
 	/// 左右のトリガーの状態を取得()
@@ -369,8 +375,6 @@ private:
 	bool usedXInput_ = true;
 	//つながっているかどうか
 	bool joystickConnected;
-	//スティックのデッドゾーン
-	float deadZone;
 
 };
 
