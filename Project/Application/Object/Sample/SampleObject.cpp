@@ -82,9 +82,6 @@ void SampleObject::Initialize(Model* model)
 
 	velocity_ = { 1.0f,0.0f,0.0f };
 
-	localMatrixDraw_ = std::make_unique<LocalMatrixDraw>();
-	localMatrixDraw_->Initialize(localMatrixManager_.get(), &worldTransform_);
-
 }
 
 void SampleObject::Update()
@@ -160,7 +157,10 @@ void SampleObject::ImGuiDraw()
 void SampleObject::DebugDrawMap(DrawLine* drawLine)
 {
 
-	localMatrixDraw_->DrawMap(drawLine);
+	LocalMatrixDraw::DrawMap(
+		localMatrixManager_.get(),
+		&worldTransform_,
+		drawLine);
 
 }
 

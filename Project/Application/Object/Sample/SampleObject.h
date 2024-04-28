@@ -69,8 +69,5 @@ private:
 
 	Vector3 velocity_;
 
-	// 仮
-	std::unique_ptr<LocalMatrixDraw> localMatrixDraw_;
-
 };
 
