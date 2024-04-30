@@ -34,15 +34,6 @@ void TitleScene::Initialize()
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
-	//アウトライン
-	outline_.Initialize();
-	outline_.Map();
-
-	//glare_ = std::make_unique<Glare>();
-	//std::array<uint32_t, Glare::kImageForGlareIndexOfCount> test;
-	//test[0] = TextureManager::GetInstance()->Load("Resources/postEffect/zp800x800.png",dxCommon_, textureHandleManager_.get());
-	//glare_->Initialize(test);
-
 }
 
 void TitleScene::Update()

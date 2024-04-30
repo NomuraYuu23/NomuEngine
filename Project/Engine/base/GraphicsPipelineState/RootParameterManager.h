@@ -33,7 +33,6 @@ enum RootParameterIndex {
 	kRootParameterIndexModel, // モデル
 	kRootParameterIndexSprite, // スプライト
 	kRootParameterIndexParticle, // パーティクル
-	kRootParameterIndexOutLine, // アウトライン
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexWindowSprite, // ウィンドウスプライト
@@ -73,11 +72,6 @@ private: // 関数
 	/// パーティクル
 	/// </summary>	
 	static void RootParameterInitializeForParticle();
-
-	/// <summary>
-	/// アウトライン
-	/// </summary>	
-	static void RootParameterInitializeForOutLine();
 
 	/// <summary>
 	/// コライダーデバッグ2D

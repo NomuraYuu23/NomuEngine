@@ -163,9 +163,6 @@
     <Filter Include="shaders\Line">
       <UniqueIdentifier>{d0b2d68d-ef6e-4a33-aab1-23dd984656c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\OutLine">
-      <UniqueIdentifier>{93bb0985-6574-4a4b-ad28-c695d75abd21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\Patrticle">
       <UniqueIdentifier>{8a770c6d-962d-4bbb-a0cf-609fc3c270e1}</UniqueIdentifier>
     </Filter>
@@ -387,9 +384,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Math\Quaternion.cpp">
       <Filter>Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\OutLineData.cpp">
-      <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.cpp">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
@@ -813,9 +807,6 @@
     <ClInclude Include="Application\Collider\CollisionConfig.h">
       <Filter>Application\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\OutLineData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\GraphicsPipelineState\GraphicsPipelineState.h">
       <Filter>Engine\Base\GraphicsPipelineState</Filter>
     </ClInclude>
@@ -1090,12 +1081,6 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\Line.VS.hlsl">
       <Filter>shaders\Line</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\OutLine3D.VS.hlsl">
-      <Filter>shaders\OutLine</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\OutLine3D.PS.hlsl">
-      <Filter>shaders\OutLine</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
       <Filter>shaders\Patrticle</Filter>

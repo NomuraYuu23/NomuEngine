@@ -64,8 +64,5 @@ private: // メンバ変数
 	std::unique_ptr<Model> skydomeModel_;
 	bool isDrawSkydome_ = true;
 
-	//アウトライン仮
-	OutLineData outline_;
-
 };
 

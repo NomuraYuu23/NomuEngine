@@ -25,8 +25,6 @@ void RootParameterManager::Initialize()
 	RootParameterInitializeForSprite();
 	// パーティクル
 	RootParameterInitializeForParticle();
-	// アウトライン
-	RootParameterInitializeForOutLine();
 	// コライダーデバッグ2D
 	RootParameterInitializeForCollision2DDebugDraw();
 	// 線
@@ -167,30 +165,6 @@ void RootParameterManager::RootParameterInitializeForParticle()
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexParticle].push_back(rootParameters[i]);
-	}
-
-}
-
-void RootParameterManager::RootParameterInitializeForOutLine()
-{
-
-	//RootParameter作成。複数設定できるので配列。今回は1つだけなので長さ1の配列
-	D3D12_ROOT_PARAMETER rootParameters[3] = {};
-	//color
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParameters[0].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
-	//transform
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//PixelShaderで使う
-	rootParameters[1].Descriptor.ShaderRegister = 0;                   //レジスタ番号0とバインド
-	//lineWidth
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//PixelShaderで使う
-	rootParameters[2].Descriptor.ShaderRegister = 1;                   //レジスタ番号0とバインド
-
-	for (uint32_t i = 0; i < 3; ++i) {
-		rootParameters_[kRootParameterIndexOutLine].push_back(rootParameters[i]);
 	}
 
 }

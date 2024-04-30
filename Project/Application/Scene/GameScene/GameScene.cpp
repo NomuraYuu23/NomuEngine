@@ -49,10 +49,6 @@ void GameScene::Initialize() {
 	collisionManager_.reset(new CollisionManager);
 	collisionManager_->Initialize();
 
-	//UIマネージャー
-	//uiManager_ = std::make_unique<UIManager>();
-	//uiManager_->Initialize(uiTextureHandles_);
-
 	// オーディオマネージャー
 	audioManager_ = std::make_unique<GameAudioManager>();
 	audioManager_->Initialize();
@@ -61,14 +57,6 @@ void GameScene::Initialize() {
 	// スカイドーム
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
-
-
-	outline_.Initialize();
-	outline_.color_ = { 0.8f,0.4f,0.1f,1.0f };
-
-	//影
-	//shadowManager_ = std::make_unique<ShadowManager>();
-	//shadowManager_->Initialize(shadowModel_.get());
 
 	// 平行光源
 	directionalLight_ = std::make_unique<DirectionalLight>();
@@ -230,10 +218,6 @@ void GameScene::Update() {
 
 	//パーティクル
 	particleManager_->Update(camera_);
-
-	//アウトライン
-	outline_.Map();
-
 
 	time = std::fmodf(time + kDeltaTime_  * 10.0f, 50.0f);
 	PostEffect::GetInstance()->SetTime(time + 40.0f);

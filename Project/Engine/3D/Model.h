@@ -31,7 +31,6 @@
 #include "../Camera/BaseCamera.h"
 
 #include "../base/ITextureHandleManager.h"
-#include "OutLineData.h"
 #include "../Light/PointLight/PointLightManager.h"
 #include "../Light/SpotLight/SpotLightManager.h"
 #include "../Light/DirectionalLight/DirectionalLight.h"

@@ -85,10 +85,6 @@ private:
 
 	std::unique_ptr<CollisionManager> collisionManager_;
 
-	// UIマネージャー
-	//std::unique_ptr<UIManager> uiManager_;
-	//std:::array<uint32_t, UITextureHandleIndex::kUITextureHandleIndexOfCount> uiTextureHandles_;
-
 	// オーディオマネージャー
 	std::unique_ptr<GameAudioManager> audioManager_;
 	bool isDecreasingVolume = true;
@@ -96,13 +92,6 @@ private:
 	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Model> skydomeModel_;
-
-	//アウトライン仮
-	OutLineData outline_;
-
-	//影
-	//std::unique_ptr<ShadowManager> shadowManager_;
-	//std::unique_ptr<Model> shadowModel_;
 
 	// サンプルOBJ
 	std::unique_ptr<SampleObject> sampleObj_;
