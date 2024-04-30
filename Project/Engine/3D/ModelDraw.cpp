@@ -138,6 +138,65 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 
 }
 
+void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
+{
+
+	// nullptrチェック
+	assert(sCommandList);
+
+	// ワールドトランスフォームマップ処理
+	desc.worldTransform->Map(desc.camera->GetViewProjectionMatrix());
+
+	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView());
+
+	//マテリアルCBufferの場所を設定
+	if (desc.material) {
+		sCommandList->SetGraphicsRootConstantBufferView(0, desc.material->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+	else {
+		sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+
+	// 平行光源
+	if (sDirectionalLight_) {
+		sDirectionalLight_->Draw(sCommandList, 1);
+	}
+
+	// カメラCBufferの場所を設定
+	sCommandList->SetGraphicsRootConstantBufferView(2, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
+
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootConstantBufferView(3, desc.worldTransform->GetTransformationMatrixBuff()->GetGPUVirtualAddress());
+
+	//テクスチャ
+	if (desc.textureHandles.empty()) {
+		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 4 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+		}
+	}
+	else {
+		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 4 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+	}
+
+	// ポイントライト
+	if (sPointLightManager_) {
+		sPointLightManager_->Draw(sCommandList, 8);
+	}
+	// スポットライト
+	if (sSpotLightManager_) {
+		sSpotLightManager_->Draw(sCommandList, 9);
+	}
+
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(10, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+
+	//描画
+	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
+
+}
+
 void ModelDraw::ParticleDraw(ParticleDesc& desc)
 {
 	// nullptrチェック

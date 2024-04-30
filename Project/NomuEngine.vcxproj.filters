@@ -196,6 +196,9 @@
     <Filter Include="Engine\Physics\Spring">
       <UniqueIdentifier>{fef9c416-87d2-42ab-b9b5-96af10df57bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\Object3d\PS_hlsli">
+      <UniqueIdentifier>{1b43a9a2-59fa-4115-8115-a056a32a5003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -1041,9 +1044,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="NomuEngine.vcxproj.user" />
-    <None Include="resources\shaders\Object3d.hlsli">
-      <Filter>shaders\Object3d</Filter>
-    </None>
     <None Include="Resources\shaders\Collider2DDebug.hlsli">
       <Filter>shaders\Collider2DDebug</Filter>
     </None>
@@ -1062,12 +1062,12 @@
     <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
+    <None Include="resources\shaders\Object3d.hlsli">
+      <Filter>shaders\Object3d\PS_hlsli</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
+    <FxCompile Include="resources\shaders\AnimModel.VS.hlsl">
       <Filter>shaders\Object3d</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
@@ -1103,14 +1103,17 @@
     <FxCompile Include="Resources\shaders\ManyModels.VS.hlsl">
       <Filter>shaders\Object3d</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
-      <Filter>shaders\Object3d</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectCalc.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
+      <Filter>shaders\Object3d\PS_hlsli</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\NormalModel.VS.hlsl">
+      <Filter>shaders\Object3d</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

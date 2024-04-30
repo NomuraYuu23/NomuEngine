@@ -20,7 +20,11 @@ public: // サブクラス
 
 	// パイプラインの名前
 	enum PipelineStateIndex {
-		kPipelineStateIndexModel, // モデル
+		kPipelineStateIndexAnimModel, // アニメーションモデル
+		kPipelineStateIndexNormalModel, // アニメーション無しモデル
+
+
+
 		kPipelineStateIndexSprite, //スプライト
 		kPipelineStateIndexParticle, // パーティクル
 		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D

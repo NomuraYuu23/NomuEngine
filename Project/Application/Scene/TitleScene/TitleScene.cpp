@@ -81,7 +81,7 @@ void TitleScene::Draw()
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
 	preDrawDesc.directionalLight = nullptr;
 	preDrawDesc.fogManager = FogManager::GetInstance();
-	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimObject;
+	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimModel;
 	preDrawDesc.pointLightManager = nullptr;
 	preDrawDesc.spotLightManager = nullptr;
 

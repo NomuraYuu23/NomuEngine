@@ -13,7 +13,8 @@ public: // サブクラス
 
 	// パイプライン番号
 	enum PipelineStateIndex {
-		kPipelineStateIndexAnimObject, // アニメーションオブジェクト
+		kPipelineStateIndexAnimModel, // アニメーションモデル
+		kPipelineStateIndexNormalModel, // アニメーション無しモデル
 		kPipelineStateIndexParticle, // パーティクル
 		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト
 		kPipelineStateIndexOfCount
@@ -36,6 +37,16 @@ public: // サブクラス
 		Model* model; //モデル
 		WorldTransform* worldTransform; // ワールドトランスフォーム
 		LocalMatrixManager* localMatrixManager;// ローカル行列マネージャー
+		BaseCamera* camera; // カメラ
+		Material* material; // マテリアル(なくてもいい)
+		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
+	};
+
+	// アニメーション無しオブジェクト引数
+	struct NormalObjectDesc
+	{
+		Model* model; //モデル
+		WorldTransform* worldTransform; // ワールドトランスフォーム
 		BaseCamera* camera; // カメラ
 		Material* material; // マテリアル(なくてもいい)
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
@@ -106,6 +117,12 @@ public: // 描画
 	/// </summary>
 	/// <param name="desc">アニメーションオブジェクト引数</param>
 	static void AnimObjectDraw(AnimObjectDesc& desc);
+
+	/// <summary>
+	/// アニメーション無しオブジェクト
+	/// </summary>
+	/// <param name="desc">アニメーション無しオブジェクト引数</param>
+	static void NormalObjectDraw(NormalObjectDesc& desc);
 
 	/// <summary>
 	/// パーティクル
