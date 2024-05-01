@@ -24,7 +24,6 @@ public: // サブクラス
 	struct PreDrawDesc
 	{
 		ID3D12GraphicsCommandList* commandList; // コマンドリスト
-		PipelineStateIndex pipelineStateIndex; // パイプライン番号
 		DirectionalLight* directionalLight; // 平行光源
 		PointLightManager* pointLightManager; // ポイントライト
 		SpotLightManager* spotLightManager; // スポットライト
@@ -116,6 +115,12 @@ public: // 描画
 	/// </summary>
 	/// <param name="desc">アニメーション無しオブジェクト引数</param>
 	static void NormalObjectDraw(NormalObjectDesc& desc);
+
+	/// <summary>
+	/// アニメーション反転オブジェクト
+	/// </summary>
+	/// <param name="desc">アニメーションオブジェクト引数</param>
+	static void AnimInverseObjectDraw(AnimObjectDesc& desc);
 
 	/// <summary>
 	/// 複数のアニメーションオブジェクト

@@ -49,13 +49,12 @@ void Skydome::Update() {
 /// <param name="viewProjection">ビュープロジェクション</param>
 void Skydome::Draw(BaseCamera& camera) {
 
-	ModelDraw::AnimObjectDesc desc;
+	ModelDraw::NormalObjectDesc desc;
 	desc.camera = &camera;
-	desc.localMatrixManager = localMatrixManager_.get();
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.worldTransform = &worldTransform_;
-	ModelDraw::AnimObjectDraw(desc);
+	ModelDraw::NormalObjectDraw(desc);
 
 }
 

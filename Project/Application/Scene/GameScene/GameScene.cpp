@@ -253,7 +253,6 @@ void GameScene::Draw() {
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
 	preDrawDesc.directionalLight = directionalLight_.get();
 	preDrawDesc.fogManager = FogManager::GetInstance();
-	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexAnimModel;
 	preDrawDesc.pointLightManager = pointLightManager_.get();
 	preDrawDesc.spotLightManager = spotLightManager_.get();
 
@@ -267,31 +266,6 @@ void GameScene::Draw() {
 
 	// 紐
 	testString_->Draw(camera_);
-
-	ModelDraw::PostDraw();
-
-	//preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexNormalModel;
-	//ModelDraw::PreDraw(preDrawDesc);
-
-	////Obj
-	//sampleObj_->Draw(camera_);
-
-	//ModelDraw::PostDraw();
-
-#ifdef _DEBUG
-
-	// デバッグ描画
-	//colliderDebugDraw_->Draw(camera_);
-
-#endif // _DEBUG
-
-	ModelDraw::PostDraw();
-
-#pragma endregion
-
-#pragma region 複数のモデル描画
-	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexManyAnimObjects;
-	ModelDraw::PreDraw(preDrawDesc);
 
 	//testManyObject_->Draw(camera_);
 
