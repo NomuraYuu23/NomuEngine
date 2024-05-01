@@ -16,7 +16,6 @@ public: // サブクラス
 		kPipelineStateIndexAnimModel, // アニメーションモデル
 		kPipelineStateIndexNormalModel, // アニメーション無しモデル
 		kPipelineStateIndexAnimInverseModel, // アニメーション反転モデル(右手座標系)
-		kPipelineStateIndexParticle, // パーティクル
 		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト
 		kPipelineStateIndexOfCount
 	};
@@ -51,13 +50,6 @@ public: // サブクラス
 		BaseCamera* camera; // カメラ
 		Material* material; // マテリアル(なくてもいい)
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
-	};
-
-	// パーティクル引数
-	struct ParticleDesc 
-	{
-		Model* model; //モデル
-		ParticleManager* particleManager; // パーティクルマネージャー
 	};
 
 	// 複数のアニメーションオブジェクト
@@ -124,12 +116,6 @@ public: // 描画
 	/// </summary>
 	/// <param name="desc">アニメーション無しオブジェクト引数</param>
 	static void NormalObjectDraw(NormalObjectDesc& desc);
-
-	/// <summary>
-	/// パーティクル
-	/// </summary>
-	/// <param name="desc">パーティクル引数</param>
-	static void ParticleDraw(ParticleDesc& desc);
 
 	/// <summary>
 	/// 複数のアニメーションオブジェクト

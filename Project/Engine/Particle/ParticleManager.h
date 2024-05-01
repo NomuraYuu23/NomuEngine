@@ -20,7 +20,6 @@ public: // サブクラス
 
 	struct StartInstanceId {
 		int32_t num;
-		//float padding[3];
 	};
 
 	//パーティクルリスト
@@ -54,7 +53,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	/// <param name="rootSignature">ルートシグネチャ</param>
+	/// <param name="pipelineState">パイプライン</param>
+	void Initialize(ID3D12RootSignature* rootSignature,
+		ID3D12PipelineState* pipelineState);
 
 	/// <summary>
 	/// SRVを作る
@@ -69,8 +71,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Draw(const Matrix4x4& viewProjectionMatrix);
+	/// <param name="viewProjectionMatrix">ビュープロジェクション行列</param>
+	/// <param name="commandList">コマンドリスト</param>
+	void Draw(const Matrix4x4& viewProjectionMatrix,
+		ID3D12GraphicsCommandList* commandList);
 
 	/// <summary>
 	/// マッピング
@@ -123,28 +127,7 @@ public: // メンバ関数
 	/// </summary>
 	void DeadDelete();
 
-public: // アクセッサ
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetInstancingSrvHandleCPU() { return instancingSrvHandleCPU_; }
-
-	D3D12_GPU_DESCRIPTOR_HANDLE GetInstancingSrvHandleGPU() { return instancingSrvHandleGPU_; }
-
-	ParticleForGPU* GetParticleForGPUMap() { return particleForGPUMap_; }
-
-	ID3D12Resource* GetParticleForGPUBuff() { return particleForGPUBuff_.Get(); }
-
-	uint32_t GetCurrentInstanceIndex() { return particleDatas_[currentModel_].instanceIndex_; }
-
-	Matrix4x4 GetBillBoardMatrix() { return billBoardMatrix_; }
-
-	ID3D12Resource* GetCurrentStartInstanceIdBuff() { return particleDatas_[currentModel_].startInstanceIdBuff_.Get(); }
-
 private: // メンバ変数
-
-	ParticleManager() = default;
-	~ParticleManager() = default;
-	ParticleManager(const ParticleManager&) = delete;
-	const ParticleManager& operator=(const ParticleManager&) = delete;
 
 	//WVP用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> particleForGPUBuff_;
@@ -167,8 +150,17 @@ private: // メンバ変数
 	// エミッタ
 	std::list<IEmitter*> emitters_;
 
-	// 現在のモデル
-	uint32_t currentModel_ = 0u;
+	// ルートシグネチャ
+	ID3D12RootSignature* rootSignature_;
+	// パイプラインステートオブジェクト
+	ID3D12PipelineState* pipelineState_;
+
+private: // シングルトン
+
+	ParticleManager() = default;
+	~ParticleManager() = default;
+	ParticleManager(const ParticleManager&) = delete;
+	const ParticleManager& operator=(const ParticleManager&) = delete;
 
 };
 

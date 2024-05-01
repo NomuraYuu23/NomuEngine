@@ -197,33 +197,6 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 
 }
 
-void ModelDraw::ParticleDraw(ParticleDesc& desc)
-{
-	// nullptrチェック
-	assert(sCommandList);
-
-	ParticleManager* particleManager = ParticleManager::GetInstance();
-
-	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView()); //VBVを設定
-
-	//マテリアルを設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
-
-	// 開始位置を設定
-	sCommandList->SetGraphicsRootConstantBufferView(3, particleManager->GetCurrentStartInstanceIdBuff()->GetGPUVirtualAddress());
-
-	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-	for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
-		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, desc.model->GetTextureHandles()[i]);
-	}
-
-	sCommandList->SetGraphicsRootDescriptorTable(1, particleManager->GetInstancingSrvHandleGPU());
-
-	//描画
-	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), particleManager->GetCurrentInstanceIndex(), 0, 0);
-
-}
-
 void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 {
 

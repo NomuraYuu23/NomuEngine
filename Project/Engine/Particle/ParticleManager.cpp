@@ -7,7 +7,9 @@
 #include "../base/SRVDescriptorHerpManager.h"
 #include "../3D/ModelDraw.h"
 
-uint32_t ParticleManager::kNumInstanceMax_ = 32768;
+#include <cassert>
+
+uint32_t ParticleManager::kNumInstanceMax_ = 1024;
 
 ParticleManager* ParticleManager::GetInstance()
 {
@@ -16,8 +18,12 @@ ParticleManager* ParticleManager::GetInstance()
 	
 }
 
-void ParticleManager::Initialize()
+void ParticleManager::Initialize(ID3D12RootSignature* rootSignature,
+	ID3D12PipelineState* pipelineState)
 {
+
+	rootSignature_ = rootSignature;
+	pipelineState_ = pipelineState;
 
 	//WVP用のリソースを作る。
 	particleForGPUBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(ParticleForGPU) + 0xff) & ~0xff) * kNumInstanceMax_);
@@ -79,17 +85,44 @@ void ParticleManager::Update(BaseCamera& camera)
 
 }
 
-void ParticleManager::Draw(const Matrix4x4& viewProjectionMatrix)
+void ParticleManager::Draw(const Matrix4x4& viewProjectionMatrix, ID3D12GraphicsCommandList* commandList)
 {
+
+	assert(commandList);
 
 	Map(viewProjectionMatrix);
 
-	ModelDraw::ParticleDesc desc;
-	desc.particleManager = this;
+	//RootSignatureを設定。
+	commandList->SetPipelineState(pipelineState_);//PS0を設定
+	commandList->SetGraphicsRootSignature(rootSignature_);
+
+	// SRV
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//形状を設定。PS0に設定しているものとは別。
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
-		currentModel_ = i;
-		desc.model = particleDatas_[i].model_;
-		ModelDraw::ParticleDraw(desc);
+
+		commandList->IASetVertexBuffers(0, 1, particleDatas_[i].model_->GetMesh()->GetVbView()); //VBVを設定
+
+		//マテリアルを設定
+		commandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
+
+		// 開始位置を設定
+		commandList->SetGraphicsRootConstantBufferView(3, particleDatas_[i].startInstanceIdBuff_->GetGPUVirtualAddress());
+
+		//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
+		for (size_t j = 0; j < particleDatas_[i].model_->GetModelData().material.textureFilePaths.size(); ++j) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(commandList, 2, particleDatas_[i].model_->GetTextureHandles()[j]);
+		}
+
+		commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+
+		//描画
+		commandList->DrawInstanced(UINT(particleDatas_[i].model_->GetModelData().vertices.size()), particleDatas_[i].instanceIndex_, 0, 0);
+
 	}
 
 }

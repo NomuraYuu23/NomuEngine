@@ -307,13 +307,8 @@ void GameScene::Draw() {
 	
 #pragma region パーティクル描画
 
-	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexParticle;
-	ModelDraw::PreDraw(preDrawDesc);
-
 	// パーティクルはここ
-	particleManager_->Draw(camera_.GetViewProjectionMatrix());
-
-	ModelDraw::PostDraw();
+	particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
 
 #pragma endregion
 
