@@ -80,6 +80,9 @@ public:
 	// 霧マネージャー
 	static FogManager* sFogManager_;
 
+	// 現在のパイプライン番号
+	static PipelineStateIndex currentPipelineStateIndex_;
+
 public: //関数（描画以外）
 
 	/// <summary>

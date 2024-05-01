@@ -19,6 +19,8 @@ PointLightManager* ModelDraw::sPointLightManager_ = nullptr;
 SpotLightManager* ModelDraw::sSpotLightManager_ = nullptr;
 // 霧マネージャー
 FogManager* ModelDraw::sFogManager_ = nullptr;
+// 現在のパイプライン番号
+ModelDraw::PipelineStateIndex ModelDraw::currentPipelineStateIndex_ = kPipelineStateIndexOfCount;
 
 void ModelDraw::Initialize(
 	const std::array<ID3D12RootSignature*, PipelineStateIndex::kPipelineStateIndexOfCount>& rootSignature,
@@ -65,6 +67,8 @@ void ModelDraw::PostDraw()
 	sSpotLightManager_ = nullptr;
 	sFogManager_ = nullptr;
 
+	currentPipelineStateIndex_ = kPipelineStateIndexOfCount;
+
 }
 
 void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
@@ -76,8 +80,12 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 	// ワールドトランスフォームマップ処理
 	desc.worldTransform->Map(desc.camera->GetViewProjectionMatrix());
 
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimModel]);
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexAnimModel) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimModel;
+	}
 
 	//VBVを設定 (インフルエンスと合体)
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
@@ -146,8 +154,12 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 	// ワールドトランスフォームマップ処理
 	desc.worldTransform->Map(desc.camera->GetViewProjectionMatrix());
 
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalModel]);
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexNormalModel) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexNormalModel;
+	}
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView());
 
@@ -208,8 +220,12 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 	// ワールドトランスフォームマップ処理
 	desc.worldTransform->Map(desc.camera->GetViewProjectionMatrix());
 
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexAnimInverseModel) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModel;
+	}
 
 	//VBVを設定 (インフルエンスと合体)
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
@@ -275,8 +291,12 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	// nullptrチェック
 	assert(sCommandList);
 
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyAnimObjects]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyAnimObjects]);
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexManyAnimObjects) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyAnimObjects]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyAnimObjects]);
+		currentPipelineStateIndex_ = kPipelineStateIndexManyAnimObjects;
+	}
 
 	//VBVを設定 (インフルエンスと合体)
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {

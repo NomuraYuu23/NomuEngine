@@ -267,7 +267,7 @@ void GameScene::Draw() {
 	// 紐
 	testString_->Draw(camera_);
 
-	//testManyObject_->Draw(camera_);
+	testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 

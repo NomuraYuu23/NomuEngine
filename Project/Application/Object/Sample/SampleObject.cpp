@@ -127,13 +127,6 @@ void SampleObject::Draw(BaseCamera& camera)
 	desc.worldTransform = &worldTransform_;
 	ModelDraw::AnimObjectDraw(desc);
 
-	//ModelDraw::NormalObjectDesc desc;
-	//desc.camera = &camera;
-	//desc.material = material_.get();
-	//desc.model = model_;
-	//desc.worldTransform = &worldTransform_;
-	//ModelDraw::NormalObjectDraw(desc);
-
 }
 
 void SampleObject::ImGuiDraw()
