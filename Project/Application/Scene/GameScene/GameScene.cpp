@@ -263,20 +263,20 @@ void GameScene::Draw() {
 	skydome_->Draw(camera_);
 
 	//Obj
-	//sampleObj_->Draw(camera_);
+	sampleObj_->Draw(camera_);
 
 	// 紐
 	testString_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
-	preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexNormalModel;
-	ModelDraw::PreDraw(preDrawDesc);
+	//preDrawDesc.pipelineStateIndex = ModelDraw::kPipelineStateIndexNormalModel;
+	//ModelDraw::PreDraw(preDrawDesc);
 
-	//Obj
-	sampleObj_->Draw(camera_);
+	////Obj
+	//sampleObj_->Draw(camera_);
 
-	ModelDraw::PostDraw();
+	//ModelDraw::PostDraw();
 
 #ifdef _DEBUG
 

@@ -119,20 +119,20 @@ void SampleObject::Draw(BaseCamera& camera)
 
 	velocity2DDataMap_->SetVelocity(velocity_, camera.GetViewMatrix());
 
-	//ModelDraw::AnimObjectDesc desc;
-	//desc.camera = &camera;
-	//desc.localMatrixManager = localMatrixManager_.get();
-	//desc.material = material_.get();
-	//desc.model = model_;
-	//desc.worldTransform = &worldTransform_;
-	//ModelDraw::AnimObjectDraw(desc);
-
-	ModelDraw::NormalObjectDesc desc;
+	ModelDraw::AnimObjectDesc desc;
 	desc.camera = &camera;
+	desc.localMatrixManager = localMatrixManager_.get();
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.worldTransform = &worldTransform_;
-	ModelDraw::NormalObjectDraw(desc);
+	ModelDraw::AnimObjectDraw(desc);
+
+	//ModelDraw::NormalObjectDesc desc;
+	//desc.camera = &camera;
+	//desc.material = material_.get();
+	//desc.model = model_;
+	//desc.worldTransform = &worldTransform_;
+	//ModelDraw::NormalObjectDraw(desc);
 
 }
 
