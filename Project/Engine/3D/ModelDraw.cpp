@@ -317,9 +317,16 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	sCommandList->SetGraphicsRootConstantBufferView(7, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
 
 
-	//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-	for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
-		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+	//テクスチャ
+	if (desc.textureHandles.empty()) {
+		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+		}
+	}
+	else {
+		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
 	}
 
 	// ポイントライト

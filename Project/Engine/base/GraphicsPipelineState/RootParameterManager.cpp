@@ -314,7 +314,7 @@ void RootParameterManager::RootParameterInitializeForManyModels()
 {
 
 	//RootParameter作成
-	D3D12_ROOT_PARAMETER rootParameters[13] = {};
+	D3D12_ROOT_PARAMETER rootParameters[12] = {};
 	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
