@@ -151,9 +151,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 
-	// たくさんモデル
-	desc.pipelineStateIndex = kPipelineStateIndexManyModels;
-	desc.rootParameterIndex = kRootParameterIndexManyModels;
+	// たくさんのアニメーションモデル
+	desc.pipelineStateIndex = kPipelineStateIndexManyAnimModels;
+	desc.rootParameterIndex = kRootParameterIndexManyAnimModels;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
@@ -161,7 +161,22 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.blendStateIndex = kBlendStateIndexNormal;
 	desc.cullMode = D3D12_CULL_MODE_NONE;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/ManyModels.VS.hlsl";
+	desc.filePathVS = L"Resources/shaders/ManyAnimModels.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	Create(desc);
+
+	// たくさんのアニメーション無しモデル
+	desc.pipelineStateIndex = kPipelineStateIndexManyNormalModels;
+	desc.rootParameterIndex = kRootParameterIndexManyNormalModels;
+	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	desc.inputLayoutIndex = kInputLayoutIndexModel;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_NONE;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/ManyNormalModels.VS.hlsl";
 	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);

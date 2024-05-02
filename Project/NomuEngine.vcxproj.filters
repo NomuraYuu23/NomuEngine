@@ -1100,7 +1100,7 @@
     <FxCompile Include="Resources\shaders\WindowSprite.PS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\ManyModels.VS.hlsl">
+    <FxCompile Include="Resources\shaders\ManyAnimModels.VS.hlsl">
       <Filter>shaders\Object3d</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
@@ -1116,6 +1116,9 @@
       <Filter>shaders\Object3d</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\AnimInverseModel.VS.hlsl">
+      <Filter>shaders\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ManyNormalModels.VS.hlsl">
       <Filter>shaders\Object3d</Filter>
     </FxCompile>
   </ItemGroup>

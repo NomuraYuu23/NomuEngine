@@ -23,15 +23,15 @@ public: // サブクラス
 		kPipelineStateIndexAnimModel, // アニメーションモデル
 		kPipelineStateIndexNormalModel, // アニメーション無しモデル
 		kPipelineStateIndexAnimInverseModel, // アニメーション反転モデル(右手座標系)
-
-
+		kPipelineStateIndexManyAnimModels, // たくさんのアニメーションモデル
+		kPipelineStateIndexManyNormalModels, // たくさんのアニメーション無しモデル
 
 		kPipelineStateIndexSprite, //スプライト
-		kPipelineStateIndexParticle, // パーティクル
-		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D
-		kPipelineStateIndexLine, // 線
 		kPipelineStateIndexWindowSprite, // ウィンドウスプライト
-		kPipelineStateIndexManyModels, // たくさんのモデル
+		kPipelineStateIndexLine, // 線
+		kPipelineStateIndexParticle, // パーティクル
+
+		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D
 		kPipelineStateIndexOfCount // 使わない
 	};
 

@@ -37,7 +37,8 @@ enum RootParameterIndex {
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexWindowSprite, // ウィンドウスプライト
-	kRootParameterIndexManyModels, // 多くのオブジェクト
+	kRootParameterIndexManyAnimModels, // たくさんのアニメーションモデル
+	kRootParameterIndexManyNormalModels, // たくさんのアニメーション無しモデル
 	kRootParameterIndexOfCount,
 };
 
@@ -95,9 +96,14 @@ private: // 関数
 	static void RootParameterInitializeForSwapChain();
 
 	/// <summary>
-	/// 多くのオブジェクト
+	/// たくさんのアニメーションモデル
 	/// </summary>
-	static void RootParameterInitializeForManyModels();
+	static void RootParameterInitializeForManyAnimModels();
+
+	/// <summary>
+	/// たくさんのアニメーション無しモデル
+	/// </summary>
+	static void RootParameterInitializeForManyNormalModels();
 
 	/// <summary>
 	/// ディスクリプタレンジの初期化
