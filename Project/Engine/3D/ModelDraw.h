@@ -17,6 +17,7 @@ public: // サブクラス
 		kPipelineStateIndexNormalModel, // アニメーション無しモデル
 		kPipelineStateIndexAnimInverseModel, // アニメーション反転モデル(右手座標系)
 		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト(アニメーションは同じ)
+		kPipelineStateIndexManyNormalObjects, // 複数のアニメーション無しオブジェクト
 		kPipelineStateIndexOfCount
 	};
 	
@@ -56,6 +57,17 @@ public: // サブクラス
 	{
 		Model* model; //モデル
 		D3D12_GPU_DESCRIPTOR_HANDLE* localMatrixesHandle;
+		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
+		BaseCamera* camera;
+		uint32_t numInstance;
+		Material* material;
+		std::vector<UINT> textureHandles;
+	};
+
+	// 複数のアニメーション無しオブジェクト
+	struct ManyNormalObjectsDesc
+	{
+		Model* model; //モデル
 		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
 		BaseCamera* camera;
 		uint32_t numInstance;
@@ -130,6 +142,12 @@ public: // 描画
 	/// </summary>
 	/// <param name="desc">複数のアニメーションオブジェクト引数</param>
 	static void ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc);
+
+	/// <summary>
+	/// 複数のアニメーション無しオブジェクト
+	/// </summary>
+	/// <param name="desc">複数のアニメーション無しオブジェクト引数</param>
+	static void ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc);
 
 };
 

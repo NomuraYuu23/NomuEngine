@@ -85,9 +85,8 @@ void LargeNumberOfObjects::Draw(BaseCamera& camera, std::vector<UINT>* textureHn
 
 	Map(camera.GetViewProjectionMatrix());
 
-	ModelDraw::ManyAnimObjectsDesc desc;
+	ModelDraw::ManyNormalObjectsDesc desc;
 	desc.camera = &camera;
-	desc.localMatrixesHandle = &localMatrixManager_->localMatrixesHandleGPU_;
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.numInstance = numInstance_;
@@ -95,7 +94,7 @@ void LargeNumberOfObjects::Draw(BaseCamera& camera, std::vector<UINT>* textureHn
 		desc.textureHandles = *textureHnadles;
 	}
 	desc.transformationMatrixesHandle = &transformationMatrixesHandleGPU_;
-	ModelDraw::ManyAnimObjectsDraw(desc);
+	ModelDraw::ManyNormalObjectsDraw(desc);
 
 }
 

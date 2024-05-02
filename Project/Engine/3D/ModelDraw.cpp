@@ -353,3 +353,70 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
 
 }
+
+void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
+
+
+	// nullptrチェック
+	assert(sCommandList);
+
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexManyNormalObjects) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyNormalObjects]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyNormalObjects]);
+		currentPipelineStateIndex_ = kPipelineStateIndexManyNormalObjects;
+	}
+
+	//VBVを設定 (インフルエンスと合体)
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		*(desc.model->GetMesh())->GetVbView(),
+		*(desc.model->GetMesh())->GetInfluenceView()
+	};
+	sCommandList->IASetVertexBuffers(0, 2, vbvs);
+
+	//マテリアルCBufferの場所を設定
+	if (desc.material) {
+		sCommandList->SetGraphicsRootConstantBufferView(0, desc.material->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+	else {
+		sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
+	}
+
+	// カメラCBufferの場所を設定
+	sCommandList->SetGraphicsRootConstantBufferView(6, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
+
+
+	//テクスチャ
+	if (desc.textureHandles.empty()) {
+		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+		}
+	}
+	else {
+		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+	}
+
+	// ポイントライト
+	if (sPointLightManager_) {
+		sPointLightManager_->Draw(sCommandList, 7);
+	}
+	// スポットライト
+	if (sSpotLightManager_) {
+		sSpotLightManager_->Draw(sCommandList, 8);
+	}
+	// 平行光源
+	if (sDirectionalLight_) {
+		sDirectionalLight_->Draw(sCommandList, 5);
+	}
+
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootDescriptorTable(9, *desc.transformationMatrixesHandle);
+	// 霧
+	sCommandList->SetGraphicsRootConstantBufferView(10, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+
+	//描画
+	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
+
+}
