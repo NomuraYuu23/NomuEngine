@@ -71,19 +71,22 @@ public: // サブクラス
 		kPipelineIndexOverwrite, // 上書き
 		kPipelineIndexRTTCorrection, // レンダーターゲット画像の修正
 		kPipelineIndexMotionBlur, // モーションブラー
-		kPipliineIndexWhiteNoise, // ホワイトノイズ
-		kPipliineIndexScanLine, // 走査線
-		kPipliineIndexRGBShift, // RGBずらし
-		kPipliineIndexBarrelCurved, // 樽状湾曲
-		kPipliineIndexVignette, // ビネット
-		kPipliineIndexGlitch, // グリッチ
-		kPipliineIndexRadialBlur, // 放射状ブラー
-		kPipliineIndexShockWave, // 衝撃波
-		kPipliineIndexFlarePara, // フレア パラ
-		kPipliineIndexReduction, // 縮小
-		kPipliineIndexExpansion, // 拡大(縮小したものをもとに戻す)
-		kPipliineIndexGrayScale, // グレイスケール
-		kPipliineIndexSepia, // セピア
+		kPipelineIndexWhiteNoise, // ホワイトノイズ
+		kPipelineIndexScanLine, // 走査線
+		kPipelineIndexRGBShift, // RGBずらし
+		kPipelineIndexBarrelCurved, // 樽状湾曲
+		kPipelineIndexVignette, // ビネット
+		kPipelineIndexGlitch, // グリッチ
+		kPipelineIndexRadialBlur, // 放射状ブラー
+		kPipelineIndexShockWave, // 衝撃波
+		kPipelineIndexFlarePara, // フレア パラ
+		kPipelineIndexReduction, // 縮小
+		kPipelineIndexExpansion, // 拡大(縮小したものをもとに戻す)
+		kPipelineIndexGrayScale, // グレイスケール
+		kPipelineIndexSepia, // セピア
+
+		kPipelineIndexGlitchRGBShift, // グリッチRGB
+
 		kPipelineIndexOfCount // 数を数える用
 	};
 
@@ -115,6 +118,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainExpansion"}, // 拡大(縮小したものをもとに戻す)
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitchRGBShift"}, // グリッチRGB
 	};
 	
 	// 画像の幅
@@ -389,6 +393,18 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList,
 		uint32_t editTextureIndex,
 		const CD3DX12_GPU_DESCRIPTOR_HANDLE& sepiaGPUHandle);
+
+	/// <summary>
+	/// グリッチとRGB
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="editTextureIndex">編集する画像番号</param>
+	/// <param name="glitchRGBShiftGPUHandle">画像のGPUハンドル</param>
+	void GlitchRGBShiftCommand(
+		ID3D12GraphicsCommandList* commandList,
+		uint32_t editTextureIndex,
+		const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchRGBShiftGPUHandle);
+
 
 private: // 関数
 

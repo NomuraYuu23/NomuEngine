@@ -267,7 +267,7 @@ void GameScene::Draw() {
 	// 紐
 	testString_->Draw(camera_);
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -312,20 +312,20 @@ void GameScene::Draw() {
 #pragma endregion
 
 
-	//renderTargetTexture_->ChangePixelShaderResource(0);
-	//
-	//PostEffect::GetInstance()->SepiaCommand(
-	//	dxCommon_->GetCommadList(),
-	//	0,
-	//	renderTargetTexture_->GetSrvGPUHandle(0)//,
-	//	//shockWaveManager_->GetShockWaveDataBuff()
-	//	//sampleObj_->GetVelocity2DData()
-	//);
+	renderTargetTexture_->ChangePixelShaderResource(0);
+	
+	PostEffect::GetInstance()->GlitchRGBShiftCommand(
+		dxCommon_->GetCommadList(),
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)//,
+		//shockWaveManager_->GetShockWaveDataBuff()
+		//sampleObj_->GetVelocity2DData()
+	);
 
-	//renderTargetTexture_->ChangeRenderTarget(0);
-	//renderTargetTexture_->ClearDepthBuffer();
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->ClearDepthBuffer();
 
-	//renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

@@ -542,7 +542,7 @@ void PostEffect::WhiteNoizeCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexWhiteNoise].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexWhiteNoise].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -583,7 +583,7 @@ void PostEffect::ScanLineCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexScanLine].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexScanLine].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -624,7 +624,7 @@ void PostEffect::RGBShiftCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexRGBShift].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRGBShift].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -665,7 +665,7 @@ void PostEffect::BarrelCurvedCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexBarrelCurved].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBarrelCurved].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -706,7 +706,7 @@ void PostEffect::VignetteCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexVignette].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexVignette].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -747,7 +747,7 @@ void PostEffect::GlitchCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexGlitch].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitch].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -788,7 +788,7 @@ void PostEffect::RadialBlurCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexRadialBlur].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRadialBlur].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -830,7 +830,7 @@ void PostEffect::ShockWaveCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexShockWave].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexShockWave].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -873,7 +873,7 @@ void PostEffect::FlareParaCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexFlarePara].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexFlarePara].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -914,7 +914,7 @@ void PostEffect::ReductionCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexReduction].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexReduction].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -955,7 +955,7 @@ void PostEffect::ExpansionCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexExpansion].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexExpansion].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -996,7 +996,7 @@ void PostEffect::GrayScaleCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexGrayScale].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGrayScale].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -1037,7 +1037,7 @@ void PostEffect::SepiaCommand(
 	uint32_t z = 1;
 
 	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipliineIndexSepia].Get());
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexSepia].Get());
 	// バッファを送る
 	// 定数パラメータ
 	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
@@ -1051,6 +1051,48 @@ void PostEffect::SepiaCommand(
 
 	// コマンドリスト
 	commandList_ = nullptr;
+
+}
+
+void PostEffect::GlitchRGBShiftCommand(
+	ID3D12GraphicsCommandList* commandList, 
+	uint32_t editTextureIndex, 
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchRGBShiftGPUHandle)
+{
+
+	// インデックスが超えているとエラー
+	assert(editTextureIndex < kNumEditTexture);
+
+	// コマンドリスト
+	commandList_ = commandList;
+
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitchRGBShift].Get());
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+	// 衝撃波を掛ける画像をセット
+	commandList_->SetComputeRootDescriptorTable(1, glitchRGBShiftGPUHandle);
+	// 編集する画像セット
+	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
 
 }
 
