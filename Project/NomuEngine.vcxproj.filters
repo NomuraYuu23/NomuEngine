@@ -1035,6 +1035,9 @@
     <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
       <Filter>Engine\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\EmitterDesc.h">
+      <Filter>Engine\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

@@ -2,20 +2,19 @@
 #include "../Math/DeltaTime.h"
 #include "../../Application/Particle/MakeParticle.h"
 
-void IEmitter::Initialize(const EulerTransform& transform, uint32_t instanceCount,
-	float frequency, float lifeTime, uint32_t particleModelNum, uint32_t paeticleName)
+void IEmitter::Initialize(const EmitterDesc& emitterDesc)
 {
 
 	// トランスフォーム
-	transform_ = transform;
+	transform_ = *emitterDesc.transform;
 	// 発生させるインスタンス数
-	instanceCount_ = instanceCount;
+	instanceCount_ = emitterDesc.instanceCount;
 	// 発生頻度
-	frequency_ = frequency;
+	frequency_ = emitterDesc.frequency;
 	// 発生時間
 	frequencyTime_ = 0.0f;
 	// 生存時間
-	lifeTime_ = lifeTime;
+	lifeTime_ = emitterDesc.lifeTime;
 	// 発生してからの経過時間
 	currentTime_ = 0.0f;
 	// エミットする
@@ -23,9 +22,9 @@ void IEmitter::Initialize(const EulerTransform& transform, uint32_t instanceCoun
 
 	isDead_ = false;
 
-	particleModelNum_ = particleModelNum;
+	particleModelNum_ = emitterDesc.particleModelNum;
 	
-	paeticleName_ = paeticleName;
+	paeticleName_ = emitterDesc.paeticleName;
 
 }
 

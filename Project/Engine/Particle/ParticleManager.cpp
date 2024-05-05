@@ -217,13 +217,10 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 
 }
 
-void ParticleManager::MakeEmitter(const EulerTransform& transform, uint32_t instanceCount,
-	float frequency, float lifeTime,
-	uint32_t particleModelNum, uint32_t paeticleName, uint32_t emitterName)
+void ParticleManager::MakeEmitter(const EmitterDesc& emitterDesc, uint32_t emitterName)
 {
-	emitters_.push_back(MakeEmitter::GetInstance()->Run(transform, instanceCount,
-		frequency, lifeTime,
-		particleModelNum, paeticleName, emitterName));
+
+	emitters_.push_back(MakeEmitter::GetInstance()->Run(emitterDesc, emitterName));
 
 }
 

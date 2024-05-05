@@ -38,10 +38,22 @@ void GameScene::Initialize() {
 	particleModel[ParticleModelIndex::kUvChecker] = particleUvcheckerModel_.get();
 	particleModel[ParticleModelIndex::kCircle] = particleCircleModel_.get();
 	particleManager_->ModelCreate(particleModel);
+
+
 	EulerTransform emitter = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{-3.0f,0.0f,0.0f} };
-	particleManager_->MakeEmitter(emitter, 1, 0.5f, 300.0f, ParticleModelIndex::kUvChecker, 0, 0);
+
+	EmitterDesc emitterDesc;
+	emitterDesc.transform = &emitter;
+	emitterDesc.instanceCount = 1;
+	emitterDesc.frequency = 0.5f;
+	emitterDesc.lifeTime = 300.0f;
+	emitterDesc.paeticleName = 0;
+	emitterDesc.particleModelNum = ParticleModelIndex::kUvChecker;
+
+	particleManager_->MakeEmitter(emitterDesc, 0);
 	emitter.translate.x = 3.0f;
-	particleManager_->MakeEmitter(emitter, 1, 0.5f, 300.0f, ParticleModelIndex::kCircle, 0, 0);
+	emitterDesc.particleModelNum = ParticleModelIndex::kCircle;
+	particleManager_->MakeEmitter(emitterDesc, 0);
 
 
 	isDebugCameraActive_ = false;

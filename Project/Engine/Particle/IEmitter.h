@@ -2,6 +2,7 @@
 #include "../3D/TransformStructure.h"
 #include "IParticle.h"
 #include <list>
+#include "EmitterDesc.h"
 
 class IEmitter
 {
@@ -16,8 +17,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize(const EulerTransform& transform, uint32_t instanceCount,
-		float frequency, float lifeTime, uint32_t particleModelNum, uint32_t paeticleName);
+	virtual void Initialize(const EmitterDesc& emitterDesc);
 
 	/// <summary>
 	/// 更新

@@ -101,11 +101,9 @@ public: // メンバ関数
 	/// <summary>
 	/// エミッタ生成
 	/// </summary>
-	/// <param name="transform"></param>
-	/// <param name="lifeTime"></param>
-	void MakeEmitter(const EulerTransform& transform, uint32_t instanceCount,
-		float frequency, float lifeTime,
-		uint32_t particleModelNum, uint32_t paeticleName, uint32_t emitterName);
+    /// <param name="emitterDesc">エミッタ引数</param>
+    /// <param name="emitterName">エミッタの名前</param>
+	void MakeEmitter(const EmitterDesc& emitterDesc, uint32_t emitterName);
 
 	/// <summary>
 	/// エミッタ更新

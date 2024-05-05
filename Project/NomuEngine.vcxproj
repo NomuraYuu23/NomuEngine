@@ -308,6 +308,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\RandomEngine.h" />
     <ClInclude Include="Engine\Math\ShortestDistance.h" />
+    <ClInclude Include="Engine\Particle\EmitterDesc.h" />
     <ClInclude Include="Engine\Particle\IEmitter.h" />
     <ClInclude Include="Engine\Particle\IParticle.h" />
     <ClInclude Include="Engine\Particle\ParticleForGPU.h" />
