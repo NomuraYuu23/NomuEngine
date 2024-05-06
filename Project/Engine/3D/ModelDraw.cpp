@@ -410,3 +410,28 @@ void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
 
 }
+
+void ModelDraw::NormalOutlineDraw(NormalOutlineDesc& desc)
+{
+
+	// nullptrチェック
+	assert(sCommandList);
+
+	// パイプライン設定
+	if (currentPipelineStateIndex_ != kPipelineStateIndexNormalOutline) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalOutline]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalOutline]);
+		currentPipelineStateIndex_ = kPipelineStateIndexNormalOutline;
+	}
+
+	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView());
+
+	// ワールドトランスフォーム
+	sCommandList->SetGraphicsRootConstantBufferView(0, desc.worldTransform->GetTransformationMatrixBuff()->GetGPUVirtualAddress());
+	// アウトライン
+	sCommandList->SetGraphicsRootConstantBufferView(1, desc.outline->GetOutlineDataBuff()->GetGPUVirtualAddress());
+
+	//描画
+	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
+
+}

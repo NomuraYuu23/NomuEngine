@@ -4,6 +4,7 @@
 #include "../../../Engine/Animation/Animation.h"
 #include "../../../Engine/PostEffect/Velocity2DData.h"
 #include "../../../Engine/Animation/LocalMatrixDraw.h"
+#include "../../../Engine/3D/Outline.h"
 
 class SampleObject
 {
@@ -68,6 +69,8 @@ private:
 	Velocity2DData* velocity2DDataMap_;
 
 	Vector3 velocity_;
+
+	std::unique_ptr<Outline> outline_;
 
 };
 

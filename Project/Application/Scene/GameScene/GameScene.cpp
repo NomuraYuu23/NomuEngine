@@ -241,6 +241,8 @@ void GameScene::Update() {
 	testString_->Update(stringWind);
 	testString_->DebugDrawMap(drawLine_);
 
+	WindowSpriteStorage::GetInstance()->Reset();
+
 }
 
 /// <summary>
@@ -273,15 +275,15 @@ void GameScene::Draw() {
 	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
-	skydome_->Draw(camera_);
+	//skydome_->Draw(camera_);
 
 	//Obj
 	sampleObj_->Draw(camera_);
 
 	// 紐
-	testString_->Draw(camera_);
+	//testString_->Draw(camera_);
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -326,23 +328,24 @@ void GameScene::Draw() {
 #pragma endregion
 
 	renderTargetTexture_->ChangePixelShaderResource(0);
+	renderTargetTexture_->ChangePixelShaderResource(1);
 	
-	PostEffect::GetInstance()->GlitchRGBShiftCommand(
-		dxCommon_->GetCommadList(),
-		0,
-		renderTargetTexture_->GetSrvGPUHandle(0)//,
-		//shockWaveManager_->GetShockWaveDataBuff()
-		//sampleObj_->GetVelocity2DData()
-	);
+	//PostEffect::GetInstance()->GlitchRGBShiftCommand(
+	//	dxCommon_->GetCommadList(),
+	//	0,
+	//	renderTargetTexture_->GetSrvGPUHandle(0)//,
+	//	//shockWaveManager_->GetShockWaveDataBuff()
+	//	//sampleObj_->GetVelocity2DData()
+	//);
 
-	renderTargetTexture_->ChangeRenderTarget(0);
+	//renderTargetTexture_->ChangeRenderTarget(0);
 	renderTargetTexture_->ClearDepthBuffer();
 
-	//WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
-	//	dxCommon_->GetCommadList(),
-	//	renderTargetTexture_->GetSrvGPUHandle(1),
-	//	"outline"
-	//);
+	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+		dxCommon_->GetCommadList(),
+		renderTargetTexture_->GetSrvGPUHandle(1),
+		"outline"
+	);
 
 	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
 		dxCommon_->GetCommadList(),
@@ -351,6 +354,9 @@ void GameScene::Draw() {
 	);
 
 	WindowSpriteStorage::GetInstance()->TemporaryStoragOverwrite(dxCommon_->GetCommadList());
+
+	renderTargetTexture_->ChangeRenderTarget(0);
+	renderTargetTexture_->ChangeRenderTarget(1);
 
 	renderTargetTexture_->TextureDraw(WindowSpriteStorage::GetInstance()->GetTemporaryStorageOverwriteTexture()->GetUavHandleGPU());
 
@@ -450,8 +456,8 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
-	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
+	//sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));

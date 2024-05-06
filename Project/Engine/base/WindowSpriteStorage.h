@@ -23,6 +23,11 @@ public: // 関数
 	/// </summary>
 	void ImGuiDraw();
 
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset();
+
 private: // 関数
 
 	/// <summary>
@@ -80,8 +85,8 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPipelineIndexOfCount> shaderNames_ =
 	{
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainCopy"}, // レンダーターゲット画像の修正＆コピー
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainOverwrite"}, // 上書き
+		std::pair{L"Resources/shaders/WindowSpriteStorage.CS.hlsl", L"mainCopy"}, // レンダーターゲット画像の修正＆コピー
+		std::pair{L"Resources/shaders/WindowSpriteStorage.CS.hlsl", L"mainOverwrite"}, // 上書き
 
 	};
 

@@ -50,6 +50,13 @@ void WindowSpriteStorage::ImGuiDraw()
 {
 }
 
+void WindowSpriteStorage::Reset()
+{
+
+	computeParametersMap_->overwriteCount = 0;  // 上書き回数
+
+}
+
 void WindowSpriteStorage::CreateRootSignature()
 {
 
@@ -279,8 +286,6 @@ void WindowSpriteStorage::TemporaryStoragOverwrite(
 
 	// コマンドリスト
 	commandList_ = nullptr;
-
-	computeParametersMap_->overwriteCount = 0;  // 上書き回数
 
 }
 

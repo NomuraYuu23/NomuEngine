@@ -5,6 +5,7 @@
 #include "../Animation/LocalMatrixManager.h"
 #include "Model.h"
 #include "FogManager.h"
+#include "Outline.h"
 
 class ModelDraw
 {
@@ -18,6 +19,10 @@ public: // サブクラス
 		kPipelineStateIndexAnimInverseModel, // アニメーション反転モデル(右手座標系)
 		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト(アニメーションは同じ)
 		kPipelineStateIndexManyNormalObjects, // 複数のアニメーション無しオブジェクト
+
+
+		kPipelineStateIndexNormalOutline, // アニメーション無しアウトライン
+
 		kPipelineStateIndexOfCount
 	};
 	
@@ -73,6 +78,13 @@ public: // サブクラス
 		uint32_t numInstance;
 		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle;
 		std::vector<UINT> textureHandles;
+	};
+
+	struct NormalOutlineDesc 
+	{
+		Model* model; //モデル
+		WorldTransform* worldTransform; // ワールドトランスフォーム
+		Outline* outline; // アウトライン
 	};
 
 public:
@@ -148,6 +160,11 @@ public: // 描画
 	/// </summary>
 	/// <param name="desc">複数のアニメーション無しオブジェクト引数</param>
 	static void ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	static void NormalOutlineDraw(NormalOutlineDesc& desc);
 
 };
 
