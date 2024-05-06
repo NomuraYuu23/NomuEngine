@@ -199,6 +199,9 @@
     <Filter Include="shaders\Object3d\PS_hlsli">
       <UniqueIdentifier>{1b43a9a2-59fa-4115-8115-a056a32a5003}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\WindowSpriteStorage">
+      <UniqueIdentifier>{2c6b57cb-03f0-44b8-9089-7fb47e30378d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -558,6 +561,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Animation\LocalMatrixDraw.cpp">
       <Filter>Engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\WindowSpriteStorage.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1038,6 +1044,9 @@
     <ClInclude Include="Engine\Particle\EmitterDesc.h">
       <Filter>Engine\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\WindowSpriteStorage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -1067,6 +1076,9 @@
     </None>
     <None Include="resources\shaders\Object3d.hlsli">
       <Filter>shaders\Object3d\PS_hlsli</Filter>
+    </None>
+    <None Include="Resources\shaders\WindowSpriteStorage.hlsli">
+      <Filter>shaders\WindowSpriteStorage</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1123,6 +1135,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyNormalModels.VS.hlsl">
       <Filter>shaders\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\WindowSpriteStorage.CS.hlsl">
+      <Filter>shaders\WindowSpriteStorage</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
