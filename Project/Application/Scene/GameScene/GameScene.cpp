@@ -135,10 +135,11 @@ void GameScene::Initialize() {
 	testManyObject_ = std::make_unique<LargeNumberOfObjects>();
 	testManyObject_->Initialize(testModel_.get());
 
-	for (uint32_t i = 0; i < 3; ++i) {
+	for (uint32_t i = 0; i < 5; ++i) {
 		OneOfManyObjects* obj = new OneOfManyObjects();
 		obj->Initialize();
 		obj->transform_.translate.x = i * 1.0f;
+		obj->materialData_.uvTransform = Matrix4x4::MakeAffineMatrix(Vector3{ 1.0f * (i + 1),1.0f * (i + 1),1.0f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f });
 		testManyObject_->AddObject(obj);
 	}
 
@@ -279,7 +280,7 @@ void GameScene::Draw() {
 	// 紐
 	testString_->Draw(camera_);
 
-	//testManyObject_->Draw(camera_);
+	testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 

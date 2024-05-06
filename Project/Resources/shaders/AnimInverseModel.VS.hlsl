@@ -1,4 +1,4 @@
-#include "Object3d.hlsli"
+#include "Model.hlsli"
 
 struct LocalMatrix {
 	float32_t4x4 Matrix;

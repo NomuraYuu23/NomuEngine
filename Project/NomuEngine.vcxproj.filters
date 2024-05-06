@@ -1074,11 +1074,14 @@
     <None Include="Resources\shaders\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
-    <None Include="resources\shaders\Object3d.hlsli">
+    <None Include="resources\shaders\Model.hlsli">
       <Filter>shaders\Object3d\PS_hlsli</Filter>
     </None>
     <None Include="Resources\shaders\WindowSpriteStorage.hlsli">
       <Filter>shaders\WindowSpriteStorage</Filter>
+    </None>
+    <None Include="Resources\shaders\ManyModels.hlsli">
+      <Filter>shaders\Object3d\PS_hlsli</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1124,7 +1127,7 @@
     <FxCompile Include="Resources\shaders\PostEffectCalc.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
+    <FxCompile Include="resources\shaders\Model.PS.hlsl">
       <Filter>shaders\Object3d\PS_hlsli</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\NormalModel.VS.hlsl">
@@ -1138,6 +1141,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\WindowSpriteStorage.CS.hlsl">
       <Filter>shaders\WindowSpriteStorage</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
+      <Filter>shaders\Object3d\PS_hlsli</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

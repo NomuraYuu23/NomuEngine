@@ -42,7 +42,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.cullMode = D3D12_CULL_MODE_BACK;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/AnimModel.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 
@@ -57,7 +57,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.cullMode = D3D12_CULL_MODE_BACK;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/NormalModel.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 
@@ -72,7 +72,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.cullMode = D3D12_CULL_MODE_FRONT;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/AnimInverseModel.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 
@@ -159,10 +159,10 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	desc.inputLayoutIndex = kInputLayoutIndexModel;
 	desc.blendStateIndex = kBlendStateIndexNormal;
-	desc.cullMode = D3D12_CULL_MODE_NONE;
+	desc.cullMode = D3D12_CULL_MODE_BACK;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/ManyAnimModels.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.filePathPS = L"Resources/shaders/ManyModels.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 
@@ -172,12 +172,12 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexModel;
+	desc.inputLayoutIndex = kInputLayoutIndexNormal;
 	desc.blendStateIndex = kBlendStateIndexNormal;
-	desc.cullMode = D3D12_CULL_MODE_NONE;
+	desc.cullMode = D3D12_CULL_MODE_BACK;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/ManyNormalModels.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Object3d.PS.hlsl";
+	desc.filePathPS = L"Resources/shaders/ManyModels.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	Create(desc);
 

@@ -9,6 +9,7 @@ LargeNumberOfObjects::~LargeNumberOfObjects()
 	objects_.clear();
 
 	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(transformationMatrixesIndexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(materialsIndexDescriptorHeap_);
 
 }
 
@@ -19,12 +20,36 @@ void LargeNumberOfObjects::Initialize(Model* model)
 	model_ = model;
 	
 	// マテリアル
-	material_.reset(Material::Create());
+	materialsBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(SRVMaterialData) + 0xff) & ~0xff) * kNumInstanceMax_);
+	materialsBuff_->Map(0, nullptr, reinterpret_cast<void**>(&materialsMap_));
+
+	for (uint32_t i = 0; i < kNumInstanceMax_; ++i) {
+		materialsMap_[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		materialsMap_[i].enableLighting = None;
+		materialsMap_[i].shininess = 100.0f;
+		materialsMap_[i].uvTransform = Matrix4x4::MakeAffineMatrix(Vector3{10.0f,10.0f,1.0f}, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f });
+	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC materialsSrvDesc{};
+	materialsSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	materialsSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	materialsSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	materialsSrvDesc.Buffer.FirstElement = 0;
+	materialsSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	materialsSrvDesc.Buffer.NumElements = kNumInstanceMax_;
+	materialsSrvDesc.Buffer.StructureByteStride = sizeof(SRVMaterialData);
+
+	materialsHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	materialsHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	materialsIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(materialsBuff_.Get(), &materialsSrvDesc, materialsHandleCPU_);
+
 
 	// ローカル行列
 	localMatrixManager_ = std::make_unique<LocalMatrixManager>();
 	localMatrixManager_->Initialize(model_->GetRootNode());
-\
+
 	// トランスフォームマトリックス
 	transformationMatrixesBuff_ = BufferResource::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), ((sizeof(TransformationMatrix) + 0xff) & ~0xff) * kNumInstanceMax_);
 	transformationMatrixesBuff_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixesMap_));
@@ -71,6 +96,9 @@ void LargeNumberOfObjects::Map(const Matrix4x4& viewProjectionMatrix)
 	uint32_t i = 0;
 	for (; itr != objects_.end(); ++itr) {
 		OneOfManyObjects* obj = itr->get();
+
+		materialsMap_[i] = obj->materialData_;
+
 		transformationMatrixesMap_[i].WVP = obj->worldMatrix_ * viewProjectionMatrix;
 		transformationMatrixesMap_[i].World = obj->worldMatrix_;
 		transformationMatrixesMap_[i].WorldInverseTranspose = Matrix4x4::Transpose(obj->worldMatrix_);
@@ -87,7 +115,7 @@ void LargeNumberOfObjects::Draw(BaseCamera& camera, std::vector<UINT>* textureHn
 
 	ModelDraw::ManyNormalObjectsDesc desc;
 	desc.camera = &camera;
-	desc.material = material_.get();
+	desc.materialsHandle = &materialsHandleGPU_;
 	desc.model = model_;
 	desc.numInstance = numInstance_;
 	if (textureHnadles) {

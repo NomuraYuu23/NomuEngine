@@ -15,6 +15,13 @@ void OneOfManyObjects::Initialize()
 	// 死んでいるか
 	isDead_ = false;
 
+	//	マテリアルデータ
+	materialData_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	materialData_.enableLighting = None;
+	materialData_.shininess = 100.0f;
+	materialData_.uvTransform = Matrix4x4::MakeAffineMatrix(Vector3{ 1.0f,1.0f,1.0f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f });
+
+
 }
 
 void OneOfManyObjects::Update()

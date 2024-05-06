@@ -305,13 +305,8 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	};
 	sCommandList->IASetVertexBuffers(0, 2, vbvs);
 
-	//マテリアルCBufferの場所を設定
-	if (desc.material) {
-		sCommandList->SetGraphicsRootConstantBufferView(0, desc.material->GetMaterialBuff()->GetGPUVirtualAddress());
-	}
-	else {
-		sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
-	}
+	// マテリアル
+	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);
 
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(7, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
@@ -374,13 +369,8 @@ void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
 	};
 	sCommandList->IASetVertexBuffers(0, 2, vbvs);
 
-	//マテリアルCBufferの場所を設定
-	if (desc.material) {
-		sCommandList->SetGraphicsRootConstantBufferView(0, desc.material->GetMaterialBuff()->GetGPUVirtualAddress());
-	}
-	else {
-		sCommandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
-	}
+	// マテリアル
+	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);
 
 	// カメラCBufferの場所を設定
 	sCommandList->SetGraphicsRootConstantBufferView(6, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());

@@ -60,7 +60,7 @@ public: // サブクラス
 		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
 		BaseCamera* camera;
 		uint32_t numInstance;
-		Material* material;
+		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle;
 		std::vector<UINT> textureHandles;
 	};
 
@@ -71,7 +71,7 @@ public: // サブクラス
 		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
 		BaseCamera* camera;
 		uint32_t numInstance;
-		Material* material;
+		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle;
 		std::vector<UINT> textureHandles;
 	};
 

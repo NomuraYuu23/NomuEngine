@@ -2,6 +2,7 @@
 #include "TransformStructure.h"
 #include "../Math/Matrix4x4.h"
 #include "../3D/WorldTransform.h"
+#include "MaterialData.h"
 
 class OneOfManyObjects
 {
@@ -55,6 +56,9 @@ public:
 
 	// 死んでるか
 	bool isDead_;
+
+	// マテリアルデータ
+	SRVMaterialData materialData_;
 
 };
 

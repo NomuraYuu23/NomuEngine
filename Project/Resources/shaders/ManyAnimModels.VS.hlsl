@@ -1,4 +1,4 @@
-#include "Object3d.hlsli"
+#include "ManyModels.hlsli"
 
 struct LocalMatrix {
 	float32_t4x4 Matrix;
@@ -53,6 +53,8 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t vertexId : SV_VertexID
 	float32_t4 worldPosition = mul(input.position, comb);
 	worldPosition.w = 1.0f;
 	output.worldPosition = mul(worldPosition, gTransformationMatrixes[instanceId].World).xyz;
+
+	output.instanceId = instanceId;
 
 	return output;
 }

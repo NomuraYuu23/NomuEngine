@@ -20,9 +20,10 @@ enum DescriptorRangeIndex {
 	kDescriptorRangeIndexPointLight, // ポイントライト
 	kDescriptorRangeIndexSpotLight, // スポットライト
 	kDescriptorRangeIndexLocalMatrix, // ローカル行列
-	kDexcriptorRangeIndexCollider2DDebugDrawForGPU, // コライダーデバッグ2d
-	kDexcriptorRangeIndexTransformationMatrix, // トランスフォーム行列
-	kDexcriptorRangeIndexLineForGPU, // 線描画
+	kDescriptorRangeIndexCollider2DDebugDrawForGPU, // コライダーデバッグ2d
+	kDescriptorRangeIndexTransformationMatrix, // トランスフォーム行列
+	kDescriptorRangeIndexLineForGPU, // 線描画
+	kDescriptorRangeIndexMaterials, // マテリアル
 	kDescriptorRangeIndexOfCount,
 };
 

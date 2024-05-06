@@ -20,3 +20,10 @@ struct MaterialData {
 	Matrix4x4 uvTransform;
 	float shininess;
 };
+
+struct SRVMaterialData {
+	Vector4 color;
+	int32_t enableLighting;
+	Matrix4x4 uvTransform;
+	float shininess;
+};

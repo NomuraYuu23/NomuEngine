@@ -1,4 +1,4 @@
-#include "Object3d.hlsli"
+#include "ManyModels.hlsli"
 
 struct TransformationMatrix {
 	float32_t4x4 WVP;
@@ -25,6 +25,8 @@ VertexShaderOutput main(VertexShaderInput input, uint32_t instanceId : SV_Instan
 	output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrixes[instanceId].WorldInverseTranspose));
 
 	output.worldPosition = mul(input.position, gTransformationMatrixes[instanceId].World).xyz;
+
+	output.instanceId = instanceId;
 
 	return output;
 }
