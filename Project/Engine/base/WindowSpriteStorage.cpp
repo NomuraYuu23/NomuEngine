@@ -30,6 +30,7 @@ void WindowSpriteStorage::Initialize()
 	computeParametersMap_->threadIdOffsetZ = 0; // スレッドのオフセットZ
 	computeParametersMap_->threadIdTotalZ = 1; // スレッドの総数Z
 
+	computeParametersMap_->clearColor = { 0.0f, 1.0f, 0.0f, 1.0f }; // クリアするときの色
 	computeParametersMap_->overwriteCount = 0;  // 上書き回数
 
 	// ルートシグネチャ
@@ -40,6 +41,8 @@ void WindowSpriteStorage::Initialize()
 
 	// パイプライン
 	CreatePipline();
+
+	TemporaryStorageInitialize();
 
 }
 
@@ -199,21 +202,106 @@ void WindowSpriteStorage::TemporaryStorageRegister(
 	const std::string& name)
 {
 
+	// コマンドリスト
+	commandList_ = commandList;
 
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+
+	commandList_->SetComputeRootDescriptorTable(1, GPUHandle);
+
+	commandList_->SetComputeRootDescriptorTable(9, temporaryStorageTextures_[computeParametersMap_->overwriteCount].second->GetUavHandleGPU());
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+	temporaryStorageTextures_[computeParametersMap_->overwriteCount].first = name;
+
+	computeParametersMap_->overwriteCount++;
 
 }
 
 void WindowSpriteStorage::TemporaryStoragOverwrite(
+	ID3D12GraphicsCommandList* commandList,
 	std::array<std::string, kTemporaryStorageTexturesNum>* temporaryStorageNames)
 {
 
+	// コマンドリスト
+	commandList_ = commandList;
 
+	// コマンドリストがヌルならエラー
+	assert(commandList_);
+
+	// ルートシグネチャ
+	commandList_->SetComputeRootSignature(rootSignature_.Get());
+	// パイプライン
+	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexOverwrite].Get());
+
+	// ディスパッチ数
+	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+	uint32_t z = 1;
+
+	// バッファを送る
+	// 定数パラメータ
+	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+
+	if (temporaryStorageNames) {
+		assert(0);
+	}
+	else {
+		for (uint32_t i = 0; i < computeParametersMap_->overwriteCount; ++i) {
+			commandList_->SetComputeRootDescriptorTable(1 + i, temporaryStorageTextures_[i].second->GetUavHandleGPU());
+		}
+	}
+
+	commandList_->SetComputeRootDescriptorTable(9, temporaryStorageOverwriteTexture_->GetUavHandleGPU());
+
+	// 実行
+	commandList_->Dispatch(x, y, z);
+
+	// コマンドリスト
+	commandList_ = nullptr;
+
+	computeParametersMap_->overwriteCount = 0;  // 上書き回数
 
 }
 
 void WindowSpriteStorage::TemporaryStorageInitialize()
 {
 
+	// 保存する画像初期化
+	for (uint32_t i = 0; i < kTemporaryStorageTexturesNum; ++i) {
+		temporaryStorageTextures_[i].first = "NoName";
+		temporaryStorageTextures_[i].second = std::make_unique<TextureUAV>();
+		temporaryStorageTextures_[i].second->Initialize(
+			device_,
+			kTextureWidth,
+			kTextureHeight);
+	}
 
+	// 保存された画像をすべて上書きした画像
+	temporaryStorageOverwriteTexture_ = std::make_unique<TextureUAV>();
+	temporaryStorageOverwriteTexture_->Initialize(
+		device_,
+		kTextureWidth,
+		kTextureHeight);
 
 }

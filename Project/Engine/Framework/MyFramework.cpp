@@ -66,6 +66,9 @@ void MyFramework::Initialize()
 	// 霧
 	FogManager::GetInstance()->Initialize();
 
+	// ウィンドウスプライト保存
+	WindowSpriteStorage::GetInstance()->Initialize();
+
 	//サウンド
 	audio = Audio::GetInstance();
 	audio->Initialize();

@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "../../Particle/EmitterName.h"
 #include "../../../Engine/3D/ModelDraw.h"
+#include "../../../Engine/base/WindowSpriteStorage.h"
 
 GameScene::~GameScene()
 {
@@ -338,7 +339,15 @@ void GameScene::Draw() {
 	renderTargetTexture_->ChangeRenderTarget(0);
 	renderTargetTexture_->ClearDepthBuffer();
 
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+		dxCommon_->GetCommadList(),
+		renderTargetTexture_->GetSrvGPUHandle(0),
+		"name"
+	);
+
+	WindowSpriteStorage::GetInstance()->TemporaryStoragOverwrite(dxCommon_->GetCommadList());
+
+	renderTargetTexture_->TextureDraw(WindowSpriteStorage::GetInstance()->GetTemporaryStorageOverwriteTexture()->GetUavHandleGPU());
 
 }
 
