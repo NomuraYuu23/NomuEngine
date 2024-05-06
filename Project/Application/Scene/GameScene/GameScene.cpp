@@ -325,7 +325,6 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-
 	renderTargetTexture_->ChangePixelShaderResource(0);
 	
 	PostEffect::GetInstance()->GlitchRGBShiftCommand(
@@ -339,10 +338,16 @@ void GameScene::Draw() {
 	renderTargetTexture_->ChangeRenderTarget(0);
 	renderTargetTexture_->ClearDepthBuffer();
 
+	//WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+	//	dxCommon_->GetCommadList(),
+	//	renderTargetTexture_->GetSrvGPUHandle(1),
+	//	"outline"
+	//);
+
 	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_->GetSrvGPUHandle(0),
-		"name"
+		"normal"
 	);
 
 	WindowSpriteStorage::GetInstance()->TemporaryStoragOverwrite(dxCommon_->GetCommadList());

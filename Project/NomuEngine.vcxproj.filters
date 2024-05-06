@@ -154,9 +154,6 @@
     <Filter Include="Engine\Math\Matrix3x3">
       <UniqueIdentifier>{7f7d088f-e420-4dd5-8ae3-748e04aa8d24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\Object3d">
-      <UniqueIdentifier>{e8b1b387-3420-407b-b41a-60165565e62a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\Collider2DDebug">
       <UniqueIdentifier>{ed0acce8-727f-4826-820e-5ee61a8e7f97}</UniqueIdentifier>
     </Filter>
@@ -196,11 +193,20 @@
     <Filter Include="Engine\Physics\Spring">
       <UniqueIdentifier>{fef9c416-87d2-42ab-b9b5-96af10df57bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\Object3d\PS_hlsli">
-      <UniqueIdentifier>{1b43a9a2-59fa-4115-8115-a056a32a5003}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shaders\WindowSpriteStorage">
       <UniqueIdentifier>{2c6b57cb-03f0-44b8-9089-7fb47e30378d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Model">
+      <UniqueIdentifier>{e8b1b387-3420-407b-b41a-60165565e62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Model\PS_hlsli">
+      <UniqueIdentifier>{1b43a9a2-59fa-4115-8115-a056a32a5003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Outline">
+      <UniqueIdentifier>{b99fa13c-5792-4ccf-af71-7a2ee683f359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Outline\PS_hlsli">
+      <UniqueIdentifier>{4fdcecf5-3eed-4995-a93b-02f0caf74576}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1075,18 +1081,21 @@
       <Filter>shaders\PostEffect</Filter>
     </None>
     <None Include="resources\shaders\Model.hlsli">
-      <Filter>shaders\Object3d\PS_hlsli</Filter>
+      <Filter>shaders\Model\PS_hlsli</Filter>
     </None>
     <None Include="Resources\shaders\WindowSpriteStorage.hlsli">
       <Filter>shaders\WindowSpriteStorage</Filter>
     </None>
     <None Include="Resources\shaders\ManyModels.hlsli">
-      <Filter>shaders\Object3d\PS_hlsli</Filter>
+      <Filter>shaders\Model\PS_hlsli</Filter>
+    </None>
+    <None Include="Resources\shaders\Outline.hlsli">
+      <Filter>shaders\Outline\PS_hlsli</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\AnimModel.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
+      <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
       <Filter>shaders\Collider2DDebug</Filter>
@@ -1119,7 +1128,7 @@
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyAnimModels.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
+      <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
@@ -1128,22 +1137,28 @@
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="resources\shaders\Model.PS.hlsl">
-      <Filter>shaders\Object3d\PS_hlsli</Filter>
+      <Filter>shaders\Model\PS_hlsli</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\NormalModel.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
+      <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\AnimInverseModel.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
+      <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyNormalModels.VS.hlsl">
-      <Filter>shaders\Object3d</Filter>
+      <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\WindowSpriteStorage.CS.hlsl">
       <Filter>shaders\WindowSpriteStorage</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
-      <Filter>shaders\Object3d\PS_hlsli</Filter>
+      <Filter>shaders\Model\PS_hlsli</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Outline.VS.hlsl">
+      <Filter>shaders\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Outline.PS.hlsl">
+      <Filter>shaders\Outline\PS_hlsli</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

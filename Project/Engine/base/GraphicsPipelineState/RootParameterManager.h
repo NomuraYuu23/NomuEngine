@@ -33,6 +33,9 @@ enum DescriptorRangeIndex {
 enum RootParameterIndex {
 	kRootParameterIndexAnimModel, // アニメーションモデル
 	kRootParameterIndexNormalModel, // アニメーション無しモデル
+
+	kRootParameterIndexNormalOutline, // アニメーション無しアウトライン
+
 	kRootParameterIndexSprite, // スプライト
 	kRootParameterIndexParticle, // パーティクル
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
@@ -70,6 +73,11 @@ private: // 関数
 	/// アニメーション無しモデル
 	/// </summary>
 	static void CreateForNormalModel();
+
+	/// <summary>
+	/// アニメーション無しアウトライン
+	/// </summary>
+	static void CreateForNormalOutline();
 
 	/// <summary>
 	/// スプライト

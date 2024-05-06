@@ -22,6 +22,8 @@ void RootParameterManager::Initialize()
 	// モデル
 	CreateForAnimModel();
 	CreateForNormalModel();
+
+	CreateForNormalOutline();
 	// スプライト
 	RootParameterInitializeForSprite();
 	// パーティクル
@@ -178,6 +180,28 @@ void RootParameterManager::CreateForNormalModel()
 
 	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
 		rootParameters_[kRootParameterIndexNormalModel].push_back(rootParameters[i]);
+	}
+
+}
+
+void RootParameterManager::CreateForNormalOutline()
+{
+
+	//RootParameter作成
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+
+	// ワールドトランスフォーム
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+	rootParameters[0].Descriptor.ShaderRegister = 0;
+
+	// アウトラインデータ
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 1;
+
+	for (uint32_t i = 0; i < _countof(rootParameters); ++i) {
+		rootParameters_[kRootParameterIndexNormalOutline].push_back(rootParameters[i]);
 	}
 
 }
