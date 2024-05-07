@@ -577,10 +577,10 @@ public: // アクセッサ
 private: // 変数
 
 	// デバイス
-	ID3D12Device* device_;
+	ID3D12Device* device_ = nullptr;
 
 	// コマンドリスト
-	ID3D12GraphicsCommandList* commandList_;
+	ID3D12GraphicsCommandList* commandList_ = nullptr;
 
 	// 編集する画像
 	std::unique_ptr<TextureUAV> editTextures_[8];

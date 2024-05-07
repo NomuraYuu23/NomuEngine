@@ -104,10 +104,10 @@ private: // 定数
 private: // 変数
 
 	// デバイス
-	ID3D12Device* device_;
+	ID3D12Device* device_ = nullptr;
 
 	// コマンドリスト
-	ID3D12GraphicsCommandList* commandList_;
+	ID3D12GraphicsCommandList* commandList_ = nullptr;
 
 	//OverwriteParameter用のリソースを作る。
 	Microsoft::WRL::ComPtr<ID3D12Resource> computeParametersBuff_;
@@ -166,6 +166,12 @@ private: // 一時保存 変数
 public: // アクセッサ
 
 	TextureUAV* GetTemporaryStorageOverwriteTexture() { return temporaryStorageOverwriteTexture_.get(); }
+
+private: // シングルトン
+	WindowSpriteStorage() = default;
+	~WindowSpriteStorage() = default;
+	WindowSpriteStorage(const WindowSpriteStorage&) = delete;
+	const WindowSpriteStorage& operator=(const WindowSpriteStorage&) = delete;
 
 };
 

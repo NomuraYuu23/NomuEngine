@@ -18,6 +18,8 @@ void WindowSpriteStorage::Initialize()
 	// デバイス取得
 	device_ = DirectXCommon::GetInstance()->GetDevice();
 
+	commandList_ = nullptr;
+
 	// 定数バッファ作成
 	computeParametersBuff_ = BufferResource::CreateBufferResource(device_, ((sizeof(ComputeParameters) + 0xff) & ~0xff));
 	computeParametersBuff_->Map(0, nullptr, reinterpret_cast<void**>(&computeParametersMap_));
