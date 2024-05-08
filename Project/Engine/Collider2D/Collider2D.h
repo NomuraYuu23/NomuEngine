@@ -24,8 +24,8 @@ public: //メンバ関数 (衝突)
 	ColliderParentObject2D GetParentObject() { return parentObject_; }
 public:
 	// デバッグ用
-	Vector2 position_;
-	Vector2 scale_;
+	Vector2 position_{};
+	Vector2 scale_{};
 
 protected:
 

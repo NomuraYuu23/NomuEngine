@@ -117,7 +117,7 @@ public: // アクセッサ
 protected: // メンバ変数
 
 	// 再生中のサウンドデータコンテナ
-	std::array<PlayingSoundData, kMaxPlayingSoundData> playingSoundDatas_;
+	std::array<PlayingSoundData, kMaxPlayingSoundData> playingSoundDatas_{};
 
 };
 
