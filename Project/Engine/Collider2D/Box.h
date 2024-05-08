@@ -26,7 +26,6 @@ public: // メンバ関数
 public: // メンバ変数
 
 	// 回転
-	float rotation_; // ディグリー
+	float rotation_ = 0.0f; // ディグリー
 
 };
-

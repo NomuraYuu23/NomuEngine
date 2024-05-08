@@ -85,16 +85,16 @@ private:
 	// 計算データ
 	std::vector<AnimationCalcData> animationDatas_;
 	// アニメーション数
-	uint32_t animationCalcDataNum_;
+	uint32_t animationCalcDataNum_ = 0;
 
 	// ノード数
-	uint32_t nodeNum_;
+	uint32_t nodeNum_ = 0;
 
 	// トランスフォーム
 	std::vector<QuaternionTransform> transforms_;
 
 	// アニメーション速度
-	double animationSpeed_;
+	double animationSpeed_ = 0.0;
 
 	// ノードの名前
 	std::vector<std::string> nodeNames_;

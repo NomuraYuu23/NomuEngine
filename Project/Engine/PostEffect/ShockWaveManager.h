@@ -58,15 +58,15 @@ public: // アクセッサ
 private: //変数
 
 	// デバイス
-	ID3D12Device* device_;
+	ID3D12Device* device_ = nullptr;
 
 	// ShockWaveバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> shockWaveDataBuff_;
 	// ShockWaveマップ
-	ShockWaveData* shockWaveDataMap_;
+	ShockWaveData* shockWaveDataMap_{};
 
-	float radiusMax_; // 半径最大
-	float radiusAddValue_; // 半径の加算値
+	float radiusMax_ = 0.0f; // 半径最大
+	float radiusAddValue_ = 0.0f; // 半径の加算値
 
 };
 

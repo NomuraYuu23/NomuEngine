@@ -33,7 +33,7 @@ public: // メンバ関数
 private: // メンバ変数
 
 	// データ
-	std::array<AudioData, GameAudioNameIndex::kGameAudioNameIndexOfCount> audioDatas_;
+	std::array<AudioData, GameAudioNameIndex::kGameAudioNameIndexOfCount> audioDatas_{};
 
 	// ファイル名
 	std::array<const std::string, GameAudioNameIndex::kGameAudioNameIndexOfCount> audioNames_ = 

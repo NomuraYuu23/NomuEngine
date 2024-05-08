@@ -95,7 +95,7 @@ protected: // モデル関係
 	std::unique_ptr<LocalMatrixManager> localMatrixManager_;
 
 	// モデル
-	Model* model_;
+	Model* model_ = nullptr;
 
 	//	マテリアル
 	//std::unique_ptr<Material> material_;
@@ -105,9 +105,9 @@ protected: // モデル関係
 	//書き込むためのアドレスを取得
 	SRVMaterialData* materialsMap_{};
 	// CPUハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE materialsHandleCPU_;
+	D3D12_CPU_DESCRIPTOR_HANDLE materialsHandleCPU_{};
 	// GPUハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE materialsHandleGPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE materialsHandleGPU_{};
 	// ディスクリプタヒープの位置
 	uint32_t materialsIndexDescriptorHeap_ = 0;
 };

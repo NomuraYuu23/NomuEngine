@@ -22,9 +22,9 @@ public: // メンバ関数
 
 public: // メンバ変数
 
-	Vector2 origin_; // 原点
+	Vector2 origin_{}; // 原点
 	
-	Vector2 length_; // 長さ
+	Vector2 length_{}; // 長さ
 
 };
 

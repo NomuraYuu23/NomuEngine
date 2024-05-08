@@ -48,27 +48,26 @@ private:
 	// マテリアル
 	std::unique_ptr<Material> material_ = nullptr;
 	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_{};
 
 	// ローカル行列
 	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
 
-	// 
-	int32_t enableLighting_;
+	int32_t enableLighting_ = 0;
 
-	float shininess_;
+	float shininess_ = 0.0f;
 
 	//ノードアニメーション
-	Animation animation_;
+	Animation animation_{};
 
-	RigidBody rigidBody_;
+	RigidBody rigidBody_{};
 
 	// 速度バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> velocity2DDataBuff_;
 
-	Velocity2DData* velocity2DDataMap_;
+	Velocity2DData* velocity2DDataMap_{};
 
-	Vector3 velocity_;
+	Vector3 velocity_{};
 
 	std::unique_ptr<Outline> outline_;
 

@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 
 	//パーティクル
 	particleManager_ = ParticleManager::GetInstance();
-	std::array<Model*, ParticleModelIndex::kCountofParticleModelIndex> particleModel;
+	std::array<Model*, ParticleModelIndex::kCountofParticleModelIndex> particleModel{};
 	particleModel[ParticleModelIndex::kUvChecker] = particleUvcheckerModel_.get();
 	particleModel[ParticleModelIndex::kCircle] = particleCircleModel_.get();
 	particleManager_->ModelCreate(particleModel);
@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 
 	EulerTransform emitter = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{-3.0f,0.0f,0.0f} };
 
-	EmitterDesc emitterDesc;
+	EmitterDesc emitterDesc{};
 	emitterDesc.transform = &emitter;
 	emitterDesc.instanceCount = 1;
 	emitterDesc.frequency = 0.5f;
@@ -155,7 +155,7 @@ void GameScene::Initialize() {
 	shockWaveManager_->Initialize();
 
 	testString_ = std::make_unique<String>();
-	MassPoint testSpringMassPoint;
+	MassPoint testSpringMassPoint{};
 	testSpringMassPoint.position = { 1.2f,0.0f,0.0f };
 	testSpringMassPoint.mass = 0.5f;
 	testSpringMassPoint.acceleration = { 0.0f,0.0f,0.0f };
@@ -194,7 +194,7 @@ void GameScene::Update() {
 	}
 
 	//光源
-	DirectionalLightData directionalLightData;
+	DirectionalLightData directionalLightData{};
 	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
 	directionalLightData.direction = Vector3::Normalize(direction);
 	directionalLightData.intencity = intencity;
@@ -265,7 +265,7 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
 
-	ModelDraw::PreDrawDesc preDrawDesc;
+	ModelDraw::PreDrawDesc preDrawDesc{};
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
 	preDrawDesc.directionalLight = directionalLight_.get();
 	preDrawDesc.fogManager = FogManager::GetInstance();

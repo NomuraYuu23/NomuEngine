@@ -23,7 +23,7 @@ public: // メンバ関数
 
 public: // メンバ変数
 
-	float radius_;
+	float radius_ = 0.0f;
 
 };
 

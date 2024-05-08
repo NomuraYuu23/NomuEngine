@@ -74,19 +74,19 @@ public:
 	EulerTransform transform_{ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
 	//ワールド行列
-	Matrix4x4 worldMatrix_;
+	Matrix4x4 worldMatrix_{};
 
 	// 回転行列
-	Matrix4x4 rotateMatrix_;
+	Matrix4x4 rotateMatrix_{};
 
 	// 方向ベクトルで回転行列
-	bool usedDirection_;
+	bool usedDirection_ = false;
 
 	// 方向ベクトル
 	Vector3 direction_ = {0.0f,0.0f,1.0f};
 
 	// スケールを考えない
-	Matrix4x4 parentMatrix_;
+	Matrix4x4 parentMatrix_{};
 
 	//親
 	WorldTransform* parent_ = nullptr;

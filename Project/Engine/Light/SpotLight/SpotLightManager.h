@@ -68,9 +68,9 @@ private:
 	//書き込むためのアドレスを取得
 	SpotLightData* spotLightDataMap_{};
 
-	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_{};
 
-	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
 	// ディスクリプタヒープの位置
 	uint32_t indexDescriptorHeap_ = 0;
