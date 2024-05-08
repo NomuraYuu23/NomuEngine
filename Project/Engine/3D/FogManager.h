@@ -62,7 +62,7 @@ private: //変数
 	// ShockWaveバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> fogDataBuff_;
 	// ShockWaveマップ
-	FogData* fogDataMap_;
+	FogData* fogDataMap_{};
 
 private: // シングルトン
 	FogManager() = default;
