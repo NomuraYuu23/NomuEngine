@@ -16,13 +16,13 @@ void String::Initialize(
 
 	structuralSpring_.resize(springNum);
 
-	MassPoint initMassPoint;
+	MassPoint initMassPoint{};
 	initMassPoint.position = anchor;
 	initMassPoint.mass = mass;
 	initMassPoint.acceleration = { 0.0f,0.0f,0.0f };
 	initMassPoint.velocity = { 0.0f,0.0f,0.0f };
 	initMassPoint.force = { 0.0f,0.0f,0.0f };
-	MassPoint initMassPoint1;
+	MassPoint initMassPoint1{};
 	initMassPoint1.position = Vector3::Add(anchor, distance);
 	initMassPoint1.mass = mass;
 	initMassPoint1.acceleration = { 0.0f,0.0f,0.0f };
@@ -116,8 +116,8 @@ void String::Update(
 
 	// それ以外を更新
 	for (uint32_t i = 1; i < structuralSpring_.size() - 1; ++i) {
-		structuralSpring_[i].SetPoint0(spring[i - 1].GetPoint1());
-		structuralSpring_[i].SetPoint1(spring[i + 1].GetPoint0());
+		structuralSpring_[i].SetPoint0(spring[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) - 1].GetPoint1());
+		structuralSpring_[i].SetPoint1(spring[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) + 1].GetPoint0());
 		structuralSpring_[i].Update(wind, gravity);
 	}
 
@@ -131,7 +131,7 @@ void String::Update(
 	MassPoint massPoint0Tmp;
 	for (uint32_t i = 0; i < structuralSpring_.size() - 1; ++i) {
 		massPoint1Tmp = structuralSpring_[i].GetPoint1();
-		massPoint0Tmp = structuralSpring_[i + 1].GetPoint0();
+		massPoint0Tmp = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) + 1].GetPoint0();
 
 		massPointTmp.position = (massPoint1Tmp.position + massPoint0Tmp.position) *  0.5f;
 		massPointTmp.acceleration = (massPoint1Tmp.acceleration + massPoint0Tmp.acceleration) * 0.5f;
@@ -140,7 +140,7 @@ void String::Update(
 		massPointTmp.mass = (massPoint1Tmp.mass + massPoint0Tmp.mass) * 0.5f;
 
 		structuralSpring_[i].SetPoint1(massPointTmp);
-		structuralSpring_[i + 1].SetPoint0(massPointTmp);
+		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) + 1].SetPoint0(massPointTmp);
 
 	}
 
@@ -156,8 +156,8 @@ void String::Update(
 	Vector3 basePosition = structuralSpring_[0].GetPoint0().position;
 
 	for (uint32_t i = kExtraMatrixNum; i < matrixes.size(); ++i) {
-		matrixes[i] = Matrix4x4::MakeTranslateMatrix(structuralSpring_[i - kExtraMatrixNum].GetPoint0().position - basePosition);
-		basePosition = structuralSpring_[i - kExtraMatrixNum].GetPoint0().position;
+		matrixes[i] = Matrix4x4::MakeTranslateMatrix(structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) - kExtraMatrixNum].GetPoint0().position - basePosition);
+		basePosition = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(i) - kExtraMatrixNum].GetPoint0().position;
 	}
 
 	// ワールドトランスフォーム
@@ -185,7 +185,7 @@ void String::Draw(BaseCamera& camera)
 void String::DebugDrawMap(DrawLine* drawLine)
 {
 
-	LineForGPU lineForGPU;
+	LineForGPU lineForGPU{};
 
 	for (uint32_t i = 0; i < structuralSpring_.size(); ++i) {
 
@@ -209,11 +209,11 @@ void String::SetAnchor(uint32_t pointIndex, bool fixPoint)
 		structuralSpring_[pointIndex].SetFixPoint0(fixPoint);
 	}
 	else if (pointIndex == structuralSpring_.size()) {
-		structuralSpring_[pointIndex - 1].SetFixPoint1(fixPoint);
+		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].SetFixPoint1(fixPoint);
 	}
 	else {
 		structuralSpring_[pointIndex].SetFixPoint0(fixPoint);
-		structuralSpring_[pointIndex - 1].SetFixPoint1(fixPoint);
+		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].SetFixPoint1(fixPoint);
 	}
 
 }
@@ -231,18 +231,18 @@ void String::SetPosition(uint32_t pointIndex, const Vector3& position)
 		structuralSpring_[pointIndex].SetPoint0(massPoint);
 	}
 	else if (pointIndex == structuralSpring_.size()) {
-		massPoint = structuralSpring_[pointIndex - 1].GetPoint1();
+		massPoint = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].GetPoint1();
 		massPoint.position = position;
-		structuralSpring_[pointIndex - 1].SetPoint1(massPoint);
+		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].SetPoint1(massPoint);
 	}
 	else {
 		massPoint = structuralSpring_[pointIndex].GetPoint0();
 		massPoint.position = position;
 		structuralSpring_[pointIndex].SetPoint0(massPoint);
 
-		massPoint = structuralSpring_[pointIndex - 1].GetPoint1();
+		massPoint = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].GetPoint1();
 		massPoint.position = position;
-		structuralSpring_[pointIndex - 1].SetPoint1(massPoint);
+		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].SetPoint1(massPoint);
 	}
 
 }

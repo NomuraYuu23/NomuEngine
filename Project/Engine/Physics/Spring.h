@@ -44,14 +44,14 @@ public: // アクセッサ
 private: // 変数
 
 	//アンカー。固定された端の位置
-	Vector3 anchor_;
+	Vector3 anchor_{};
 	// 自然長
-	float naturalLength_;
+	float naturalLength_ = 0.0f;
 	// 剛性。バネ定数k
-	float stiffness_;
+	float stiffness_ = 0.0f;
 	// 減衰係数
-	float dampingCoefficient_;
+	float dampingCoefficient_ = 0.0f;
 	// 質点
-	MassPoint massPoint_;
+	MassPoint massPoint_{};
 
 };

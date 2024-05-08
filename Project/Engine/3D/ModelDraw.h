@@ -29,62 +29,62 @@ public: // サブクラス
 	// 描画前処理引数
 	struct PreDrawDesc
 	{
-		ID3D12GraphicsCommandList* commandList; // コマンドリスト
-		DirectionalLight* directionalLight; // 平行光源
-		PointLightManager* pointLightManager; // ポイントライト
-		SpotLightManager* spotLightManager; // スポットライト
-		FogManager* fogManager; // 霧マネージャー
+		ID3D12GraphicsCommandList* commandList = nullptr; // コマンドリスト
+		DirectionalLight* directionalLight = nullptr; // 平行光源
+		PointLightManager* pointLightManager = nullptr; // ポイントライト
+		SpotLightManager* spotLightManager = nullptr; // スポットライト
+		FogManager* fogManager = nullptr; // 霧マネージャー
 	};
 
 	// アニメーションオブジェクト引数
 	struct AnimObjectDesc
 	{
-		Model* model; //モデル
-		WorldTransform* worldTransform; // ワールドトランスフォーム
-		LocalMatrixManager* localMatrixManager;// ローカル行列マネージャー
-		BaseCamera* camera; // カメラ
-		Material* material; // マテリアル(なくてもいい)
+		Model* model = nullptr; //モデル
+		WorldTransform* worldTransform = nullptr; // ワールドトランスフォーム
+		LocalMatrixManager* localMatrixManager = nullptr;// ローカル行列マネージャー
+		BaseCamera* camera = nullptr; // カメラ
+		Material* material = nullptr; // マテリアル(なくてもいい)
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
 	};
 
 	// アニメーション無しオブジェクト引数
 	struct NormalObjectDesc
 	{
-		Model* model; //モデル
-		WorldTransform* worldTransform; // ワールドトランスフォーム
-		BaseCamera* camera; // カメラ
-		Material* material; // マテリアル(なくてもいい)
+		Model* model = nullptr; //モデル
+		WorldTransform* worldTransform = nullptr; // ワールドトランスフォーム
+		BaseCamera* camera = nullptr; // カメラ
+		Material* material = nullptr; // マテリアル(なくてもいい)
 		std::vector<UINT> textureHandles; // テクスチャハンドル(なくてもいい)
 	};
 
 	// 複数のアニメーションオブジェクト
 	struct ManyAnimObjectsDesc
 	{
-		Model* model; //モデル
-		D3D12_GPU_DESCRIPTOR_HANDLE* localMatrixesHandle;
-		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
-		BaseCamera* camera;
-		uint32_t numInstance;
-		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle;
+		Model* model = nullptr; //モデル
+		D3D12_GPU_DESCRIPTOR_HANDLE* localMatrixesHandle = nullptr;
+		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle = nullptr;
+		BaseCamera* camera = nullptr;
+		uint32_t numInstance = 0;
+		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle = nullptr;
 		std::vector<UINT> textureHandles;
 	};
 
 	// 複数のアニメーション無しオブジェクト
 	struct ManyNormalObjectsDesc
 	{
-		Model* model; //モデル
-		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle;
-		BaseCamera* camera;
-		uint32_t numInstance;
-		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle;
+		Model* model = nullptr; //モデル
+		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle = nullptr;
+		BaseCamera* camera = nullptr;
+		uint32_t numInstance = 0;
+		D3D12_GPU_DESCRIPTOR_HANDLE* materialsHandle = nullptr;
 		std::vector<UINT> textureHandles;
 	};
 
 	struct NormalOutlineDesc 
 	{
-		Model* model; //モデル
-		WorldTransform* worldTransform; // ワールドトランスフォーム
-		Outline* outline; // アウトライン
+		Model* model = nullptr; //モデル
+		WorldTransform* worldTransform = nullptr; // ワールドトランスフォーム
+		Outline* outline = nullptr; // アウトライン
 	};
 
 public:

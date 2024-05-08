@@ -98,7 +98,7 @@ private: // 変数(モデル)
 	// マテリアル
 	std::unique_ptr<Material> material_ = nullptr;
 	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_{};
 	// ローカル行列
 	std::unique_ptr<LocalMatrixManager> localMatrixManager_ = nullptr;
 

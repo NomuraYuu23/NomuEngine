@@ -81,14 +81,14 @@ public:
 	//書き込むためのアドレスを取得
 	LocalMatrix* localMatrixesMap_{};
 	// CPUハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE localMatrixesHandleCPU_;
+	D3D12_CPU_DESCRIPTOR_HANDLE localMatrixesHandleCPU_{};
 	// GPUハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE localMatrixesHandleGPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE localMatrixesHandleGPU_{};
 	// ディスクリプタヒープの位置
 	uint32_t indexDescriptorHeap_ = 0;
 
 	//数
-	uint32_t num_;
+	uint32_t num_ = 0;
 
 	// ノードデータ
 	std::vector<NodeData> nodeDatas_;
