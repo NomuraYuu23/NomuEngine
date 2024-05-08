@@ -493,6 +493,12 @@ public: // アクセッサ
 	void SetVignetteSize(float vignetteSize) { computeParametersMap_->vignetteSize = vignetteSize; }
 
 	/// <summary>
+	/// ビネットの変化設定
+	/// </summary>
+	/// <param name="vignetteChange">ビネットの変化</param>
+	void SetVignetteChange(float vignetteChange) { computeParametersMap_->vignetteChange = vignetteChange; }
+
+	/// <summary>
 	/// グリッチの水平設定
 	/// </summary>
 	/// <param name="horzGlitchPase">グリッチの水平</param>
