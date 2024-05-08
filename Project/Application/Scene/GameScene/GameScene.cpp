@@ -330,35 +330,37 @@ void GameScene::Draw() {
 	renderTargetTexture_->ChangePixelShaderResource(0);
 	renderTargetTexture_->ChangePixelShaderResource(1);
 	
-	//PostEffect::GetInstance()->GlitchRGBShiftCommand(
-	//	dxCommon_->GetCommadList(),
-	//	0,
-	//	renderTargetTexture_->GetSrvGPUHandle(0)//,
-	//	//shockWaveManager_->GetShockWaveDataBuff()
-	//	//sampleObj_->GetVelocity2DData()
-	//);
-
-	//renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->ClearDepthBuffer();
-
-	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+	PostEffect::GetInstance()->VignetteCommand(
 		dxCommon_->GetCommadList(),
-		renderTargetTexture_->GetSrvGPUHandle(1),
-		"outline"
+		0,
+		renderTargetTexture_->GetSrvGPUHandle(0)//,
+		//shockWaveManager_->GetShockWaveDataBuff()
+		//sampleObj_->GetVelocity2DData()
 	);
-
-	WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
-		dxCommon_->GetCommadList(),
-		renderTargetTexture_->GetSrvGPUHandle(0),
-		"normal"
-	);
-
-	WindowSpriteStorage::GetInstance()->TemporaryStoragOverwrite(dxCommon_->GetCommadList());
 
 	renderTargetTexture_->ChangeRenderTarget(0);
-	renderTargetTexture_->ChangeRenderTarget(1);
+	renderTargetTexture_->ClearDepthBuffer();
 
-	renderTargetTexture_->TextureDraw(WindowSpriteStorage::GetInstance()->GetTemporaryStorageOverwriteTexture()->GetUavHandleGPU());
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+
+	//WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+	//	dxCommon_->GetCommadList(),
+	//	renderTargetTexture_->GetSrvGPUHandle(1),
+	//	"outline"
+	//);
+
+	//WindowSpriteStorage::GetInstance()->TemporaryStorageRegister(
+	//	dxCommon_->GetCommadList(),
+	//	renderTargetTexture_->GetSrvGPUHandle(0),
+	//	"normal"
+	//);
+
+	//WindowSpriteStorage::GetInstance()->TemporaryStoragOverwrite(dxCommon_->GetCommadList());
+
+	//renderTargetTexture_->ChangeRenderTarget(0);
+	//renderTargetTexture_->ChangeRenderTarget(1);
+
+	//renderTargetTexture_->TextureDraw(WindowSpriteStorage::GetInstance()->GetTemporaryStorageOverwriteTexture()->GetUavHandleGPU());
 
 }
 

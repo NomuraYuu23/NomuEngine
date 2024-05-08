@@ -28,6 +28,7 @@ struct ComputeParameters {
 	float32_t distortion; // 歪み
 	
 	float32_t vignetteSize; // ビネットの大きさ
+	float32_t vignetteChange; // ビネットの変化
 
 	float32_t horzGlitchPase; //水平
 	float32_t vertGlitchPase; //垂直
@@ -618,12 +619,14 @@ float32_t4 Vignette(in const float32_t4 input, in const float32_t2 index) {
 		index.x / gComputeConstants.threadIdTotalX,
 		index.y / gComputeConstants.threadIdTotalY);
 
-	float32_t vignette = length(float32_t2(0.5f, 0.5f) - texcoord);
+	float32_t2 corrent = texcoord * (1.0f - texcoord.yx);
 
-	vignette = clamp(vignette - gComputeConstants.vignetteSize, 0.0f, 1.0f);
+	float32_t vigntte = corrent.x * corrent.y * gComputeConstants.vignetteSize;
+
+	vigntte = saturate(pow(vigntte, gComputeConstants.vignetteChange));
 
 	float32_t4 output = input;
-	output.rgb -= vignette;
+	output.rgb *= vigntte;
 
 	return output;
 

@@ -46,7 +46,8 @@ void PostEffect::Initialize()
 
 	computeParametersMap_->distortion = 0.0f; // 歪み
 
-	computeParametersMap_->vignetteSize = 0.0f; // ビネットの大きさ
+	computeParametersMap_->vignetteSize = 16.0f; // ビネットの大きさ
+	computeParametersMap_->vignetteChange = 0.8f; // ビネットの変化
 
 	computeParametersMap_->horzGlitchPase = 0.1f; //水平
 	computeParametersMap_->vertGlitchPase = 0.1f; //垂直
@@ -107,6 +108,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("bShift", &computeParametersMap_->bShift.x, 0.01f);
 	ImGui::DragFloat("distortion", &computeParametersMap_->distortion, 0.01f);
 	ImGui::DragFloat("vignetteSize", &computeParametersMap_->vignetteSize, 0.01f);
+	ImGui::DragFloat("vignetteChange", &computeParametersMap_->vignetteChange, 0.01f);
 	ImGui::DragFloat("horzGlitchPase", &computeParametersMap_->horzGlitchPase, 0.01f);
 	ImGui::DragFloat("vertGlitchPase", &computeParametersMap_->vertGlitchPase, 0.01f);
 	ImGui::DragFloat("glitchStepValue", &computeParametersMap_->glitchStepValue, 0.01f);

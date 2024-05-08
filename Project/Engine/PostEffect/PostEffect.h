@@ -35,12 +35,14 @@ public: // サブクラス
 
 		float distortion; // 歪み
 		float vignetteSize; // ビネットの大きさ
+		float vignetteChange; // ビネットの変化
 
 		float horzGlitchPase; // グリッチの水平
 		float vertGlitchPase; // グリッチの垂直
 		float glitchStepValue; // グリッチのステップ値
 
 		int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
+		float padding2[3]; // パディング
 		Vector2 radialBlurCenter; // 放射状ブラーの中心座標
 		float radialBlurStrength; // 放射状ブラーの広がる強さ
 		float radialBlurMask; // 放射状ブラーが適用されないサイズ
