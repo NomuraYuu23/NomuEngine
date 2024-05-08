@@ -58,11 +58,11 @@ private: // 変数
 	// テクスチャリソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	// シェーダーリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE uavHandleCPU_;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE uavHandleCPU_{};
 	// シェーダーリソースビューのハンドル(GPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE uavHandleGPU_;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE uavHandleGPU_{};
 	//  SRVのインデックス
-	uint32_t indexDescriptorHeap_;
+	uint32_t indexDescriptorHeap_ = 0;
 
 };
 
