@@ -65,21 +65,21 @@ private: // メンバ変数
 	// シーン遷移を保持するメンバ変数
 	std::unique_ptr<ISceneTransition> sceneTransition_;
 
-	// 初期化用スレッド
+	// シーン初期化用スレッド
 	std::thread sceneInitialize_;
-	// 初期化中か
-	bool sceneInitializing_;
-	// 初期化が終わったか
+	// シーン初期化が終わったか
 	bool sceneInitializeEnd_;
+	// シーン初期化がデタッチされたか
+	bool sceneDetachCompletion_;
 
 	// シーン遷移用初期化用スレッド
 	std::thread sceneTransitionInitialize_;
-	// 初期化中か
-	bool sceneTransitionInitializing_;
-	// 初期化が終わったか
+	// シーン遷移初期化が終わったか
 	bool sceneTransitionInitializeEnd_;
-	// 最初か
+	// シーン遷移初期化が最初か
 	bool isFirstLoad_;
+	// シーン遷移初期化がデタッチされたか
+	bool sceneTransitionDetachCompletion_;
 
 };
 

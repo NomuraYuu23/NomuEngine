@@ -3,10 +3,10 @@
 SceneManager::~SceneManager()
 {
 
-	if (sceneInitializing_) {
+	if (!sceneDetachCompletion_) {
 		sceneInitialize_.join();
 	}
-	if (sceneTransitionInitializing_) {
+	if (!sceneTransitionDetachCompletion_) {
 		sceneTransitionInitialize_.join();
 	}
 
@@ -24,7 +24,8 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 	scene_->StaticInitialize();
 	// シーンの初期化
 	sceneInitialize_ = std::thread(std::bind(&SceneManager::SceneInitializeThread, this));
-	sceneInitializing_ = true;
+	// デタッチ完了フラグ
+	sceneDetachCompletion_ = false;
 
 	// 初期シーン
 	currentSceneNo_ = earlySceneNo;
@@ -41,13 +42,20 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 	sceneTransition_->SetStoppingUpdates(true);
 	sceneTransition_->SetIsFadeIn(false);
 
+	// デタッチ完了フラグ
+	sceneTransitionDetachCompletion_ = true;
+
+	// 初期化終了フラグ
+	sceneInitializeEnd_ = false;
+	sceneTransitionInitializeEnd_ = false;
+
 }
 
 void SceneManager::Update()
 {
 
 	// シーンのチェック
-	if (!sceneInitializing_) {
+	if (sceneDetachCompletion_) {
 		currentSceneNo_ = scene_->GetSceneNo();
 
 		prevRequestSeneNo_ = requestSeneNo_; // 前のリクエストシーン
@@ -56,15 +64,15 @@ void SceneManager::Update()
 
 	// リクエストシーンが変わったか
 	if ( (requestSeneNo_ != prevRequestSeneNo_ || scene_->GetResetScene())
-		&& !sceneTransitionInitializing_ && !sceneTransitionInitializeEnd_) {
+		&& sceneTransitionDetachCompletion_) {
 		//シーン遷移開始（初期化）
 		sceneTransition_.reset(sceneTransitionFactory_->CreateSceneTransition(currentSceneNo_, requestSeneNo_));
 		sceneTransitionInitialize_ = std::thread(std::bind(&SceneManager::SceneTransitionInitializeThread, this));
-		sceneTransitionInitializing_ = true;
+		sceneTransitionDetachCompletion_ = false;
 	}
 
 	//シーン遷移中
-	if (sceneTransition_ && !sceneTransitionInitializing_) {
+	if (sceneTransition_ && sceneTransitionDetachCompletion_) {
 		// シーン遷移更新
 		sceneTransition_->Update();
 		if (sceneTransition_->GetSwitchScene()) {
@@ -74,7 +82,7 @@ void SceneManager::Update()
 			scene_.reset(sceneFacyory_->CreateScene(currentSceneNo_));
 			// シーンの初期化
 			sceneInitialize_ = std::thread(std::bind(&SceneManager::SceneInitializeThread, this));
-			sceneInitializing_ = true;
+			sceneDetachCompletion_ = false;
 			sceneTransition_->SetSwitchScene(false);
 			sceneTransition_->SetStoppingUpdates(true);
 		}
@@ -84,7 +92,7 @@ void SceneManager::Update()
 	}
 
 	// 更新処理
-	if (!sceneInitializing_) {
+	if (sceneDetachCompletion_) {
 		scene_->Update();
 	}
 
@@ -92,6 +100,7 @@ void SceneManager::Update()
 	if (sceneInitializeEnd_) {
 		sceneInitializeEnd_ = false;
 		sceneInitialize_.detach();
+		sceneDetachCompletion_ = true;
 		if (sceneTransition_) {
 			sceneTransition_->SetStoppingUpdates(false);
 		}
@@ -101,6 +110,7 @@ void SceneManager::Update()
 	if (sceneTransitionInitializeEnd_) {
 		sceneTransitionInitializeEnd_ = false;
 		sceneTransitionInitialize_.detach();
+		sceneTransitionDetachCompletion_ = true;
 	}
 
 }
@@ -108,10 +118,10 @@ void SceneManager::Update()
 void SceneManager::Draw()
 {
 	// 描画処理
-	if (!sceneInitializing_) {
+	if (sceneDetachCompletion_) {
 		scene_->Draw();
 	}
-	if (sceneTransition_ && !sceneTransitionInitializing_) {
+	if (sceneTransition_ && sceneTransitionDetachCompletion_) {
 		sceneTransition_->Draw();
 	}
 
@@ -120,21 +130,15 @@ void SceneManager::Draw()
 void SceneManager::SceneInitializeThread()
 {
 
-	sceneInitializeEnd_ = false;
-	sceneInitializing_ = true;
 	scene_->Initialize();
 	sceneInitializeEnd_ = true;
-	sceneInitializing_ = false;
 
 }
 
 void SceneManager::SceneTransitionInitializeThread()
 {
 
-	sceneTransitionInitializeEnd_ = false;
-	sceneTransitionInitializing_ = true;
 	sceneTransition_->Initialize();
 	sceneTransitionInitializeEnd_ = true;
-	sceneTransitionInitializing_ = false;
 
 }
