@@ -64,7 +64,7 @@ void SceneManager::Update()
 
 	// リクエストシーンが変わったか
 	if ( (requestSeneNo_ != prevRequestSeneNo_ || scene_->GetResetScene())
-		&& sceneTransitionDetachCompletion_) {
+		&& sceneTransitionDetachCompletion_ && sceneDetachCompletion_) {
 		//シーン遷移開始（初期化）
 		sceneTransition_.reset(sceneTransitionFactory_->CreateSceneTransition(currentSceneNo_, requestSeneNo_));
 		sceneTransitionInitialize_ = std::thread(std::bind(&SceneManager::SceneTransitionInitializeThread, this));
@@ -75,7 +75,7 @@ void SceneManager::Update()
 	if (sceneTransition_ && sceneTransitionDetachCompletion_) {
 		// シーン遷移更新
 		sceneTransition_->Update();
-		if (sceneTransition_->GetSwitchScene()) {
+		if (sceneTransition_->GetSwitchScene() && sceneDetachCompletion_) {
 			// シーン切り替え
 			currentSceneNo_ = requestSeneNo_;
 			scene_->SetStopAudio(true);
