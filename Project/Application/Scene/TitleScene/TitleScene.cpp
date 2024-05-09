@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "../../../Engine/3D/ModelDraw.h"
+#include "../../../Engine/base/OutputLog.h"
 
 TitleScene::~TitleScene()
 {
