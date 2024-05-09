@@ -143,7 +143,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DxCommand.cpp" />
     <ClCompile Include="Engine\base\DXGIDevice.cpp" />
     <ClCompile Include="Engine\base\Log.cpp" />
-    <ClCompile Include="Engine\base\OutputLog.cpp" />
     <ClCompile Include="Engine\base\RTVDescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\BlendStateManager.cpp" />
