@@ -20,7 +20,7 @@ class LargeNumberOfObjects
 public: // 定数
 
 	// 最大数
-	static const uint32_t kNumInstanceMax_ = 1024;
+	static const uint32_t kNumInstanceMax_ = 256;
 
 public:
 

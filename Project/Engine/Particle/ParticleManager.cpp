@@ -9,8 +9,6 @@
 
 #include <cassert>
 
-uint32_t ParticleManager::kNumInstanceMax_ = 1024;
-
 ParticleManager* ParticleManager::GetInstance()
 {
 	static ParticleManager instance;

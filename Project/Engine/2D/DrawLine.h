@@ -81,7 +81,7 @@ private:
 public: // 静的メンバ変数
 
 	// 線最大数
-	const uint32_t kNumInstanceMax_ = 1024;
+	const uint32_t kNumInstanceMax_ = 256;
 
 private: // メンバ変数
 

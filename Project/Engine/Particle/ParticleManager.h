@@ -37,10 +37,10 @@ public: // サブクラス
 		Model* model_;
 	};
 
-public: // 静的メンバ変数
+public: // 定数
 
-	// パーティクル最大数
-	static uint32_t kNumInstanceMax_;
+	// 最大数
+	const uint32_t kNumInstanceMax_ = 256;
 
 public: // メンバ関数
 
