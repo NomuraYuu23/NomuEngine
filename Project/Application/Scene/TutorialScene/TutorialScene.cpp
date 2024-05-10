@@ -55,6 +55,8 @@ void TutorialScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
+	IScene::InitilaizeCheck();
+
 }
 
 /// <summary>
@@ -66,7 +68,7 @@ void TutorialScene::Update() {
 	ImguiDraw();
 #endif
 
-	if (requestSceneNo == kClear || requestSceneNo == kTitle || isBeingReset_) {
+	if (requestSceneNo_ == kClear || requestSceneNo_ == kTitle || isBeingReset_) {
 		resetScene_ = false;
 		// BGM音量下げる
 		if (isDecreasingVolume) {

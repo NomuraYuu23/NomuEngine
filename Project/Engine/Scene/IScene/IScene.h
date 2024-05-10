@@ -51,8 +51,11 @@ class IScene
 protected: // 静的メンバ変数
 
 	// シーン番号
-	static int sceneNo;
-	static int requestSceneNo;
+	static int sceneNo_;
+	static int requestSceneNo_;
+
+	static int  sceneNoCheck_;
+	static int requestSceneNoCheck_;
 
 	// 入力マネージャー
 	static DirectXCommon* dxCommon_;
@@ -118,6 +121,11 @@ protected:  // メンバ関数
 	/// テクスチャロード
 	/// </summary>
 	virtual void TextureLoad();
+
+	/// <summary>
+	/// 初期化確認
+	/// </summary>
+	void InitilaizeCheck();
 
 protected: // メンバ変数
 

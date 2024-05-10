@@ -173,6 +173,8 @@ void GameScene::Initialize() {
 
 	stringWind = { 0.0f,0.0f,0.0f };
 
+	IScene::InitilaizeCheck();
+
 }
 
 /// <summary>
@@ -184,7 +186,7 @@ void GameScene::Update() {
 	ImguiDraw();
 #endif
 
-	if (requestSceneNo == kClear || requestSceneNo == kTitle || isBeingReset_) {
+	if (requestSceneNo_ == kClear || requestSceneNo_ == kTitle || isBeingReset_) {
 		resetScene_ = false;
 		// BGM音量下げる
 		if (isDecreasingVolume) {

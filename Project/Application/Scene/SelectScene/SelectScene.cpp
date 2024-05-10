@@ -8,6 +8,8 @@ void SelectScene::Initialize()
 	ModelCreate();
 	TextureLoad();
 
+	IScene::InitilaizeCheck();
+
 }
 
 void SelectScene::Update()
@@ -15,7 +17,7 @@ void SelectScene::Update()
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		// 行きたいシーンへ
-		requestSceneNo = kGame;
+		requestSceneNo_ = kGame;
 	}
 
 }

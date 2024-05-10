@@ -35,6 +35,8 @@ void TitleScene::Initialize()
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
+	IScene::InitilaizeCheck();
+
 }
 
 void TitleScene::Update()
@@ -45,13 +47,13 @@ void TitleScene::Update()
 #endif // _DEBUG
 
 	if ((input_->TriggerJoystick(JoystickButton::kJoystickButtonA) || input_->TriggerKey(DIK_SPACE)) &&
-		requestSceneNo == kTitle) {
+		requestSceneNo_ == kTitle) {
 		// 行きたいシーンへ
-		requestSceneNo = kGame;
+		requestSceneNo_ = kGame;
 	}
 
 	// BGM音量下げる
-	if (requestSceneNo == kTutorial && isDecreasingVolume) {
+	if (requestSceneNo_ == kTutorial && isDecreasingVolume) {
 		LowerVolumeBGM();
 	}
 	

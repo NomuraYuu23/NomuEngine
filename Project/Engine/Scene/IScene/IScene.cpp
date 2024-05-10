@@ -1,8 +1,11 @@
 #include "IScene.h"
 
 //タイトルシーンで初期化
-int IScene::sceneNo = kTitle;
-int IScene::requestSceneNo = kTitle;
+int IScene::sceneNo_ = kTitle;
+int IScene::requestSceneNo_ = kTitle;
+
+int IScene::sceneNoCheck_ = kTitle;
+int IScene::requestSceneNoCheck_ = kTitle;
 
 DirectXCommon* IScene::dxCommon_ = nullptr;
 Input* IScene::input_ = nullptr;
@@ -21,6 +24,9 @@ DrawLine* IScene::drawLine_ = nullptr;
 
 void IScene::StaticInitialize()
 {
+
+	sceneNoCheck_ = sceneNo_;
+	requestSceneNoCheck_ = requestSceneNo_;
 
 	//機能
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -58,10 +64,18 @@ IScene::~IScene(){
 
 }
 
-int IScene::GetSceneNo(){ return sceneNo; }
+int IScene::GetSceneNo(){ return sceneNo_; }
 
-int IScene::GetRequestSceneNo(){ return requestSceneNo; }
+int IScene::GetRequestSceneNo(){ return requestSceneNo_; }
 
 void IScene::ModelCreate(){}
 
 void IScene::TextureLoad(){}
+
+void IScene::InitilaizeCheck()
+{
+
+	assert(requestSceneNo_ == requestSceneNoCheck_);
+	assert(sceneNo_ == sceneNoCheck_);
+
+}
