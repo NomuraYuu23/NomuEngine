@@ -25,9 +25,6 @@ DrawLine* IScene::drawLine_ = nullptr;
 void IScene::StaticInitialize()
 {
 
-	sceneNoCheck_ = sceneNo_;
-	requestSceneNoCheck_ = requestSceneNo_;
-
 	//機能
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -52,6 +49,9 @@ void IScene::StaticInitialize()
 
 void IScene::Initialize()
 {
+
+	sceneNoCheck_ = sceneNo_;
+	requestSceneNoCheck_ = requestSceneNo_;
 
 	textureHandleManager_ = std::make_unique<ITextureHandleManager>();
 	textureHandleManager_->Initialize();
