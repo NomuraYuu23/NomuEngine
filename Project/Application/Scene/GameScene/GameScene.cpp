@@ -277,13 +277,13 @@ void GameScene::Draw() {
 	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
-	//skydome_->Draw(camera_);
+	skydome_->Draw(camera_);
 
 	//Obj
 	sampleObj_->Draw(camera_);
 
 	// 紐
-	//testString_->Draw(camera_);
+	testString_->Draw(camera_);
 
 	//testManyObject_->Draw(camera_);
 

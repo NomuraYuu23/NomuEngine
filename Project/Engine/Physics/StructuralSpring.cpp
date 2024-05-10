@@ -1,5 +1,6 @@
 #include "StructuralSpring.h"
 #include "../Math/DeltaTime.h"
+#include <algorithm>
 
 void StructuralSpring::Initialize(
 	const MassPoint& point0, 
@@ -76,6 +77,14 @@ void StructuralSpring::Update(
 	else {
 		point1_.velocity = { 0.0f,0.0f,0.0f };
 	}
+
+	// 速度制限
+	const float velocityRestrictions = 256.0f;
+
+	point0_.velocity.x = std::clamp(point0_.velocity.x, -velocityRestrictions, velocityRestrictions);
+	point0_.velocity.y = std::clamp(point0_.velocity.y, -velocityRestrictions, velocityRestrictions);
+	point1_.velocity.x = std::clamp(point1_.velocity.x, -velocityRestrictions, velocityRestrictions);
+	point1_.velocity.y = std::clamp(point1_.velocity.y, -velocityRestrictions, velocityRestrictions);
 
 	// 位置変動
 	point0_.position = point0_.position + point0_.velocity * kDeltaTime_;

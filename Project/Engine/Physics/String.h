@@ -81,7 +81,7 @@ public:
 	/// <param name="pointIndex">インデックス</param>
 	/// <param name="position">位置</param>
 	void SetPosition(uint32_t pointIndex, const Vector3& position);
-
+	
 public: // アクセッサ
 
 	std::vector<StructuralSpring> GetSpring() { return structuralSpring_; }

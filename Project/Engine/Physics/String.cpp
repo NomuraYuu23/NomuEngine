@@ -240,8 +240,8 @@ void String::SetPosition(uint32_t pointIndex, const Vector3& position)
 		massPoint.position = position;
 		structuralSpring_[pointIndex].SetPoint0(massPoint);
 
-		massPoint = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].GetPoint1();
-		massPoint.position = position;
+		//massPoint = structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].GetPoint1();
+		//massPoint.position = position;
 		structuralSpring_[static_cast<std::vector<StructuralSpring, std::allocator<StructuralSpring>>::size_type>(pointIndex) - 1].SetPoint1(massPoint);
 	}
 
