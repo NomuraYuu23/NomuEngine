@@ -82,10 +82,10 @@ void TitleScene::Draw()
 
 	ModelDraw::PreDrawDesc preDrawDesc;
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
-	preDrawDesc.directionalLight = nullptr;
+	preDrawDesc.directionalLight = directionalLight_.get();
 	preDrawDesc.fogManager = FogManager::GetInstance();
-	preDrawDesc.pointLightManager = nullptr;
-	preDrawDesc.spotLightManager = nullptr;
+	preDrawDesc.pointLightManager = pointLightManager_.get();
+	preDrawDesc.spotLightManager = spotLightManager_.get();
 
 	ModelDraw::PreDraw(preDrawDesc);
 

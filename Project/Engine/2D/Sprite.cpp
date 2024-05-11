@@ -250,10 +250,10 @@ void Sprite::Draw() {
 	spriteForGPUMap_->World = transformMatrix_;
 
 	//TransformationMatrixCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(1, spriteForGPUBuff_->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(0, spriteForGPUBuff_->GetGPUVirtualAddress());
 
 	//マテリアルCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(0, material_->GetMaterialBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(1, material_->GetMaterialBuff()->GetGPUVirtualAddress());
 
 	// シェーダーリソースビューをセット
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2, textureHandle_);

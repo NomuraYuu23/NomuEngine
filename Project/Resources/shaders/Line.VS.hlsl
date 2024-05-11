@@ -6,7 +6,7 @@ struct ViewProjectionMatrix {
 	float32_t4x4 m;
 };
 
-ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b0);
+ConstantBuffer<ViewProjectionMatrix> gViewProjectionMatrix : register(b3);
 
 struct LineGPU {
 
@@ -15,7 +15,7 @@ struct LineGPU {
 
 };
 
-StructuredBuffer<LineGPU> gLine : register(t0);
+StructuredBuffer<LineGPU> gLine : register(t4);
 
 VertexShaderOutput main(uint32_t vertexId : SV_VertexID, uint32_t instanceId : SV_InstanceID)
 {

@@ -1,11 +1,5 @@
 #include "Model.hlsli"
 
-Texture2D<float32_t4> gTexture : register(t0);
-Texture2D<float32_t4> gTexture1 : register(t1);
-Texture2D<float32_t4> gTexture2 : register(t2);
-Texture2D<float32_t4> gTexture3 : register(t3);
-SamplerState gSampler : register(s0);
-
 struct Material {
 	float32_t4 color;
 	int32_t enableLighting;
@@ -50,18 +44,6 @@ struct Fog {
 	float32_t fagFar; // 終了位置
 };
 
-ConstantBuffer<Material> gMaterial : register(b0);
-
-ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
-
-ConstantBuffer<Camera> gCamera : register(b2);
-
-ConstantBuffer<Fog> gFog : register(b3);
-
-StructuredBuffer<PointLight> gPointLights : register(t4);
-
-StructuredBuffer<SpotLight> gSpotLights : register(t5);
-
 struct PointLightCalcData {
 	float32_t3 pointLightDirection;
 	float32_t pointFactor;
@@ -77,6 +59,25 @@ struct SpotLightCalcData {
 struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
 };
+
+SamplerState gSampler : register(s0);
+
+Texture2D<float32_t4> gTexture0 : register(t0);
+Texture2D<float32_t4> gTexture1 : register(t1);
+Texture2D<float32_t4> gTexture2 : register(t2);
+Texture2D<float32_t4> gTexture3 : register(t3);
+Texture2D<float32_t4> gTexture4 : register(t4);
+Texture2D<float32_t4> gTexture5 : register(t5);
+Texture2D<float32_t4> gTexture6 : register(t6);
+Texture2D<float32_t4> gTexture7 : register(t7);
+
+StructuredBuffer<PointLight> gPointLights : register(t8);
+StructuredBuffer<SpotLight> gSpotLights : register(t9);
+
+ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<Camera> gCamera : register(b2);
+ConstantBuffer<Fog> gFog : register(b3);
 
 /// <summary>
 /// ランバート
@@ -392,7 +393,7 @@ float32_t4 SetTextureColor(VertexShaderOutput input) {
 	if (input.texcoord.x <= 1.0f) {
 		texcoord = input.texcoord;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
-		textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+		textureColor = gTexture0.Sample(gSampler, transformedUV.xy);
 	}
 	else if(input.texcoord.x <= 3.0f){
 		texcoord.x = input.texcoord.x - 2.0f;

@@ -11,9 +11,9 @@ struct TransformationMatrix {
 	float32_t4x4 WorldInverseTranspose;
 };
 
-StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t0);
+StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t1);
 
-StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t1);
+StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t3);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;

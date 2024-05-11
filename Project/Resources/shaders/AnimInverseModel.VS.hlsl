@@ -11,7 +11,7 @@ struct TransformationMatrix {
 	float32_t4x4 WorldInverseTranspose;
 };
 
-StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t0);
+StructuredBuffer<LocalMatrix> gLocalMatrixes : register(t1);
 
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 

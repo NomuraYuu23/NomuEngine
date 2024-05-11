@@ -78,11 +78,6 @@ private:
 	std::unique_ptr<Model> particleUvcheckerModel_ = nullptr;
 	std::unique_ptr<Model> particleCircleModel_ = nullptr;
 
-	// ライト
-	std::unique_ptr<DirectionalLight> directionalLight_;
-	Vector3 direction = { 1.0f, -1.0f, 0.0f};
-	float intencity = 1.0f;
-
 	std::unique_ptr<CollisionManager> collisionManager_;
 
 	// オーディオマネージャー
@@ -96,14 +91,6 @@ private:
 	// サンプルOBJ
 	std::unique_ptr<SampleObject> sampleObj_;
 	std::unique_ptr<Model> sampleObjModel_;
-
-	// 点光源
-	std::unique_ptr<PointLightManager> pointLightManager_;
-	std::array<PointLightData, PointLightManager::kNumInstanceMax_> pointLightDatas_;
-
-	// スポットライト
-	std::unique_ptr<SpotLightManager> spotLightManager_;
-	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
 
 	// Collision2DManager
 	std::unique_ptr<Collision2DManager> collision2DManager_;

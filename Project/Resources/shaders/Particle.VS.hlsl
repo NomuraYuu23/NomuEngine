@@ -17,7 +17,7 @@ struct StartInstanceId {
 	uint32_t num;
 };
 
-ConstantBuffer<StartInstanceId> gStartInstanceId : register(b0);
+ConstantBuffer<StartInstanceId> gStartInstanceId : register(b2);
 
 VertexShaderOutput main(VertexShaderInput input, uint32_t instanceId : SV_InstanceID) {
 	VertexShaderOutput output;

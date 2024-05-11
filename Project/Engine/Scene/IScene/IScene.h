@@ -141,5 +141,17 @@ protected: // メンバ変数
 	// 削除された時オーディオ止める
 	bool stopAudio_ = false;
 
+	// ライト
+	std::unique_ptr<DirectionalLight> directionalLight_;
+	DirectionalLightData directionalLightData_;
+
+	// 点光源
+	std::unique_ptr<PointLightManager> pointLightManager_;
+	std::array<PointLightData, PointLightManager::kNumInstanceMax_> pointLightDatas_;
+
+	// スポットライト
+	std::unique_ptr<SpotLightManager> spotLightManager_;
+	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
+
 };
 

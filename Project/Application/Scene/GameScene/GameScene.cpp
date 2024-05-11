@@ -71,39 +71,9 @@ void GameScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
-	// 平行光源
-	directionalLight_ = std::make_unique<DirectionalLight>();
-	directionalLight_->Initialize();
-
 	// サンプルobj
 	sampleObj_ = std::make_unique<SampleObject>();
 	sampleObj_->Initialize(sampleObjModel_.get());
-
-	// 点光源
-	pointLightManager_ = std::make_unique<PointLightManager>();
-	pointLightManager_->Initialize();
-	for (size_t i = 0; i < pointLightDatas_.size(); ++i) {
-		pointLightDatas_[i].color = { 1.0f,1.0f,1.0f,1.0f };
-		pointLightDatas_[i].position = { 0.0f, -1.0f, 0.0f };
-		pointLightDatas_[i].intencity = 1.0f;
-		pointLightDatas_[i].radius = 10.0f;
-		pointLightDatas_[i].decay = 10.0f;
-		pointLightDatas_[i].used = false;
-	}
-
-	spotLightManager_ = std::make_unique<SpotLightManager>();
-	spotLightManager_->Initialize();
-	for (size_t i = 0; i < spotLightDatas_.size(); ++i) {
-		spotLightDatas_[i].color = { 1.0f,1.0f,1.0f,1.0f };
-		spotLightDatas_[i].position = { 0.0f, -1.0f, 0.0f };
-		spotLightDatas_[i].intencity = 1.0f;
-		spotLightDatas_[i].direction = { 0.0f, -1.0f, 0.0f }; // ライトの方向
-		spotLightDatas_[i].distance = 10.0f; // ライトの届く距離
-		spotLightDatas_[i].decay = 2.0f; // 減衰率
-		spotLightDatas_[i].cosAngle = 2.0f; // スポットライトの余弦
-		spotLightDatas_[i].cosFalloffStart = 1.0f; // フォールオフ開始位置
-		spotLightDatas_[i].used = false; // 使用している
-	}
 
 	collision2DManager_ = std::make_unique<Collision2DManager>();
 	collision2DManager_->Initialize();
@@ -196,11 +166,6 @@ void GameScene::Update() {
 	}
 
 	//光源
-	DirectionalLightData directionalLightData{};
-	directionalLightData.color = { 1.0f,1.0f,1.0f,1.0f };
-	directionalLightData.direction = Vector3::Normalize(direction);
-	directionalLightData.intencity = intencity;
-	directionalLight_->Update(directionalLightData);
 
 	pointLightManager_->Update(pointLightDatas_);
 	spotLightManager_->Update(spotLightDatas_);
@@ -368,11 +333,6 @@ void GameScene::Draw() {
 
 void GameScene::ImguiDraw(){
 #ifdef _DEBUG
-
-	ImGui::Begin("Light");
-	ImGui::DragFloat3("direction", &direction.x, 0.1f);
-	ImGui::DragFloat("i", &intencity, 0.01f);
-	ImGui::End();
 
 	//ImGui::DragFloat2("box_", &boxCenter_.x, 0.1f);
 	//ImGui::DragFloat2("box1_", &box1Center_.x, 0.1f);

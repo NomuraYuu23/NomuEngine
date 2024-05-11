@@ -108,15 +108,14 @@ void ParticleManager::Draw(const Matrix4x4& viewProjectionMatrix, ID3D12Graphics
 		//マテリアルを設定
 		commandList->SetGraphicsRootConstantBufferView(0, Model::GetDefaultMaterial()->GetMaterialBuff()->GetGPUVirtualAddress());
 
-		// 開始位置を設定
-		commandList->SetGraphicsRootConstantBufferView(3, particleDatas_[i].startInstanceIdBuff_->GetGPUVirtualAddress());
-
-		//SRVのDescriptorTableの先頭を設定。2はrootParamenter[2]である
-		for (size_t j = 0; j < particleDatas_[i].model_->GetModelData().material.textureFilePaths.size(); ++j) {
-			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(commandList, 2, particleDatas_[i].model_->GetTextureHandles()[j]);
-		}
 
 		commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+
+		// パーティクルはテクスチャ1個
+		TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(commandList, 2, particleDatas_[i].model_->GetTextureHandles()[0]);
+
+		// 開始位置を設定
+		commandList->SetGraphicsRootConstantBufferView(3, particleDatas_[i].startInstanceIdBuff_->GetGPUVirtualAddress());
 
 		//描画
 		commandList->DrawInstanced(UINT(particleDatas_[i].model_->GetModelData().vertices.size()), particleDatas_[i].instanceIndex_, 0, 0);
