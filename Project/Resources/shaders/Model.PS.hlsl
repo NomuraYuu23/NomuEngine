@@ -407,11 +407,35 @@ float32_t4 SetTextureColor(VertexShaderOutput input) {
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture2.Sample(gSampler, transformedUV.xy);
 	}
-	else {
-		texcoord = input.texcoord.x - 6.0f;
+	else if (input.texcoord.x <= 7.0f) {
+		texcoord.x = input.texcoord.x - 6.0f;
 		texcoord.y = input.texcoord.y;
 		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 		textureColor = gTexture3.Sample(gSampler, transformedUV.xy);
+	}
+	else if (input.texcoord.x <= 9.0f) {
+		texcoord = input.texcoord.x - 8.0f;
+		texcoord.y = input.texcoord.y;
+		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+		textureColor = gTexture4.Sample(gSampler, transformedUV.xy);
+	}
+	else if (input.texcoord.x <= 11.0f) {
+		texcoord.x = input.texcoord.x - 10.0f;
+		texcoord.y = input.texcoord.y;
+		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+		textureColor = gTexture5.Sample(gSampler, transformedUV.xy);
+	}
+	else if (input.texcoord.x <= 13.0f) {
+		texcoord = input.texcoord.x - 12.0f;
+		texcoord.y = input.texcoord.y;
+		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+		textureColor = gTexture6.Sample(gSampler, transformedUV.xy);
+	}
+	else {
+		texcoord = input.texcoord.x - 14.0f;
+		texcoord.y = input.texcoord.y;
+		transformedUV = mul(float32_t4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+		textureColor = gTexture7.Sample(gSampler, transformedUV.xy);
 	}
 
 	return textureColor;

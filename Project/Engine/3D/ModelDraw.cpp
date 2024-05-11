@@ -39,6 +39,10 @@ void ModelDraw::PreDraw(const PreDrawDesc& desc)
 {
 
 	assert(sCommandList == nullptr);
+	assert(desc.directionalLight);
+	assert(desc.pointLightManager);
+	assert(desc.spotLightManager);
+	assert(desc.fogManager);
 
 	sCommandList = desc.commandList;
 
@@ -119,10 +123,24 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 5 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				5 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				desc.model->GetTextureHandles()[0]);
+		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 5 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList, 
+				5 + static_cast<UINT>(i + desc.textureHandles.size()),
+				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
@@ -179,10 +197,24 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 4 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				4 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				desc.model->GetTextureHandles()[0]);
+		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 4 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				4 + static_cast<UINT>(i + desc.textureHandles.size()),
+				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
@@ -247,10 +279,24 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 5 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList, 
+				5 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				desc.model->GetTextureHandles()[0]);
+		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 5 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				5 + static_cast<UINT>(i + desc.textureHandles.size()),
+				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
@@ -297,10 +343,24 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				2 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				desc.model->GetTextureHandles()[0]);
+		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				2 + static_cast<UINT>(i + desc.textureHandles.size()),
+				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
@@ -352,10 +412,24 @@ void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				1 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				desc.model->GetTextureHandles()[0]);
+		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.textureHandles[i]);
+		}
+		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
+		for (uint32_t i = 0; i < tooMany; ++i) {
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+				sCommandList,
+				1 + static_cast<UINT>(i + desc.textureHandles.size()),
+				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
