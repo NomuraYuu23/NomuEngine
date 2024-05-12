@@ -66,8 +66,6 @@ void PostEffect::Initialize()
 	computeParametersMap_->paraSize = { 0.3f, 0.3f };// パラの大きさ
 	computeParametersMap_->paraPosition = { 1280.0f, 720.0f }; // パラの位置
 
-	computeParametersMap_->magnificationER = 2.0f; // 拡大縮小倍率
-
 	// ルートシグネチャ
 	CreateRootSignature();
 
@@ -85,13 +83,13 @@ void PostEffect::Initialize()
 			kTextureWidth,
 			kTextureHeight);
 	}
-	for (uint32_t i = 0; i < 3; ++i) {
-		internalEditTextures_[i] = std::make_unique<TextureUAV>();
-		internalEditTextures_[i]->Initialize(
-			device_,
-			kTextureWidth,
-			kTextureHeight);
-	}
+
+	// デフォルト速度バッファ
+	velocity2DManager_ = std::make_unique<Velocity2DManager>();
+	velocity2DManager_->Initialize();
+	// デフォルト衝撃波パラメータ
+	shockWaveManager_ = std::make_unique<ShockWaveManager>();
+	shockWaveManager_->Initialize();
 
 }
 
@@ -122,192 +120,16 @@ void PostEffect::ImGuiDraw()
 	ImGui::ColorEdit4("paraColor", &computeParametersMap_->paraColor.x);
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
-	ImGui::DragFloat("magnificationER", &computeParametersMap_->magnificationER, 0.01f, 1.0f);
 	ImGui::End();
 
 }
 
-void PostEffect::CopyCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex,
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& copyGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// コピーする画像
-	commandList_->SetComputeRootDescriptorTable(1, copyGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::ClearCommand(
+void PostEffect::Execution(
 	ID3D12GraphicsCommandList* commandList,
-	uint32_t editTextureIndex)
+	RenderTargetTexture* renderTargetTexture,
+	CommandIndex commandIndex,
+	ExecutionAdditionalDesc* executionAdditionalDesc)
 {
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexClesrCS].Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::BinaryThresholdCommand(
-	ID3D12GraphicsCommandList* commandList,
-	uint32_t editTextureIndex,
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBinaryThresholdCS].Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// バッファを送る
-
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 二値化する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, binaryThresholdGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::GaussianBlurCommand(
-	ID3D12GraphicsCommandList* commandList,
-	uint32_t editTextureIndex,
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ガウスブラーを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
-	// 編集する画像セット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
-	// バッファを送る
-	// ガウスブラーを掛ける画像をセット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::BloomCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& bloomGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
 
 	// コマンドリスト
 	commandList_ = commandList;
@@ -323,782 +145,1058 @@ void PostEffect::BloomCommand(
 	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
 	uint32_t z = 1;
 
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBrightnessThreshold].Get());
+	//ソース
+	for (uint32_t i = 0; i < 8; ++i) {
+		renderTargetTexture->ChangePixelShaderResource(i);
+	}
 
-	// バッファを送る
+	for (uint32_t i = 0; i < 4; ++i) {
 
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 明度分けする画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
-	// 編集する画像セット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+		// 処理が残っているか
+		if (CommandDatas_[commandIndex][i] == kPipelineIndexOfCount) {
+			break;
+		}
 
-	// 実行
-	commandList_->Dispatch(x, y, z);
+		// パイプライン
+		commandList_->SetPipelineState(pipelineStates_[CommandDatas_[commandIndex][i]].Get());
 
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
-	// バッファを送る
-	// ガウスブラーを掛ける画像をセット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
-	// 編集する画像セット
-	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 3);
+		// バッファを送る
+		uint32_t rootParameterIndex = 0;
+		// 定数パラメータ
+		commandList_->SetComputeRootConstantBufferView(rootParameterIndex, computeParametersBuff_->GetGPUVirtualAddress());
+		rootParameterIndex++;
 
-	// 実行
-	commandList_->Dispatch(x, y, z);
+		// 速度パラメータ
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (executionAdditionalDesc) {
+				if (executionAdditionalDesc->velocity2DManagers[i]) {
+					commandList_->SetComputeRootConstantBufferView(rootParameterIndex, executionAdditionalDesc->velocity2DManagers[i]->GetVelocity2DDataBuff()->GetGPUVirtualAddress());
+				}
+				else {
+					commandList_->SetComputeRootConstantBufferView(rootParameterIndex, velocity2DManager_->GetVelocity2DDataBuff()->GetGPUVirtualAddress());
+				}
+			}
+			else {
+				commandList_->SetComputeRootConstantBufferView(rootParameterIndex, velocity2DManager_->GetVelocity2DDataBuff()->GetGPUVirtualAddress());
+			}
+			rootParameterIndex++;
+		}
 
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
-	// バッファを送る
-	// ガウスブラーを掛ける画像をセット
-	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 1);
-	// 編集する画像セット
-	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+		// 衝撃波パラメータ
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (executionAdditionalDesc) {
+				if (executionAdditionalDesc->shockWaveManagers[i]) {
+					commandList_->SetComputeRootConstantBufferView(rootParameterIndex, executionAdditionalDesc->shockWaveManagers[i]->GetShockWaveDataBuff()->GetGPUVirtualAddress());
+				}
+				else {
+					commandList_->SetComputeRootConstantBufferView(rootParameterIndex, shockWaveManager_->GetShockWaveDataBuff()->GetGPUVirtualAddress());
+				}
+			}
+			else {
+				commandList_->SetComputeRootConstantBufferView(rootParameterIndex, shockWaveManager_->GetShockWaveDataBuff()->GetGPUVirtualAddress());
+			}
+			rootParameterIndex++;
+		}
 
-	// 実行
-	commandList_->Dispatch(x, y, z);
+		// ソース
+		for (uint32_t i = 0; i < 8; ++i) {
+			commandList_->SetComputeRootDescriptorTable(rootParameterIndex, renderTargetTexture->GetSrvGPUHandle(i));
+			rootParameterIndex++;
+		}
 
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
-	// バッファを送る
-	// 加算する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
-	// 加算する画像をセット
-	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 2);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+		// 行先
+		for (uint32_t i = 0; i < kNumEditTexture; ++i) {
+			editTextures_[i]->SetRootDescriptorTable(commandList_, rootParameterIndex);
+			rootParameterIndex++;
+		}
 
-	// 実行
-	commandList_->Dispatch(x, y, z);
-	
-	// コマンドリスト
-	commandList_ = nullptr;
+		// 実行
+		commandList_->Dispatch(x, y, z);
 
-}
+	}
 
-void PostEffect::OverwriteCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& addGPUHandle0, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& addGPUHandle1)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexOverwrite].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 加算する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, addGPUHandle0);
-	// 加算する画像をセット
-	commandList_->SetComputeRootDescriptorTable(2, addGPUHandle1);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
+	//ソース
+	for (uint32_t i = 0; i < 8; ++i) {
+		renderTargetTexture->ChangeRenderTarget(i);
+	}
 
 	// コマンドリスト
 	commandList_ = nullptr;
 
 }
 
-void PostEffect::RTTCorrectionCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& textureGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRTTCorrection].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 修正する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, textureGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::MotionBlurCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& motionBlurGPUHandle, 
-	ID3D12Resource* velocityBuff)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-	
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexMotionBlur].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 修正する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
-	// 編集する画像セット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
-	// 速度パラメータ
-	commandList_->SetComputeRootConstantBufferView(4, velocityBuff->GetGPUVirtualAddress());
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 加算する画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
-	// 加算する画像をセット
-	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 2);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::WhiteNoizeCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& whiteNoizeGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexWhiteNoise].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ノイズを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, whiteNoizeGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::ScanLineCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& scanLineGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexScanLine].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 走査線を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, scanLineGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::RGBShiftCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& rgbShiftGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRGBShift].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// RGBずらしを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, rgbShiftGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::BarrelCurvedCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& barrelCurvedGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBarrelCurved].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 樽状湾曲を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, barrelCurvedGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::VignetteCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& vignetteGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexVignette].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// ビネットを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, vignetteGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::GlitchCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitch].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// グリッチを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, glitchGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::RadialBlurCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& radialBlurGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRadialBlur].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 放射状ブラーを掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, radialBlurGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::ShockWaveCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& shockWaveGPUHandle,
-	ID3D12Resource* shockWaveBuff)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexShockWave].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, shockWaveGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-	// 衝撃波パラメータ
-	commandList_->SetComputeRootConstantBufferView(5, shockWaveBuff->GetGPUVirtualAddress());
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::FlareParaCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& flareParaGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexFlarePara].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, flareParaGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::ReductionCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& reductionGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexReduction].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, reductionGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::ExpansionCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& expansionGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexExpansion].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, expansionGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::GrayScaleCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& grayScaleGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGrayScale].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, grayScaleGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::SepiaCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& sepiaGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexSepia].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, sepiaGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-}
-
-void PostEffect::GlitchRGBShiftCommand(
-	ID3D12GraphicsCommandList* commandList, 
-	uint32_t editTextureIndex, 
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchRGBShiftGPUHandle)
-{
-
-	// インデックスが超えているとエラー
-	assert(editTextureIndex < kNumEditTexture);
-
-	// コマンドリスト
-	commandList_ = commandList;
-
-	// コマンドリストがヌルならエラー
-	assert(commandList_);
-
-	// ルートシグネチャ
-	commandList_->SetComputeRootSignature(rootSignature_.Get());
-
-	// ディスパッチ数
-	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
-	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
-	uint32_t z = 1;
-
-	// パイプライン
-	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitchRGBShift].Get());
-	// バッファを送る
-	// 定数パラメータ
-	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
-	// 衝撃波を掛ける画像をセット
-	commandList_->SetComputeRootDescriptorTable(1, glitchRGBShiftGPUHandle);
-	// 編集する画像セット
-	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
-
-	// 実行
-	commandList_->Dispatch(x, y, z);
-
-	// コマンドリスト
-	commandList_ = nullptr;
-
-
-}
+//void PostEffect::CopyCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex,
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& copyGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexCopyCS].Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// コピーする画像
+//	commandList_->SetComputeRootDescriptorTable(1, copyGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::ClearCommand(
+//	ID3D12GraphicsCommandList* commandList,
+//	uint32_t editTextureIndex)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexClesrCS].Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::BinaryThresholdCommand(
+//	ID3D12GraphicsCommandList* commandList,
+//	uint32_t editTextureIndex,
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& binaryThresholdGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBinaryThresholdCS].Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// バッファを送る
+//
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 二値化する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, binaryThresholdGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::GaussianBlurCommand(
+//	ID3D12GraphicsCommandList* commandList,
+//	uint32_t editTextureIndex,
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& gaussianBluGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//	
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// ガウスブラーを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, gaussianBluGPUHandle);
+//	// 編集する画像セット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
+//	// バッファを送る
+//	// ガウスブラーを掛ける画像をセット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::BloomCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& bloomGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBrightnessThreshold].Get());
+//
+//	// バッファを送る
+//
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 明度分けする画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
+//	// 編集する画像セット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurHorizontal].Get());
+//	// バッファを送る
+//	// ガウスブラーを掛ける画像をセット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 1);
+//	// 編集する画像セット
+//	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGaussianBlurVertical].Get());
+//	// バッファを送る
+//	// ガウスブラーを掛ける画像をセット
+//	internalEditTextures_[1]->SetRootDescriptorTable(commandList_, 1);
+//	// 編集する画像セット
+//	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
+//	// バッファを送る
+//	// 加算する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, bloomGPUHandle);
+//	// 加算する画像をセット
+//	internalEditTextures_[2]->SetRootDescriptorTable(commandList_, 2);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//	
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::OverwriteCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& addGPUHandle0, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& addGPUHandle1)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexOverwrite].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 加算する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, addGPUHandle0);
+//	// 加算する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(2, addGPUHandle1);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::RTTCorrectionCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& textureGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRTTCorrection].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 修正する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, textureGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::MotionBlurCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& motionBlurGPUHandle, 
+//	ID3D12Resource* velocityBuff)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//	
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexMotionBlur].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 修正する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
+//	// 編集する画像セット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 3);
+//	// 速度パラメータ
+//	commandList_->SetComputeRootConstantBufferView(4, velocityBuff->GetGPUVirtualAddress());
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBlurAdd].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 加算する画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, motionBlurGPUHandle);
+//	// 加算する画像をセット
+//	internalEditTextures_[0]->SetRootDescriptorTable(commandList_, 2);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::WhiteNoizeCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& whiteNoizeGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexWhiteNoise].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// ノイズを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, whiteNoizeGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::ScanLineCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& scanLineGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexScanLine].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 走査線を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, scanLineGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::RGBShiftCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& rgbShiftGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRGBShift].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// RGBずらしを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, rgbShiftGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::BarrelCurvedCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& barrelCurvedGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexBarrelCurved].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 樽状湾曲を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, barrelCurvedGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::VignetteCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& vignetteGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexVignette].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// ビネットを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, vignetteGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::GlitchCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitch].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// グリッチを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, glitchGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::RadialBlurCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& radialBlurGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexRadialBlur].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 放射状ブラーを掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, radialBlurGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::ShockWaveCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& shockWaveGPUHandle,
+//	ID3D12Resource* shockWaveBuff)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexShockWave].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, shockWaveGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//	// 衝撃波パラメータ
+//	commandList_->SetComputeRootConstantBufferView(5, shockWaveBuff->GetGPUVirtualAddress());
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::FlareParaCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& flareParaGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexFlarePara].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, flareParaGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::ReductionCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& reductionGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexReduction].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, reductionGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::ExpansionCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& expansionGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexExpansion].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, expansionGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::GrayScaleCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& grayScaleGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGrayScale].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, grayScaleGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::SepiaCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& sepiaGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexSepia].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, sepiaGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//}
+//
+//void PostEffect::GlitchRGBShiftCommand(
+//	ID3D12GraphicsCommandList* commandList, 
+//	uint32_t editTextureIndex, 
+//	const CD3DX12_GPU_DESCRIPTOR_HANDLE& glitchRGBShiftGPUHandle)
+//{
+//
+//	// インデックスが超えているとエラー
+//	assert(editTextureIndex < kNumEditTexture);
+//
+//	// コマンドリスト
+//	commandList_ = commandList;
+//
+//	// コマンドリストがヌルならエラー
+//	assert(commandList_);
+//
+//	// ルートシグネチャ
+//	commandList_->SetComputeRootSignature(rootSignature_.Get());
+//
+//	// ディスパッチ数
+//	uint32_t x = (kTextureWidth + kNumThreadX - 1) / kNumThreadX;
+//	uint32_t y = (kTextureHeight + kNumThreadY - 1) / kNumThreadY;
+//	uint32_t z = 1;
+//
+//	// パイプライン
+//	commandList_->SetPipelineState(pipelineStates_[kPipelineIndexGlitchRGBShift].Get());
+//	// バッファを送る
+//	// 定数パラメータ
+//	commandList_->SetComputeRootConstantBufferView(0, computeParametersBuff_->GetGPUVirtualAddress());
+//	// 衝撃波を掛ける画像をセット
+//	commandList_->SetComputeRootDescriptorTable(1, glitchRGBShiftGPUHandle);
+//	// 編集する画像セット
+//	editTextures_[editTextureIndex]->SetRootDescriptorTable(commandList_, 3);
+//
+//	// 実行
+//	commandList_->Dispatch(x, y, z);
+//
+//	// コマンドリスト
+//	commandList_ = nullptr;
+//
+//
+//}
 
 void PostEffect::CreateRootSignature()
 {
@@ -1108,63 +1206,64 @@ void PostEffect::CreateRootSignature()
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootsignature{};
 	descriptionRootsignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// ディスクリプタレンジ
-
-	// ソース0
-	D3D12_DESCRIPTOR_RANGE descriptorRangeSouce0[1] = {};
-	descriptorRangeSouce0[0].BaseShaderRegister = 0;//0から始まる
-	descriptorRangeSouce0[0].NumDescriptors = 1;//数は一つ
-	descriptorRangeSouce0[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SAVを使う
-	descriptorRangeSouce0[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
-
-	// ソース1
-	D3D12_DESCRIPTOR_RANGE descriptorRangeSouce1[1] = {};
-	descriptorRangeSouce1[0].BaseShaderRegister = 1;//0から始まる
-	descriptorRangeSouce1[0].NumDescriptors = 1;//数は一つ
-	descriptorRangeSouce1[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SAVを使う
-	descriptorRangeSouce1[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
-
-	// 編集するテクスチャ情報
-	D3D12_DESCRIPTOR_RANGE descriptorRangeEditTextureInformation[1] = {};
-	descriptorRangeEditTextureInformation[0].BaseShaderRegister = 0;//0から始まる
-	descriptorRangeEditTextureInformation[0].NumDescriptors = 1;//数は一つ
-	descriptorRangeEditTextureInformation[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
-	descriptorRangeEditTextureInformation[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
-
 	// ルートパラメータ
-	D3D12_ROOT_PARAMETER rootParameters[6] = {};
-	// 定数バッファ
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
-	rootParameters[0].Descriptor.ShaderRegister = 0;                  //レジスタ番号0とバインド
+	D3D12_ROOT_PARAMETER rootParameters[19] = {};
+	uint32_t rootParametersIndex = 0;
 
-	// 元画像テクスチャ0
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeSouce0;//Tableの中身の配列を指定
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeSouce0);//Tableで利用する数
+	// 定数バッファ * 1
+	// 速度バッファ * 4
+	// 衝撃波バッファ * 4
+	for (uint32_t i = 0; i < 9; ++i) {
+		
+		rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+		rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
+		rootParameters[rootParametersIndex].Descriptor.ShaderRegister = i;                  //レジスタ番号iとバインド
+		
+		rootParametersIndex++;
+	
+	}
 
-	// 元画像テクスチャ1
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeSouce1;//Tableの中身の配列を指定
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeSouce1);//Tableで利用する数
+	descriptorRanges_.resize(10);
 
-	// 行先画像テクスチャ
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRangeEditTextureInformation;//Tableの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeEditTextureInformation);//Tableで利用する数
+	// ソース * 8
+	for (uint32_t i = 0; i < 8; ++i) {
 
-	// 速度バッファ
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
-	rootParameters[4].Descriptor.ShaderRegister = 1;                  //レジスタ番号1とバインド
+		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+		descriptorRange[0].BaseShaderRegister = i;//iから始まる
+		descriptorRange[0].NumDescriptors = 1;//数は一つ
+		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使う
+		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
-	// 衝撃波バッファ
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
-	rootParameters[5].Descriptor.ShaderRegister = 2;                  //レジスタ番号1とバインド
+		descriptorRanges_[i].push_back(descriptorRange[0]);
+
+		rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+		rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
+		rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges_[i].data();//Tableの中身の配列を指定
+		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[i].size());//Tableで利用する数
+
+		rootParametersIndex++;
+	
+	}
+
+	// 行先 * 2
+	for (uint32_t i = 0; i < 2; ++i) {
+
+		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+		descriptorRange[0].BaseShaderRegister = i;//iから始まる
+		descriptorRange[0].NumDescriptors = 1;//数は一つ
+		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
+		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+		descriptorRanges_[i + 8].push_back(descriptorRange[0]);
+
+		rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+		rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
+		rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges_[i + 8].data();//Tableの中身の配列を指定
+		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[i + 8].size());//Tableで利用する数
+
+		rootParametersIndex++;
+
+	}
 
 	descriptionRootsignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootsignature.NumParameters = _countof(rootParameters); //配列の長さ

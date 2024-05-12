@@ -60,7 +60,10 @@ struct VelocityParameters {
 };
 
 // 速度データ
-ConstantBuffer<VelocityParameters> gVelocityConstants: register(b1);
+ConstantBuffer<VelocityParameters> gVelocityConstants0: register(b1);
+ConstantBuffer<VelocityParameters> gVelocityConstants1: register(b2);
+ConstantBuffer<VelocityParameters> gVelocityConstants2: register(b3);
+ConstantBuffer<VelocityParameters> gVelocityConstants3: register(b4);
 
 // 衝撃波データ
 struct ShockWaveParameters {
@@ -73,14 +76,24 @@ struct ShockWaveParameters {
 };
 
 // 衝撃波データ
-ConstantBuffer<ShockWaveParameters> gShockWaveConstants: register(b2);
+ConstantBuffer<ShockWaveParameters> gShockWaveConstants0: register(b5);
+ConstantBuffer<ShockWaveParameters> gShockWaveConstants1: register(b6);
+ConstantBuffer<ShockWaveParameters> gShockWaveConstants2: register(b7);
+ConstantBuffer<ShockWaveParameters> gShockWaveConstants3: register(b8);
 
-// ソース0
+// ソース
 Texture2D<float32_t4> sourceImage0 : register(t0);
-// ソース1
 Texture2D<float32_t4> sourceImage1 : register(t1);
+Texture2D<float32_t4> sourceImage2 : register(t2);
+Texture2D<float32_t4> sourceImage3 : register(t3);
+Texture2D<float32_t4> sourceImage4 : register(t4);
+Texture2D<float32_t4> sourceImage5 : register(t5);
+Texture2D<float32_t4> sourceImage6 : register(t6);
+Texture2D<float32_t4> sourceImage7 : register(t7);
+
 // 行先
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
+RWTexture2D<float32_t4> destinationImage1 : register(u1);
 
 // コピー
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
@@ -421,8 +434,8 @@ void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
 float32_t4 MotionBlur(in const float32_t2 index) {
 
 	// ブラーかからない
-	if (gVelocityConstants.values.x == 0 && 
-		gVelocityConstants.values.y == 0) {
+	if (gVelocityConstants0.values.x == 0 &&
+		gVelocityConstants0.values.y == 0) {
 		return sourceImage0[index];
 	}
 
@@ -446,8 +459,8 @@ float32_t4 MotionBlur(in const float32_t2 index) {
 		// インデックス
 		indexTmp = index;
 
-		indexTmp.x += float32_t(i) * gVelocityConstants.values.x;
-		indexTmp.y += float32_t(i) * gVelocityConstants.values.y;
+		indexTmp.x += float32_t(i) * gVelocityConstants0.values.x;
+		indexTmp.y += float32_t(i) * gVelocityConstants0.values.y;
 		if ((indexTmp.x < 0.0f) || (indexTmp.y < 0.0f)) {
 			continue;
 		}
@@ -760,15 +773,15 @@ float32_t4 ShockWave(in const float32_t2 index) {
 	float32_t2 scaleUV = (texcoord - float32_t2(0.5f, 0.0f)) / float32_t2(ratio, 1.0f) + float32_t2(0.5f, 0.0f);
 
 	// 中心を基準にした位置
-	float32_t2 position = scaleUV - gShockWaveConstants.center;
+	float32_t2 position = scaleUV - gShockWaveConstants0.center;
 
 	// マスク
 	float32_t mask =
-		(1.0f - smoothstep(gShockWaveConstants.radius - 0.1f, gShockWaveConstants.radius, length(position))) *
-		smoothstep(gShockWaveConstants.radius - gShockWaveConstants.thickness - 0.1f, gShockWaveConstants.radius - gShockWaveConstants.thickness, length(position));
+		(1.0f - smoothstep(gShockWaveConstants0.radius - 0.1f, gShockWaveConstants0.radius, length(position))) *
+		smoothstep(gShockWaveConstants0.radius - gShockWaveConstants0.thickness - 0.1f, gShockWaveConstants0.radius - gShockWaveConstants0.thickness, length(position));
 
 	// 歪み
-	float32_t2 distortion = normalize(position) * gShockWaveConstants.distortion * mask;
+	float32_t2 distortion = normalize(position) * gShockWaveConstants0.distortion * mask;
 	
 	// 新しいインデックス
 	float32_t2 newIndex = texcoord - distortion;

@@ -107,56 +107,6 @@ public: // 関数
 
 private: // 関数
 
-	///// <summary>
-	///// アニメーションモデル
-	///// </summary>
-	//static void CreateForAnimModel();
-
-	///// <summary>
-	///// アニメーション無しモデル
-	///// </summary>
-	//static void CreateForNormalModel();
-
-	///// <summary>
-	///// アニメーション無しアウトライン
-	///// </summary>
-	//static void CreateForNormalOutline();
-
-	///// <summary>
-	///// スプライト
-	///// </summary>
-	//static void RootParameterInitializeForSprite();
-
-	///// <summary>
-	///// パーティクル
-	///// </summary>	
-	//static void RootParameterInitializeForParticle();
-
-	///// <summary>
-	///// コライダーデバッグ2D
-	///// </summary>
-	//static void RootParameterInitializeForCollision2DDebugDraw();
-
-	///// <summary>
-	///// 線
-	///// </summary>
-	//static void RootParameterInitializeForLine();
-
-	///// <summary>
-	///// ポストエフェクト
-	///// </summary>
-	//static void RootParameterInitializeForSwapChain();
-
-	///// <summary>
-	///// たくさんのアニメーションモデル
-	///// </summary>
-	//static void RootParameterInitializeForManyAnimModels();
-
-	///// <summary>
-	///// たくさんのアニメーション無しモデル
-	///// </summary>
-	//static void RootParameterInitializeForManyNormalModels();
-
 	/// <summary>
 	/// ディスクリプタレンジの初期化
 	/// </summary>
