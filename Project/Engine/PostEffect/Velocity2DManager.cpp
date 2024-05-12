@@ -22,6 +22,11 @@ void Velocity2DManager::Update()
 
 void Velocity2DManager::ImGuiDraw()
 {
+	
+	ImGui::Begin("Velocity2D");
+	ImGui::DragFloat2("velocity", &velocity2DDataMap_->velocity.x);
+	ImGui::End();
+
 }
 
 void Velocity2DManager::SetVelocity(const Vector3& velocity3D, const Matrix4x4& viewMatrix)

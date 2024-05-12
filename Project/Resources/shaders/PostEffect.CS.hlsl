@@ -95,34 +95,6 @@ Texture2D<float32_t4> sourceImage7 : register(t7);
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
 RWTexture2D<float32_t4> destinationImage1 : register(u1);
 
-// コピー
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainCopy(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-		
-		destinationImage0[dispatchId.xy] = sourceImage0[dispatchId.xy];
-
-	}
-
-}
-
-// クリア(グリーン)
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainClear(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
-		destinationImage0[dispatchId.xy] = gComputeConstants.clearColor;
-
-	}
-
-}
-
 // 明度の高いところを白で書き込む、それ以外は黒を書き込む
 float32_t4 BinaryThreshold(in const float32_t4 input) {
 
@@ -147,6 +119,40 @@ void mainBinaryThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
 		destinationImage0[dispatchId.xy] = BinaryThreshold(input);
 
 	}
+
+}
+
+// ブラー画像との合成
+float32_t4 BlurAdd(in const float32_t4 input0, in const float32_t4 input1) {
+
+	float32_t alphaSum = input0.a + input1.a;
+
+	if (alphaSum != 0.0f) {
+		float32_t a1 = input0.a / alphaSum;
+		float32_t a2 = input1.a / alphaSum;
+
+		float32_t3 col = input0.rgb * a1 + input1.rgb * a2;
+
+		return float32_t4(col, min(alphaSum, 1.0f));
+	}
+
+	return float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+
+}
+
+// レンダーターゲット画像の書き込まれていない部分を透明に
+float32_t4 RTTCorrection(in const float32_t4 input) {
+
+	float32_t4 clear = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	if (input.r == gComputeConstants.clearColor.r &&
+		input.g == gComputeConstants.clearColor.g &&
+		input.b == gComputeConstants.clearColor.b &&
+		input.a == gComputeConstants.clearColor.a) {
+		return clear;
+	}
+
+	return input;
 
 }
 
@@ -177,7 +183,12 @@ float32_t4 GaussianBlur(in const float32_t2 index, in const float32_t2 dir) {
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
 
 		// outputに加算
-		output += sourceImage0[indexTmp] * weight;
+		if (dir.x == 1.0f) {
+			output += sourceImage0[indexTmp] * weight;
+		}
+		else {
+			output += destinationImage1[indexTmp] * weight;
+		}
 
 		// 重みの合計に加算
 		weightSum += weight;
@@ -198,7 +209,7 @@ void mainGaussianBlurHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage0[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage1[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
 
 	}
 
@@ -242,8 +253,13 @@ float32_t4 Bloom(in const float32_t2 index, in const  float32_t2 dir) {
 
 		indexTmp.x += (float32_t(i) + 0.5f) * dir.x;
 		indexTmp.y += (float32_t(i) + 0.5f) * dir.y;
-
-		input = sourceImage0[indexTmp];
+		
+		if (dir.x == 1.0f) {
+			input = sourceImage0[indexTmp];
+		}
+		else {
+			input = destinationImage1[indexTmp];
+		}
 
 		// 重み確認
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
@@ -274,7 +290,7 @@ void mainBloomHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage0[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage1[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
 
 	}
 
@@ -287,145 +303,9 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage0[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
-
-	}
-
-}
-
-// 明度の高いところをその色で書き込む、それ以外は透明を書き込む
-float32_t4 BrightnessThreshold(in const float32_t4 input) {
-
-	float32_t4 col = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	if ((input.r + input.g + input.b) / 3.0f > gComputeConstants.threshold) {
-		col = input;
-	}
-
-	return col;
-
-}
-
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainBrightnessThreshold(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
-		float32_t4 input = sourceImage0[dispatchId.xy];
-		destinationImage0[dispatchId.xy] = BrightnessThreshold(input);
-
-	}
-
-}
-
-// ブラー画像との合成
-float32_t4 BlurAdd(in const float32_t4 input0, in const float32_t4 input1) {
-
-	float32_t alphaSum = input0.a + input1.a;
-
-	if(alphaSum != 0.0f) {
-		float32_t a1 = input0.a / alphaSum;
-		float32_t a2 = input1.a / alphaSum;
-
-		float32_t3 col = input0.rgb * a1 + input1.rgb * a2;
-		
-		return float32_t4(col, min(alphaSum, 1.0f));
-	}
-
-	return float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
-
-}
-
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainBlurAdd(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
 		float32_t4 input0 = sourceImage0[dispatchId.xy];
-		float32_t4 input1 = sourceImage1[dispatchId.xy];
+		float32_t4 input1 = Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
 		destinationImage0[dispatchId.xy] = BlurAdd(input0, input1);
-
-	}
-
-}
-
-// 画像の上に画像を書き込む
-float32_t4 Overwrite(in const float32_t4 input0, in const float32_t4 input1) {
-
-	if (input1.a == 1.0f) {
-		return input1;
-	}
-	else if (input1.a == 0.0f) {
-		return input0;
-	}
-
-	float32_t alphaOut = 1.0f - input1.a;
-
-	alphaOut = min(alphaOut, input0.a);
-
-	if (input0.a != 0.0f) {
-		float32_t a = min(alphaOut / input0.a, 1.0f);
-
-		float32_t4 color =
-			float32_t4(
-				input0.r * a,
-				input0.g * a,
-				input0.b * a,
-				alphaOut);
-
-		return input1 + color;
-
-	}
-
-	return input1;
-
-}
-
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainOverwrite(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
-		float32_t4 input0 = sourceImage0[dispatchId.xy];
-		float32_t4 input1 = sourceImage1[dispatchId.xy];
-		destinationImage0[dispatchId.xy] = Overwrite(input0, input1);
-
-	}
-
-}
-
-// レンダーターゲット画像の書き込まれていない部分を透明に
-float32_t4 RTTCorrection(in const float32_t4 input) {
-
-	float32_t4 clear = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	if (input.r == gComputeConstants.clearColor.r &&
-		input.g == gComputeConstants.clearColor.g &&
-		input.b == gComputeConstants.clearColor.b &&
-		input.a == gComputeConstants.clearColor.a) {
-		return clear;
-	}
-
-	return input;
-
-}
-
-[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
-void mainRTTCorrection(uint32_t3 dispatchId : SV_DispatchThreadID)
-{
-
-	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
-		dispatchId.y < gComputeConstants.threadIdTotalY) {
-
-		float32_t4 input = sourceImage0[dispatchId.xy];
-		destinationImage0[dispatchId.xy] = RTTCorrection(input);
-
 	}
 
 }

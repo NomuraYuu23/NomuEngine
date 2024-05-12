@@ -294,9 +294,14 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	//renderTargetTexture_->ClearDepthBuffer();
+	renderTargetTexture_->ClearDepthBuffer();
 
-	//renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	PostEffect::GetInstance()->Execution(
+		dxCommon_->GetCommadList(),
+		renderTargetTexture_,
+		PostEffect::kCommandIndexShockWave);
+
+	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

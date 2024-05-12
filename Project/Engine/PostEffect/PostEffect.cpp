@@ -122,6 +122,9 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 	ImGui::End();
 
+	velocity2DManager_->ImGuiDraw();
+	shockWaveManager_->ImGuiDraw();
+
 }
 
 void PostEffect::Execution(

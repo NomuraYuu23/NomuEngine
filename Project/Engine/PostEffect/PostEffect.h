@@ -44,10 +44,11 @@ public: // サブクラス
 		float glitchStepValue; // グリッチのステップ値
 
 		int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
-		float padding2[3]; // パディング
 		Vector2 radialBlurCenter; // 放射状ブラーの中心座標
 		float radialBlurStrength; // 放射状ブラーの広がる強さ
 		float radialBlurMask; // 放射状ブラーが適用されないサイズ
+
+		float padding2[3]; // パディング
 
 		Vector4 flareColor; // フレアの色
 		Vector2 flareSize; // フレアの大きさ
@@ -63,15 +64,11 @@ public: // サブクラス
 	/// パイプライン名前
 	/// </summary>
 	enum PipelineIndex {
-		kPipelineIndexCopyCS, // コピー
-		kPipelineIndexClesrCS, // クリア
 		kPipelineIndexBinaryThresholdCS,// 二値化(白黒)
 		kPipelineIndexGaussianBlurHorizontal, // ガウスブラー水平
 		kPipelineIndexGaussianBlurVertical, // ガウスブラー垂直
-		kPipelineIndexBrightnessThreshold, // 明度分け
-		kPipelineIndexBlurAdd, // ブラー用加算
-		kPipelineIndexOverwrite, // 上書き
-		kPipelineIndexRTTCorrection, // レンダーターゲット画像の修正
+		kPipelineIndexBloomHorizontal, // ブルーム水平
+		kPipelineIndexBloomVertical, // ブルーム垂直
 		kPipelineIndexMotionBlur, // モーションブラー
 		kPipelineIndexWhiteNoise, // ホワイトノイズ
 		kPipelineIndexScanLine, // 走査線
@@ -82,8 +79,6 @@ public: // サブクラス
 		kPipelineIndexRadialBlur, // 放射状ブラー
 		kPipelineIndexShockWave, // 衝撃波
 		kPipelineIndexFlarePara, // フレア パラ
-		kPipelineIndexReduction, // 縮小
-		kPipelineIndexExpansion, // 拡大(縮小したものをもとに戻す)
 		kPipelineIndexGrayScale, // グレイスケール
 		kPipelineIndexSepia, // セピア
 
@@ -100,7 +95,7 @@ public: // サブクラス
 		kCommandIndexGaussianBlur, // ガウスブラー
 		kCommandIndexBloom, // ブルーム
 		kCommandIndexMotionBlur, // モーションブラー
-		kCommandIndexWhiteNoizer, // ホワイトノイズ
+		kCommandIndexWhiteNoize, // ホワイトノイズ
 		kCommandIndexScanLine, // 走査線
 		kCommandIndexRGBShift, // RGBずらし
 		kCommandIndexBarrelCurved, // 樽状湾曲
@@ -128,15 +123,11 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPipelineIndexOfCount> shaderNames_ =
 	{
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainCopy"}, // コピー
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainClear"}, // クリア
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBrightnessThreshold"}, // 明度分け
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBlurAdd"}, // ブラー用加算
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainOverwrite"}, // 上書き
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRTTCorrection"}, // レンダーターゲット画像の修正
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBloomHorizontal"},  // ブルーム水平
+		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBloomVertical"},  // ブルーム垂直
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"}, // 走査線
@@ -147,8 +138,6 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainReduction"}, // 縮小
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainExpansion"}, // 拡大(縮小したものをもとに戻す)
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
 		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitchRGBShift"}, // グリッチRGB
@@ -160,7 +149,7 @@ private: // 定数
 		{
 			{kPipelineIndexBinaryThresholdCS, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // 白黒
 			{kPipelineIndexGaussianBlurHorizontal, kPipelineIndexGaussianBlurVertical, kPipelineIndexOfCount, kPipelineIndexOfCount}, // ガウスブラー
-			{kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // ブルーム
+			{kPipelineIndexBloomHorizontal, kPipelineIndexBloomVertical, kPipelineIndexOfCount, kPipelineIndexOfCount}, // ブルーム
 			{kPipelineIndexMotionBlur, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // モーションブラー
 			{kPipelineIndexWhiteNoise, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // ホワイトノイズ
 			{kPipelineIndexScanLine, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // 走査線
