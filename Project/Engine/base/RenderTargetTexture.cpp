@@ -114,7 +114,7 @@ void RenderTargetTexture::Initialize(
 		device->CreateShaderResourceView(resources_[i].Get(), &srvDesc, srvCPUHandles_[i]);
 
 		// レンダーターゲットか
-		isRenderTarget_[i] = false;
+		resouceStates_[i] = kResouceStateIndexPixelShaderResource;
 
 	}
 
@@ -168,7 +168,7 @@ void RenderTargetTexture::PostDraw()
 {
 
 	for (uint32_t i = 0; i < kResourceNum_; ++i) {
-		if (isRenderTarget_[i]) {
+		if (resouceStates_[i] != kResouceStateIndexPixelShaderResource) {
 			ChangePixelShaderResource(i);
 		}
 	}
@@ -207,7 +207,7 @@ void RenderTargetTexture::ChangeRenderTarget(uint32_t resourceIndex)
 {
 
 	assert(commandList_);
-	assert(!isRenderTarget_[resourceIndex]);
+	assert(resouceStates_[resourceIndex] != kResouceStateIndexRenderTarget);
 
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};
@@ -218,13 +218,13 @@ void RenderTargetTexture::ChangeRenderTarget(uint32_t resourceIndex)
 	//バリアを張る対象のリソース。
 	barrier.Transition.pResource = resources_[resourceIndex].Get();
 	//遷移前（現在）のResouceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = GetStateBefore(resourceIndex);
 	//遷移後のResoureState
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier);
 
-	isRenderTarget_[resourceIndex] = true;
+	resouceStates_[resourceIndex] = kResouceStateIndexRenderTarget;
 
 }
 
@@ -232,7 +232,7 @@ void RenderTargetTexture::ChangePixelShaderResource(uint32_t resourceIndex)
 {
 
 	assert(commandList_);
-	assert(isRenderTarget_[resourceIndex]);
+	assert(resouceStates_[resourceIndex] != kResouceStateIndexPixelShaderResource);
 
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};
@@ -242,14 +242,40 @@ void RenderTargetTexture::ChangePixelShaderResource(uint32_t resourceIndex)
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。
 	barrier.Transition.pResource = resources_[resourceIndex].Get();
-
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = GetStateBefore(resourceIndex);
+	//遷移後のResoureState
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier);
 
-	isRenderTarget_[resourceIndex] = false;
+	resouceStates_[resourceIndex] = kResouceStateIndexPixelShaderResource;
  
+}
+
+void RenderTargetTexture::ChangeNonPixelShaderResource(uint32_t resourceIndex)
+{
+
+	assert(commandList_);
+	assert(resouceStates_[resourceIndex] != kResouceStateIndexNonPixelShaderResource);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = resources_[resourceIndex].Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = GetStateBefore(resourceIndex);
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier);
+
+	resouceStates_[resourceIndex] = kResouceStateIndexNonPixelShaderResource;
+
 }
 
 void RenderTargetTexture::TextureDraw(uint32_t resourceIndex)
@@ -259,9 +285,26 @@ void RenderTargetTexture::TextureDraw(uint32_t resourceIndex)
 
 }
 
-void RenderTargetTexture::TextureDraw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& handle)
+D3D12_RESOURCE_STATES RenderTargetTexture::GetStateBefore(uint32_t resourceIndex)
 {
 
-	WindowSprite::GetInstance()->DrawSRV(handle);
+	D3D12_RESOURCE_STATES result = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
+	switch (resouceStates_[resourceIndex])
+	{
+	case kResouceStateIndexRenderTarget:
+		result = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		break;
+	case kResouceStateIndexPixelShaderResource:
+		result = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		break;
+	case kResouceStateIndexNonPixelShaderResource:
+		result = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+		break;
+	default:
+		assert(0);
+		break;
+	}
+
+	return result;
 }

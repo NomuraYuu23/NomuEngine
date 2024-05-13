@@ -2,6 +2,7 @@
 #include "../../Particle/EmitterName.h"
 #include "../../../Engine/3D/ModelDraw.h"
 #include "../../../Engine/base/WindowSpriteStorage.h"
+#include "../../../Engine/base/WindowSprite.h"
 
 GameScene::~GameScene()
 {
@@ -305,7 +306,7 @@ void GameScene::Draw() {
 		renderTargetTexture_,
 		PostEffect::kCommandIndexBloom);
 
-	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

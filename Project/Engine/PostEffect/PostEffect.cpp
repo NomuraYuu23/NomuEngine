@@ -150,7 +150,7 @@ void PostEffect::Execution(
 
 	//ソース
 	for (uint32_t i = 0; i < 8; ++i) {
-		renderTargetTexture->ChangePixelShaderResource(i);
+		renderTargetTexture->ChangeNonPixelShaderResource(i);
 	}
 
 	for (uint32_t i = 0; i < 4; ++i) {

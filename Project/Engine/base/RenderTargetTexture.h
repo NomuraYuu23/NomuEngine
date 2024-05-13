@@ -15,6 +15,18 @@
 class RenderTargetTexture
 {
 
+public: // サブクラス
+
+	/// <summary>
+	/// リソースステート
+	/// </summary>
+	enum ResouceStateIndex {
+		kResouceStateIndexRenderTarget, // レンダーターゲット
+		kResouceStateIndexPixelShaderResource, // ピクセルシェーダリソース
+		kResouceStateIndexNonPixelShaderResource, // ピクセルシェーダ以外のリソース
+		kResouceStateIndexOfCount // 数を数える
+	};
+
 public: 
 
 	/// <summary>
@@ -66,16 +78,16 @@ public:
 	void ChangePixelShaderResource(uint32_t resourceIndex);
 
 	/// <summary>
-	/// テクスチャ描画
+	/// Nonピクセルシェーダーリソースに変更
 	/// </summary>
 	/// <param name="resourceIndex">リソースインデックス</param>
-	void TextureDraw(uint32_t resourceIndex);
+	void ChangeNonPixelShaderResource(uint32_t resourceIndex);
 
 	/// <summary>
 	/// テクスチャ描画
 	/// </summary>
-	/// <param name="handle">ハンドル</param>
-	void TextureDraw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& handle);
+	/// <param name="resourceIndex">リソースインデックス</param>
+	void TextureDraw(uint32_t resourceIndex);
 
 	/// <summary>
 	/// GPUハンドル入手
@@ -83,6 +95,15 @@ public:
 	/// <param name="index"></param>
 	/// <returns></returns>
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrvGPUHandle(uint32_t index) { return srvGPUHandles_[index]; }
+
+private: // 関数
+
+	/// <summary>
+	/// 遷移前（現在）のResouceState取得
+	/// </summary>
+	/// <param name="resourceIndex">リソースインデックス</param>
+	/// <returns></returns>
+	D3D12_RESOURCE_STATES GetStateBefore(uint32_t resourceIndex);
 
 private: // 変数
 
@@ -118,8 +139,8 @@ private: // 変数
 	// コマンドリスト
 	ID3D12GraphicsCommandList* commandList_;
 
-	// レンダーターゲットか
-	bool isRenderTarget_[kResourceNum_];
+	// リソースステート
+	ResouceStateIndex resouceStates_[kResourceNum_];
 
 };
 
