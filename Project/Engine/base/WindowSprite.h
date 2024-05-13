@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
 #include "../../externals/DirectXTex/d3dx12.h"
-#include "SpriteVertex.h"
+#include "../2D/SpriteVertex.h"
 #include "../Math/Matrix4x4.h"
-#include "SpriteForGPU.h"
+#include "../2D/SpriteForGPU.h"
 #include "../3D/Material.h"
 
 class WindowSprite
@@ -35,12 +35,16 @@ public:
 		ID3D12GraphicsCommandList* commandList);
 
 	/// <summary>
-	/// 描画
+	/// 描画SRV
 	/// </summary>
 	/// <param name="srvGPUHandle">GPUハンドル</param>
-	void Draw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle);
+	void DrawSRV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle);
 
-private:
+	/// <summary>
+	/// 描画UAV
+	/// </summary>
+	/// <param name="uavGPUHandle">GPUハンドル</param>
+	void DrawUAV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& uavGPUHandle);
 
 };
 

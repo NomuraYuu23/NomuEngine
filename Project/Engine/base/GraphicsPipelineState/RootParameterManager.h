@@ -10,33 +10,33 @@
 #include <variant>
 
 /// <summary>
-/// ディスクリプタレンジの名前 PS
+/// SRV PS
 /// </summary>
-enum DescriptorRangePSIndex {
-	kDescriptorRangePSIndexTexture0 = 0, // テクスチャ0
-	kDescriptorRangePSIndexTexture1 = 1, // テクスチャ1
-	kDescriptorRangePSIndexTexture2 = 2, // テクスチャ2
-	kDescriptorRangePSIndexTexture3 = 3, // テクスチャ3
-	kDescriptorRangePSIndexTexture4 = 4, // テクスチャ4
-	kDescriptorRangePSIndexTexture5 = 5, // テクスチャ5
-	kDescriptorRangePSIndexTexture6 = 6, // テクスチャ6
-	kDescriptorRangePSIndexTexture7 = 7, // テクスチャ7
-	kDescriptorRangePSIndexPointLight = 8, // ポイントライト
-	kDescriptorRangePSIndexSpotLight = 9, // スポットライト
-	kDescriptorRangePSIndexMaterials = 10, // マテリアル
-	kDescriptorRangePSIndexOfCount,
+enum SRV_PSIndex {
+	kSRV_PSIndexTexture0 = 0, // テクスチャ0
+	kSRV_PSIndexTexture1 = 1, // テクスチャ1
+	kSRV_PSIndexTexture2 = 2, // テクスチャ2
+	kSRV_PSIndexTexture3 = 3, // テクスチャ3
+	kSRV_PSIndexTexture4 = 4, // テクスチャ4
+	kSRV_PSIndexTexture5 = 5, // テクスチャ5
+	kSRV_PSIndexTexture6 = 6, // テクスチャ6
+	kSRV_PSIndexTexture7 = 7, // テクスチャ7
+	kSRV_PSIndexPointLight = 8, // ポイントライト
+	kSRV_PSIndexSpotLight = 9, // スポットライト
+	kSRV_PSIndexMaterials = 10, // マテリアル
+	kSRV_PSIndexOfCount,
 };
 
 /// <summary>
-/// ディスクリプタレンジの名前 VS
+/// SRV VS
 /// </summary>
-enum DescriptorRangeVSIndex {
-	kDescriptorRangeVSIndexParticleForGPU = 0, //  パーティクル用
-	kDescriptorRangeVSIndexLocalMatrix = 1, // ローカル行列
-	kDescriptorRangeVSIndexCollider2DDebugDrawForGPU = 2, // コライダーデバッグ2d
-	kDescriptorRangeVSIndexTransformationMatrix = 3, // トランスフォーム行列
-	kDescriptorRangeVSIndexLineForGPU = 4, // 線描画
-	kDescriptorRangeVSIndexOfCount,
+enum SRV_VSIndex {
+	kSRV_VSIndexParticleForGPU = 0, //  パーティクル用
+	kSRV_VSIndexLocalMatrix = 1, // ローカル行列
+	kSRV_VSIndexCollider2DDebugDrawForGPU = 2, // コライダーデバッグ2d
+	kSRV_VSIndexTransformationMatrix = 3, // トランスフォーム行列
+	kSRV_VSIndexLineForGPU = 4, // 線描画
+	kSRV_VSIndexOfCount,
 };
 
 /// <summary>
@@ -67,6 +67,14 @@ enum CBV_VSIndex {
 };
 
 /// <summary>
+/// UAV PS
+/// </summary>
+enum UAV_PSIndex {
+	kUAV_PSIndexTexture0 = 0, // テクスチャ0
+	kUAV_PSIndexOfCount
+};
+
+/// <summary>
 /// ルートパラメータの名前
 /// </summary>
 enum RootParameterIndex {
@@ -79,7 +87,8 @@ enum RootParameterIndex {
 	kRootParameterIndexParticle, // パーティクル
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
 	kRootParameterIndexLine, // 線
-	kRootParameterIndexWindowSprite, // ウィンドウスプライト
+	kRootParameterIndexWindowSpriteSRV, // ウィンドウスプライトSRV
+	kRootParameterIndexWindowSpriteUAV,// ウィンドウスプライトUAV
 	kRootParameterIndexManyAnimModels, // たくさんのアニメーションモデル
 	kRootParameterIndexManyNormalModels, // たくさんのアニメーション無しモデル
 	kRootParameterIndexOfCount,
@@ -90,7 +99,7 @@ class RootParameterManager
 
 private:
 
-	using Item = std::variant<DescriptorRangePSIndex, DescriptorRangeVSIndex, CBV_PSIndex, CBV_VSIndex>;
+	using Item = std::variant<SRV_PSIndex, SRV_VSIndex, CBV_PSIndex, CBV_VSIndex, UAV_PSIndex>;
 
 public: // 関数
 
@@ -123,10 +132,12 @@ public: // 変数
 
 	// ルートパラメータ
 	static std::array<std::vector<D3D12_ROOT_PARAMETER>, kRootParameterIndexOfCount> rootParameters_;
-	// ディスクリプタレンジPS
-	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kDescriptorRangePSIndexOfCount> descriptorRangesPS_;
-	// ディスクリプタレンジVS
-	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kDescriptorRangeVSIndexOfCount> descriptorRangesVS_;
+	// ディスクリプタレンジ SRV PS
+	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kSRV_PSIndexOfCount> descriptorRangesSRV_PS_;
+	// ディスクリプタレンジ SRV VS
+	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kSRV_VSIndexOfCount> descriptorRangesSRV_VS_;
+	// ディスクリプタレンジ UAV PS
+	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kUAV_PSIndexOfCount> descriptorRangesUAV_PS_;
 
 private: // シングルトン
 

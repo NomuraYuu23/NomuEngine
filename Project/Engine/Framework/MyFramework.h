@@ -45,7 +45,7 @@
 #include "../Particle/ParticleManager.h"
 
 // Windowサイズのスプライト
-#include "../2D/WindowSprite.h"
+#include "../base/WindowSprite.h"
 
 // PostEffect
 #include "../PostEffect/PostEffect.h"

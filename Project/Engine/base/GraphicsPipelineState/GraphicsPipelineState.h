@@ -29,7 +29,8 @@ public: // サブクラス
 		kPipelineStateIndexNormalOutline, // アニメーション無しモデルアウトライン
 
 		kPipelineStateIndexSprite, //スプライト
-		kPipelineStateIndexWindowSprite, // ウィンドウスプライト
+		kPipelineStateIndexWindowSpriteSRV, // ウィンドウスプライトSRV
+		kPipelineStateIndexWindowSpriteUAV, // ウィンドウスプライトUAV
 		kPipelineStateIndexLine, // 線
 		kPipelineStateIndexParticle, // パーティクル
 

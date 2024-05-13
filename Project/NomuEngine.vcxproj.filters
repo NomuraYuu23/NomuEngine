@@ -532,7 +532,7 @@
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
       <Filter>Engine\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\WindowSprite.cpp">
+    <ClCompile Include="Engine\base\WindowSprite.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\TextureUAV.cpp">
@@ -1005,7 +1005,7 @@
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\WindowSprite.h">
+    <ClInclude Include="Engine\base\WindowSprite.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\TextureUAV.h">
@@ -1183,6 +1183,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\Outline.PS.hlsl">
       <Filter>shaders\Outline\PS_hlsli</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\WindowSpriteUAV.PS.hlsl">
+      <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

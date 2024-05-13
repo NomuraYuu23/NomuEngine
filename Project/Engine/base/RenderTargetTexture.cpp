@@ -4,7 +4,7 @@
 #include "SRVDescriptorHerpManager.h"
 #include "../Math/Matrix4x4.h"
 #include "BufferResource.h"
-#include "../2D/WindowSprite.h"
+#include "WindowSprite.h"
 
 void RenderTargetTexture::Initialize(
 	ID3D12Device* device,
@@ -255,13 +255,13 @@ void RenderTargetTexture::ChangePixelShaderResource(uint32_t resourceIndex)
 void RenderTargetTexture::TextureDraw(uint32_t resourceIndex)
 {
 
-	WindowSprite::GetInstance()->Draw(srvGPUHandles_[resourceIndex]);
+	WindowSprite::GetInstance()->DrawSRV(srvGPUHandles_[resourceIndex]);
 
 }
 
 void RenderTargetTexture::TextureDraw(const CD3DX12_GPU_DESCRIPTOR_HANDLE& handle)
 {
 
-	WindowSprite::GetInstance()->Draw(handle);
+	WindowSprite::GetInstance()->DrawSRV(handle);
 
 }

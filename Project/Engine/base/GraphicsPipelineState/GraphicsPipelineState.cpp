@@ -31,7 +31,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	// 引数
 	CreateDesc desc;
 
-	// アニメーションモデル
+#pragma region アニメーションありモデル
 	desc.pipelineStateIndex = kPipelineStateIndexAnimModel;
 	desc.rootParameterIndex = kRootParameterIndexAnimModel;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -47,8 +47,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// アニメーション無しモデル
+#pragma region アニメーションなしモデル
 	desc.pipelineStateIndex = kPipelineStateIndexNormalModel;
 	desc.rootParameterIndex = kRootParameterIndexNormalModel;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -64,8 +65,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// アニメーション反転モデル(右手座標系)
+#pragma region アニメーション反転モデル(右手座標系)
 	desc.pipelineStateIndex = kPipelineStateIndexAnimInverseModel;
 	desc.rootParameterIndex = kRootParameterIndexAnimModel;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -81,8 +83,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// アニメーション無しアウトライン
+#pragma region アニメーション無しアウトライン
 	desc.pipelineStateIndex = kPipelineStateIndexNormalOutline;
 	desc.rootParameterIndex = kRootParameterIndexNormalOutline;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -98,8 +101,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 2;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// スプライト
+#pragma region スプライト
 	desc.pipelineStateIndex = kPipelineStateIndexSprite;
 	desc.rootParameterIndex = kRootParameterIndexSprite;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -115,8 +119,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// パーティクル
+#pragma region パーティクル
 	desc.pipelineStateIndex = kPipelineStateIndexParticle;
 	desc.rootParameterIndex = kRootParameterIndexParticle;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -132,8 +137,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// 2Dコライダーデバッグ
+#pragma region 2Dコライダーデバッグ
 	desc.pipelineStateIndex = kPipelineStateIndexCollision2DDebugDraw;
 	desc.rootParameterIndex = kRootParameterIndexCollision2DDebugDraw;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -149,8 +155,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// 線
+#pragma region 線
 	desc.pipelineStateIndex = kPipelineStateIndexLine;
 	desc.rootParameterIndex = kRootParameterIndexLine;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -166,10 +173,11 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// ウィンドウスプライト
-	desc.pipelineStateIndex = kPipelineStateIndexWindowSprite;
-	desc.rootParameterIndex = kRootParameterIndexWindowSprite;
+#pragma region ウィンドウスプライトSRV
+	desc.pipelineStateIndex = kPipelineStateIndexWindowSpriteSRV;
+	desc.rootParameterIndex = kRootParameterIndexWindowSpriteSRV;
 	desc.samplerIndex = kSamplerIndexPostEffect;
 	desc.depthEnable = false;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
@@ -183,8 +191,28 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
+#pragma endregion
 
-	// たくさんのアニメーションモデル
+#pragma region ウィンドウスプライトUAV
+	desc.pipelineStateIndex = kPipelineStateIndexWindowSpriteUAV;
+	desc.rootParameterIndex = kRootParameterIndexWindowSpriteUAV;
+	desc.samplerIndex = kSamplerIndexPostEffect;
+	desc.depthEnable = false;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_NONE;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/WindowSprite.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/WindowSpriteUAV.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.numRenderTargets = 1;
+	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	Create(desc);
+#pragma endregion
+	
+#pragma region たくさんのアニメーションモデル
 	desc.pipelineStateIndex = kPipelineStateIndexManyAnimModels;
 	desc.rootParameterIndex = kRootParameterIndexManyAnimModels;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -200,8 +228,9 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
-	// たくさんのアニメーション無しモデル
+#pragma region たくさんのアニメーション無しモデル
 	desc.pipelineStateIndex = kPipelineStateIndexManyNormalModels;
 	desc.rootParameterIndex = kRootParameterIndexManyNormalModels;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -217,6 +246,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
+#pragma endregion
 
 }
 

@@ -124,7 +124,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\2D\DrawLine.cpp" />
     <ClCompile Include="Engine\3D\FogManager.cpp" />
     <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp" />
-    <ClCompile Include="Engine\2D\WindowSprite.cpp" />
+    <ClCompile Include="Engine\base\WindowSprite.cpp" />
     <ClCompile Include="Engine\3D\Mesh.cpp" />
     <ClCompile Include="Engine\3D\ModelDraw.cpp" />
     <ClCompile Include="Engine\3D\OneOfManyObjects.cpp" />
@@ -259,7 +259,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\FogData.h" />
     <ClInclude Include="Engine\3D\FogManager.h" />
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h" />
-    <ClInclude Include="Engine\2D\WindowSprite.h" />
+    <ClInclude Include="Engine\base\WindowSprite.h" />
     <ClInclude Include="Engine\3D\Mesh.h" />
     <ClInclude Include="Engine\3D\ModelDraw.h" />
     <ClInclude Include="Engine\3D\ModelNodeData.h" />
@@ -584,6 +584,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\WindowSpriteUAV.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

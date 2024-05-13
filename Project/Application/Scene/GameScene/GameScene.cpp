@@ -143,6 +143,10 @@ void GameScene::Initialize() {
 
 	stringWind = { 0.0f,0.0f,0.0f };
 
+	PostEffect::GetInstance()->SetThreshold(0.1f);
+	PostEffect::GetInstance()->SetKernelSize(33);
+	PostEffect::GetInstance()->SetSigma(33.0f);
+
 	IScene::InitilaizeCheck();
 
 }
@@ -299,7 +303,7 @@ void GameScene::Draw() {
 	PostEffect::GetInstance()->Execution(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_,
-		PostEffect::kCommandIndexShockWave);
+		PostEffect::kCommandIndexBloom);
 
 	renderTargetTexture_->TextureDraw(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
@@ -325,7 +329,7 @@ void GameScene::ImguiDraw(){
 
 	PostEffect::GetInstance()->ImGuiDraw();
 
-	shockWaveManager_->ImGuiDraw();
+	//shockWaveManager_->ImGuiDraw();
 	FogManager::GetInstance()->ImGuiDraw();
 
 	//Obj
