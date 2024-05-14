@@ -83,8 +83,11 @@ void StructuralSpring::Update(
 
 	point0_.velocity.x = std::clamp(point0_.velocity.x, -velocityRestrictions, velocityRestrictions);
 	point0_.velocity.y = std::clamp(point0_.velocity.y, -velocityRestrictions, velocityRestrictions);
+	point0_.velocity.z = std::clamp(point0_.velocity.z, -velocityRestrictions, velocityRestrictions);
+
 	point1_.velocity.x = std::clamp(point1_.velocity.x, -velocityRestrictions, velocityRestrictions);
 	point1_.velocity.y = std::clamp(point1_.velocity.y, -velocityRestrictions, velocityRestrictions);
+	point1_.velocity.z = std::clamp(point1_.velocity.z, -velocityRestrictions, velocityRestrictions);
 
 	// 位置変動
 	point0_.position = point0_.position + point0_.velocity * kDeltaTime_;
