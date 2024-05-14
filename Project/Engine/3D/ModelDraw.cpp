@@ -336,7 +336,7 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	// マテリアル
 	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);
 	// ローカル
-	sCommandList->SetGraphicsRootDescriptorTable(1, *desc.localMatrixesHandle);
+	desc.localMatrixManager->SetGraphicsRootDescriptorTable(sCommandList, 1);
 
 	//テクスチャ 2~9
 	if (desc.textureHandles.empty()) {

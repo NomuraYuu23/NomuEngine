@@ -61,7 +61,7 @@ public: // サブクラス
 	struct ManyAnimObjectsDesc
 	{
 		Model* model = nullptr; //モデル
-		D3D12_GPU_DESCRIPTOR_HANDLE* localMatrixesHandle = nullptr;
+		LocalMatrixManager* localMatrixManager = nullptr;// ローカル行列マネージャー
 		D3D12_GPU_DESCRIPTOR_HANDLE* transformationMatrixesHandle = nullptr;
 		BaseCamera* camera = nullptr;
 		uint32_t numInstance = 0;
