@@ -132,7 +132,7 @@ void GameScene::Initialize() {
 	testString_->Initialize(
 		testStringModel_.get(),
 		{ 0.0f,0.0f,0.0f },
-		0.001f, 500.0f, 2.0f, 0.5f
+		0.001f, 2000.0f, 5.0f, 1.0f
 	);
 
 	testString_->SetAnchor(0, true);
