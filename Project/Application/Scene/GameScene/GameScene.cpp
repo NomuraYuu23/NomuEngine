@@ -301,7 +301,7 @@ void GameScene::Draw() {
 	PostEffect::GetInstance()->Execution(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_,
-		PostEffect::kCommandIndexBloom);
+		PostEffect::kCommandIndexWhiteNoize);
 
 	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
