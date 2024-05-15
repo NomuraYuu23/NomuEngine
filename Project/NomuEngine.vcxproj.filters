@@ -208,6 +208,9 @@
     <Filter Include="shaders\Outline\PS_hlsli">
       <UniqueIdentifier>{4fdcecf5-3eed-4995-a93b-02f0caf74576}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\Model\CS">
+      <UniqueIdentifier>{b86875ca-32bf-41e9-8b06-53955eda52ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -1186,6 +1189,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\WindowSpriteUAV.PS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\AnimModel.CS.hlsl">
+      <Filter>shaders\Model\CS</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

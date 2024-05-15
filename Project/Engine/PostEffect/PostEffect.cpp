@@ -292,7 +292,6 @@ void PostEffect::CreateRootSignature()
 		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[i + 8].size());//Tableで利用する数
 
 		rootParametersIndex++;
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	}
 
@@ -329,7 +328,6 @@ void PostEffect::CreateRootSignature()
 	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
 		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(hr));
-
 
 }
 

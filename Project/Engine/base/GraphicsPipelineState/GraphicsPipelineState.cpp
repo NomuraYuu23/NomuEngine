@@ -192,7 +192,6 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	Create(desc);
 #pragma endregion
-#pragma endregion
 
 #pragma region ウィンドウスプライトUAV
 	desc.pipelineStateIndex = kPipelineStateIndexWindowSpriteUAV;

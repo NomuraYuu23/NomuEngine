@@ -107,6 +107,11 @@ public:
 	// 現在のパイプライン番号
 	static PipelineStateIndex currentPipelineStateIndex_;
 
+	// ルートシグネチャCS
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> sRootSignatureCS_;
+	// パイプラインステートオブジェクトCS
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineStateCS_;
+
 public: //関数（描画以外）
 
 	/// <summary>
@@ -165,6 +170,10 @@ public: // 描画
 	/// 
 	/// </summary>
 	static void NormalOutlineDraw(NormalOutlineDesc& desc);
+
+private: // 関数
+
+	static void UpdateVertexUAV();
 
 };
 

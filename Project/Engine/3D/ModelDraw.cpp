@@ -1,6 +1,8 @@
 #include "ModelDraw.h"
 #include "../base/SRVDescriptorHerpManager.h"
 #include "../base/TextureManager.h"
+#include "../base/Log.h"
+#include "../base/CompileShader.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -22,6 +24,11 @@ FogManager* ModelDraw::sFogManager_ = nullptr;
 // 現在のパイプライン番号
 ModelDraw::PipelineStateIndex ModelDraw::currentPipelineStateIndex_ = kPipelineStateIndexOfCount;
 
+// ルートシグネチャCS
+Microsoft::WRL::ComPtr<ID3D12RootSignature> ModelDraw::sRootSignatureCS_ = nullptr;
+// パイプラインステートオブジェクトCS
+Microsoft::WRL::ComPtr<ID3D12PipelineState> ModelDraw::sPipelineStateCS_ = nullptr;
+
 void ModelDraw::Initialize(
 	const std::array<ID3D12RootSignature*, PipelineStateIndex::kPipelineStateIndexOfCount>& rootSignature,
 	const std::array<ID3D12PipelineState*, PipelineStateIndex::kPipelineStateIndexOfCount>& pipelineState)
@@ -32,6 +39,117 @@ void ModelDraw::Initialize(
 		sRootSignature[i] = rootSignature[i];
 		sPipelineState[i] = pipelineState[i];
 	}
+
+	HRESULT hr;
+	// デバイス取得
+	ID3D12Device* device = DirectXCommon::GetInstance()->GetDevice();
+
+#pragma region ルートシグネチャ設定
+
+	D3D12_ROOT_SIGNATURE_DESC descriptionRootsignature{};
+	descriptionRootsignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	// ルートパラメータ
+	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	uint32_t rootParametersIndex = 0;
+
+	// 定数バッファ * 1
+	rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;   //CBVを使う
+	rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //ALLで使う
+	rootParameters[rootParametersIndex].Descriptor.ShaderRegister = 0;                  //レジスタ番号iとバインド
+
+	rootParametersIndex++;
+
+	// ディスクリプタレンジ
+	std::vector<std::vector<D3D12_DESCRIPTOR_RANGE>> descriptorRanges;
+	descriptorRanges.resize(4);
+
+	// SRV * 3
+	for (uint32_t i = 0; i < 3; ++i) {
+
+		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+		descriptorRange[0].BaseShaderRegister = i;//iから始まる
+		descriptorRange[0].NumDescriptors = 1;//数は一つ
+		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使う
+		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+		descriptorRanges[i].push_back(descriptorRange[0]);
+
+		rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+		rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
+		rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges[i].data();//Tableの中身の配列を指定
+		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges[i].size());//Tableで利用する数
+
+		rootParametersIndex++;
+
+	}
+
+	// UAV * 1
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+	descriptorRange[0].BaseShaderRegister = 0;//iから始まる
+	descriptorRange[0].NumDescriptors = 1;//数は一つ
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+	descriptorRanges[3].push_back(descriptorRange[0]);
+
+	rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+	rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
+	rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges[3].data();//Tableの中身の配列を指定
+	rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges[3].size());//Tableで利用する数
+
+	descriptionRootsignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
+	descriptionRootsignature.NumParameters = _countof(rootParameters); //配列の長さ
+
+	// サンプラー
+	D3D12_STATIC_SAMPLER_DESC samplerDesc[1] = {};
+	samplerDesc[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc[0].MipLODBias = 0.0f;
+	samplerDesc[0].MaxAnisotropy = 0;
+	samplerDesc[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDesc[0].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+	samplerDesc[0].MinLOD = 0.0f;
+	samplerDesc[0].MaxLOD = 3.402823466e+38f;
+	samplerDesc[0].RegisterSpace = 0;
+	samplerDesc[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	descriptionRootsignature.pStaticSamplers = samplerDesc;
+	descriptionRootsignature.NumStaticSamplers = _countof(samplerDesc);
+
+	//シリアライズしてバイナリにする
+	ID3DBlob* signatureBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	hr = D3D12SerializeRootSignature(&descriptionRootsignature,
+		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr)) {
+		Log::Message(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		assert(false);
+	}
+
+	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
+		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&sRootSignatureCS_));
+	assert(SUCCEEDED(hr));
+
+#pragma endregion
+
+	// シェーダコンパイル
+	IDxcBlob* shader = CompileShader::Compile(
+		L"Resources/shaders/AnimModel.CS.hlsl",
+		L"cs_6_0",
+		L"main");
+
+	// パイプライン
+	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
+	desc.CS.pShaderBytecode = shader->GetBufferPointer();
+	desc.CS.BytecodeLength = shader->GetBufferSize();
+	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	desc.NodeMask = 0;
+	desc.pRootSignature = sRootSignatureCS_.Get();
+
+	hr = device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&sPipelineStateCS_));
+	assert(SUCCEEDED(hr));
 
 }
 
