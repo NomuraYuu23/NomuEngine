@@ -49,7 +49,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	Create(desc);
 #pragma endregion
 
-#pragma region アニメーションなしモデル
+#pragma region モデル
 	desc.pipelineStateIndex = kPipelineStateIndexNormalModel;
 	desc.rootParameterIndex = kRootParameterIndexNormalModel;
 	desc.samplerIndex = kSamplerIndexNormal;
@@ -67,17 +67,17 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	Create(desc);
 #pragma endregion
 
-#pragma region アニメーション反転モデル(右手座標系)
+#pragma region 反転モデル(右手座標系)
 	desc.pipelineStateIndex = kPipelineStateIndexAnimInverseModel;
-	desc.rootParameterIndex = kRootParameterIndexAnimModel;
+	desc.rootParameterIndex = kRootParameterIndexNormalModel;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexModel;
+	desc.inputLayoutIndex = kInputLayoutIndexNormal;
 	desc.blendStateIndex = kBlendStateIndexNormal;
 	desc.cullMode = D3D12_CULL_MODE_FRONT;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/AnimInverseModel.VS.hlsl";
+	desc.filePathVS = L"Resources/shaders/NormalModel.VS.hlsl";
 	desc.filePathPS = L"Resources/shaders/Model.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	desc.numRenderTargets = 1;

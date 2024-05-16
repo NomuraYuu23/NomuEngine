@@ -355,9 +355,9 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalModel]);
-	currentPipelineStateIndex_ = kPipelineStateIndexNormalModel;
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
+	currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModel;
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
 
