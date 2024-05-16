@@ -44,7 +44,6 @@ public: // 関数
 	/// インフルエンスバッファビュー
 	/// </summary>
 	/// <returns></returns>
-	D3D12_VERTEX_BUFFER_VIEW* GetInfluenceView() { return &influenceView_; }
 	void SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
@@ -115,8 +114,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> influenceBuff_;
 	// インフルエンスバッファマップ
 	VertexInfluence* influenceMap_ = nullptr;
-	// インフルエンスバッファビュー
-	D3D12_VERTEX_BUFFER_VIEW influenceView_{};
 
 	// CPUハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE influenceHandleCPU_{};

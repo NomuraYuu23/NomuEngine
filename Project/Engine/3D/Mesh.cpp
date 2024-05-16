@@ -93,13 +93,6 @@ void Mesh::VertInfluenceBuffInitialize(ID3D12Device* sDevice, const std::vector<
 	// インフルエンスバッファ
 	influenceBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(VertexInfluence) + 0xff) & ~0xff) * vertexInfluences.size());
 
-	//リソースの先頭のアドレスから使う
-	influenceView_.BufferLocation = influenceBuff_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点3つ分のサイズ
-	influenceView_.SizeInBytes = UINT(sizeof(VertexInfluence) * vertexInfluences.size());
-	//1頂点あたりのサイズ
-	influenceView_.StrideInBytes = sizeof(VertexInfluence);
-
 	//書き込むためのアドレスを取得
 	influenceBuff_->Map(0, nullptr, reinterpret_cast<void**>(&influenceMap_));
 	//頂点データをリソースにコピー
