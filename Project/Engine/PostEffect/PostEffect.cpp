@@ -69,7 +69,7 @@ void PostEffect::Initialize()
 
 	computeParametersMap_->paraColor = { 0.2f, 0.2f, 0.2f, 0.7f };  // パラの色
 	computeParametersMap_->paraSize = { 0.3f, 0.3f };// パラの大きさ
-	computeParametersMap_->paraPosition = { 1280.0f, 720.0f }; // パラの位置
+	computeParametersMap_->paraPosition = { 1.0f, 1.0f }; // パラの位置
 
 	// ルートシグネチャ
 	CreateRootSignature();

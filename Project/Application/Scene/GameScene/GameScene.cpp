@@ -299,7 +299,7 @@ void GameScene::Draw() {
 	PostEffect::GetInstance()->Execution(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_,
-		PostEffect::kCommandIndexSepia);
+		PostEffect::kCommandIndexFlarePara);
 
 	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 

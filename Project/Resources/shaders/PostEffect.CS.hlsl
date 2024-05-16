@@ -681,18 +681,21 @@ float32_t4 FlarePara(in const float32_t4 input, in const float32_t2 index) {
 	// アウトプットにソース画像を入れる
 	float32_t4 output = input;
 
+	// uv
+	float32_t2 texcoord = GetTexcoord(index, float32_t2(gComputeConstants.threadIdTotalX, gComputeConstants.threadIdTotalY));
+
 	// フレアの距離
-	float32_t2 flareLength = index - gComputeConstants.flarePosition;
-	flareLength.x = flareLength.x * rcp(gComputeConstants.flareSize.x * gComputeConstants.threadIdTotalY);
-	flareLength.y = flareLength.y * rcp(gComputeConstants.flareSize.y * gComputeConstants.threadIdTotalY);
+	float32_t2 flareLength = texcoord - gComputeConstants.flarePosition;
+	flareLength.x = flareLength.x * rcp(gComputeConstants.flareSize.x);
+	flareLength.y = flareLength.y * rcp(gComputeConstants.flareSize.y);
 
 	// フレア
 	float32_t flare = 1.0f - clamp(length(flareLength), 0.0f, 1.0f);
 
 	// パラの距離
-	float32_t2 paraLength = index - gComputeConstants.paraPosition;
-	paraLength.x = paraLength.x * rcp(gComputeConstants.paraSize.x * gComputeConstants.threadIdTotalY);
-	paraLength.y = paraLength.y * rcp(gComputeConstants.paraSize.y * gComputeConstants.threadIdTotalY);
+	float32_t2 paraLength = texcoord - gComputeConstants.paraPosition;
+	paraLength.x = paraLength.x * rcp(gComputeConstants.paraSize.x);
+	paraLength.y = paraLength.y * rcp(gComputeConstants.paraSize.y);
 
 	// パラ
 	float32_t para = 1.0f - clamp(length(paraLength), 0.0f, 1.0f);
