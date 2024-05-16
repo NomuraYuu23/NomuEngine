@@ -423,65 +423,58 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	// nullptrチェック
 	assert(sCommandList);
 
-	// パイプライン設定
-	if (currentPipelineStateIndex_ != kPipelineStateIndexManyAnimObjects) {
-		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyAnimObjects]);//PS0を設定
-		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyAnimObjects]);
-		currentPipelineStateIndex_ = kPipelineStateIndexManyAnimObjects;
-	}
+	desc.model->GetMesh()->GetSkinningInformationMap()->isInverse = false;
+	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
-	//VBVを設定 (インフルエンスと合体)
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		*(desc.model->GetMesh())->GetVbView(),
-		*(desc.model->GetMesh())->GetInfluenceView()
-	};
-	sCommandList->IASetVertexBuffers(0, 2, vbvs);
+	// パイプライン設定
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyNormalObjects]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyNormalObjects]);
+	currentPipelineStateIndex_ = kPipelineStateIndexManyNormalObjects;
+
+	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
 
 	// マテリアル
 	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);
-	// ローカル
-	desc.localMatrixManager->SetGraphicsRootDescriptorTable(sCommandList, 1);
 
-	//テクスチャ 2~9
+	//テクスチャ 1~8
 	if (desc.textureHandles.empty()) {
 		for (size_t i = 0; i < desc.model->GetModelData().material.textureFilePaths.size(); ++i) {
-			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.model->GetTextureHandles()[i]);
 		}
 		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.model->GetModelData().material.textureFilePaths.size());
 		for (uint32_t i = 0; i < tooMany; ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
 				sCommandList,
-				2 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
+				1 + static_cast<UINT>(i + desc.model->GetModelData().material.textureFilePaths.size()),
 				desc.model->GetTextureHandles()[0]);
 		}
 	}
 	else {
 		for (size_t i = 0; i < desc.textureHandles.size(); ++i) {
-			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 2 + static_cast<UINT>(i), desc.textureHandles[i]);
+			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 1 + static_cast<UINT>(i), desc.textureHandles[i]);
 		}
 		uint32_t tooMany = 8 - static_cast<uint32_t>(desc.textureHandles.size());
 		for (uint32_t i = 0; i < tooMany; ++i) {
 			TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
 				sCommandList,
-				2 + static_cast<UINT>(i + desc.textureHandles.size()),
+				1 + static_cast<UINT>(i + desc.textureHandles.size()),
 				desc.model->GetTextureHandles()[0]);
 		}
 	}
 
 	// 平行光源
-	sDirectionalLight_->Draw(sCommandList, 10);
+	sDirectionalLight_->Draw(sCommandList, 9);
 	// カメラCBufferの場所を設定
-	sCommandList->SetGraphicsRootConstantBufferView(11, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(10, desc.camera->GetWorldPositionBuff()->GetGPUVirtualAddress());
 	// ポイントライト
-	sPointLightManager_->Draw(sCommandList, 12);
+	sPointLightManager_->Draw(sCommandList, 11);
 	// スポットライト
-
-	sSpotLightManager_->Draw(sCommandList, 13);
+	sSpotLightManager_->Draw(sCommandList, 12);
 
 	// ワールドトランスフォーム
-	sCommandList->SetGraphicsRootDescriptorTable(14, *desc.transformationMatrixesHandle);
+	sCommandList->SetGraphicsRootDescriptorTable(13, *desc.transformationMatrixesHandle);
 	// 霧
-	sCommandList->SetGraphicsRootConstantBufferView(15, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
