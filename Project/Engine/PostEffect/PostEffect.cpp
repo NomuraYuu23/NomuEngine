@@ -58,7 +58,11 @@ void PostEffect::Initialize()
 	computeParametersMap_->radialBlurStrength = 0.0f; // ブラーの広がる強さ
 	computeParametersMap_->radialBlurMask = 0.0f; // 放射状ブラーが適用されないサイズ
 
-	computeParametersMap_->colorLerpT = 1.0f;
+	computeParametersMap_->colorLerpT = 1.0f; // 色変える系のLerpT
+	computeParametersMap_->colorSize = { 0.3f, 0.3f }; // 色変える系の大きさ
+	computeParametersMap_->colorPosition = { 0.5f, 0.5f }; // 色変える系の位置
+
+
 	computeParametersMap_->flareColor = { 0.7f, 0.7f, 0.7f, 0.7f }; // フレアの色
 	computeParametersMap_->flareSize = { 0.3f, 0.3f }; // フレアの大きさ
 	computeParametersMap_->flarePosition = { 0.0f, 0.0f }; // フレアの位置
@@ -116,6 +120,8 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat("radialBlurStrength", &computeParametersMap_->radialBlurStrength, 0.01f);
 	ImGui::DragFloat("radialBlurMask", &computeParametersMap_->radialBlurMask, 0.01f);
 	ImGui::DragFloat("colorLerpT", &computeParametersMap_->colorLerpT, 0.01f);
+	ImGui::DragFloat2("colorSize", &computeParametersMap_->colorSize.x, 0.01f);
+	ImGui::DragFloat2("colorPosition", &computeParametersMap_->colorPosition.x, 0.01f);
 	ImGui::ColorEdit4("flareColor", &computeParametersMap_->flareColor.x);
 	ImGui::DragFloat2("flareSize", &computeParametersMap_->flareSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("flarePosition", &computeParametersMap_->flarePosition.x, 0.01f);

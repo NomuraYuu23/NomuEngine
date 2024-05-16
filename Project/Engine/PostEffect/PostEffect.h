@@ -49,6 +49,8 @@ public: // サブクラス
 		float radialBlurMask; // 放射状ブラーが適用されないサイズ
 
 		float colorLerpT; // 色変える系のLerpT
+		Vector2 colorSize; // 色変える系の大きさ
+		Vector2 colorPosition; // 色変える系の位置
 
 		float padding2[2]; // パディング
 
@@ -355,6 +357,18 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="colorLerpT">色変える系のLerpT</param>
 	void SetColorLerpT(float colorLerpT) { computeParametersMap_->colorLerpT = colorLerpT; }
+
+	/// <summary>
+	/// 色変える系の大きさ設定
+	/// </summary>
+	/// <param name="colorSize">色変える系の大きさ</param>
+	void SetColorSize(const Vector2& colorSize) { computeParametersMap_->colorSize = colorSize; }
+
+	/// <summary>
+	/// 色変える系の位置設定
+	/// </summary>
+	/// <param name="colorPosition">色変える系の位置</param>
+	void SetColorPosition(const Vector2& colorPosition) { computeParametersMap_->colorPosition = colorPosition; }
 
 	/// <summary>
 	/// フレアの色設定
