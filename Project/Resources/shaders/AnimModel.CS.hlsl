@@ -62,13 +62,11 @@ void main(uint32_t3 dispatchId : SV_DispatchThreadID)
 		input.position.w = 1.0f;
 
 		output.position = mul(input.position, comb);
-		if (gSkinningInformation.isInverse) {
-			output.position.x *= -1.0f;
-		}
 
 		output.normal = normalize(mul(input.normal, (float32_t3x3)combInverseTranspose));
 		if (gSkinningInformation.isInverse) {
 			output.normal.x *= -1.0f;
+			output.position.x *= -1.0f;
 		}
 		gOutputVertices[VertexIndex] = output;
 	}

@@ -250,9 +250,9 @@ void GameScene::Draw() {
 	sampleObj_->Draw(camera_);
 
 	// 紐
-	//testString_->Draw(camera_);
+	testString_->Draw(camera_);
 
-	//testManyObject_->Draw(camera_);
+	testManyObject_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 

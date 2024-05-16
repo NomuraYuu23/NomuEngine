@@ -26,29 +26,6 @@ void RootParameterManager::Initialize()
 	// データ
 	std::vector<Item> data;
 
-#pragma region アニメーションありモデル
-	//CreateForAnimModel();
-	data.push_back(kCBV_PSIndexMaterial); // マテリアル 
-	data.push_back(kCBV_PSIndexDirectionalLight); // 平行光源
-	data.push_back(kCBV_PSIndexCamera); // カメラ
-	data.push_back(kCBV_VSIndexWorldTransform); // ワールドトランスフォーム
-	data.push_back(kSRV_VSIndexLocalMatrix); // ローカルトランスフォーム
-	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture1); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture2); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture3); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture4); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture5); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture6); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture7); // テクスチャ
-	data.push_back(kSRV_PSIndexPointLight); // ポイントライト
-	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
-	data.push_back(kCBV_PSIndexFog); // 霧
-	Analyze(kRootParameterIndexAnimModel, data); // 解析
-	data.clear(); // クリア
-
-#pragma endregion
-
 #pragma region アニメーションなしモデル
 	//CreateForNormalModel();
 	data.push_back(kCBV_PSIndexMaterial); // マテリアル 
@@ -124,28 +101,6 @@ void RootParameterManager::Initialize()
 #pragma region ウィンドウスプライトUAV
 	data.push_back(kUAV_PSIndexTexture0); // テクスチャUAV
 	Analyze(kRootParameterIndexWindowSpriteUAV, data); // 解析
-	data.clear(); // クリア
-#pragma endregion
-
-#pragma region たくさんのアニメーションモデル
-	//RootParameterInitializeForManyAnimModels();
-	data.push_back(kSRV_PSIndexMaterials); // マテリアル
-	data.push_back(kSRV_VSIndexLocalMatrix); // ローカルトランスフォーム
-	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture1); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture2); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture3); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture4); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture5); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture6); // テクスチャ
-	data.push_back(kSRV_PSIndexTexture7); // テクスチャ
-	data.push_back(kCBV_PSIndexDirectionalLight); // 平行光源 
-	data.push_back(kCBV_PSIndexCamera); //  カメラ
-	data.push_back(kSRV_PSIndexPointLight); // ポイントライト
-	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
-	data.push_back(kSRV_VSIndexTransformationMatrix); // ワールドトランスフォーム
-	data.push_back(kCBV_PSIndexFog); // 霧
-	Analyze(kRootParameterIndexManyAnimModels, data); // 解析
 	data.clear(); // クリア
 #pragma endregion
 

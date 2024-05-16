@@ -32,7 +32,6 @@ enum SRV_PSIndex {
 /// </summary>
 enum SRV_VSIndex {
 	kSRV_VSIndexParticleForGPU = 0, //  パーティクル用
-	kSRV_VSIndexLocalMatrix = 1, // ローカル行列
 	kSRV_VSIndexCollider2DDebugDrawForGPU = 2, // コライダーデバッグ2d
 	kSRV_VSIndexTransformationMatrix = 3, // トランスフォーム行列
 	kSRV_VSIndexLineForGPU = 4, // 線描画
@@ -78,7 +77,6 @@ enum UAV_PSIndex {
 /// ルートパラメータの名前
 /// </summary>
 enum RootParameterIndex {
-	kRootParameterIndexAnimModel, // アニメーションモデル
 	kRootParameterIndexNormalModel, // アニメーション無しモデル
 
 	kRootParameterIndexNormalOutline, // アニメーション無しアウトライン
@@ -89,7 +87,6 @@ enum RootParameterIndex {
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexWindowSpriteSRV, // ウィンドウスプライトSRV
 	kRootParameterIndexWindowSpriteUAV,// ウィンドウスプライトUAV
-	kRootParameterIndexManyAnimModels, // たくさんのアニメーションモデル
 	kRootParameterIndexManyNormalModels, // たくさんのアニメーション無しモデル
 	kRootParameterIndexOfCount,
 };

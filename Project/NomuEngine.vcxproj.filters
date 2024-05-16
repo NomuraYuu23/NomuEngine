@@ -1124,9 +1124,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shaders\AnimModel.VS.hlsl">
-      <Filter>shaders\Model</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
       <Filter>shaders\Collider2DDebug</Filter>
     </FxCompile>
@@ -1157,9 +1154,6 @@
     <FxCompile Include="Resources\shaders\WindowSprite.PS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\ManyAnimModels.VS.hlsl">
-      <Filter>shaders\Model</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
@@ -1170,9 +1164,6 @@
       <Filter>shaders\Model\PS_hlsli</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\NormalModel.VS.hlsl">
-      <Filter>shaders\Model</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\AnimInverseModel.VS.hlsl">
       <Filter>shaders\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ManyNormalModels.VS.hlsl">

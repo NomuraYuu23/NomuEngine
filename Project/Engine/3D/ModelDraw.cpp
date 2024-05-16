@@ -206,9 +206,9 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalModel]);
-	currentPipelineStateIndex_ = kPipelineStateIndexNormalModel;
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexModel]);
+	currentPipelineStateIndex_ = kPipelineStateIndexModel;
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
 
@@ -278,10 +278,10 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 	desc.worldTransform->Map(desc.camera->GetViewProjectionMatrix());
 
 	// パイプライン設定
-	if (currentPipelineStateIndex_ != kPipelineStateIndexNormalModel) {
-		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexNormalModel]);//PS0を設定
-		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexNormalModel]);
-		currentPipelineStateIndex_ = kPipelineStateIndexNormalModel;
+	if (currentPipelineStateIndex_ != kPipelineStateIndexModel) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexModel;
 	}
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView());
@@ -355,9 +355,9 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
-	currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModel;
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexInverseModel]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexInverseModel]);
+	currentPipelineStateIndex_ = kPipelineStateIndexInverseModel;
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
 
@@ -427,9 +427,9 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyNormalObjects]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyNormalObjects]);
-	currentPipelineStateIndex_ = kPipelineStateIndexManyNormalObjects;
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyObjects]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyObjects]);
+	currentPipelineStateIndex_ = kPipelineStateIndexManyObjects;
 
 	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
 
@@ -488,18 +488,14 @@ void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
 	assert(sCommandList);
 
 	// パイプライン設定
-	if (currentPipelineStateIndex_ != kPipelineStateIndexManyNormalObjects) {
-		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyNormalObjects]);//PS0を設定
-		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyNormalObjects]);
-		currentPipelineStateIndex_ = kPipelineStateIndexManyNormalObjects;
+	if (currentPipelineStateIndex_ != kPipelineStateIndexManyObjects) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyObjects]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyObjects]);
+		currentPipelineStateIndex_ = kPipelineStateIndexManyObjects;
 	}
 
 	//VBVを設定 (インフルエンスと合体)
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		*(desc.model->GetMesh())->GetVbView(),
-		*(desc.model->GetMesh())->GetInfluenceView()
-	};
-	sCommandList->IASetVertexBuffers(0, 2, vbvs);
+	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbView());
 
 	// マテリアル
 	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);

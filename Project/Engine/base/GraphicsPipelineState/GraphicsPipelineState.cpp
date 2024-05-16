@@ -31,26 +31,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	// 引数
 	CreateDesc desc;
 
-#pragma region アニメーションありモデル
-	desc.pipelineStateIndex = kPipelineStateIndexAnimModel;
-	desc.rootParameterIndex = kRootParameterIndexAnimModel;
-	desc.samplerIndex = kSamplerIndexNormal;
-	desc.depthEnable = true;
-	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexModel;
-	desc.blendStateIndex = kBlendStateIndexNormal;
-	desc.cullMode = D3D12_CULL_MODE_BACK;
-	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/AnimModel.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Model.PS.hlsl";
-	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	desc.numRenderTargets = 1;
-	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	Create(desc);
-#pragma endregion
-
 #pragma region モデル
-	desc.pipelineStateIndex = kPipelineStateIndexNormalModel;
+	desc.pipelineStateIndex = kPipelineStateIndexModel;
 	desc.rootParameterIndex = kRootParameterIndexNormalModel;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
@@ -68,7 +50,7 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 #pragma endregion
 
 #pragma region 反転モデル(右手座標系)
-	desc.pipelineStateIndex = kPipelineStateIndexAnimInverseModel;
+	desc.pipelineStateIndex = kPipelineStateIndexInverseModel;
 	desc.rootParameterIndex = kRootParameterIndexNormalModel;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
@@ -211,26 +193,8 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	Create(desc);
 #pragma endregion
 	
-#pragma region たくさんのアニメーションモデル
-	desc.pipelineStateIndex = kPipelineStateIndexManyAnimModels;
-	desc.rootParameterIndex = kRootParameterIndexManyAnimModels;
-	desc.samplerIndex = kSamplerIndexNormal;
-	desc.depthEnable = true;
-	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexModel;
-	desc.blendStateIndex = kBlendStateIndexNormal;
-	desc.cullMode = D3D12_CULL_MODE_BACK;
-	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/ManyAnimModels.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/ManyModels.PS.hlsl";
-	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	desc.numRenderTargets = 1;
-	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	Create(desc);
-#pragma endregion
-
 #pragma region たくさんのアニメーション無しモデル
-	desc.pipelineStateIndex = kPipelineStateIndexManyNormalModels;
+	desc.pipelineStateIndex = kPipelineStateIndexManyModels;
 	desc.rootParameterIndex = kRootParameterIndexManyNormalModels;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;

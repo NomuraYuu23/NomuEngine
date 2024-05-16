@@ -14,11 +14,9 @@ public: // サブクラス
 
 	// パイプライン番号
 	enum PipelineStateIndex {
-		kPipelineStateIndexAnimModel, // アニメーションモデル
-		kPipelineStateIndexNormalModel, // アニメーション無しモデル
-		kPipelineStateIndexAnimInverseModel, // アニメーション反転モデル(右手座標系)
-		kPipelineStateIndexManyAnimObjects, // 複数のアニメーションオブジェクト(アニメーションは同じ)
-		kPipelineStateIndexManyNormalObjects, // 複数のアニメーション無しオブジェクト
+		kPipelineStateIndexModel, // モデル
+		kPipelineStateIndexInverseModel, // 反転モデル(右手座標系)
+		kPipelineStateIndexManyObjects, // 複数のアニメーション無しオブジェクト
 
 
 		kPipelineStateIndexNormalOutline, // アニメーション無しアウトライン
