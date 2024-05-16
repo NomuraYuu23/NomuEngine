@@ -48,7 +48,9 @@ public: // サブクラス
 		float radialBlurStrength; // 放射状ブラーの広がる強さ
 		float radialBlurMask; // 放射状ブラーが適用されないサイズ
 
-		float padding2[3]; // パディング
+		float colorLerpT; // 色変える系のLerpT
+
+		float padding2[2]; // パディング
 
 		Vector4 flareColor; // フレアの色
 		Vector2 flareSize; // フレアの大きさ
@@ -348,6 +350,12 @@ public: // アクセッサ
 	/// <param name="radialBlurMask">放射状ブラーが適用されないサイズ</param>
 	void SetRadialBlurMask(float radialBlurMask) { computeParametersMap_->radialBlurMask = radialBlurMask; }
 	
+	/// <summary>
+	/// 色変える系のLerpT設定
+	/// </summary>
+	/// <param name="colorLerpT">色変える系のLerpT</param>
+	void SetColorLerpT(float colorLerpT) { computeParametersMap_->colorLerpT = colorLerpT; }
+
 	/// <summary>
 	/// フレアの色設定
 	/// </summary>

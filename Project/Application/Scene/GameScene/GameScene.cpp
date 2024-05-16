@@ -296,12 +296,12 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	//PostEffect::GetInstance()->Execution(
-	//	dxCommon_->GetCommadList(),
-	//	renderTargetTexture_,
-	//	PostEffect::kCommandIndexWhiteNoize);
+	PostEffect::GetInstance()->Execution(
+		dxCommon_->GetCommadList(),
+		renderTargetTexture_,
+		PostEffect::kCommandIndexSepia);
 
-	//WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

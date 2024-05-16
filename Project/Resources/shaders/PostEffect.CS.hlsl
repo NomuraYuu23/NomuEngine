@@ -39,6 +39,8 @@ struct ComputeParameters {
 	float32_t radialBlurStrength; // 放射状ブラーの広がる強さ
 	float32_t radialBlurMask; // 放射状ブラーが適用されないサイズ
 
+	float32_t colorLerpT; // 色変える系のLerpT
+
 	float32_t4 flareColor; // フレアの色
 	float32_t2 flareSize; // フレアの大きさ
 	float32_t2 flarePosition; // フレアの位置
@@ -717,7 +719,9 @@ float32_t4 GrayScale(in const float32_t4 input) {
 
 	float32_t value = dot(input.rgb, float32_t3(0.2125f, 0.7154f, 0.0721f));
 
-	return float32_t4(value, value, value, input.a);
+	float32_t3 output = lerp(input.rgb, float32_t3(value, value, value), gComputeConstants.colorLerpT);
+
+	return float32_t4(output, input.a);
 
 }
 
@@ -738,7 +742,9 @@ float32_t4 Sepia(in const float32_t4 input) {
 
 	float32_t value = dot(input.rgb, float32_t3(0.2125f, 0.7154f, 0.0721f));
 
-	return float32_t4(value, value * 74.0f * rcp(107.0f), value * 43.0f * rcp(107.0f), input.a);
+	float32_t3 output = lerp(input.rgb, float32_t3(value, value * 74.0f * rcp(107.0f), value * 43.0f * rcp(107.0f)), gComputeConstants.colorLerpT);
+
+	return float32_t4(output, input.a);
 
 }
 
