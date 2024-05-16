@@ -259,6 +259,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\FogData.h" />
     <ClInclude Include="Engine\3D\FogManager.h" />
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h" />
+    <ClInclude Include="Engine\Animation\SkinningInformation.h" />
     <ClInclude Include="Engine\base\WindowSprite.h" />
     <ClInclude Include="Engine\3D\Mesh.h" />
     <ClInclude Include="Engine\3D\ModelDraw.h" />

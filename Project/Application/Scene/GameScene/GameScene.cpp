@@ -250,7 +250,7 @@ void GameScene::Draw() {
 	sampleObj_->Draw(camera_);
 
 	// 紐
-	testString_->Draw(camera_);
+	//testString_->Draw(camera_);
 
 	//testManyObject_->Draw(camera_);
 
@@ -296,14 +296,12 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	renderTargetTexture_->ClearDepthBuffer();
+	//PostEffect::GetInstance()->Execution(
+	//	dxCommon_->GetCommadList(),
+	//	renderTargetTexture_,
+	//	PostEffect::kCommandIndexWhiteNoize);
 
-	PostEffect::GetInstance()->Execution(
-		dxCommon_->GetCommadList(),
-		renderTargetTexture_,
-		PostEffect::kCommandIndexWhiteNoize);
-
-	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	//WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 
@@ -396,8 +394,8 @@ void GameScene::ModelCreate()
 	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
-	//sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
-	sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));

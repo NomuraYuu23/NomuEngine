@@ -28,6 +28,29 @@ void Mesh::CreateMesh(
 	// UAVバッファ
 	UAVBuffInitialize(sDevice, vertices);
 
+	// SkinningInformationバッファ
+	skinningInformationBuff_ = BufferResource::CreateBufferResource(sDevice, ((sizeof(SkinningInformation) + 0xff) & ~0xff));
+	//書き込むためのアドレスを取得
+	skinningInformationBuff_->Map(0, nullptr, reinterpret_cast<void**>(&skinningInformationMap_));
+	// マップ
+	skinningInformationMap_->num = static_cast<int32_t>(vertices.size());
+	skinningInformationMap_->isInverse = false;
+
+}
+
+void Mesh::SetComputeRootDescriptorTableVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+{
+	commandList->SetComputeRootDescriptorTable(rootParameterIndex, vertHandleGPU_);
+}
+
+void Mesh::SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+{
+	commandList->SetComputeRootDescriptorTable(rootParameterIndex, influenceHandleGPU_);
+}
+
+void Mesh::SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+{
+	commandList->SetComputeRootDescriptorTable(rootParameterIndex, vertUAVHandleGPU_);
 }
 
 void Mesh::VertBuffInitialize(ID3D12Device* sDevice, const std::vector<VertexData>& vertices)
@@ -107,7 +130,7 @@ void Mesh::UAVBuffInitialize(
 	vertBuffUAV_ = BufferResource::CreateBufferResourceUAV(sDevice, ((sizeof(VertexData) + 0xff) & ~0xff) * vertices.size());
 
 	//リソースの先頭のアドレスから使う
-	vbViewUAV_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
+	vbViewUAV_.BufferLocation = vertBuffUAV_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ
 	vbViewUAV_.SizeInBytes = UINT(sizeof(VertexData) * vertices.size());
 	//1頂点あたりのサイズ

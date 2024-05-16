@@ -48,7 +48,7 @@ void SampleObject::Initialize(Model* model)
 		localMatrixManager_->GetInitTransform(),
 		localMatrixManager_->GetNodeNames());
 
-	//animation_.StartAnimation(0, true);
+	animation_.StartAnimation(0, true);
 	//animation_.StartAnimation(1, true);
 
 	enableLighting_ = 0;
@@ -92,9 +92,9 @@ void SampleObject::Update()
 
 	ApplyGlobalVariables();
 
-	//localMatrixManager_->SetNodeLocalMatrix(animation_.AnimationUpdate());
+	localMatrixManager_->SetNodeLocalMatrix(animation_.AnimationUpdate());
 
-	//localMatrixManager_->Map();
+	localMatrixManager_->Map();
 
 	//rigidBody_.postureMatrix =  RigidBody::PostureCalc(rigidBody_.postureMatrix, rigidBody_.angularVelocity, kDeltaTime_);
 
@@ -122,19 +122,19 @@ void SampleObject::Draw(BaseCamera& camera)
 
 	velocity2DDataMap_->SetVelocity(velocity_, camera.GetViewMatrix());
 
-	ModelDraw::NormalObjectDesc desc;
+	ModelDraw::AnimObjectDesc desc;
 	desc.camera = &camera;
-	//desc.localMatrixManager = localMatrixManager_.get();
+	desc.localMatrixManager = localMatrixManager_.get();
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.worldTransform = &worldTransform_;
-	ModelDraw::NormalObjectDraw(desc);
+	ModelDraw::AnimInverseObjectDraw(desc);
 
-	ModelDraw::NormalOutlineDesc outlineDesc;
-	outlineDesc.model = model_;
-	outlineDesc.outline = outline_.get();
-	outlineDesc.worldTransform = &worldTransform_;
-	ModelDraw::NormalOutlineDraw(outlineDesc);
+	//ModelDraw::NormalOutlineDesc outlineDesc;
+	//outlineDesc.model = model_;
+	//outlineDesc.outline = outline_.get();
+	//outlineDesc.worldTransform = &worldTransform_;
+	//ModelDraw::NormalOutlineDraw(outlineDesc);
 
 }
 

@@ -1080,6 +1080,9 @@
     <ClInclude Include="Engine\PostEffect\Velocity2DManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Animation\SkinningInformation.h">
+      <Filter>Engine\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

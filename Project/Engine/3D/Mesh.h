@@ -10,6 +10,7 @@
 
 #include "VertexData.h"
 #include "VertexInfluence.h"
+#include "../Animation/SkinningInformation.h"
 
 class Mesh
 {
@@ -37,22 +38,33 @@ public: // 関数
 	/// </summary>
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetVbView() { return &vbView_; }
+	void SetComputeRootDescriptorTableVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// インフルエンスバッファビュー
 	/// </summary>
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetInfluenceView() { return &influenceView_; }
+	void SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// UAVバッファビュー
 	/// </summary>
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetVbViewUAV() { return &vbViewUAV_; }
+	void SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
-	D3D12_GPU_DESCRIPTOR_HANDLE* GetVertHandleGPU() { return &vertHandleGPU_; }
-	D3D12_GPU_DESCRIPTOR_HANDLE* GetInfluenceHandleGPU() { return &influenceHandleGPU_; }
-	D3D12_GPU_DESCRIPTOR_HANDLE* GetVertUAVHandleGPU() { return &vertUAVHandleGPU_; }
+	/// <summary>
+	/// skinningバッファ
+	/// </summary>
+	/// <returns></returns>
+	ID3D12Resource* GetSkinningInformationBuff() { return skinningInformationBuff_.Get(); }
+
+	/// <summary>
+	/// マップ
+	/// </summary>
+	/// <returns></returns>
+	SkinningInformation* GetSkinningInformationMap() { return skinningInformationMap_; }
 
 private: // 関数
 
@@ -126,6 +138,11 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE vertUAVHandleGPU_{};
 	// ディスクリプタヒープの位置
 	uint32_t vertUAVIndexDescriptorHeap_ = 0;
+
+	// SkinningInformationバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> skinningInformationBuff_;
+	// SkinningInformationバッファマップ
+	SkinningInformation* skinningInformationMap_ = nullptr;
 	
 };
 

@@ -14,12 +14,13 @@ struct LocalMatrix{
 	float32_t4x4 MatrixInverseTranspose;
 };
 
-struct VertexNumber {
+struct SkinningInformation {
 	uint32_t num;
+	bool isInverse;
 };
 
 // 頂点数
-ConstantBuffer<VertexNumber> gVertexNumber : register(b0);
+ConstantBuffer<SkinningInformation> gSkinningInformation : register(b0);
 
 // 頂点情報
 StructuredBuffer<Vertex> gVertices : register(t0);
@@ -39,7 +40,7 @@ void main(uint32_t3 dispatchId : SV_DispatchThreadID)
 
 	uint32_t VertexIndex = dispatchId.x;
 
-	if (VertexIndex < gVertexNumber.num) {
+	if (VertexIndex < gSkinningInformation.num) {
 		Vertex output;
 
 		Vertex input = gVertices[VertexIndex];
@@ -61,9 +62,14 @@ void main(uint32_t3 dispatchId : SV_DispatchThreadID)
 		input.position.w = 1.0f;
 
 		output.position = mul(input.position, comb);
+		if (gSkinningInformation.isInverse) {
+			output.position.x *= -1.0f;
+		}
 
 		output.normal = normalize(mul(input.normal, (float32_t3x3)combInverseTranspose));
-
+		if (gSkinningInformation.isInverse) {
+			output.normal.x *= -1.0f;
+		}
 		gOutputVertices[VertexIndex] = output;
 	}
 
