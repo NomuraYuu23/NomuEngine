@@ -173,7 +173,9 @@ public: // 描画
 
 private: // 関数
 
-	static void UpdateVertexUAV();
+	static void UpdateVertexUAV(
+		Model* model,
+		LocalMatrixManager* localMatrixManager);
 
 };
 

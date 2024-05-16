@@ -594,3 +594,27 @@ void ModelDraw::NormalOutlineDraw(NormalOutlineDesc& desc)
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
 
 }
+
+void ModelDraw::UpdateVertexUAV(
+	Model* model,
+	LocalMatrixManager* localMatrixManager)
+{
+
+	Mesh* mesh = model->GetMesh();
+
+	sCommandList->SetPipelineState(sPipelineStateCS_.Get());//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignatureCS_.Get());
+
+	D3D12_GPU_DESCRIPTOR_HANDLE vertHandleGPU = *(mesh->GetVertHandleGPU());
+	D3D12_GPU_DESCRIPTOR_HANDLE influenceHandleGPU = *(mesh->GetInfluenceHandleGPU());
+	D3D12_GPU_DESCRIPTOR_HANDLE vertUAVHandleGPU = *(mesh->GetVertUAVHandleGPU());
+
+	//sCommandList->SetComputeRootConstantBufferView();
+	sCommandList->SetComputeRootDescriptorTable(1, vertHandleGPU);
+	sCommandList->SetComputeRootDescriptorTable(2, influenceHandleGPU);
+	sCommandList->SetComputeRootDescriptorTable(3, localMatrixManager->localMatrixesHandleGPU_);
+	sCommandList->SetComputeRootDescriptorTable(4, vertUAVHandleGPU);
+
+	sCommandList->Dispatch(static_cast<UINT>(), 1, 1);
+
+}
