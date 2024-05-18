@@ -19,7 +19,7 @@ public:
     /// <param name="emitterDesc">エミッタ引数</param>
     /// <param name="emitterName">エミッタの名前</param>
     /// <returns></returns>
-    IEmitter* Run(const EmitterDesc& emitterDesc, uint32_t emitterName);
+    IEmitter* Run(EmitterDesc* emitterDesc, uint32_t emitterName);
 
 private:
     MakeEmitter() = default;

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "../../Particle/EmitterName.h"
+#include "../../Particle/NewEmitterDssc.h"
 
 GameScene::~GameScene()
 {
@@ -41,18 +42,19 @@ void GameScene::Initialize() {
 
 	EulerTransform emitter = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{-3.0f,0.0f,0.0f} };
 
-	EmitterDesc emitterDesc{};
+	NewEmitterDesc emitterDesc{};
 	emitterDesc.transform = &emitter;
 	emitterDesc.instanceCount = 1;
 	emitterDesc.frequency = 0.5f;
 	emitterDesc.lifeTime = 300.0f;
 	emitterDesc.paeticleName = 0;
 	emitterDesc.particleModelNum = ParticleModelIndex::kUvChecker;
+	emitterDesc.otamesi_ = 0;
 
-	particleManager_->MakeEmitter(emitterDesc, 0);
+	particleManager_->MakeEmitter(&emitterDesc, 0);
 	emitter.translate.x = 3.0f;
 	emitterDesc.particleModelNum = ParticleModelIndex::kCircle;
-	particleManager_->MakeEmitter(emitterDesc, 0);
+	particleManager_->MakeEmitter(&emitterDesc, 0);
 
 
 	isDebugCameraActive_ = false;

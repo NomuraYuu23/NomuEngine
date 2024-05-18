@@ -7,7 +7,7 @@ MakeEmitter* MakeEmitter::GetInstance()
     return nullptr;
 }
 
-IEmitter* MakeEmitter::Run(const EmitterDesc& emitterDesc, uint32_t emitterName)
+IEmitter* MakeEmitter::Run(EmitterDesc* emitterDesc, uint32_t emitterName)
 {
 	
 	IEmitter* emitter = nullptr;

@@ -1089,6 +1089,9 @@
     <ClInclude Include="Engine\base\QueryTimestamp.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Particle\NewEmitterDssc.h">
+      <Filter>Application\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

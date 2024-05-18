@@ -17,7 +17,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize(const EmitterDesc& emitterDesc);
+	virtual void Initialize(EmitterDesc* emitterDesc);
 
 	/// <summary>
 	/// 更新

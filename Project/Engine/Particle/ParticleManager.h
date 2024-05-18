@@ -103,7 +103,7 @@ public: // メンバ関数
 	/// </summary>
     /// <param name="emitterDesc">エミッタ引数</param>
     /// <param name="emitterName">エミッタの名前</param>
-	void MakeEmitter(const EmitterDesc& emitterDesc, uint32_t emitterName);
+	void MakeEmitter(EmitterDesc* emitterDesc, uint32_t emitterName);
 
 	/// <summary>
 	/// エミッタ更新

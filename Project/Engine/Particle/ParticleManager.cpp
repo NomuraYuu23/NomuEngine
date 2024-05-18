@@ -214,7 +214,7 @@ void ParticleManager::BillBoardUpdate(BaseCamera& camera)
 
 }
 
-void ParticleManager::MakeEmitter(const EmitterDesc& emitterDesc, uint32_t emitterName)
+void ParticleManager::MakeEmitter(EmitterDesc* emitterDesc, uint32_t emitterName)
 {
 
 	emitters_.push_back(MakeEmitter::GetInstance()->Run(emitterDesc, emitterName));
