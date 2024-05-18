@@ -49,8 +49,10 @@ std::list<IParticle*> IEmitter::Emit()
 	std::list<IParticle*> particles;
 	MakeParticle* makeParticle = MakeParticle::GetInstance();
 
+	ParticleDesc desc = { transform_.translate ,transform_.scale };
+
 	for (uint32_t count = 0; count < instanceCount_; ++count) {
-		particles.push_back(makeParticle->Run(paeticleName_,transform_.translate, transform_.scale));
+		particles.push_back(makeParticle->Run(&desc, paeticleName_));
 	}
 
 	return particles;

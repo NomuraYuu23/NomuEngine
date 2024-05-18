@@ -7,6 +7,7 @@
 #include <d3d12.h>
 #include "../Math/Vector4.h"
 #include "ParticleForGPU.h"
+#include "ParticleDesc.h"
 #include "../../Application/Particle/ParticleName.h"
 
 class IParticle
@@ -34,7 +35,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="numInstance"></param>
-	virtual void Initialize(const Vector3& position, const Vector3& size);
+	virtual void Initialize(ParticleDesc* particleDesc);
 
 	/// <summary>
 	/// 更新

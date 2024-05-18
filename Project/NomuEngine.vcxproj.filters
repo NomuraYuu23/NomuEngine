@@ -1092,6 +1092,9 @@
     <ClInclude Include="Application\Particle\NewEmitterDssc.h">
       <Filter>Application\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleDesc.h">
+      <Filter>Engine\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">

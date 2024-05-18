@@ -6,7 +6,7 @@ MakeParticle* MakeParticle::GetInstance()
     return nullptr;
 }
 
-IParticle* MakeParticle::Run(uint32_t paeticleName, const Vector3& position, const Vector3& size)
+IParticle* MakeParticle::Run(ParticleDesc* particleDesc, uint32_t paeticleName)
 {
 	
 	IParticle* particle = nullptr;
@@ -15,7 +15,7 @@ IParticle* MakeParticle::Run(uint32_t paeticleName, const Vector3& position, con
 	{
 	case kDefaultParticle:
 		particle = new IParticle();
-		particle->Initialize(position, size);
+		particle->Initialize(particleDesc);
 		break;
 	case kCountOfParticleName:
 	default:

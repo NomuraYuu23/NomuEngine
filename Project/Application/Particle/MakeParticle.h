@@ -17,7 +17,7 @@ public:
     /// パーティクル作成
     /// </summary>
     /// <returns></returns>
-    IParticle* Run(uint32_t paeticleName, const Vector3& position, const Vector3& size);
+    IParticle* Run(ParticleDesc* particleDesc, uint32_t paeticleName);
 
 private:
     MakeParticle() = default;

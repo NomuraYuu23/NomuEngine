@@ -10,18 +10,18 @@
 
 IParticle::~IParticle(){}
 
-void IParticle::Initialize(const Vector3& position, const Vector3& size)
+void IParticle::Initialize(ParticleDesc* particleDesc)
 {
 
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-	Vector3 distributionMax = { position.x + size.x / 2.0f,
-								position.y + size.y / 2.0f,
-								position.z + size.z / 2.0f };
-	Vector3 distributionMin = { position.x - size.x / 2.0f,
-								position.y - size.y / 2.0f,
-								position.z - size.z / 2.0f };
+	Vector3 distributionMax = { particleDesc->position.x + particleDesc->size.x / 2.0f,
+								particleDesc->position.y + particleDesc->size.y / 2.0f,
+								particleDesc->position.z + particleDesc->size.z / 2.0f };
+	Vector3 distributionMin = { particleDesc->position.x - particleDesc->size.x / 2.0f,
+								particleDesc->position.y - particleDesc->size.y / 2.0f,
+								particleDesc->position.z - particleDesc->size.z / 2.0f };
 	std::uniform_real_distribution<float> distributionX(distributionMin.x, distributionMax.x);
 	std::uniform_real_distribution<float> distributionY(distributionMin.y, distributionMax.y);
 	std::uniform_real_distribution<float> distributionZ(distributionMin.z, distributionMax.z);
