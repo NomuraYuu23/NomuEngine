@@ -13,6 +13,7 @@
 #include "Log.h"
 #include "GraphicsPipelineState/GraphicsPipelineState.h"
 #include "../base/CompileShader.h"
+#include "QueryTimestamp.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -89,6 +90,8 @@ void DirectXCommon::Initialize(
 // 描画前処理
 void DirectXCommon::PreDraw() {
 
+	QueryTimestamp::GetInstance()->Preprocessing(command_->GetCommadList());
+
 	renderTargetTexture_->PreDraw(command_->GetCommadList());
 
 }
@@ -126,8 +129,12 @@ void DirectXCommon::PostDraw() {
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
 
+	QueryTimestamp::GetInstance()->Postprocessing(command_->GetCommadList());
+
 	// FPS固定
 	UpdateFixFPS();
+
+	QueryTimestamp::GetInstance()->Reading();
 
 	//次のフレーム用のコマンドリストを準備
 	hr = command_->GetCommandAllocator()->Reset();

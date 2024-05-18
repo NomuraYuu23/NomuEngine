@@ -583,6 +583,9 @@
     <ClCompile Include="Engine\PostEffect\Velocity2DManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\QueryTimestamp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -1082,6 +1085,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Animation\SkinningInformation.h">
       <Filter>Engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\QueryTimestamp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

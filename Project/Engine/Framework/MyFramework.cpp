@@ -67,6 +67,9 @@ void MyFramework::Initialize()
 	// ウィンドウスプライト保存
 	WindowSpriteStorage::GetInstance()->Initialize();
 
+	// クエリタイムスタンプ
+	QueryTimestamp::GetInstance()->Initialize(dxCommon->GetDevice());
+
 	//サウンド
 	audio = Audio::GetInstance();
 	audio->Initialize();
@@ -121,6 +124,9 @@ void MyFramework::Update()
 	//ImGui::ShowDemoWindow();
 	// グローバル変数の更新
 	GlobalVariables::GetInstance()->Update();
+
+	// クエリタイムスタンプ
+	QueryTimestamp::GetInstance()->ImGuiDraw();
 
 }
 

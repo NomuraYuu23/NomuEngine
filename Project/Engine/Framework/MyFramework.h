@@ -59,6 +59,9 @@
 // ウィンドウスプライト保存
 #include "../base/WindowSpriteStorage.h"
 
+// タイムスタンプ
+#include "../base/QueryTimestamp.h"
+
 class MyFramework
 {
 
