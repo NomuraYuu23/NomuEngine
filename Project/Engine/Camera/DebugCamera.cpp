@@ -21,24 +21,30 @@ void DebugCamera::Update(float elapsedTime) {
 
 	Input* input = Input::GetInstance();
 	
+	Vector3 velocity = {0.0f,0.0f,0.0f};
+
 	if (input->PushKey(DIK_D)) {
-		transform_.translate.x += moveSpeed_;
+		velocity.x += moveSpeed_;
 	}
 	if (input->PushKey(DIK_A)) {
-		transform_.translate.x -= moveSpeed_;
+		velocity.x -= moveSpeed_;
 	}
 	if (input->PushKey(DIK_W)) {
-		transform_.translate.y += moveSpeed_;
+		velocity.y += moveSpeed_;
 	}
 	if (input->PushKey(DIK_S)) {
-		transform_.translate.y -= moveSpeed_;
+		velocity.y -= moveSpeed_;
 	}
 	if (input->PushKey(DIK_E)) {
-		transform_.translate.z += moveSpeed_;
+		velocity.z += moveSpeed_;
 	}
 	if (input->PushKey(DIK_Q)) {
-		transform_.translate.z -= moveSpeed_;
+		velocity.z -= moveSpeed_;
 	}
+
+	velocity = Matrix4x4::TransformNormal(velocity, transformMatrix_);
+
+	transform_.translate += velocity;
 
 	if (input->PushKey(DIK_RIGHT)) {
 		transform_.rotate.y += rotateSpeed_;
