@@ -130,6 +130,8 @@ void TitleScene::ModelCreate()
 void TitleScene::TextureLoad()
 {
 
+	handle_ = TextureManager::Load("Resources/default/rostock_laage_airport_4k.dds", DirectXCommon::GetInstance(), textureHandleManager_.get());
+
 }
 
 void TitleScene::LowerVolumeBGM()

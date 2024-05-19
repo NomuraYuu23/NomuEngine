@@ -64,5 +64,8 @@ private: // メンバ変数
 	std::unique_ptr<Model> skydomeModel_;
 	bool isDrawSkydome_ = true;
 
+	// スカイボックス
+	uint32_t handle_ = 0;
+
 };
 
