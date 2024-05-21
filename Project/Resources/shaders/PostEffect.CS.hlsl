@@ -267,18 +267,16 @@ float32_t4 Bloom(in const float32_t2 index, in const  float32_t2 dir) {
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
 
 		// 色確認
-		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
+		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold) && input.a != 0.0f) {
 			// outputに加算
 			output += input * weight;
-			// 重みの合計に加算
-			weightSum += weight;
 		}
+		// 重みの合計に加算
+		weightSum += weight;
 	}
 
-	if (weightSum != 0.0f) {
-		// 重みの合計分割る
-		output *= rcp(weightSum);
-	}
+	// 重みの合計分割る
+	output *= rcp(weightSum);
 
 	// 代入
 	return output;
