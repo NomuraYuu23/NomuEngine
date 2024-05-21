@@ -211,6 +211,9 @@
     <Filter Include="shaders\Model\CS">
       <UniqueIdentifier>{b86875ca-32bf-41e9-8b06-53955eda52ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\SkyBox">
+      <UniqueIdentifier>{be388ffe-207d-48f4-a5f3-a05943cd1b70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -584,6 +587,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\QueryTimestamp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SkyBox\SkyBox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1094,6 +1100,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleDesc.h">
       <Filter>Engine\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SkyBox\SkyBox.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
