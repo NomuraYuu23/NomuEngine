@@ -217,6 +217,30 @@
     <Filter Include="shaders\SkyBox">
       <UniqueIdentifier>{5dd7c169-f997-4033-813a-f7cc3f0060a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\2D\ImGui">
+      <UniqueIdentifier>{0a4c76c3-44ae-4c89-9e5b-9d42bdfbd75f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\2D\Sprite">
+      <UniqueIdentifier>{1f90c5f6-94e3-4607-9f99-b40c9c3641d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Objects">
+      <UniqueIdentifier>{1a8427f8-6e8a-4346-bb34-d3b1e240878b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Fog">
+      <UniqueIdentifier>{107a491f-eb7c-4e9f-8e1b-ef541cd7beda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Material">
+      <UniqueIdentifier>{eaa5bb8d-3e40-4b30-b680-8c9e2122f608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Vertex">
+      <UniqueIdentifier>{38a13aa0-efb6-4c06-9e51-417b10496d79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Transform">
+      <UniqueIdentifier>{6d75f7e1-f0df-4c87-9e6e-bb5605b160ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3D\Line">
+      <UniqueIdentifier>{17a3054a-ec97-433f-95c8-3b3bcafacf86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -239,18 +263,6 @@
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\ImGuiManager.cpp">
-      <Filter>Engine\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\Sprite.cpp">
-      <Filter>Engine\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Material.cpp">
-      <Filter>Engine\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\WorldTransform.cpp">
-      <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Audio\Audio.cpp">
       <Filter>Engine\Audio</Filter>
@@ -496,9 +508,6 @@
     <ClCompile Include="Engine\Math\Matrix3x3.cpp">
       <Filter>Engine\Math\Matrix3x3</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\DrawLine.cpp">
-      <Filter>Engine\2D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\SRVDescriptorHerpManager.cpp">
       <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClCompile>
@@ -526,12 +535,6 @@
     <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp">
       <Filter>Engine\ContactRecord</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp">
-      <Filter>Engine\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\OneOfManyObjects.cpp">
-      <Filter>Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\CompileShader.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
@@ -549,9 +552,6 @@
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp">
       <Filter>Engine\PostEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\FogManager.cpp">
-      <Filter>Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collider2D\Segment2D.cpp">
       <Filter>Engine\Collider2D</Filter>
@@ -595,6 +595,30 @@
     <ClCompile Include="Engine\SkyBox\Skybox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\2D\ImGuiManager.cpp">
+      <Filter>Engine\2D\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\Sprite.cpp">
+      <Filter>Engine\2D\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\DrawLine.cpp">
+      <Filter>Engine\3D\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\OneOfManyObjects.cpp">
+      <Filter>Engine\3D\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp">
+      <Filter>Engine\3D\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\FogManager.cpp">
+      <Filter>Engine\3D\Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Material.cpp">
+      <Filter>Engine\3D\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\WorldTransform.cpp">
+      <Filter>Engine\3D\Transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -617,30 +641,6 @@
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\Sprite.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\ImGuiManager.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Material.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\MaterialData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\TransformationMatrix.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\TransformStructure.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\VertexData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\WorldTransform.h">
-      <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Audio\Audio.h">
       <Filter>Engine\Audio</Filter>
@@ -885,9 +885,6 @@
     <ClInclude Include="Engine\3D\Model.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\SpriteForGPU.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\Mesh.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
@@ -966,15 +963,6 @@
     <ClInclude Include="Engine\Math\Matrix3x3.h">
       <Filter>Engine\Math\Matrix3x3</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\ColorVertexData.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\DrawLine.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\SpriteVertex.h">
-      <Filter>Engine\2D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\SRVDescriptorHerpManager.h">
       <Filter>Engine\Base\DescriptorHerpManager</Filter>
     </ClInclude>
@@ -1011,12 +999,6 @@
     <ClInclude Include="Engine\3D\ModelNodeData.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\OneOfManyObjects.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
@@ -1032,20 +1014,11 @@
     <ClInclude Include="Engine\PostEffect\ShockWaveData.h">
       <Filter>Engine\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\FogData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\FogManager.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collider2D\Segment2D.h">
       <Filter>Engine\Collider2D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\ShockWaveManager.h">
       <Filter>Engine\PostEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\VertexInfluence.h">
-      <Filter>Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation\LocalMatrix.h">
       <Filter>Engine\Animation</Filter>
@@ -1064,9 +1037,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Physics\String.h">
       <Filter>Engine\Physics\Spring</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\LineForGPU.h">
-      <Filter>Engine\2D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation\LocalMatrixDraw.h">
       <Filter>Engine\Animation</Filter>
@@ -1106,6 +1076,60 @@
     </ClInclude>
     <ClInclude Include="Engine\SkyBox\Skybox.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\ImGuiManager.h">
+      <Filter>Engine\2D\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\SpriteVertex.h">
+      <Filter>Engine\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\Sprite.h">
+      <Filter>Engine\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\SpriteForGPU.h">
+      <Filter>Engine\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\LineForGPU.h">
+      <Filter>Engine\3D\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\DrawLine.h">
+      <Filter>Engine\3D\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\OneOfManyObjects.h">
+      <Filter>Engine\3D\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\LargeNumberOfObjects.h">
+      <Filter>Engine\3D\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\FogManager.h">
+      <Filter>Engine\3D\Fog</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\FogData.h">
+      <Filter>Engine\3D\Fog</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Material.h">
+      <Filter>Engine\3D\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\MaterialData.h">
+      <Filter>Engine\3D\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\VertexData.h">
+      <Filter>Engine\3D\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\VertexInfluence.h">
+      <Filter>Engine\3D\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\WorldTransform.h">
+      <Filter>Engine\3D\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\TransformationMatrix.h">
+      <Filter>Engine\3D\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\TransformStructure.h">
+      <Filter>Engine\3D\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\ColorVertexData.h">
+      <Filter>Engine\3D\Vertex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

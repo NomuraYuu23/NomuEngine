@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "StructuralSpring.h"
-#include "../2D/DrawLine.h"
+#include "../3D/DrawLine.h"
 #include "../3D/Model.h"
 
 class String

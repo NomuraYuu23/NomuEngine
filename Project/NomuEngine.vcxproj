@@ -121,7 +121,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\UI\UI.cpp" />
     <ClCompile Include="Application\UI\UIManager.cpp" />
     <ClCompile Include="Engine\2D\ImGuiManager.cpp" />
-    <ClCompile Include="Engine\2D\DrawLine.cpp" />
+    <ClCompile Include="Engine\3D\DrawLine.cpp" />
     <ClCompile Include="Engine\3D\FogManager.cpp" />
     <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp" />
     <ClCompile Include="Engine\base\QueryTimestamp.cpp" />
@@ -253,10 +253,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\ShadowManager\ShadowManager.h" />
     <ClInclude Include="Application\UI\UI.h" />
     <ClInclude Include="Application\UI\UIManager.h" />
-    <ClInclude Include="Engine\2D\ColorVertexData.h" />
+    <ClInclude Include="Engine\3D\ColorVertexData.h" />
     <ClInclude Include="Engine\2D\ImGuiManager.h" />
-    <ClInclude Include="Engine\2D\DrawLine.h" />
-    <ClInclude Include="Engine\2D\LineForGPU.h" />
+    <ClInclude Include="Engine\3D\DrawLine.h" />
+    <ClInclude Include="Engine\3D\LineForGPU.h" />
     <ClInclude Include="Engine\2D\SpriteForGPU.h" />
     <ClInclude Include="Engine\2D\SpriteVertex.h" />
     <ClInclude Include="Engine\3D\FogData.h" />

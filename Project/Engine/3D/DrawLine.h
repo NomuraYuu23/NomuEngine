@@ -7,7 +7,7 @@
 #include <dxcapi.h>
 #include <list>
 #include <memory>
-#include "../2D/ColorVertexData.h"
+#include "../3D/ColorVertexData.h"
 #include "../Math/Matrix4x4.h"
 #include "../Camera/BaseCamera.h"
 #include "LineForGPU.h"

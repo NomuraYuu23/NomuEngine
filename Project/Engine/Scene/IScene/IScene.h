@@ -19,7 +19,7 @@
 #include "../../2D/Sprite.h" // スプライト
 #include "../../3D/Model.h" // モデル
 #include "../../3D/LargeNumberOfObjects.h" // 大量のオブジェクト用モデル
-#include "../../2D/DrawLine.h" // 線描画
+#include "../../3D/DrawLine.h" // 線描画
 #include "../../3D/Material.h"// マテリアル
 #include "../../Particle/ParticleManager.h" // パーティクルマネージャー
 #include "../../PostEffect/PostEffect.h" // ポストエフェクト
