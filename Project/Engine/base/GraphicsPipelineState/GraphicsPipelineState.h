@@ -33,6 +33,7 @@ public: // サブクラス
 		kPipelineStateIndexParticle, // パーティクル
 
 		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D
+		kPipelineStateIndexSkyBox, // スカイボックス
 		kPipelineStateIndexOfCount // 使わない
 	};
 

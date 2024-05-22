@@ -35,6 +35,11 @@ void TitleScene::Initialize()
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModel_.get());
 
+	skybox_ = std::make_unique<Skybox>();
+	skybox_->Initialize(skyboxTextureHandle_,
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexSkyBox].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexSkyBox].Get());
+
 	IScene::InitilaizeCheck();
 
 }
@@ -57,6 +62,25 @@ void TitleScene::Update()
 		LowerVolumeBGM();
 	}
 	
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_RETURN)) {
+		if (isDebugCameraActive_) {
+			isDebugCameraActive_ = false;
+		}
+		else {
+			isDebugCameraActive_ = true;
+		}
+	}
+
+	// カメラの処理
+	if (isDebugCameraActive_) {
+		// デバッグカメラの更新
+		debugCamera_->Update(kDeltaTime_ * 5.0f);
+		// デバッグカメラのビュー行列をコピー
+		camera_ = static_cast<BaseCamera>(*debugCamera_.get());
+	}
+#endif
+
 	// カメラ
 	camera_.Update();
 	
@@ -80,6 +104,8 @@ void TitleScene::Draw()
 
 #pragma endregion
 
+	skybox_->Draw(dxCommon_->GetCommadList(), &camera_);
+
 	ModelDraw::PreDrawDesc preDrawDesc;
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
 	preDrawDesc.directionalLight = directionalLight_.get();
@@ -90,7 +116,7 @@ void TitleScene::Draw()
 	ModelDraw::PreDraw(preDrawDesc);
 
 	// スカイドーム
-	skydome_->Draw(camera_);
+	//skydome_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -115,6 +141,8 @@ void TitleScene::ImguiDraw()
 	ImGui::Begin("Title");
 	ImGui::Checkbox("isDrawSkydome", &isDrawSkydome_);
 	ImGui::End();
+		
+	debugCamera_->ImGuiDraw();
 #endif // _DEBUG
 
 }
@@ -129,6 +157,8 @@ void TitleScene::ModelCreate()
 
 void TitleScene::TextureLoad()
 {
+
+	skyboxTextureHandle_ = TextureManager::Load("Resources/default/rostock_laage_airport_4k.dds", DirectXCommon::GetInstance(), textureHandleManager_.get());
 
 }
 
