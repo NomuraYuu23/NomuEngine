@@ -1116,31 +1116,31 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="NomuEngine.vcxproj.user" />
-    <None Include="Resources\shaders\Collider2DDebug.hlsli">
+    <None Include="Resources\shaders\Collider2DDebug\Collider2DDebug.hlsli">
       <Filter>shaders\Collider2DDebug</Filter>
     </None>
-    <None Include="Resources\shaders\Line.hlsli">
+    <None Include="Resources\shaders\Line\Line.hlsli">
       <Filter>shaders\Line</Filter>
     </None>
-    <None Include="Resources\shaders\Particle.hlsli">
+    <None Include="Resources\shaders\Particle\Particle.hlsli">
       <Filter>shaders\Patrticle</Filter>
     </None>
-    <None Include="Resources\shaders\Sprite.hlsli">
+    <None Include="Resources\shaders\Sprite\Sprite.hlsli">
       <Filter>shaders\Sprite</Filter>
     </None>
-    <None Include="Resources\shaders\WindowSprite.hlsli">
+    <None Include="Resources\shaders\WindowSprite\WindowSprite.hlsli">
       <Filter>shaders\WindowSprite</Filter>
     </None>
-    <None Include="Resources\shaders\PostEffect.hlsli">
+    <None Include="Resources\shaders\PostEffect\PostEffect.hlsli">
       <Filter>shaders\PostEffect</Filter>
     </None>
-    <None Include="resources\shaders\Model.hlsli">
+    <None Include="Resources\shaders\Model\Model.hlsli">
       <Filter>shaders\Model\PS_hlsli</Filter>
     </None>
-    <None Include="Resources\shaders\WindowSpriteStorage.hlsli">
+    <None Include="Resources\shaders\WindowSprite\WindowSpriteStorage.hlsli">
       <Filter>shaders\WindowSpriteStorage</Filter>
     </None>
-    <None Include="Resources\shaders\ManyModels.hlsli">
+    <None Include="Resources\shaders\Model\ManyModels.hlsli">
       <Filter>shaders\Model\PS_hlsli</Filter>
     </None>
     <None Include="Resources\shaders\Outline.hlsli">
@@ -1151,55 +1151,55 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shaders\Collider2DDebug.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Collider2DDebug\Collider2DDebug.VS.hlsl">
       <Filter>shaders\Collider2DDebug</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Collider2DDebug.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Collider2DDebug\Collider2DDebug.PS.hlsl">
       <Filter>shaders\Collider2DDebug</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Line.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Line\Line.PS.hlsl">
       <Filter>shaders\Line</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Line.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Line\Line.VS.hlsl">
       <Filter>shaders\Line</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Particle\Particle.VS.hlsl">
       <Filter>shaders\Patrticle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Particle\Particle.PS.hlsl">
       <Filter>shaders\Patrticle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Sprite.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Sprite\Sprite.VS.hlsl">
       <Filter>shaders\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\Sprite.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Sprite\Sprite.PS.hlsl">
       <Filter>shaders\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\WindowSprite.VS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite\WindowSprite.VS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\WindowSprite.PS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite\WindowSprite.PS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffect.CS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffect\PostEffect.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectCalc.CS.hlsl">
+    <FxCompile Include="Resources\shaders\PostEffect\PostEffectCalc.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="resources\shaders\Model.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Model\Model.PS.hlsl">
       <Filter>shaders\Model\PS_hlsli</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\NormalModel.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Model\NormalModel.VS.hlsl">
       <Filter>shaders\Model</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\ManyNormalModels.VS.hlsl">
+    <FxCompile Include="Resources\shaders\Model\ManyNormalModels.VS.hlsl">
       <Filter>shaders\Model</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\WindowSpriteStorage.CS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite\WindowSpriteStorage.CS.hlsl">
       <Filter>shaders\WindowSpriteStorage</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\ManyModels.PS.hlsl">
+    <FxCompile Include="Resources\shaders\Model\ManyModels.PS.hlsl">
       <Filter>shaders\Model\PS_hlsli</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Outline.VS.hlsl">
@@ -1208,10 +1208,10 @@
     <FxCompile Include="Resources\shaders\Outline.PS.hlsl">
       <Filter>shaders\Outline\PS_hlsli</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\WindowSpriteUAV.PS.hlsl">
+    <FxCompile Include="Resources\shaders\WindowSprite\WindowSpriteUAV.PS.hlsl">
       <Filter>shaders\WindowSprite</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\AnimModel.CS.hlsl">
+    <FxCompile Include="Resources\shaders\Model\AnimModel.CS.hlsl">
       <Filter>shaders\Model\CS</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Skybox\Skybox.VS.hlsl">

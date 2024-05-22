@@ -127,24 +127,24 @@ private: // 定数
 	// シェーダー情報 <シェーダ名, エントリポイント>
 	const std::array<std::pair<const std::wstring, const wchar_t*>, kPipelineIndexOfCount> shaderNames_ =
 	{
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBloomHorizontal"},  // ブルーム水平
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBloomVertical"},  // ブルーム垂直
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainScanLine"}, // 走査線
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRGBShift"}, // RGBずらし
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainBarrelCurved"}, // 樽状湾曲
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainVignette"}, // ビネット
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitch"}, // グリッチ
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
-		std::pair{L"Resources/shaders/PostEffect.CS.hlsl", L"mainGlitchRGBShift"}, // グリッチRGB
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainBinaryThreshold"}, // 二値化
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGaussianBlurHorizontal"}, // ガウスブラー水平
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGaussianBlurVertical"}, // ガウスブラー垂直
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainBloomHorizontal"},  // ブルーム水平
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainBloomVertical"},  // ブルーム垂直
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainMotionBlur"}, // モーションブラー
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainWhiteNoise"}, // ホワイトノイズ
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainScanLine"}, // 走査線
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainRGBShift"}, // RGBずらし
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainBarrelCurved"}, // 樽状湾曲
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainVignette"}, // ビネット
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGlitch"}, // グリッチ
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainRadialBlur"}, // 放射状ブラー
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainShockWave"}, // 衝撃波
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGlitchRGBShift"}, // グリッチRGB
 	};
 
 	// コマンド情報(コマンド実行可能回数4回)

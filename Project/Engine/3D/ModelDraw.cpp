@@ -136,7 +136,7 @@ void ModelDraw::Initialize(
 
 	// シェーダコンパイル
 	IDxcBlob* shader = CompileShader::Compile(
-		L"Resources/shaders/AnimModel.CS.hlsl",
+		L"Resources/shaders/Model/AnimModel.CS.hlsl",
 		L"cs_6_0",
 		L"main");
 
