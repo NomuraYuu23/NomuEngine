@@ -61,6 +61,7 @@ enum CBV_VSIndex {
 	kCBV_VSIndexParticleStart = 2,// パーティクルの開始位置
 	kCBV_VSIndexViewProjection = 3,// viewProjection
 	kCBV_VSIndexSpriteForGPU = 4, // スプライト用
+	kCBV_VSIndexSkyboxForGPU = 5, // スカイボックス用
 	kCBV_VSIndexOfCount
 
 };
@@ -88,6 +89,9 @@ enum RootParameterIndex {
 	kRootParameterIndexWindowSpriteSRV, // ウィンドウスプライトSRV
 	kRootParameterIndexWindowSpriteUAV,// ウィンドウスプライトUAV
 	kRootParameterIndexManyNormalModels, // たくさんのアニメーション無しモデル
+	
+	kRootParameterIndexSkyBox, // スカイボックス
+
 	kRootParameterIndexOfCount,
 };
 

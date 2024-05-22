@@ -9,11 +9,11 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 #include "../Math/Vector4.h"
-#include "../3D/TransformationMatrix.h"
+#include "../Math/Matrix4x4.h"
 #include "../3D/Material.h"
 #include "../Camera/BaseCamera.h"
 
-class SkyBox
+class Skybox
 {
 
 public: // サブクラス
@@ -22,17 +22,47 @@ public: // サブクラス
 		Vector4 position;
 	};
 
+	// トランスフォーム行列
+	struct SkyboxForGPU {
+		Matrix4x4 WVP;
+	};
+
 public: // 関数
 
-	void Initialize(uint32_t textureHandle);
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="textureHandle">テクスチャハンドル</param>
+	/// <param name="rootSignature">ルートシグネチャ</param>
+	/// <param name="pipelineState">パイプライン</param>
+	void Initialize(uint32_t textureHandle, ID3D12RootSignature* rootSignature, ID3D12PipelineState* pipelineState);
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	/// <param name="camera">カメラ</param>
 	void Draw(ID3D12GraphicsCommandList* commandList, BaseCamera* camera);
 
 private: // 関数
 
+	/// <summary>
+	/// 頂点マッピング
+	/// </summary>
 	void VertMapping();
 
+	/// <summary>
+	/// インデックスマッピング
+	/// </summary>
 	void IndexMapping();
+
+public: // アクセッサ
+
+	/// <summary>
+	/// トランスフォーム
+	/// </summary>
+	/// <param name="transform"></param>
+	void SetTransform(const EulerTransform& transform) { transform_ = transform; }
 
 private: // 定数
 
@@ -46,7 +76,7 @@ private: // 変数
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
 	// 頂点バッファマップ
-	SkyBox::VertexData* vertMap_ = nullptr;
+	Skybox::VertexData* vertMap_ = nullptr;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
@@ -58,15 +88,27 @@ private: // 変数
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
 	// トランスフォームバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> transformationBuff_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> skyboxForGPUBuff_;
 	// トランスフォーム行列マップ
-	TransformationMatrix* transformationMatrixMap_;
+	Skybox::SkyboxForGPU* skyboxForGPUMap_;
+
+	// トランスフォーム行列
+	Matrix4x4 transformMatrix_;
+
+	// トランスフォーム
+	EulerTransform transform_;
 
 	// マテリアル
 	std::unique_ptr<Material> material_;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_;
+
+	// ルートシグネチャ
+	ID3D12RootSignature* rootSignature_;
+
+	// パイプライン
+	ID3D12PipelineState* pipelineState_;
 
 };
 

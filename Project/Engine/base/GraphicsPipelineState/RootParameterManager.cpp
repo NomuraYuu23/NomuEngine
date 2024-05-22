@@ -105,7 +105,6 @@ void RootParameterManager::Initialize()
 #pragma endregion
 
 #pragma region たくさんのアニメーション無しモデル
-	// RootParameterInitializeForManyNormalModels();
 	data.push_back(kSRV_PSIndexMaterials); // マテリアル
 	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
 	data.push_back(kSRV_PSIndexTexture1); // テクスチャ
@@ -122,6 +121,14 @@ void RootParameterManager::Initialize()
 	data.push_back(kSRV_VSIndexTransformationMatrix); // ワールドトランスフォーム
 	data.push_back(kCBV_PSIndexFog); // 霧
 	Analyze(kRootParameterIndexManyNormalModels, data); // 解析
+	data.clear(); // クリア
+#pragma endregion
+
+#pragma region スカイボックス
+	data.push_back(kCBV_PSIndexMaterial); // マテリアル
+	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
+	data.push_back(kCBV_VSIndexSkyboxForGPU); // スカイボックス
+	Analyze(kRootParameterIndexSkyBox, data); // 解析
 	data.clear(); // クリア
 #pragma endregion
 

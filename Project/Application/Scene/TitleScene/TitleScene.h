@@ -4,6 +4,7 @@
 #include "../../AudioManager/TitleAudioManager.h"
 
 #include "../../Skydome/Skydome.h"
+#include "../../../Engine/SkyBox/Skybox.h"
 
 class TitleScene : public IScene
 {
@@ -65,7 +66,9 @@ private: // メンバ変数
 	bool isDrawSkydome_ = true;
 
 	// スカイボックス
-	uint32_t handle_ = 0;
+	uint32_t skyboxTextureHandle_ = 0;
+	std::unique_ptr<Skybox> skybox_;
+
 
 };
 

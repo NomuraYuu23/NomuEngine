@@ -214,6 +214,9 @@
     <Filter Include="Engine\SkyBox">
       <UniqueIdentifier>{be388ffe-207d-48f4-a5f3-a05943cd1b70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\SkyBox">
+      <UniqueIdentifier>{5dd7c169-f997-4033-813a-f7cc3f0060a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -589,7 +592,7 @@
     <ClCompile Include="Engine\base\QueryTimestamp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\SkyBox\SkyBox.cpp">
+    <ClCompile Include="Engine\SkyBox\Skybox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1101,7 +1104,7 @@
     <ClInclude Include="Engine\Particle\ParticleDesc.h">
       <Filter>Engine\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\SkyBox\SkyBox.h">
+    <ClInclude Include="Engine\SkyBox\Skybox.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1142,6 +1145,9 @@
     </None>
     <None Include="Resources\shaders\Outline.hlsli">
       <Filter>shaders\Outline\PS_hlsli</Filter>
+    </None>
+    <None Include="Resources\shaders\Skybox\Skybox.hlsli">
+      <Filter>shaders\SkyBox</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1207,6 +1213,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\AnimModel.CS.hlsl">
       <Filter>shaders\Model\CS</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox\Skybox.VS.hlsl">
+      <Filter>shaders\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox\Skybox.PS.hlsl">
+      <Filter>shaders\SkyBox</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -40,4 +40,15 @@ void InputLayoutManager::Initialize()
 	inputLayouts_[kInputLayoutIndexNone].pInputElementDescs = nullptr;
 	inputLayouts_[kInputLayoutIndexNone].NumElements = 0;
 
+	//kInputLayoutIndexPositon
+	D3D12_INPUT_ELEMENT_DESC positonInputElementDescs[1] = {};
+	positonInputElementDescs[0].SemanticName = "POSITION";
+	positonInputElementDescs[0].SemanticIndex = 0;
+	positonInputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	positonInputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs_[kInputLayoutIndexPositon].push_back(positonInputElementDescs[0]);
+
+	inputLayouts_[kInputLayoutIndexPositon].pInputElementDescs = inputElementDescs_[kInputLayoutIndexPositon].data();
+	inputLayouts_[kInputLayoutIndexPositon].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexPositon].size());
+
 }
