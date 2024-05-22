@@ -241,6 +241,12 @@
     <Filter Include="Engine\3D\Line">
       <UniqueIdentifier>{17a3054a-ec97-433f-95c8-3b3bcafacf86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Base\Texture">
+      <UniqueIdentifier>{2cb1d457-fe79-41c6-bd21-c6f65666e80d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Base\WindowSprite">
+      <UniqueIdentifier>{01c26ffb-3765-42f0-9933-e844a6f7454d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -268,9 +274,6 @@
       <Filter>Engine\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\BufferResource.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\TextureManager.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
@@ -388,9 +391,6 @@
     <ClCompile Include="Engine\Math\ShortestDistance.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\ITextureHandleManager.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Audio\AudioManager.cpp">
       <Filter>Engine\Audio</Filter>
     </ClCompile>
@@ -402,9 +402,6 @@
     </ClCompile>
     <ClCompile Include="Application\UI\UIManager.cpp">
       <Filter>Application\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application\AudioManager\ClearAudioManager.cpp">
       <Filter>Application\Audio</Filter>
@@ -538,17 +535,8 @@
     <ClCompile Include="Engine\base\CompileShader.cpp">
       <Filter>Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp">
       <Filter>Engine\PostEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\WindowSprite.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\TextureUAV.cpp">
-      <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Velocity2DData.cpp">
       <Filter>Engine\PostEffect</Filter>
@@ -577,24 +565,6 @@
     <ClCompile Include="Engine\Animation\LocalMatrixDraw.cpp">
       <Filter>Engine\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Outline.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\WindowSpriteStorage.cpp">
-      <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\CrashHandler.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\PostEffect\Velocity2DManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\QueryTimestamp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\SkyBox\Skybox.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\2D\ImGuiManager.cpp">
       <Filter>Engine\2D\ImGui</Filter>
     </ClCompile>
@@ -618,6 +588,42 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\WorldTransform.cpp">
       <Filter>Engine\3D\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\ITextureHandleManager.cpp">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\TextureManager.cpp">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\TextureUAV.cpp">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\WindowSprite.cpp">
+      <Filter>Engine\Base\WindowSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\WindowSpriteStorage.cpp">
+      <Filter>Engine\Base\WindowSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SkyBox\Skybox.cpp">
+      <Filter>Engine\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Outline.cpp">
+      <Filter>Engine\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
+      <Filter>Application\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Velocity2DManager.cpp">
+      <Filter>Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\QueryTimestamp.cpp">
+      <Filter>Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\CrashHandler.cpp">
+      <Filter>Engine\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -655,9 +661,6 @@
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\TextureManager.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Camera\DebugCamera.h">
@@ -801,9 +804,6 @@
     <ClInclude Include="Engine\Camera\CameraForGPU.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\ITextureHandleManager.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Collider\ColliderParentObject.h">
       <Filter>Application\Collider</Filter>
     </ClInclude>
@@ -824,9 +824,6 @@
     </ClInclude>
     <ClInclude Include="Application\UI\UIManager.h">
       <Filter>Application\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\AudioManager\ClearAudioManager.h">
       <Filter>Application\Audio</Filter>
@@ -993,20 +990,11 @@
     <ClInclude Include="Engine\base\CompileShader.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\RenderTargetTexture.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\ModelNodeData.h">
       <Filter>Engine\3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffect.h">
       <Filter>Engine\PostEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\WindowSprite.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\TextureUAV.h">
-      <Filter>Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Velocity2DData.h">
       <Filter>Engine\PostEffect</Filter>
@@ -1047,35 +1035,17 @@
     <ClInclude Include="Engine\3D\OutlineData.h">
       <Filter>Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Outline.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\WindowSpriteStorage.h">
-      <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\CrashHandler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\OutputLog.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\PostEffect\Velocity2DManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Animation\SkinningInformation.h">
       <Filter>Engine\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\QueryTimestamp.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\Particle\NewEmitterDssc.h">
       <Filter>Application\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleDesc.h">
       <Filter>Engine\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\SkyBox\Skybox.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\ImGuiManager.h">
       <Filter>Engine\2D\ImGui</Filter>
@@ -1130,6 +1100,42 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\ColorVertexData.h">
       <Filter>Engine\3D\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\ITextureHandleManager.h">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\RenderTargetTexture.h">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\TextureManager.h">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\TextureUAV.h">
+      <Filter>Engine\Base\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\WindowSpriteStorage.h">
+      <Filter>Engine\Base\WindowSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\WindowSprite.h">
+      <Filter>Engine\Base\WindowSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SkyBox\Skybox.h">
+      <Filter>Engine\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Outline.h">
+      <Filter>Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
+      <Filter>Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Velocity2DManager.h">
+      <Filter>Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\CrashHandler.h">
+      <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\QueryTimestamp.h">
+      <Filter>Engine\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
