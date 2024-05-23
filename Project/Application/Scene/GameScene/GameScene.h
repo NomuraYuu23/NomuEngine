@@ -128,4 +128,6 @@ private:
 
 	Vector3 stringWind;
 
+	uint32_t skyboxTextureHandle_ = 0;
+
 };

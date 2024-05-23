@@ -43,6 +43,7 @@ void RootParameterManager::Initialize()
 	data.push_back(kSRV_PSIndexPointLight); // ポイントライト
 	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
 	data.push_back(kCBV_PSIndexFog); // 霧
+	data.push_back(kSRV_PSIndexEnvironmentTexture); // 環境マップ(映り込み用テクスチャ)
 	Analyze(kRootParameterIndexNormalModel, data); // 解析
 	data.clear(); // クリア
 #pragma endregion
@@ -120,6 +121,7 @@ void RootParameterManager::Initialize()
 	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
 	data.push_back(kSRV_VSIndexTransformationMatrix); // ワールドトランスフォーム
 	data.push_back(kCBV_PSIndexFog); // 霧
+	data.push_back(kSRV_PSIndexEnvironmentTexture); // 環境マップ(映り込み用テクスチャ)
 	Analyze(kRootParameterIndexManyNormalModels, data); // 解析
 	data.clear(); // クリア
 #pragma endregion

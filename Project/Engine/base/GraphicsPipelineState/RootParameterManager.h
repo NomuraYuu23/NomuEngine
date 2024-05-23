@@ -24,6 +24,7 @@ enum SRV_PSIndex {
 	kSRV_PSIndexPointLight = 8, // ポイントライト
 	kSRV_PSIndexSpotLight = 9, // スポットライト
 	kSRV_PSIndexMaterials = 10, // マテリアル
+	kSRV_PSIndexEnvironmentTexture = 11, // 環境マップ(映り込み用テクスチャ)
 	kSRV_PSIndexOfCount,
 };
 

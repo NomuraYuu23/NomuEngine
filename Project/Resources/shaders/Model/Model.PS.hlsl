@@ -74,6 +74,8 @@ Texture2D<float32_t4> gTexture7 : register(t7);
 StructuredBuffer<PointLight> gPointLights : register(t8);
 StructuredBuffer<SpotLight> gSpotLights : register(t9);
 
+TextureCube<float32_t4> gEnvironmentTexture : register(t11);
+
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);

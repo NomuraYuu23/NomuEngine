@@ -32,6 +32,7 @@ public: // サブクラス
 		PointLightManager* pointLightManager = nullptr; // ポイントライト
 		SpotLightManager* spotLightManager = nullptr; // スポットライト
 		FogManager* fogManager = nullptr; // 霧マネージャー
+		uint32_t environmentTextureHandle = 1024; // 環境マップ(映り込み用テクスチャ)ハンドル
 	};
 
 	// アニメーションオブジェクト引数
@@ -101,6 +102,8 @@ public:
 	static SpotLightManager* sSpotLightManager_;
 	// 霧マネージャー
 	static FogManager* sFogManager_;
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	static uint32_t sEnvironmentTextureHandle_;
 
 	// 現在のパイプライン番号
 	static PipelineStateIndex currentPipelineStateIndex_;

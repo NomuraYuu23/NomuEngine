@@ -112,6 +112,7 @@ void TitleScene::Draw()
 	preDrawDesc.fogManager = FogManager::GetInstance();
 	preDrawDesc.pointLightManager = pointLightManager_.get();
 	preDrawDesc.spotLightManager = spotLightManager_.get();
+	preDrawDesc.environmentTextureHandle = skyboxTextureHandle_;
 
 	ModelDraw::PreDraw(preDrawDesc);
 

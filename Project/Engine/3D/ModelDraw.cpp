@@ -21,6 +21,9 @@ PointLightManager* ModelDraw::sPointLightManager_ = nullptr;
 SpotLightManager* ModelDraw::sSpotLightManager_ = nullptr;
 // 霧マネージャー
 FogManager* ModelDraw::sFogManager_ = nullptr;
+// 環境マップ(映り込み用テクスチャ)ハンドル
+uint32_t ModelDraw::sEnvironmentTextureHandle_ = 1024;
+
 // 現在のパイプライン番号
 ModelDraw::PipelineStateIndex ModelDraw::currentPipelineStateIndex_ = kPipelineStateIndexOfCount;
 
@@ -161,6 +164,7 @@ void ModelDraw::PreDraw(const PreDrawDesc& desc)
 	assert(desc.pointLightManager);
 	assert(desc.spotLightManager);
 	assert(desc.fogManager);
+	assert(desc.environmentTextureHandle != 1024);
 
 	sCommandList = desc.commandList;
 
@@ -175,6 +179,7 @@ void ModelDraw::PreDraw(const PreDrawDesc& desc)
 	sPointLightManager_ = desc.pointLightManager;
 	sSpotLightManager_ = desc.spotLightManager;
 	sFogManager_ = desc.fogManager;
+	sEnvironmentTextureHandle_ = desc.environmentTextureHandle;
 
 }
 
@@ -263,6 +268,9 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 	// 霧
 	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
 
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
+
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
 
@@ -336,6 +344,9 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 
 	// 霧
 	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
@@ -412,6 +423,9 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 	// 霧
 	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
 
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
+
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
 
@@ -476,6 +490,9 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	// 霧
 	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
 
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
+
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
 
@@ -539,6 +556,9 @@ void ModelDraw::ManyNormalObjectsDraw(ManyNormalObjectsDesc& desc) {
 	sCommandList->SetGraphicsRootDescriptorTable(13, *desc.transformationMatrixesHandle);
 	// 霧
 	sCommandList->SetGraphicsRootConstantBufferView(14, sFogManager_->GetFogDataBuff()->GetGPUVirtualAddress());
+
+	// 環境マップ(映り込み用テクスチャ)ハンドル
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);

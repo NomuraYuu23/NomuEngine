@@ -242,6 +242,7 @@ void GameScene::Draw() {
 	preDrawDesc.fogManager = FogManager::GetInstance();
 	preDrawDesc.pointLightManager = pointLightManager_.get();
 	preDrawDesc.spotLightManager = spotLightManager_.get();
+	preDrawDesc.environmentTextureHandle = skyboxTextureHandle_;
 
 	ModelDraw::PreDraw(preDrawDesc);
 
@@ -418,6 +419,9 @@ void GameScene::TextureLoad()
 	//uiTextureHandles_ = {
 
 	//};
+
+	skyboxTextureHandle_ = TextureManager::Load("Resources/default/rostock_laage_airport_4k.dds", DirectXCommon::GetInstance(), textureHandleManager_.get());
+
 }
 
 void GameScene::LowerVolumeBGM()
