@@ -5,6 +5,7 @@ struct Material {
 	int32_t enableLighting;
 	float32_t4x4 uvTransform;
 	float32_t shininess;
+	float32_t environmentCoefficient;
 };
 
 SamplerState gSampler : register(s0);

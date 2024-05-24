@@ -5,6 +5,7 @@ struct Material {
 	int32_t enableLighting;
 	float32_t4x4 uvTransform;
 	float32_t shininess;
+	float32_t environmentCoefficient;
 };
 
 struct DirectionalLight {
@@ -456,6 +457,16 @@ float32_t4 SetTextureColor(VertexShaderOutput input, uint32_t instanceID) {
 
 }
 
+float32_t4 Enviroment(VertexShaderOutput input) {
+
+	float32_t3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+	float32_t3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+	float32_t4 enviromentColor = gEnvironmentTexture.Sample(gSampler, reflectedVector);
+
+	return enviromentColor;
+}
+
+
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 
@@ -508,6 +519,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	fogT = clamp(fogT, 0.0f, 1.0f);
 
 	output.color.xyz = output.color.xyz * fogT + gFog.color.xyz * (1.0f - fogT);
+	// 環境マップ
+	output.color.xyz += Enviroment(input).xyz * gMaterials[instanceID].environmentCoefficient;
 
 	// textureかoutput.colorのα値が0の時にPixelを棄却
 	if (textureColor.a == 0.0 || output.color.a == 0.0) {

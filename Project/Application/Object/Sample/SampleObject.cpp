@@ -55,6 +55,8 @@ void SampleObject::Initialize(Model* model)
 
 	shininess_ = 100.0f;
 
+	environmentCoefficient_ = 1.0f;
+
 	RegisteringGlobalVariables();
 
 	ApplyGlobalVariables();
@@ -114,6 +116,7 @@ void SampleObject::Update()
 
 	material_->SetEnableLighting(enableLighting_);
 	material_->SetShininess(shininess_);
+	material_->SetEnvironmentCoefficient(environmentCoefficient_);
 
 }
 
@@ -154,7 +157,8 @@ void SampleObject::ImGuiDraw()
 	ImGui::SameLine();
 	ImGui::RadioButton("BlinnPhongReflection", &enableLighting_, EnableLighting::BlinnPhongReflection);
 
-	ImGui::DragFloat("shininess", &shininess_);
+	ImGui::DragFloat("shininess", &shininess_, 0.1f);
+	ImGui::DragFloat("environmentCoefficient", &environmentCoefficient_,0.01f);
 
 	ImGui::Text("velocity");
 	ImGui::DragFloat3("value", &velocity_.x, 0.01f);

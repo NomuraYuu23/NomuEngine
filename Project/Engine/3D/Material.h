@@ -47,7 +47,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess);
+	void Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess, float environmentCoefficient);
 
 public: //アクセッサ
 
@@ -63,6 +63,7 @@ public:
 	void SetColor(const Vector4& color);
 	void SetEnableLighting(const int32_t enableLighting);
 	void SetShininess(const float shininess);
+	void SetEnvironmentCoefficient(const float environmentCoefficient);
 
 private:
 
@@ -78,6 +79,8 @@ private:
 	int32_t enableLighting_;
 
 	float shininess_;
+
+	float environmentCoefficient_;
 
 };
 

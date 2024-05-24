@@ -5,6 +5,7 @@ struct Material {
 	int32_t enableLighting;
 	float32_t4x4 uvTransform;
 	float32_t shininess;
+	float32_t environmentCoefficient;
 };
 
 struct DirectionalLight {
@@ -505,7 +506,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	output.color.xyz = output.color.xyz * fogT + gFog.color.xyz * (1.0f - fogT);
 
 	// 環境マップ
-	output.color.xyz += Enviroment(input).xyz;
+	output.color.xyz += Enviroment(input).xyz * gMaterial.environmentCoefficient;
 
 	// textureかoutput.colorのα値が0の時にPixelを棄却
 	if (textureColor.a == 0.0 || output.color.a == 0.0) {

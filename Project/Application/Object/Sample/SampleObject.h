@@ -56,6 +56,7 @@ private:
 	int32_t enableLighting_ = 0;
 
 	float shininess_ = 0.0f;
+	float environmentCoefficient_ = 1.0f;
 
 	//ノードアニメーション
 	Animation animation_{};

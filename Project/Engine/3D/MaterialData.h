@@ -19,6 +19,7 @@ struct MaterialData {
 	float padding[3];
 	Matrix4x4 uvTransform;
 	float shininess;
+	float environmentCoefficient;
 };
 
 struct SRVMaterialData {
@@ -26,4 +27,5 @@ struct SRVMaterialData {
 	int32_t enableLighting;
 	Matrix4x4 uvTransform;
 	float shininess;
+	float environmentCoefficient;
 };

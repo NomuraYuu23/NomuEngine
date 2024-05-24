@@ -54,6 +54,7 @@ void Material::Initialize() {
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	enableLighting_ = None;
 	shininess_ = 100.0f;
+	environmentCoefficient_ = 1.0f;
 
 	//Sprite用のマテリアルリソースを作る
 	materialBuff_ = BufferResource::CreateBufferResource(sDevice, (sizeof(MaterialData) + 0xff) & ~0xff);
@@ -65,18 +66,20 @@ void Material::Initialize() {
 	materialMap_->enableLighting = enableLighting_;	//UVTransfome初期化
 	materialMap_->uvTransform = Matrix4x4::MakeAffineMatrix(uvTransform_.scale,uvTransform_.rotate, uvTransform_.translate);
 	materialMap_->shininess = shininess_;
+	materialMap_->environmentCoefficient = environmentCoefficient_;
 
 }
 
 /// <summary>
 /// 更新
 /// </summary>
-void Material::Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess) {
+void Material::Update(const EulerTransform& uvTransform, const Vector4& color, int enableLighting, float shininess, float environmentCoefficient) {
 
 	uvTransform_ = uvTransform;
 	color_ = color;
 	enableLighting_ = enableLighting;
 	shininess_ = shininess;
+	environmentCoefficient_ = environmentCoefficient;
 
 	//UVTransfome用
 	materialMap_->uvTransform = Matrix4x4::MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
@@ -86,6 +89,8 @@ void Material::Update(const EulerTransform& uvTransform, const Vector4& color, i
 	materialMap_->enableLighting = enableLighting_;
 
 	materialMap_->shininess = shininess_;
+
+	materialMap_->environmentCoefficient = environmentCoefficient_;
 
 }
 
@@ -118,5 +123,13 @@ void Material::SetShininess(const float shininess)
 
 	shininess_ = shininess;
 	materialMap_->shininess = shininess_;
+
+}
+
+void Material::SetEnvironmentCoefficient(const float environmentCoefficient)
+{
+
+	environmentCoefficient_ = environmentCoefficient;
+	materialMap_->environmentCoefficient = environmentCoefficient_;
 
 }
