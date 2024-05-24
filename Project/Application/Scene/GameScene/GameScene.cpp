@@ -68,8 +68,10 @@ void GameScene::Initialize() {
 	//uiManager_->SetAudioManager(audioManager_.get());
 
 	// スカイドーム
-	skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(skydomeModel_.get());
+	skybox_ = std::make_unique<Skybox>();
+	skybox_->Initialize(skyboxTextureHandle_,
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexSkyBox].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexSkyBox].Get());
 
 	// サンプルobj
 	sampleObj_ = std::make_unique<SampleObject>();
@@ -193,9 +195,6 @@ void GameScene::Update() {
 	// 影
 	ShadowUpdate();
 
-	// スカイドーム
-	skydome_->Update();
-
 	//uiManager_->Update();
 
 	// デバッグカメラ
@@ -236,6 +235,8 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
 
+	skybox_->Draw(dxCommon_->GetCommadList(), &camera_);
+
 	ModelDraw::PreDrawDesc preDrawDesc{};
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
 	preDrawDesc.directionalLight = directionalLight_.get();
@@ -245,9 +246,6 @@ void GameScene::Draw() {
 	preDrawDesc.environmentTextureHandle = skyboxTextureHandle_;
 
 	ModelDraw::PreDraw(preDrawDesc);
-
-	// スカイドーム
-	skydome_->Draw(camera_);
 
 	//Obj
 	sampleObj_->Draw(camera_);
@@ -334,9 +332,6 @@ void GameScene::ImguiDraw(){
 	//Obj
 	sampleObj_->ImGuiDraw();
 
-	// スカイドーム
-	skydome_->ImGuiDraw();
-
 	debugCamera_->ImGuiDraw();
 
 	collision2DDebugDraw_->ImGuiDraw();
@@ -392,9 +387,6 @@ void GameScene::ModelCreate()
 	// パーティクル
 	particleUvcheckerModel_.reset(Model::Create("Resources/default/", "plane.gltf", dxCommon_, textureHandleManager_.get()));
 	particleCircleModel_.reset(Model::Create("Resources/Particle/", "plane.obj", dxCommon_, textureHandleManager_.get()));
-
-	// スカイドーム
-	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 	// サンプルobj
 	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));

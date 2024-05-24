@@ -12,6 +12,7 @@
 #include "../../../Engine/Physics/Spring.h"
 #include "../../../Engine/Physics/String.h"
 #include "../../../Engine/Physics/StructuralSpring.h"
+#include "../../../Engine/SkyBox/SkyBox.h"
 
 class GameScene : public IScene
 {
@@ -84,9 +85,9 @@ private:
 	std::unique_ptr<GameAudioManager> audioManager_;
 	bool isDecreasingVolume = true;
 
-	// スカイドーム
-	std::unique_ptr<Skydome> skydome_;
-	std::unique_ptr<Model> skydomeModel_;
+	// スカイボックス
+	uint32_t skyboxTextureHandle_ = 0;
+	std::unique_ptr<Skybox> skybox_;
 
 	// サンプルOBJ
 	std::unique_ptr<SampleObject> sampleObj_;
@@ -127,7 +128,5 @@ private:
 	std::unique_ptr<Model> testStringModel_;
 
 	Vector3 stringWind;
-
-	uint32_t skyboxTextureHandle_ = 0;
 
 };
