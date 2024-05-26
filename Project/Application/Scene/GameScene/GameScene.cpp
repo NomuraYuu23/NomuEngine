@@ -304,10 +304,14 @@ void GameScene::Draw() {
 
 #pragma endregion
 
+
+	PostEffect::ExecutionAdditionalDesc desc;
+	desc.shockWaveManagers[0] = shockWaveManager_.get();
 	PostEffect::GetInstance()->Execution(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_,
-		PostEffect::kCommandIndexBloom);
+		PostEffect::kCommandIndexTAKEYARIMONOGATARI_First,
+		&desc);
 
 	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 

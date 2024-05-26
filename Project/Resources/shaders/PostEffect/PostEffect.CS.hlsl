@@ -9,47 +9,49 @@ struct ComputeParameters {
 	uint32_t threadIdTotalX; // スレッドの総数X
 	uint32_t threadIdOffsetY; // スレッドのオフセットY
 	uint32_t threadIdTotalY; // スレッドの総数Y
+
 	uint32_t threadIdOffsetZ; // スレッドのオフセットZ
 	uint32_t threadIdTotalZ; // スレッドの総数Z
-	
-	float32_t4 clearColor; // クリアするときの色
-	
 	float32_t threshold; // しきい値
+	float32_t time; // 時間
+
+	float32_t4 clearColor; // クリアするときの色
 	
 	int32_t kernelSize; // カーネルサイズ
 	float32_t sigma; // 標準偏差
-	
-	float32_t time; // 時間
-	
 	float32_t2 rShift; // Rずらし
+	
 	float32_t2 gShift; // Gずらし
 	float32_t2 bShift; // Bずらし
 	
 	float32_t distortion; // 歪み
-	
 	float32_t vignetteSize; // ビネットの大きさ
 	float32_t vignetteChange; // ビネットの変化
-
 	float32_t horzGlitchPase; //水平
+
 	float32_t vertGlitchPase; //垂直
 	float32_t glitchStepValue; // グリッチのステップ値
+	float32_t2 radialBlurCenter; // 放射状ブラーの中心座標
 
 	int32_t radialBlurSamples; // 放射状ブラーのサンプル回数
-	float32_t2 radialBlurCenter; // 放射状ブラーの中心座標
 	float32_t radialBlurStrength; // 放射状ブラーの広がる強さ
 	float32_t radialBlurMask; // 放射状ブラーが適用されないサイズ
-
 	float32_t colorLerpT; // 色変える系のLerpT
+	
 	float32_t2 colorSize; // 色変える系の大きさ
 	float32_t2 colorPosition; // 色変える系の位置
 
 	float32_t4 flareColor; // フレアの色
+	
 	float32_t2 flareSize; // フレアの大きさ
 	float32_t2 flarePosition; // フレアの位置
 
 	float32_t4 paraColor; // パラの色
+	
 	float32_t2 paraSize; // パラの大きさ
 	float32_t2 paraPosition; // パラの位置
+
+	uint32_t executionFlag;  // 実行フラグ(複数組み合わせたときのやつ)
 
 };
 
@@ -977,8 +979,6 @@ void mainGlitchRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		float32_t4 input = sourceImage0[dispatchId.xy];
-
 		float32_t a = sourceImage0[dispatchId.xy].a;
 		destinationImage0[dispatchId.xy] = float32_t4(GlitchRGBShift(dispatchId.xy), a);
 
@@ -986,3 +986,96 @@ void mainGlitchRGBShift(uint32_t3 dispatchId : SV_DispatchThreadID) {
 
 }
 
+float32_t4 TAKEYARIMONOGATARI_First(in const float32_t2 index) {
+
+
+	float32_t4 output = { 0.0f,0.0f,0.0f, 0.0f };
+	float32_t2 texcoord = GetTexcoord(index, float32_t2(gComputeConstants.threadIdTotalX, gComputeConstants.threadIdTotalY));
+
+	float32_t2 indexTmp = index;
+
+	// 衝撃波
+	if (gComputeConstants.executionFlag & 1) {
+		// 比率
+		float32_t ratio = float32_t(gComputeConstants.threadIdTotalY) * rcp(gComputeConstants.threadIdTotalX);
+
+		// テクスチャ比率に依存しない真円
+		float32_t2 scaleUV = (texcoord - float32_t2(0.5f, 0.0f)) * float32_t2(rcp(ratio), 1.0f) + float32_t2(0.5f, 0.0f);
+
+		// 中心を基準にした位置
+		float32_t2 position = scaleUV - gShockWaveConstants0.center;
+
+		// マスク
+		float32_t mask =
+			(1.0f - smoothstep(gShockWaveConstants0.radius - 0.1f, gShockWaveConstants0.radius, length(position))) *
+			smoothstep(gShockWaveConstants0.radius - gShockWaveConstants0.thickness - 0.1f, gShockWaveConstants0.radius - gShockWaveConstants0.thickness, length(position));
+
+		// 歪み
+		float32_t2 distortion = normalize(position) * gShockWaveConstants0.distortion * mask;
+
+		// 新しいインデックス
+		indexTmp = texcoord - distortion;
+		indexTmp.x *= gComputeConstants.threadIdTotalX;
+		indexTmp.y *= gComputeConstants.threadIdTotalY;
+	}
+
+	// グリッチ
+	if (gComputeConstants.executionFlag & 2) {
+		float32_t horzNoise = Noise(
+			float32_t2(
+				floor((texcoord.y) * rcp(gComputeConstants.horzGlitchPase)) * gComputeConstants.horzGlitchPase,
+				gComputeConstants.time * 0.2f));
+
+		float32_t vertNoise = Noise(
+			float32_t2(
+				floor((texcoord.x) * rcp(gComputeConstants.vertGlitchPase)) * gComputeConstants.vertGlitchPase,
+				gComputeConstants.time * 0.1f));
+
+		float32_t horzGlitchStrength = horzNoise * rcp(gComputeConstants.glitchStepValue);
+
+		float32_t vertGlitchStrength = vertNoise * rcp(gComputeConstants.glitchStepValue);
+
+		horzGlitchStrength = vertGlitchStrength * 2.0f - 1.0f;
+		vertGlitchStrength = horzGlitchStrength * 2.0f - 1.0f;
+
+		float32_t horz = step(horzNoise, gComputeConstants.glitchStepValue) * horzGlitchStrength;
+		float32_t vert = step(vertNoise, gComputeConstants.glitchStepValue * 2.0f) * vertGlitchStrength;
+
+		float32_t sinv = sin(texcoord.y * 2.0f - gComputeConstants.time * -0.1f);
+		float32_t steped = 1.0f - step(0.99f, sinv * sinv);
+		float32_t timeFrac = steped * step(0.8f, frac(gComputeConstants.time));
+
+		indexTmp = indexTmp + timeFrac * (horz + vert);
+	}
+
+	// RGBShift
+	if (gComputeConstants.executionFlag & 4) {
+		output.r = sourceImage0[indexTmp - gComputeConstants.rShift].r;
+		output.g = sourceImage0[indexTmp - gComputeConstants.gShift].g;
+		output.b = sourceImage0[indexTmp - gComputeConstants.bShift].b;
+		output.a = sourceImage0[indexTmp].a;
+	}
+	else {
+		output.rgba = sourceImage0[indexTmp].rgba;
+	}
+
+	// グレイスケール 最後
+	if (gComputeConstants.executionFlag & 8) {
+		output = GrayScale(output, indexTmp);
+	}
+
+	return output;
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainTAKEYARIMONOGATARI_First(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		destinationImage0[dispatchId.xy] = TAKEYARIMONOGATARI_First(dispatchId.xy);
+
+	}
+
+}
