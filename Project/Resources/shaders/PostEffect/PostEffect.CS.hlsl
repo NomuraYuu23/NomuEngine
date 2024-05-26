@@ -325,6 +325,56 @@ float32_t4 Bloom(in const float32_t2 index, in const  float32_t2 dir) {
 
 }
 
+// ブルーム
+float32_t4 BloomHorizontal(in const float32_t2 index) {
+
+	// 入力色
+	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	for (int32_t i = -gComputeConstants.kernelSize * rcp(2); i < gComputeConstants.kernelSize * rcp(2); i += 2) {
+
+		// インデックス
+		indexTmp = index;
+		indexTmp.x += float32_t(i) + 0.5f;
+
+		if ((indexTmp.x < 0.0f) || (indexTmp.x >= float32_t(gComputeConstants.threadIdTotalX))) {
+			continue;
+		}
+
+		input = sourceImage0[indexTmp];
+
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+		// 色確認
+		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
+			// outputに加算
+			output += input * weight;
+		}
+		// 重みの合計に加算
+		weightSum += weight;
+	}
+
+	// 重みの合計分割る
+	output *= rcp(weightSum);
+
+	// 代入
+	return output;
+
+}
+
 [numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
 void mainBloomHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 {
@@ -332,9 +382,59 @@ void mainBloomHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage1[dispatchId.xy] = Bloom(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage1[dispatchId.xy] = BloomHorizontal(dispatchId.xy);
 
 	}
+
+}
+
+// ブルーム
+float32_t4 BloomVertical(in const float32_t2 index) {
+
+	// 入力色
+	float32_t4 input = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	for (int32_t i = -gComputeConstants.kernelSize * rcp(2); i < gComputeConstants.kernelSize * rcp(2); i += 2) {
+
+		// インデックス
+		indexTmp = index;
+		indexTmp.y += float32_t(i) + 0.5f;
+
+		if ((indexTmp.y < 0.0f) || (indexTmp.y >= float32_t(gComputeConstants.threadIdTotalY))) {
+			continue;
+		}
+
+		input = destinationImage1[indexTmp];
+
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+		// 色確認
+		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
+			// outputに加算
+			output += input * weight;
+		}
+		// 重みの合計に加算
+		weightSum += weight;
+	}
+
+	// 重みの合計分割る
+	output *= rcp(weightSum);
+
+	// 代入
+	return output;
 
 }
 
@@ -346,7 +446,7 @@ void mainBloomVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
 		float32_t4 input0 = sourceImage0[dispatchId.xy];
-		float32_t4 input1 = Bloom(dispatchId.xy, float32_t2(0.0f, 1.0f));
+		float32_t4 input1 = BloomVertical(dispatchId.xy);
 		destinationImage0[dispatchId.xy] = BlurAdd(input0, input1);
 	}
 
@@ -384,15 +484,11 @@ float32_t4 MotionBlur(in const float32_t2 index) {
 		indexTmp.x += float32_t(i) * gVelocityConstants0.values.x;
 		indexTmp.y += float32_t(i) * gVelocityConstants0.values.y;
 		if ((indexTmp.x < 0.0f) || (indexTmp.y < 0.0f) ||
-			(indexTmp.x > 1280.0f) || (indexTmp.y > 720.0f)) {
+			(indexTmp.x > float32_t(gComputeConstants.threadIdTotalX)) || (indexTmp.y > float32_t(gComputeConstants.threadIdTotalY))) {
 			continue;
 		}
 
 		input = sourceImage0[indexTmp];
-
-		//if (input.a == 0.0f) {
-		//	continue;
-		//}
 
 		// 重み確認
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);

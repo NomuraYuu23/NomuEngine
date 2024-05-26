@@ -129,4 +129,7 @@ private:
 
 	Vector3 stringWind;
 
+	std::unique_ptr<Skydome> skydome_;
+	std::unique_ptr<Model> skydomeModel_;
+
 };

@@ -54,7 +54,7 @@ void Material::Initialize() {
 	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	enableLighting_ = None;
 	shininess_ = 100.0f;
-	environmentCoefficient_ = 1.0f;
+	environmentCoefficient_ = 0.0f;
 
 	//Sprite用のマテリアルリソースを作る
 	materialBuff_ = BufferResource::CreateBufferResource(sDevice, (sizeof(MaterialData) + 0xff) & ~0xff);

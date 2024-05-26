@@ -68,6 +68,9 @@ void GameScene::Initialize() {
 	//uiManager_->SetAudioManager(audioManager_.get());
 
 	// スカイドーム
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(skydomeModel_.get());
+
 	skybox_ = std::make_unique<Skybox>();
 	skybox_->Initialize(skyboxTextureHandle_,
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexSkyBox].Get(),
@@ -211,6 +214,8 @@ void GameScene::Update() {
 	testString_->Update(stringWind);
 	testString_->DebugDrawMap(drawLine_);
 
+	skydome_->Update();
+
 	WindowSpriteStorage::GetInstance()->Reset();
 
 }
@@ -235,7 +240,7 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
 
-	skybox_->Draw(dxCommon_->GetCommadList(), &camera_);
+	//skybox_->Draw(dxCommon_->GetCommadList(), &camera_);
 
 	ModelDraw::PreDrawDesc preDrawDesc{};
 	preDrawDesc.commandList = dxCommon_->GetCommadList();
@@ -246,6 +251,8 @@ void GameScene::Draw() {
 	preDrawDesc.environmentTextureHandle = skyboxTextureHandle_;
 
 	ModelDraw::PreDraw(preDrawDesc);
+
+	skydome_->Draw(camera_);
 
 	//Obj
 	sampleObj_->Draw(camera_);
@@ -300,7 +307,7 @@ void GameScene::Draw() {
 	PostEffect::GetInstance()->Execution(
 		dxCommon_->GetCommadList(),
 		renderTargetTexture_,
-		PostEffect::kCommandIndexGaussianBlur);
+		PostEffect::kCommandIndexBloom);
 
 	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
@@ -397,6 +404,8 @@ void GameScene::ModelCreate()
 
 	// テスト 紐
 	testStringModel_.reset(Model::Create("Resources/Model/SpearRibbon_R/", "SpearRibbon_R.gltf", dxCommon_, textureHandleManager_.get()));
+
+	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
 
 }
 
