@@ -159,7 +159,7 @@ float32_t4 RTTCorrection(in const float32_t4 input) {
 }
 
 // ガウシアンブラー
-float32_t4 GaussianBlur(in const float32_t2 index, in const float32_t2 dir) {
+float32_t4 GaussianBlurHorizontal(in const float32_t2 index) {
 
 	// 出力色
 	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
@@ -178,19 +178,17 @@ float32_t4 GaussianBlur(in const float32_t2 index, in const float32_t2 dir) {
 		// インデックス
 		indexTmp = index;
 
-		indexTmp.x += (float32_t(i) + 0.5f) * dir.x;
-		indexTmp.y += (float32_t(i) + 0.5f) * dir.y;
+		indexTmp.x += (float32_t(i) + 0.5f);
+
+		if ((indexTmp.x < 0.0f) || (indexTmp.x >= float32_t(gComputeConstants.threadIdTotalX))) {
+			continue;
+		}
 
 		// 重み確認
 		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
 
 		// outputに加算
-		if (dir.x == 1.0f) {
-			output += sourceImage0[indexTmp] * weight;
-		}
-		else {
-			output += destinationImage1[indexTmp] * weight;
-		}
+		output += sourceImage0[indexTmp] * weight;
 
 		// 重みの合計に加算
 		weightSum += weight;
@@ -211,9 +209,53 @@ void mainGaussianBlurHorizontal(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage1[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(1.0f, 0.0f));
+		destinationImage1[dispatchId.xy] = GaussianBlurHorizontal(dispatchId.xy);
 
 	}
+
+}
+
+// ガウシアンブラー
+float32_t4 GaussianBlurVertical(in const float32_t2 index) {
+
+	// 出力色
+	float32_t4 output = { 0.0f,0.0f,0.0f,0.0f };
+
+	// 一時的なインデックス
+	float32_t2 indexTmp = { 0.0f,0.0f };
+
+	// 重み
+	float32_t weight = 0.0f;
+
+	// 重み合計
+	float32_t weightSum = 0.0f;
+
+	for (int32_t i = -gComputeConstants.kernelSize * rcp(2); i < gComputeConstants.kernelSize * rcp(2); i += 2) {
+
+		// インデックス
+		indexTmp = index;
+
+		indexTmp.y += (float32_t(i) + 0.5f);
+
+		if ((indexTmp.y < 0.0f) || (indexTmp.y >= float32_t(gComputeConstants.threadIdTotalY))) {
+			continue;
+		}
+
+		// 重み確認
+		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+		// outputに加算
+		output += destinationImage1[indexTmp] * weight;
+
+		// 重みの合計に加算
+		weightSum += weight;
+	}
+
+	// 重みの合計分割る
+	output *= rcp(weightSum);
+
+	// 代入
+	return output;
 
 }
 
@@ -224,7 +266,7 @@ void mainGaussianBlurVertical(uint32_t3 dispatchId : SV_DispatchThreadID)
 	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
 		dispatchId.y < gComputeConstants.threadIdTotalY) {
 
-		destinationImage0[dispatchId.xy] = GaussianBlur(dispatchId.xy, float32_t2(0.0f, 1.0f));
+		destinationImage0[dispatchId.xy] = GaussianBlurVertical(dispatchId.xy);
 
 	}
 
