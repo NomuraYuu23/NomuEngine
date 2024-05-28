@@ -131,7 +131,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 
-	ImGui::DragInt("executionFlag", &computeParametersMap_->executionFlag, 0.1f, 0, 15);
+	ImGui::DragInt("executionFlag", &computeParametersMap_->executionFlag, 0.1f, 0, 31);
 
 	ImGui::End();
 

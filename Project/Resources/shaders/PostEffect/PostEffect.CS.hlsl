@@ -1059,9 +1059,71 @@ float32_t4 TAKEYARIMONOGATARI_First(in const float32_t2 index) {
 		output.rgba = sourceImage0[indexTmp].rgba;
 	}
 
-	// グレイスケール 最後
+	// グレイスケール
 	if (gComputeConstants.executionFlag & 8) {
 		output = GrayScale(output, indexTmp);
+	}
+
+	// モーションブラー竹槍 最後
+	if (( gComputeConstants.executionFlag & 16 ) && 
+		!(gVelocityConstants0.values.x == 0 &&
+		gVelocityConstants0.values.y == 0)) {
+
+		// 入力色
+		float32_t4 blurInput = { 0.0f,0.0f,0.0f,0.0f };
+
+		// 出力色
+		float32_t4 blurOutput = { 0.0f,0.0f,0.0f,0.0f };
+
+		// 一時的なインデックス
+		float32_t2 blurIndexTmp = { 0.0f,0.0f };
+
+		// 重み
+		float32_t blurWeight = 0.0f;
+
+		// 重み合計
+		float32_t blurWeightSum = 0.0f;
+
+		for (int32_t i = 0; i < gComputeConstants.kernelSize * rcp(2); i+= 2) {
+
+			// インデックス
+			blurIndexTmp = index;
+
+			blurIndexTmp.x += float32_t(i) * gVelocityConstants0.values.x;
+			blurIndexTmp.y += float32_t(i) * gVelocityConstants0.values.y;
+			if ((blurIndexTmp.x < 0.0f) || (blurIndexTmp.y < 0.0f) ||
+				(blurIndexTmp.x > float32_t(gComputeConstants.threadIdTotalX)) || (blurIndexTmp.y > float32_t(gComputeConstants.threadIdTotalY))) {
+				continue;
+			}
+
+			blurInput = sourceImage2[blurIndexTmp];
+
+			// 重み確認
+			blurWeight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+
+			// outputに加算
+			if (!(blurInput.r == 0.0f && blurInput.g == 1.0f && blurInput.b == 0.0f)) {
+				blurOutput += blurInput * blurWeight;
+			}
+			// 重みの合計に加算
+			blurWeightSum += blurWeight;
+
+		}
+
+		// 重みの合計分割る
+		blurOutput *= rcp(blurWeightSum);
+		
+		float32_t blurAlphaSum = output.a + blurOutput.a;
+
+		if (blurAlphaSum != 0.0f) {
+			float32_t a1 = output.a * rcp(blurAlphaSum);
+			float32_t a2 = blurOutput.a * rcp(blurAlphaSum);
+
+			float32_t3 col = output.rgb * a1 + blurOutput.rgb * a2;
+
+			output = float32_t4(col, min(blurAlphaSum, 1.0f));
+		}
+
 	}
 
 	return output;
