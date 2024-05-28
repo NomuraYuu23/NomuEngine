@@ -72,7 +72,7 @@ void MyFramework::Initialize()
 	WindowSpriteStorage::GetInstance()->Initialize();
 
 	// クエリタイムスタンプ
-	QueryTimestamp::GetInstance()->Initialize(dxCommon->GetDevice());
+	//QueryTimestamp::GetInstance()->Initialize(dxCommon->GetDevice());
 
 	//サウンド
 	audio = Audio::GetInstance();
@@ -130,7 +130,7 @@ void MyFramework::Update()
 	GlobalVariables::GetInstance()->Update();
 
 	// クエリタイムスタンプ
-	QueryTimestamp::GetInstance()->ImGuiDraw();
+	//QueryTimestamp::GetInstance()->ImGuiDraw();
 
 }
 
