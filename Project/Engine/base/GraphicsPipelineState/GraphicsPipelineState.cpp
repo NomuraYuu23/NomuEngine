@@ -68,16 +68,16 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 #pragma endregion
 
 #pragma region 反転モデル(右手座標系)
-	desc.pipelineStateIndex = kPipelineStateIndexInverseModel;
-	desc.rootParameterIndex = kRootParameterIndexModel;
+	desc.pipelineStateIndex = kPipelineStateIndexAnimInverseModel;
+	desc.rootParameterIndex = kRootParameterIndexAnimModel;
 	desc.samplerIndex = kSamplerIndexNormal;
 	desc.depthEnable = true;
 	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexNormal;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
 	desc.blendStateIndex = kBlendStateIndexNormal;
 	desc.cullMode = D3D12_CULL_MODE_FRONT;
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/Model/NormalModel.VS.hlsl";
+	desc.filePathVS = L"Resources/shaders/Model/AnimModel.VS.hlsl";
 	desc.filePathPS = L"Resources/shaders/Model/Model.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	desc.numRenderTargets = 1;

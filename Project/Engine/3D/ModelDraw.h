@@ -16,7 +16,7 @@ public: // サブクラス
 	enum PipelineStateIndex {
 		kPipelineStateIndexModel, // モデル
 		kPipelineStateIndexAnimModel, // アニメーションモデル
-		kPipelineStateIndexInverseModel, // 反転モデル(右手座標系)
+		kPipelineStateIndexAnimInverseModel, // 反転モデル(右手座標系)
 		kPipelineStateIndexManyObjects, // 複数のアニメーション無しオブジェクト
 
 
