@@ -53,6 +53,11 @@ void Mesh::SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandLi
 	commandList->SetComputeRootDescriptorTable(rootParameterIndex, vertUAVHandleGPU_);
 }
 
+void Mesh::SetGraphicsRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+{
+	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, vertUAVHandleGPU_);
+}
+
 void Mesh::VertBuffInitialize(ID3D12Device* sDevice, const std::vector<VertexData>& vertices)
 {
 

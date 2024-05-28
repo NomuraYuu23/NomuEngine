@@ -131,7 +131,7 @@ void SampleObject::Draw(BaseCamera& camera)
 	desc.material = material_.get();
 	desc.model = model_;
 	desc.worldTransform = &worldTransform_;
-	ModelDraw::AnimInverseObjectDraw(desc);
+	ModelDraw::AnimObjectDraw(desc);
 
 	//ModelDraw::NormalOutlineDesc outlineDesc;
 	//outlineDesc.model = model_;

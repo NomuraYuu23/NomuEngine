@@ -10,6 +10,8 @@ std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kSRV_PSIndexOfCount> RootParamet
 std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kSRV_VSIndexOfCount> RootParameterManager::descriptorRangesSRV_VS_{};
 // ディスクリプタレンジ UAV PS
 std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kUAV_PSIndexOfCount> RootParameterManager::descriptorRangesUAV_PS_{};
+// ディスクリプタレンジ UAV VS
+std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kUAV_VSIndexOfCount> RootParameterManager::descriptorRangesUAV_VS_{};
 
 RootParameterManager* RootParameterManager::GetInstance()
 {
@@ -27,7 +29,6 @@ void RootParameterManager::Initialize()
 	std::vector<Item> data;
 
 #pragma region アニメーションなしモデル
-	//CreateForNormalModel();
 	data.push_back(kCBV_PSIndexMaterial); // マテリアル 
 	data.push_back(kCBV_PSIndexDirectionalLight); // 平行光源
 	data.push_back(kCBV_PSIndexCamera); // カメラ
@@ -44,7 +45,29 @@ void RootParameterManager::Initialize()
 	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
 	data.push_back(kCBV_PSIndexFog); // 霧
 	data.push_back(kSRV_PSIndexEnvironmentTexture); // 環境マップ(映り込み用テクスチャ)
-	Analyze(kRootParameterIndexNormalModel, data); // 解析
+	Analyze(kRootParameterIndexModel, data); // 解析
+	data.clear(); // クリア
+#pragma endregion
+
+#pragma region アニメーションありモデル
+	data.push_back(kCBV_PSIndexMaterial); // マテリアル 
+	data.push_back(kCBV_PSIndexDirectionalLight); // 平行光源
+	data.push_back(kCBV_PSIndexCamera); // カメラ
+	data.push_back(kCBV_VSIndexWorldTransform); // ワールドトランスフォーム
+	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture1); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture2); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture3); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture4); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture5); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture6); // テクスチャ
+	data.push_back(kSRV_PSIndexTexture7); // テクスチャ
+	data.push_back(kSRV_PSIndexPointLight); // ポイントライト
+	data.push_back(kSRV_PSIndexSpotLight); // スポットライト
+	data.push_back(kCBV_PSIndexFog); // 霧
+	data.push_back(kSRV_PSIndexEnvironmentTexture); // 環境マップ(映り込み用テクスチャ)
+	data.push_back(kUAV_VSIndexVertex); // 頂点
+	Analyze(kRootParameterIndexAnimModel, data); // 解析
 	data.clear(); // クリア
 #pragma endregion
 
@@ -175,6 +198,19 @@ void RootParameterManager::DescriptorRangeInitialize()
 		descriptorRangesUAV_PS_[i].push_back(descriptorRange[0]);
 	}
 
+	// UAV_VS
+	for (uint32_t i = 0; i < kUAV_VSIndexOfCount; ++i) {
+	
+		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+		descriptorRange[0].BaseShaderRegister = i;//iから始まる
+		descriptorRange[0].NumDescriptors = 1;//数は一つ
+		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
+		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+
+		descriptorRangesUAV_VS_[i].push_back(descriptorRange[0]);
+	
+	}
+
 }
 
 void RootParameterManager::Analyze(RootParameterIndex rootParameterIndex, const std::vector<Item>& data)
@@ -221,6 +257,13 @@ void RootParameterManager::Analyze(RootParameterIndex rootParameterIndex, const 
 			rootParameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 			rootParameter.DescriptorTable.pDescriptorRanges = descriptorRangesUAV_PS_[index].data();//Tableの中身の配列を指定
 			rootParameter.DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRangesUAV_PS_[index].size());//Tableで利用する数
+		}
+		else if (std::holds_alternative<UAV_VSIndex>(item)) {
+			UAV_VSIndex index = std::get<UAV_VSIndex>(item);
+			rootParameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
+			rootParameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+			rootParameter.DescriptorTable.pDescriptorRanges = descriptorRangesUAV_VS_[index].data();//Tableの中身の配列を指定
+			rootParameter.DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRangesUAV_VS_[index].size());//Tableで利用する数
 		}
 
 		rootParameters_[rootParameterIndex].push_back(rootParameter);

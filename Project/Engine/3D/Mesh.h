@@ -52,6 +52,7 @@ public: // 関数
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetVbViewUAV() { return &vbViewUAV_; }
 	void SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
+	void SetGraphicsRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// skinningバッファ

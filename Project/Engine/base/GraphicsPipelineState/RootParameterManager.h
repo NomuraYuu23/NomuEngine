@@ -75,11 +75,21 @@ enum UAV_PSIndex {
 	kUAV_PSIndexOfCount
 };
 
+
+/// <summary>
+/// UAV VS
+/// </summary>
+enum UAV_VSIndex {
+	kUAV_VSIndexVertex = 0, // 頂点
+	kUAV_VSIndexOfCount
+};
+
 /// <summary>
 /// ルートパラメータの名前
 /// </summary>
 enum RootParameterIndex {
-	kRootParameterIndexNormalModel, // アニメーション無しモデル
+	kRootParameterIndexModel, // アニメーション無しモデル
+	kRootParameterIndexAnimModel, // アニメーションありモデル
 
 	kRootParameterIndexNormalOutline, // アニメーション無しアウトライン
 
@@ -101,7 +111,7 @@ class RootParameterManager
 
 private:
 
-	using Item = std::variant<SRV_PSIndex, SRV_VSIndex, CBV_PSIndex, CBV_VSIndex, UAV_PSIndex>;
+	using Item = std::variant<SRV_PSIndex, SRV_VSIndex, CBV_PSIndex, CBV_VSIndex, UAV_PSIndex, UAV_VSIndex>;
 
 public: // 関数
 
@@ -140,6 +150,8 @@ public: // 変数
 	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kSRV_VSIndexOfCount> descriptorRangesSRV_VS_;
 	// ディスクリプタレンジ UAV PS
 	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kUAV_PSIndexOfCount> descriptorRangesUAV_PS_;
+	// ディスクリプタレンジ UAV VS
+	static std::array<std::vector<D3D12_DESCRIPTOR_RANGE>, kUAV_VSIndexOfCount> descriptorRangesUAV_VS_;
 
 private: // シングルトン
 

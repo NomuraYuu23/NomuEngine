@@ -1250,6 +1250,9 @@
     <FxCompile Include="Resources\shaders\Skybox\Skybox.PS.hlsl">
       <Filter>shaders\SkyBox</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\Model\AnimModel.VS.hlsl">
+      <Filter>shaders\Model</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">
