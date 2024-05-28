@@ -18,6 +18,7 @@ public: // サブクラス
 		kPipelineStateIndexAnimModel, // アニメーションモデル
 		kPipelineStateIndexAnimInverseModel, // 反転モデル(右手座標系)
 		kPipelineStateIndexManyObjects, // 複数のアニメーション無しオブジェクト
+		kPipelineStateIndexAnimManyObjects, // 複数のアニメーションありオブジェクト
 
 
 		kPipelineStateIndexNormalOutline, // アニメーション無しアウトライン

@@ -85,6 +85,42 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	Create(desc);
 #pragma endregion
 
+#pragma region たくさんのアニメーション無しモデル
+	desc.pipelineStateIndex = kPipelineStateIndexManyModels;
+	desc.rootParameterIndex = kRootParameterIndexManyModels;
+	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	desc.inputLayoutIndex = kInputLayoutIndexNormal;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_BACK;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/Model/ManyNormalModels.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model/ManyModels.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.numRenderTargets = 1;
+	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	Create(desc);
+#pragma endregion
+
+#pragma region たくさんのアニメーションありモデル
+	desc.pipelineStateIndex = kPipelineStateIndexAnimManyModels;
+	desc.rootParameterIndex = kRootParameterIndexManyAnimModels;
+	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_BACK;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/Model/ManyAnimModels.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model/ManyModels.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.numRenderTargets = 1;
+	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	Create(desc);
+#pragma endregion
+
 #pragma region アニメーション無しアウトライン
 	desc.pipelineStateIndex = kPipelineStateIndexNormalOutline;
 	desc.rootParameterIndex = kRootParameterIndexNormalOutline;
@@ -205,24 +241,6 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	desc.fillMode = D3D12_FILL_MODE_SOLID;
 	desc.filePathVS = L"Resources/shaders/WindowSprite/WindowSprite.VS.hlsl";
 	desc.filePathPS = L"Resources/shaders/WindowSprite/WindowSpriteUAV.PS.hlsl";
-	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	desc.numRenderTargets = 1;
-	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	Create(desc);
-#pragma endregion
-	
-#pragma region たくさんのアニメーション無しモデル
-	desc.pipelineStateIndex = kPipelineStateIndexManyModels;
-	desc.rootParameterIndex = kRootParameterIndexManyNormalModels;
-	desc.samplerIndex = kSamplerIndexNormal;
-	desc.depthEnable = true;
-	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	desc.inputLayoutIndex = kInputLayoutIndexNormal;
-	desc.blendStateIndex = kBlendStateIndexNormal;
-	desc.cullMode = D3D12_CULL_MODE_BACK;
-	desc.fillMode = D3D12_FILL_MODE_SOLID;
-	desc.filePathVS = L"Resources/shaders/Model/ManyNormalModels.VS.hlsl";
-	desc.filePathPS = L"Resources/shaders/Model/ManyModels.PS.hlsl";
 	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	desc.numRenderTargets = 1;
 	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;

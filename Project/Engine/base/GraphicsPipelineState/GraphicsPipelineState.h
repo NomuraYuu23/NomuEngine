@@ -21,10 +21,10 @@ public: // サブクラス
 	// パイプラインの名前
 	enum PipelineStateIndex {
 		kPipelineStateIndexModel, // モデル
-
 		kPipelineStateIndexAnimModel, // アニメーションモデル
 		kPipelineStateIndexAnimInverseModel, // 反転モデル(右手座標系)
 		kPipelineStateIndexManyModels, // たくさんのモデル
+		kPipelineStateIndexAnimManyModels, // たくさんのアニメーションモデル
 
 		kPipelineStateIndexNormalOutline, // アニメーション無しモデルアウトライン
 

@@ -90,6 +90,8 @@ enum UAV_VSIndex {
 enum RootParameterIndex {
 	kRootParameterIndexModel, // アニメーション無しモデル
 	kRootParameterIndexAnimModel, // アニメーションありモデル
+	kRootParameterIndexManyModels, // たくさんのアニメーション無しモデル
+	kRootParameterIndexManyAnimModels, // たくさんのアニメーション無しモデル
 
 	kRootParameterIndexNormalOutline, // アニメーション無しアウトライン
 
@@ -99,7 +101,6 @@ enum RootParameterIndex {
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexWindowSpriteSRV, // ウィンドウスプライトSRV
 	kRootParameterIndexWindowSpriteUAV,// ウィンドウスプライトUAV
-	kRootParameterIndexManyNormalModels, // たくさんのアニメーション無しモデル
 	
 	kRootParameterIndexSkyBox, // スカイボックス
 

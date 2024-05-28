@@ -443,11 +443,9 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexManyObjects]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexManyObjects]);
-	currentPipelineStateIndex_ = kPipelineStateIndexManyObjects;
-
-	sCommandList->IASetVertexBuffers(0, 1, desc.model->GetMesh()->GetVbViewUAV());
+	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimManyObjects]);//PS0を設定
+	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimManyObjects]);
+	currentPipelineStateIndex_ = kPipelineStateIndexAnimManyObjects;
 
 	// マテリアル
 	sCommandList->SetGraphicsRootDescriptorTable(0, *desc.materialsHandle);
@@ -494,6 +492,9 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 
 	// 環境マップ(映り込み用テクスチャ)ハンドル
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
+
+	// 頂点
+	desc.model->GetMesh()->SetGraphicsRootDescriptorTableVertUAVHandleGPU(sCommandList, 16);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
