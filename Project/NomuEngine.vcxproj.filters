@@ -1256,6 +1256,9 @@
     <FxCompile Include="Resources\shaders\Model\ManyAnimModels.VS.hlsl">
       <Filter>shaders\Model</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\Model\ModelRT2.PS.hlsl">
+      <Filter>shaders\Model\PS_hlsli</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">

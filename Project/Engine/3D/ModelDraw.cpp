@@ -198,7 +198,7 @@ void ModelDraw::PostDraw()
 
 }
 
-void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
+void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc, uint32_t renderTargetIndex)
 {
 
 	// nullptrチェック
@@ -211,9 +211,19 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimModel]);
-	currentPipelineStateIndex_ = kPipelineStateIndexAnimModel;
+	if (renderTargetIndex == 2) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimModelRT2]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimModelRT2]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimModelRT2;
+	}
+	else if (renderTargetIndex == 3) {
+		assert(0);
+	}
+	else {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimModel;
+	}
 
 	//マテリアルCBufferの場所を設定
 	if (desc.material) {
@@ -354,7 +364,7 @@ void ModelDraw::NormalObjectDraw(NormalObjectDesc& desc)
 
 }
 
-void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
+void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc, uint32_t renderTargetIndex)
 {
 
 	// nullptrチェック
@@ -367,9 +377,19 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc)
 	UpdateVertexUAV(desc.model, desc.localMatrixManager);
 
 	// パイプライン設定
-	sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
-	sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
-	currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModel;
+	if (renderTargetIndex == 2) {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModelRT2]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModelRT2]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModelRT2;
+	}
+	else if (renderTargetIndex == 3) {
+		assert(0);
+	}
+	else {
+		sCommandList->SetPipelineState(sPipelineState[kPipelineStateIndexAnimInverseModel]);//PS0を設定
+		sCommandList->SetGraphicsRootSignature(sRootSignature[kPipelineStateIndexAnimInverseModel]);
+		currentPipelineStateIndex_ = kPipelineStateIndexAnimInverseModel;
+	}
 
 	//マテリアルCBufferの場所を設定
 	if (desc.material) {

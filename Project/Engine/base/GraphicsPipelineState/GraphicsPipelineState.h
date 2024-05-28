@@ -36,6 +36,13 @@ public: // サブクラス
 
 		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D
 		kPipelineStateIndexSkyBox, // スカイボックス
+
+
+		kPipelineStateIndexAnimModelRT2, // アニメーションモデルRT2
+		kPipelineStateIndexAnimInverseModelRT2, // 反転モデル(右手座標系)RT2
+		//kPipelineStateIndexAnimModelRT3, // アニメーションモデルRT3
+		//kPipelineStateIndexAnimInverseModelRT3, // 反転モデル(右手座標系)RT3
+
 		kPipelineStateIndexOfCount // 使わない
 	};
 

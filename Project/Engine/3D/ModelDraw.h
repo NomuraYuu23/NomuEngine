@@ -20,6 +20,8 @@ public: // サブクラス
 		kPipelineStateIndexManyObjects, // 複数のアニメーション無しオブジェクト
 		kPipelineStateIndexAnimManyObjects, // 複数のアニメーションありオブジェクト
 
+		kPipelineStateIndexAnimModelRT2, // アニメーションモデル
+		kPipelineStateIndexAnimInverseModelRT2, // 反転モデル(右手座標系)
 
 		kPipelineStateIndexNormalOutline, // アニメーション無しアウトライン
 
@@ -143,7 +145,7 @@ public: // 描画
 	/// アニメーションオブジェクト
 	/// </summary>
 	/// <param name="desc">アニメーションオブジェクト引数</param>
-	static void AnimObjectDraw(AnimObjectDesc& desc);
+	static void AnimObjectDraw(AnimObjectDesc& desc, uint32_t renderTargetIndex = 0);
 
 	/// <summary>
 	/// アニメーション無しオブジェクト
@@ -155,7 +157,7 @@ public: // 描画
 	/// アニメーション反転オブジェクト
 	/// </summary>
 	/// <param name="desc">アニメーションオブジェクト引数</param>
-	static void AnimInverseObjectDraw(AnimObjectDesc& desc);
+	static void AnimInverseObjectDraw(AnimObjectDesc& desc, uint32_t renderTargetIndex = 0);
 
 	/// <summary>
 	/// 複数のアニメーションオブジェクト

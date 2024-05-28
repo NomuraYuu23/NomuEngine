@@ -265,6 +265,42 @@ void GraphicsPipelineState::Initialize(ID3D12Device* sDevice)
 	Create(desc);
 #pragma endregion
 
+#pragma region アニメーションモデルRT2
+	desc.pipelineStateIndex = kPipelineStateIndexAnimModelRT2;
+	desc.rootParameterIndex = kRootParameterIndexAnimModel;
+	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_BACK;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/Model/AnimModel.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model/ModelRT2.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.numRenderTargets = 3;
+	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	Create(desc);
+#pragma endregion
+
+#pragma region 反転モデル(右手座標系)RT2
+	desc.pipelineStateIndex = kPipelineStateIndexAnimInverseModelRT2;
+	desc.rootParameterIndex = kRootParameterIndexAnimModel;
+	desc.samplerIndex = kSamplerIndexNormal;
+	desc.depthEnable = true;
+	desc.depthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	desc.inputLayoutIndex = kInputLayoutIndexNone;
+	desc.blendStateIndex = kBlendStateIndexNormal;
+	desc.cullMode = D3D12_CULL_MODE_FRONT;
+	desc.fillMode = D3D12_FILL_MODE_SOLID;
+	desc.filePathVS = L"Resources/shaders/Model/AnimModel.VS.hlsl";
+	desc.filePathPS = L"Resources/shaders/Model/ModelRT2.PS.hlsl";
+	desc.primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.numRenderTargets = 3;
+	desc.RTVFormats = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	Create(desc);
+#pragma endregion
+
 }
 
 void GraphicsPipelineState::Create(const CreateDesc& desc)
