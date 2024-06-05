@@ -247,6 +247,9 @@
     <Filter Include="Engine\Base\WindowSprite">
       <UniqueIdentifier>{01c26ffb-3765-42f0-9933-e844a6f7454d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\level">
+      <UniqueIdentifier>{43819e33-ff45-442f-97b4-9f331fcb049c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -624,6 +627,15 @@
     </ClCompile>
     <ClCompile Include="Engine\base\CrashHandler.cpp">
       <Filter>Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Level\LevelDataManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Level\LevelDataLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Level\LevelData.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1136,6 +1148,15 @@
     </ClInclude>
     <ClInclude Include="Engine\base\QueryTimestamp.h">
       <Filter>Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Level\LevelDataManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Level\LevelDataLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Level\LevelData.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

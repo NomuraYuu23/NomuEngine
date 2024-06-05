@@ -164,6 +164,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp" />
     <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp" />
+    <ClCompile Include="Engine\Level\LevelData.cpp" />
+    <ClCompile Include="Engine\Level\LevelDataManager.cpp" />
+    <ClCompile Include="Engine\Level\LevelDataLoader.cpp" />
     <ClCompile Include="Engine\Light\PointLight\PointLightManager.cpp" />
     <ClCompile Include="Engine\Light\SpotLight\SpotLightManager.cpp" />
     <ClCompile Include="Engine\Line\Line.cpp" />
@@ -312,6 +315,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Collision2D\Collision2DManager.h" />
     <ClInclude Include="Engine\Collision\CollisionData.h" />
     <ClInclude Include="Engine\ContactRecord\ContactRecord.h" />
+    <ClInclude Include="Engine\Level\LevelData.h" />
+    <ClInclude Include="Engine\Level\LevelDataManager.h" />
+    <ClInclude Include="Engine\Level\LevelDataLoader.h" />
     <ClInclude Include="Engine\Light\PointLight\PointLightData.h" />
     <ClInclude Include="Engine\Light\PointLight\PointLightManager.h" />
     <ClInclude Include="Engine\Light\SpotLight\SpotLightData.h" />
