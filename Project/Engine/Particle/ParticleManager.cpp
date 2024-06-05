@@ -8,6 +8,7 @@
 #include "../3D/ModelDraw.h"
 
 #include <cassert>
+#include "../base/OutputLog.h"
 
 ParticleManager* ParticleManager::GetInstance()
 {
@@ -103,6 +104,10 @@ void ParticleManager::Draw(const Matrix4x4& viewProjectionMatrix, ID3D12Graphics
 
 	for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
 
+		if (particleDatas_[i].instanceIndex_ == 0) {
+			continue;
+		}
+
 		commandList->IASetVertexBuffers(0, 1, particleDatas_[i].model_->GetMesh()->GetVbView()); //VBVを設定
 
 		//マテリアルを設定
@@ -149,6 +154,7 @@ void ParticleManager::Finalize()
 			return true;
 			});
 		particleDatas_[i].startInstanceIdMap_->num = 0;
+		particleDatas_[i].instanceIndex_ = 0;
 	}
 	emitters_.remove_if([](IEmitter* emitter) {
 		delete emitter;
