@@ -1,20 +1,12 @@
 #pragma once
 
+#include "LevelIndex.h"
 #include "LevelData.h"
 #include "LevelDataLoader.h"
+#include "LevelDataViewing.h"
 
 class LevelDataManager
 {
-
-public: // サブクラス
-
-	/// <summary>
-	/// シーンの種類
-	/// </summary>
-	enum SceneIndex {
-		kSceneIndexSample, // サンプル
-		kSceneIndexOfCount // 数を数える用
-	};
 
 public: //  関数
 
@@ -23,6 +15,11 @@ public: //  関数
 	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// ImGui描画
+	/// </summary>
+	void ImGuiDraw();
+
 public: // アクセッサ
 
 	/// <summary>
@@ -30,19 +27,19 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="index">番号</param>
 	/// <returns>データ</returns>
-	LevelData* GetLevelDatas(SceneIndex index) { return levelDatas_[index].get(); }
+	LevelData* GetLevelDatas(LevelIndex index) { return levelDatas_[index].get(); }
 
 private: // 定数
 
 	// ファイルの名前
-	const std::array<const std::string, SceneIndex::kSceneIndexOfCount> fileNames_{
+	const std::array<const std::string, LevelIndex::kLevelIndexOfCount> fileNames_{
 		"test",
 	};
 
 private: // 変数
 
 	// 格納データ群
-	std::array<std::unique_ptr<LevelData>, SceneIndex::kSceneIndexOfCount> levelDatas_{};
+	std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount> levelDatas_{};
 
 };
 

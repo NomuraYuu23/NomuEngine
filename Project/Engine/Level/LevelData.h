@@ -36,7 +36,7 @@ public: // サブクラス
 	/// <summary>
 	/// カメラタイプ
 	/// </summary>
-	struct CamaeraData
+	struct CameraData
 	{
 		// 名前
 		std::string name;
@@ -56,7 +56,7 @@ public: // サブクラス
 		EulerTransform transform;
 	};
 
-	using ObjectData = std::variant<MeshData, CamaeraData, LightData>;
+	using ObjectData = std::variant<MeshData, CameraData, LightData>;
 
 public: // 変数
 

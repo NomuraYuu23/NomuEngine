@@ -187,10 +187,10 @@ void LevelDataLoader::CameraLoad(LevelData* levelData, nlohmann::json& object)
 {
 
 	// 要素の追加
-	levelData->objectsData_.emplace_back(LevelData::CamaeraData{});
+	levelData->objectsData_.emplace_back(LevelData::CameraData{});
 
 	// 今追加した要素の参照を得る
-	LevelData::CamaeraData& objectData = std::get<LevelData::CamaeraData>(levelData->objectsData_.back());
+	LevelData::CameraData& objectData = std::get<LevelData::CameraData>(levelData->objectsData_.back());
 
 	// 名前
 	objectData.name = object["name"];
