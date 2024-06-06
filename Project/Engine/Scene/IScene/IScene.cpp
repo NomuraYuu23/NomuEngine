@@ -24,6 +24,8 @@ DrawLine* IScene::drawLine_ = nullptr;
 
 // レベルデータマネージャー
 LevelDataManager* IScene::levelDataManager_;
+// モデルマネージャー
+ModelManager* IScene::modelManager_;
 
 void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 {
@@ -50,6 +52,9 @@ void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 
 	// レベルデータマネージャー
 	levelDataManager_ = levelDataManager;
+
+	// モデルマネージャー
+	modelManager_ = ModelManager::GetInstance();
 
 }
 
@@ -103,6 +108,8 @@ void IScene::Initialize()
 IScene::~IScene(){
 
 	textureHandleManager_->ResetTextureHandles();
+
+	modelManager_->Finalize();
 
 }
 

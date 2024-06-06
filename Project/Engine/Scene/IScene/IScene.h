@@ -46,6 +46,7 @@
 #include "../../../Application/Scene/SceneName.h" // シーンの名前
 #include "../../Level/LevelDataManager.h"
 #include "../../Object/ObjectManager.h"
+#include "../../3D/ModelManager.h"
 
 /// <summary>
 /// シーンの元になるクラス
@@ -80,6 +81,9 @@ protected: // 静的メンバ変数
 	
 	// レベルデータマネージャー
 	static LevelDataManager* levelDataManager_;
+
+	// モデルマネージャー
+	static ModelManager* modelManager_;
 
 public: // メンバ関数
 

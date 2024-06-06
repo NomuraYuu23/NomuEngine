@@ -10,12 +10,23 @@ class ModelManager
 public: // 関数
 
 	/// <summary>
+	/// インスタンス取得
+	/// </summary>
+	/// <returns></returns>
+	static ModelManager* GetInstance();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="dxCommon">dxCommon</param>
 	/// <param name="textureHandleManager">テクスチャハンドルマネージャー</param>
 	void Initialize(DirectXCommon* dxCommon,
 		ITextureHandleManager* textureHandleManager);
+
+	/// <summary>
+	/// 後処理
+	/// </summary>
+	void Finalize();
 
 	/// <summary>
 	/// モデルの情報取得
@@ -43,6 +54,12 @@ private: // 変数
 
 	DirectXCommon* dxCommon_ = nullptr;
 	ITextureHandleManager* textureHandleManager_ = nullptr;
+
+private:
+	ModelManager() = default;
+	~ModelManager() = default;
+	ModelManager(const ModelManager&) = delete;
+	const ModelManager& operator=(const ModelManager&) = delete;
 
 };
 

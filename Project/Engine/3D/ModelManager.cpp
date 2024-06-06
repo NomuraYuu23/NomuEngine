@@ -1,10 +1,30 @@
 #include "ModelManager.h"
 
+ModelManager* ModelManager::GetInstance()
+{
+    static ModelManager instance;
+    return &instance;
+}
+
 void ModelManager::Initialize(DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager)
 {
 
     dxCommon_ = dxCommon;
     textureHandleManager_ = textureHandleManager;
+
+}
+
+void ModelManager::Finalize()
+{
+
+    for (std::vector<std::unique_ptr<Model>>::iterator it = models_.begin();
+        it != models_.end(); ++it) {
+
+        it->reset(nullptr);
+
+    }
+
+    models_.clear();
 
 }
 

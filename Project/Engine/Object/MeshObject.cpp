@@ -1,4 +1,5 @@
 #include "MeshObject.h"
+#include "../3D/ModelManager.h"
 
 void MeshObject::Initialize(LevelData::MeshData* data)
 {
@@ -15,10 +16,8 @@ void MeshObject::Initialize(LevelData::MeshData* data)
 	worldTransform_.UpdateMatrix();
 
 	// モデル
-
-	// モデルマネージャーから名前の一致する物を探す
-	// 在れば参照の値をとってくる
-	// なければ、新しいモデルを作成、参照の値をとってくる
+	// ディレクトリパスがまだ
+	model_ = ModelManager::GetInstance()->GetModel("Resources/default", fileNmae_);
 
 	// マテリアル
 	material_.reset(Material::Create());

@@ -152,6 +152,9 @@ void GameScene::Initialize() {
 	PostEffect::GetInstance()->SetKernelSize(33);
 	PostEffect::GetInstance()->SetSigma(33.0f);
 
+	// モデルマネージャー
+	modelManager_->Initialize(dxCommon_, textureHandleManager_.get());
+
 	// オブジェクトマネージャー
 	objectManager_->Initialize(kLevelIndexSample,levelDataManager_);
 
