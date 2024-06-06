@@ -125,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3D\DrawLine.cpp" />
     <ClCompile Include="Engine\3D\FogManager.cpp" />
     <ClCompile Include="Engine\3D\LargeNumberOfObjects.cpp" />
+    <ClCompile Include="Engine\3D\ModelManager.cpp" />
     <ClCompile Include="Engine\base\QueryTimestamp.cpp" />
     <ClCompile Include="Engine\base\WindowSprite.cpp" />
     <ClCompile Include="Engine\3D\Mesh.cpp" />
@@ -271,6 +272,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\FogData.h" />
     <ClInclude Include="Engine\3D\FogManager.h" />
     <ClInclude Include="Engine\3D\LargeNumberOfObjects.h" />
+    <ClInclude Include="Engine\3D\ModelManager.h" />
     <ClInclude Include="Engine\Animation\SkinningInformation.h" />
     <ClInclude Include="Engine\base\QueryTimestamp.h" />
     <ClInclude Include="Engine\base\WindowSprite.h" />
