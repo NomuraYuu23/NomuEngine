@@ -17,7 +17,6 @@ void ObjectManager::Initialize(LevelIndex levelIndex, LevelDataManager* levelDat
 		LevelData::ObjectData objectData = *it;
 
 		// 型にあわせてInitialize
-		objects_.emplace_back(nullptr);
 		std::unique_ptr<IObject> object;
 		object.reset(objectFactory->CreateObject(objectData));
 

@@ -22,7 +22,7 @@ public:
 private:
 
 	// オブジェクト
-	std::vector<std::unique_ptr<IObject>> objects_;
+	std::vector<std::unique_ptr<IObject>> objects_{};
 
 };
 

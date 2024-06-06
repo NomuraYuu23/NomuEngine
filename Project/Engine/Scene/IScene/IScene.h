@@ -45,6 +45,7 @@
 // アプリケーション側
 #include "../../../Application/Scene/SceneName.h" // シーンの名前
 #include "../../Level/LevelDataManager.h"
+#include "../../Object/ObjectManager.h"
 
 /// <summary>
 /// シーンの元になるクラス
@@ -159,6 +160,9 @@ protected: // メンバ変数
 	// スポットライト
 	std::unique_ptr<SpotLightManager> spotLightManager_;
 	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
+
+	// オブジェクトマネージャー
+	std::unique_ptr<ObjectManager> objectManager_;
 
 };
 

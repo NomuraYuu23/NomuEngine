@@ -34,6 +34,8 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 	// シーンファクトリー
 	sceneFacyory_ = SceneFactory::GetInstance();
 
+	levelDataManager_ = std::make_unique<LevelDataManager>();
+	levelDataManager_->Initialize();
 	IScene::StaticInitialize(levelDataManager_.get());
 
 	// シーン(タイトル)
@@ -48,9 +50,6 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 
 	requestSeneNo_ = earlySceneNo; // リクエストシーン
 	prevRequestSeneNo_ = earlySceneNo; // 前のリクエストシーン
-
-	levelDataManager_ = std::make_unique<LevelDataManager>();
-	levelDataManager_->Initialize();
 
 }
 
