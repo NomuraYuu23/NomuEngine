@@ -12,7 +12,7 @@ void LevelDataManager::Initialize()
 	}
 
 	// 表示用クラスの初期化
-	LevelDataViewing::Initialize(&levelDatas_);
+	LevelDataViewing::Initialize(&levelDatas_, &fileNames_);
 
 }
 

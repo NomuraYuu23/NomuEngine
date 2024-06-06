@@ -7,10 +7,12 @@ std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount>* LevelDat
 
 LevelIndex LevelDataViewing::viewingIndex_ = LevelIndex::kLevelIndexSample;
 
-void LevelDataViewing::Initialize(std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount>* levelDatas)
+void LevelDataViewing::Initialize(std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount>* levelDatas,
+	const std::array<const std::string, LevelIndex::kLevelIndexOfCount>* fileNames)
 {
 
 	levelDatas_ = levelDatas;
+	fileNames_ = fileNames;
 	viewingIndex_ = LevelIndex::kLevelIndexSample;
 
 }
@@ -41,6 +43,8 @@ void LevelDataViewing::ViewingIndexChange()
 		ImGui::SameLine();
 
 	}
+
+	ImGui::NewLine();
 
 	viewingIndex_ = static_cast<LevelIndex>(index);
 
@@ -78,7 +82,9 @@ void LevelDataViewing::ObjectViewing(LevelData::MeshData* objectData)
 	NamaViewing(objectData->name);
 
 	// ファイルの名前
-	FileNameViewing(objectData->flieName);
+	if (!objectData->flieName.empty()) {
+		FileNameViewing(objectData->flieName);
+	}
 
 	// トランスフォーム
 	TransformViewing(objectData->transform);
@@ -130,8 +136,8 @@ void LevelDataViewing::TransformViewing(EulerTransform& transform)
 	std::string text = "TRANSFORM";
 	ImGui::Text(text.c_str());
 
-	ImGui::DragFloat3("translation", &transform.translate.x, 0.0f);
-	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.0f);
-	ImGui::DragFloat3("scaling", &transform.scale.x, 0.0f);
+	ImGui::Text("tlanslation :: x: %.4f, y: %.4f, z: %.4f", transform.translate.x, transform.translate.y, transform.translate.z);
+	ImGui::Text("rotation     :: x: %.4f, y: %.4f, z: %.4f", transform.rotate.x, transform.rotate.y, transform.rotate.z);
+	ImGui::Text("scaling      :: x: %.4f, y: %.4f, z: %.4f", transform.scale.x, transform.scale.y, transform.scale.z);
 
 }

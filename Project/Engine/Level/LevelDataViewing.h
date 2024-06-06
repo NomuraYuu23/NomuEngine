@@ -12,7 +12,9 @@ public: // 関数
 	/// 初期化
 	/// </summary>
 	/// <param name="levelDatas">レベルデータ</param>
-	static void Initialize(std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount>* levelDatas);
+	/// <param name="fileNames">ファイルの名前</param>
+	static void Initialize(std::array<std::unique_ptr<LevelData>, LevelIndex::kLevelIndexOfCount>* levelDatas,
+		const std::array<const std::string, LevelIndex::kLevelIndexOfCount>* fileNames);
 
 	/// <summary>
 	/// imGuiでの閲覧

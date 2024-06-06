@@ -49,6 +49,9 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 	requestSeneNo_ = earlySceneNo; // リクエストシーン
 	prevRequestSeneNo_ = earlySceneNo; // 前のリクエストシーン
 
+	levelDataManager_ = std::make_unique<LevelDataManager>();
+	levelDataManager_->Initialize();
+
 }
 
 void SceneManager::Update()
@@ -112,6 +115,9 @@ void SceneManager::Update()
 		sceneTransitionInitialize_.detach();
 		sceneTransitionDetachCompletion_ = true;
 	}
+
+	// 仮レベルデータ表示
+	levelDataManager_->ImGuiDraw();
 
 }
 

@@ -5,6 +5,7 @@
 #include "../../SceneTransition/ISceneTransition/ISceneTransition.h"
 #include "../../../Application/SceneTransition/SceneTransitionFactory/SceneTransitionFactory.h"
 #include <thread>
+#include "../../Level/LevelDataManager.h"
 
 /// <summary>
 /// シーンマネージャー
@@ -80,6 +81,9 @@ private: // メンバ変数
 	bool isFirstLoad_;
 	// シーン遷移初期化がデタッチされたか
 	bool sceneTransitionDetachCompletion_;
+
+	// レベルデータマネージャー
+	std::unique_ptr<LevelDataManager> levelDataManager_;
 
 };
 
