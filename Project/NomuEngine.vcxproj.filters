@@ -247,8 +247,11 @@
     <Filter Include="Engine\Base\WindowSprite">
       <UniqueIdentifier>{01c26ffb-3765-42f0-9933-e844a6f7454d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\level">
+    <Filter Include="Engine\Level">
       <UniqueIdentifier>{43819e33-ff45-442f-97b4-9f331fcb049c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Object">
+      <UniqueIdentifier>{53de935d-e90a-426e-9881-4340ea2005fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -629,15 +632,27 @@
       <Filter>Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Level\LevelDataManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Level\LevelDataLoader.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Level</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Level\LevelData.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Level\LevelDataLoader.cpp">
+      <Filter>Engine\Level</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Level\LevelDataViewing.cpp">
+      <Filter>Engine\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object\IObject.cpp">
+      <Filter>Engine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object\MeshObject.cpp">
+      <Filter>Engine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object\ObjectManager.cpp">
+      <Filter>Engine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Object\ObjectFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1152,20 +1167,35 @@
     <ClInclude Include="Engine\base\QueryTimestamp.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Level\LevelDataManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Level\LevelDataLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\Level\LevelIndex.h">
+      <Filter>Engine\Level</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Level\LevelData.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Level\LevelDataLoader.h">
+      <Filter>Engine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Level\LevelDataManager.h">
+      <Filter>Engine\Level</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Level\LevelDataViewing.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Level</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Level\LevelIndex.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="Engine\Object\AbstractObjectFactory.h">
+      <Filter>Engine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Object\ObjectManager.h">
+      <Filter>Engine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Object\IObject.h">
+      <Filter>Engine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Object\MeshObject.h">
+      <Filter>Engine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Object\ObjectFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
