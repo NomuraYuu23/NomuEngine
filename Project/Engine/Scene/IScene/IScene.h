@@ -44,6 +44,7 @@
 
 // アプリケーション側
 #include "../../../Application/Scene/SceneName.h" // シーンの名前
+#include "../../Level/LevelDataManager.h"
 
 /// <summary>
 /// シーンの元になるクラス
@@ -75,14 +76,17 @@ protected: // 静的メンバ変数
 
 	// 線描画
 	static DrawLine* drawLine_;
+	
+	// レベルデータマネージャー
+	static LevelDataManager* levelDataManager_;
 
 public: // メンバ関数
 
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	void StaticInitialize();
-
+	static void StaticInitialize(LevelDataManager* levelDataManager);
+	 
 	/// <summary>
 	/// 初期化
 	/// </summary>

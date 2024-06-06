@@ -22,7 +22,10 @@ RenderTargetTexture* IScene::renderTargetTexture_;
 
 DrawLine* IScene::drawLine_ = nullptr;
 
-void IScene::StaticInitialize()
+// レベルデータマネージャー
+LevelDataManager* IScene::levelDataManager_;
+
+void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 {
 
 	//機能
@@ -44,6 +47,8 @@ void IScene::StaticInitialize()
 	drawLine_->Initialize(dxCommon_->GetDevice(), 
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexLine].Get(),
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexLine].Get());
+
+	levelDataManager_ = levelDataManager;
 
 }
 

@@ -34,10 +34,10 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 	// シーンファクトリー
 	sceneFacyory_ = SceneFactory::GetInstance();
 
+	IScene::StaticInitialize(levelDataManager_.get());
+
 	// シーン(タイトル)
 	scene_.reset(sceneFacyory_->CreateScene(earlySceneNo));
-	// シーンの静的初期化
-	scene_->StaticInitialize();
 	// シーンの初期化
 	sceneInitialize_ = std::thread(std::bind(&SceneManager::SceneInitializeThread, this));
 	// デタッチ完了フラグ
