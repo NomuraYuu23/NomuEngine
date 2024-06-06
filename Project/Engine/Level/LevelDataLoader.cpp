@@ -10,6 +10,10 @@ const std::array<std::string,
 	LevelData::ObjectDataIndex::kObjectDataIndexOfCount> 
 	LevelDataLoader::kObjectTypeNames = { "MESH", "CAMERA", "LIGHT"};
 
+std::array<std::function<void(LevelData*, nlohmann::json&)>,
+	LevelData::ObjectDataIndex::kObjectDataIndexOfCount> 
+	LevelDataLoader::objectTypeFunctions_ = {};
+
 void LevelDataLoader::Initialize()
 {
 
@@ -29,9 +33,8 @@ LevelData* LevelDataLoader::Load(const std::string& fileName)
 	// ファイルのデータ読み込み(失敗したらエラー)
 	assert(FileLoad(deserialized, fileName));
 
-
-
-
+	// オブジェクトの走査
+	return ScanningObjects(deserialized);
 
 }
 
@@ -178,16 +181,40 @@ void LevelDataLoader::MeshLoad(LevelData* levelData, nlohmann::json& object)
 		objectData.flieName = object["file_name"];
 	}
 
-
-
 }
 
 void LevelDataLoader::CameraLoad(LevelData* levelData, nlohmann::json& object)
 {
+
+	// 要素の追加
+	levelData->objectsData_.emplace_back(LevelData::CamaeraData{});
+
+	// 今追加した要素の参照を得る
+	LevelData::CamaeraData& objectData = std::get<LevelData::CamaeraData>(levelData->objectsData_.back());
+
+	// 名前
+	objectData.name = object["name"];
+
+	// トランスフォーム
+	objectData.transform = TransformLoad(object);
+
 }
 
 void LevelDataLoader::LightLoad(LevelData* levelData, nlohmann::json& object)
 {
+
+	// 要素の追加
+	levelData->objectsData_.emplace_back(LevelData::LightData{});
+
+	// 今追加した要素の参照を得る
+	LevelData::LightData& objectData = std::get<LevelData::LightData>(levelData->objectsData_.back());
+
+	// 名前
+	objectData.name = object["name"];
+
+	// トランスフォーム
+	objectData.transform = TransformLoad(object);
+
 }
 
 EulerTransform LevelDataLoader::TransformLoad(nlohmann::json& object)
