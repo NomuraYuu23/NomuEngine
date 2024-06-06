@@ -60,6 +60,9 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	// モデル読み込み
 	modelData_ = ModelLoader::LoadModelFile(directoryPath, filename);
 
+	// ファイルの名前
+	fileName_ = filename;
+
 	//メッシュ生成
 	mesh_ = std::make_unique<Mesh>();
 	mesh_->CreateMesh(sDevice,modelData_.vertices,modelData_.vertexInfluences);

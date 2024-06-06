@@ -153,7 +153,6 @@ void GameScene::Initialize() {
 	PostEffect::GetInstance()->SetSigma(33.0f);
 
 	// オブジェクトマネージャー
-	objectManager_ = std::make_unique<ObjectManager>();
 	objectManager_->Initialize(kLevelIndexSample,levelDataManager_);
 
 	IScene::InitilaizeCheck();

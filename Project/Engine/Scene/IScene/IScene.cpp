@@ -48,6 +48,7 @@ void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexLine].Get(),
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexLine].Get());
 
+	// レベルデータマネージャー
 	levelDataManager_ = levelDataManager;
 
 }
@@ -93,6 +94,9 @@ void IScene::Initialize()
 	directionalLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
 	directionalLightData_.direction = { 0.0f, -1.0f, 0.0f };
 	directionalLightData_.intencity = 1.0f;
+
+	// オブジェクトマネージャー
+	objectManager_ = std::make_unique<ObjectManager>();
 
 }
 
