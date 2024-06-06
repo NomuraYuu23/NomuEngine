@@ -29,7 +29,7 @@ public: // 関数
     /// 描画
     /// </summary>
     /// <param name="camera">カメラ</param>
-    virtual void Draw(BaseCamera& camera) {};
+    virtual void Draw(BaseCamera& camera);
 
 protected: // 変数
 

@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include "../../Application/Object/ObjectFactory.h"
+#include "MeshObject.h"
 
 void ObjectManager::Initialize(LevelIndex levelIndex, LevelDataManager* levelDataManager)
 {
@@ -25,6 +26,16 @@ void ObjectManager::Initialize(LevelIndex levelIndex, LevelDataManager* levelDat
 			objects_.push_back(std::move(object));
 		}
 
+	}
+
+}
+
+void ObjectManager::Draw(BaseCamera& camera)
+{
+
+	for (std::vector<std::unique_ptr<IObject>>::iterator it = objects_.begin();
+		it != objects_.end(); ++it) {
+		static_cast<MeshObject*>(it->get())->Draw(camera);
 	}
 
 }

@@ -261,12 +261,14 @@ void GameScene::Draw() {
 	skydome_->Draw(camera_);
 
 	//Obj
-	sampleObj_->Draw(camera_);
+	//sampleObj_->Draw(camera_);
 
-	// 紐
-	testString_->Draw(camera_);
+	//// 紐
+	//testString_->Draw(camera_);
 
-	testManyObject_->Draw(camera_);
+	//testManyObject_->Draw(camera_);
+
+	objectManager_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -311,15 +313,15 @@ void GameScene::Draw() {
 #pragma endregion
 
 
-	PostEffect::ExecutionAdditionalDesc desc;
-	desc.shockWaveManagers[0] = shockWaveManager_.get();
-	PostEffect::GetInstance()->Execution(
-		dxCommon_->GetCommadList(),
-		renderTargetTexture_,
-		PostEffect::kCommandIndexTAKEYARIMONOGATARI_First,
-		&desc);
+	//PostEffect::ExecutionAdditionalDesc desc;
+	//desc.shockWaveManagers[0] = shockWaveManager_.get();
+	//PostEffect::GetInstance()->Execution(
+	//	dxCommon_->GetCommadList(),
+	//	renderTargetTexture_,
+	//	PostEffect::kCommandIndexTAKEYARIMONOGATARI_First,
+	//	&desc);
 
-	WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
+	//WindowSprite::GetInstance()->DrawUAV(PostEffect::GetInstance()->GetEditTextures(0)->GetUavHandleGPU());
 
 }
 

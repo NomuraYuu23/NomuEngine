@@ -1,5 +1,6 @@
 #include "MeshObject.h"
 #include "../3D/ModelManager.h"
+#include "../3D/ModelDraw.h"
 
 void MeshObject::Initialize(LevelData::MeshData* data)
 {
@@ -10,16 +11,31 @@ void MeshObject::Initialize(LevelData::MeshData* data)
 	// ファイルの名前
 	fileNmae_ = data->flieName;
 
-	// ワールドトランスフォーム
-	worldTransform_.Initialize();
-	worldTransform_.transform_ = data->transform;
-	worldTransform_.UpdateMatrix();
-
 	// モデル
 	// ディレクトリパスがまだ
 	model_ = ModelManager::GetInstance()->GetModel("Resources/default", fileNmae_);
 
+	// ワールドトランスフォーム
+	worldTransform_.Initialize(model_->GetRootNode());
+	worldTransform_.transform_ = data->transform;
+	worldTransform_.UpdateMatrix();
+
 	// マテリアル
 	material_.reset(Material::Create());
+
+}
+
+void MeshObject::Draw(BaseCamera& camera)
+{
+
+
+	ModelDraw::NormalObjectDesc desc;
+
+	desc.model = model_;
+	desc.material = material_.get();
+	desc.camera = &camera;
+	desc.worldTransform = &worldTransform_;
+
+	ModelDraw::NormalObjectDraw(desc);
 
 }

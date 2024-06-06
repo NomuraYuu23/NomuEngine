@@ -19,6 +19,17 @@ public:
 	/// <param name="levelDataManager">レベルデータマネージャー</param>
 	void Initialize(LevelIndex levelIndex, LevelDataManager* levelDataManager);
 
+	/// <summary>
+	/// 更新 考え中
+	/// </summary>
+	void Update() {};
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	void Draw(BaseCamera& camera);
+
 private:
 
 	// オブジェクト
