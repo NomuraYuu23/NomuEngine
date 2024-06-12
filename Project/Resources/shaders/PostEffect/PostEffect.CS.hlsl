@@ -940,16 +940,16 @@ float32_t4 Outline(in const float32_t2 index) {
 
 	float32_t2 difference = float32_t2(0.0f, 0.0f);
 
-	for (int32_t x = 0; x < 3; ++x) {
-		for (int32_t y = 0; y < 3; ++y) {
+	for (int32_t x = -1; x < 2; ++x) {
+		for (int32_t y = -1; y < 2; ++y) {
 			// uv
 			float32_t2 indexTmp = index;
 			indexTmp += float32_t2(float32_t(x), float32_t(y)) * gComputeConstants.sigma;
 
 			float32_t3 fetchColor = sourceImage0[indexTmp].rgb;
 			float32_t luminance = Luminance(fetchColor);
-			difference.x += luminance * kPrewittHorizontalKernel[x][y];
-			difference.y += luminance * kPrewittVerticalKernel[x][y];
+			difference.x += luminance * kPrewittHorizontalKernel[x + 1][y + 1];
+			difference.y += luminance * kPrewittVerticalKernel[x + 1][y + 1];
 
 		}
 	}
