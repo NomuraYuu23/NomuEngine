@@ -86,9 +86,7 @@ public: // サブクラス
 		kPipelineIndexFlarePara, // フレア パラ
 		kPipelineIndexGrayScale, // グレイスケール
 		kPipelineIndexSepia, // セピア
-
-		kPipelineIndexGlitchRGBShift, // グリッチRGB
-		kPipelineIndexTAKEYARIMONOGATARI_First,  // 竹槍物語用
+		kPipelineIndexOutline, // アウトライン
 
 		kPipelineIndexOfCount // 数を数える用（穴埋め用）
 	};
@@ -112,8 +110,7 @@ public: // サブクラス
 		kCommandIndexFlarePara, // フレアパラ
 		kCommandIndexGrayScale, // グレイスケール
 		kCommandIndexSepia, // セピア
-		kCommandIndexGlitchRGBShift, // グリッチとRGB
-		kCommandIndexTAKEYARIMONOGATARI_First,  // 竹槍物語用
+		kCommandIndexOutline, // アウトライン
 
 		kCommandIndexOfCount // 数を数えるよう
 	};
@@ -148,8 +145,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainFlarePara"}, // フレア パラ
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
-		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGlitchRGBShift"}, // グリッチRGB
-		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainTAKEYARIMONOGATARI_First"}, // 竹槍物語用
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainOutline"}, // アウトライン
 	};
 
 	// コマンド情報(コマンド実行可能回数4回)
@@ -171,8 +167,7 @@ private: // 定数
 			{kPipelineIndexFlarePara, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // フレアパラ
 			{kPipelineIndexGrayScale, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // グレイスケール
 			{kPipelineIndexSepia, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // セピア
-			{kPipelineIndexGlitchRGBShift, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // グリッチとRGB
-			{kPipelineIndexTAKEYARIMONOGATARI_First, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // 竹槍物語用
+			{kPipelineIndexOutline, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // アウトライン
 		},
 	};
 

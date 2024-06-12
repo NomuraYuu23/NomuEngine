@@ -1325,6 +1325,9 @@
     <FxCompile Include="Resources\shaders\Model\ModelRT2.PS.hlsl">
       <Filter>shaders\Model\PS_hlsli</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffect\LuminanceBasedOutline.CS.hlsl">
+      <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">
