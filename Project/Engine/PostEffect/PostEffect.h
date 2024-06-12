@@ -61,6 +61,8 @@ public: // サブクラス
 		Vector2 paraSize; // パラの大きさ
 		Vector2 paraPosition; // パラの位置
 
+		Matrix4x4 projectionInverse; // プロジェクション逆行列
+
 		int32_t executionFlag; // 実行フラグ(複数組み合わせたときのやつ)
 
 	};
@@ -406,6 +408,12 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="paraPosition">パラの位置</param>
 	void SetParaPosition(const Vector2& paraPosition) { computeParametersMap_->paraPosition = paraPosition; }
+
+	/// <summary>
+	/// プロジェクション逆行列設定
+	/// </summary>
+	/// <param name="projectionInverse">プロジェクション逆行列</param>
+	void SetProjectionInverse(const Matrix4x4& projectionInverse) { computeParametersMap_->projectionInverse = projectionInverse; }
 
 	/// <summary>
 	/// 実行フラグ設定

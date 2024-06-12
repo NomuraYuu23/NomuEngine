@@ -27,6 +27,16 @@ public: // サブクラス
 		kResouceStateIndexOfCount // 数を数える
 	};
 
+	/// <summary>
+	/// depth版 リソースステート
+	/// </summary>
+	enum DepthTextureResouceStateIndex {
+		kDepthTextureResouceStateIndexDepthWrite, // 深度値書き込み
+		kDepthTextureResouceStateIndexPixelShaderResource, // ピクセルシェーダリソース
+		kDepthTextureResouceStateIndexNonPixelShaderResource, // ピクセルシェーダ以外のリソース
+		kDepthTextureResouceStateIndexOfCount // 数を数える
+	};
+
 public: 
 
 	/// <summary>
@@ -90,11 +100,32 @@ public:
 	void TextureDraw(uint32_t resourceIndex);
 
 	/// <summary>
+	/// depth版 深度値書き込みリソースに変更
+	/// </summary>
+	void DepthTextureChangeDepthWriteResource();
+
+	/// <summary>
+	/// depth版 ピクセルシェーダーリソースに変更
+	/// </summary>
+	void DepthTextureChangePixelShaderResource();
+
+	/// <summary>
+	/// depth版 Nonピクセルシェーダーリソースに変更
+	/// </summary>
+	void DepthTextureChangeNonPixelShaderResource();
+
+	/// <summary>
 	/// GPUハンドル入手
 	/// </summary>
 	/// <param name="index"></param>
 	/// <returns></returns>
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrvGPUHandle(uint32_t index) { return srvGPUHandles_[index]; }
+
+	/// <summary>
+	/// 深度値テクスチャのGPUハンドル入手
+	/// </summary>
+	/// <returns></returns>
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetDepthSrvGPUHandle() { return depthSrvGPUHandles_; }
 
 private: // 関数
 
@@ -104,6 +135,12 @@ private: // 関数
 	/// <param name="resourceIndex">リソースインデックス</param>
 	/// <returns></returns>
 	D3D12_RESOURCE_STATES GetStateBefore(uint32_t resourceIndex);
+
+	/// <summary>
+	/// depth版 遷移前（現在）のResouceState取得
+	/// </summary>
+	/// <returns></returns>
+	D3D12_RESOURCE_STATES GetDepthTextureStateBefore();
 
 private: // 変数
 
@@ -136,11 +173,20 @@ private: // 変数
 	// DSVのIndex
 	uint32_t dsvIndexDescriptorHeap_;
 
+	// depthのSRVのハンドル(CPU)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE depthSrvCPUHandles_;
+	// depthのSRVのハンドル(GPU)
+	CD3DX12_GPU_DESCRIPTOR_HANDLE depthSrvGPUHandles_;
+	// depthのSRVのインデックス
+	uint32_t depthSrvIndexDescriptorHeaps_;
+
 	// コマンドリスト
 	ID3D12GraphicsCommandList* commandList_;
 
 	// リソースステート
 	ResouceStateIndex resouceStates_[kResourceNum_];
+
+	DepthTextureResouceStateIndex depthTextureResouceStateIndex_;
 
 };
 

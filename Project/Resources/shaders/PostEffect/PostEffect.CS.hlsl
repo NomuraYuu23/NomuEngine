@@ -53,6 +53,8 @@ struct ComputeParameters {
 	float32_t2 paraSize; // パラの大きさ
 	float32_t2 paraPosition; // パラの位置
 
+	float32_t4x4 projectionInverse; // プロジェクション逆行列
+
 	uint32_t executionFlag;  // 実行フラグ(複数組み合わせたときのやつ)
 
 };
@@ -97,11 +99,12 @@ Texture2D<float32_t4> sourceImage5 : register(t5);
 Texture2D<float32_t4> sourceImage6 : register(t6);
 Texture2D<float32_t4> sourceImage7 : register(t7);
 
+// 深度値
+Texture2D<float32_t4> depthTexture : register(t8);
+
 // 行先
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
 RWTexture2D<float32_t4> destinationImage1 : register(u1);
-
-SamplerState gSampler : register(s0);
 
 // 明度の高いところを白で書き込む、それ以外は黒を書き込む
 float32_t4 BinaryThreshold(in const float32_t4 input) {
@@ -946,16 +949,20 @@ float32_t4 Outline(in const float32_t2 index) {
 			float32_t2 indexTmp = index;
 			indexTmp += float32_t2(float32_t(x), float32_t(y)) * gComputeConstants.sigma;
 
-			float32_t3 fetchColor = sourceImage0[indexTmp].rgb;
-			float32_t luminance = Luminance(fetchColor);
-			difference.x += luminance * kPrewittHorizontalKernel[x + 1][y + 1];
-			difference.y += luminance * kPrewittVerticalKernel[x + 1][y + 1];
+			float32_t ndcDepth = depthTexture[indexTmp].r;
+
+			float32_t4 viewSpace = mul(float32_t4(0.0f, 0.0f, ndcDepth, 1.0f), gComputeConstants.projectionInverse);
+
+			float32_t viewZ = viewSpace.z * rcp(viewSpace.w);
+
+			difference.x += viewZ * kPrewittHorizontalKernel[x + 1][y + 1];
+			difference.y += viewZ * kPrewittVerticalKernel[x + 1][y + 1];
 
 		}
 	}
 
 	float32_t weight = length(difference);
-	weight = saturate(weight * 6.0f);
+	weight = saturate(weight);
 
 	float32_t4 output;
 	output.rgb = (1.0f - weight) * sourceImage0[index].rgb;

@@ -71,6 +71,8 @@ void PostEffect::Initialize()
 	computeParametersMap_->paraSize = { 0.3f, 0.3f };// パラの大きさ
 	computeParametersMap_->paraPosition = { 1.0f, 1.0f }; // パラの位置
 
+	computeParametersMap_->projectionInverse = Matrix4x4::MakeIdentity4x4(); // プロジェクション逆行列
+
 	computeParametersMap_->executionFlag = 15;
 
 	// ルートシグネチャ
@@ -166,6 +168,8 @@ void PostEffect::Execution(
 		renderTargetTexture->ChangeNonPixelShaderResource(i);
 	}
 
+	renderTargetTexture->DepthTextureChangeNonPixelShaderResource();
+
 	for (uint32_t i = 0; i < 4; ++i) {
 
 		// 処理が残っているか
@@ -220,6 +224,10 @@ void PostEffect::Execution(
 			rootParameterIndex++;
 		}
 
+		// 深度値
+		commandList_->SetComputeRootDescriptorTable(rootParameterIndex, renderTargetTexture->GetDepthSrvGPUHandle());
+		rootParameterIndex++;
+
 		// 行先
 		for (uint32_t i = 0; i < kNumEditTexture; ++i) {
 			editTextures_[i]->SetRootDescriptorTable(commandList_, rootParameterIndex);
@@ -235,6 +243,7 @@ void PostEffect::Execution(
 	for (uint32_t i = 0; i < 8; ++i) {
 		renderTargetTexture->ChangeRenderTarget(i);
 	}
+	renderTargetTexture->DepthTextureChangeDepthWriteResource();
 
 	// コマンドリスト
 	commandList_ = nullptr;
@@ -250,7 +259,7 @@ void PostEffect::CreateRootSignature()
 	descriptionRootsignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	// ルートパラメータ
-	D3D12_ROOT_PARAMETER rootParameters[19] = {};
+	D3D12_ROOT_PARAMETER rootParameters[20] = {};
 	uint32_t rootParametersIndex = 0;
 
 	// 定数バッファ * 1
@@ -266,10 +275,10 @@ void PostEffect::CreateRootSignature()
 	
 	}
 
-	descriptorRanges_.resize(10);
+	descriptorRanges_.resize(11);
 
-	// ソース * 8
-	for (uint32_t i = 0; i < 8; ++i) {
+	// ソース * 8 + 1
+	for (uint32_t i = 0; i < 9; ++i) {
 
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = i;//iから始まる
@@ -289,6 +298,9 @@ void PostEffect::CreateRootSignature()
 	}
 
 	// 行先 * 2
+
+	uint32_t offset = 9;
+
 	for (uint32_t i = 0; i < 2; ++i) {
 
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
@@ -297,12 +309,12 @@ void PostEffect::CreateRootSignature()
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;//UAVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
 
-		descriptorRanges_[i + 8].push_back(descriptorRange[0]);
+		descriptorRanges_[i + offset].push_back(descriptorRange[0]);
 
 		rootParameters[rootParametersIndex].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//DescriptorTableを使う
 		rootParameters[rootParametersIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;//全てで使う
-		rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges_[i + 8].data();//Tableの中身の配列を指定
-		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[i + 8].size());//Tableで利用する数
+		rootParameters[rootParametersIndex].DescriptorTable.pDescriptorRanges = descriptorRanges_[i + offset].data();//Tableの中身の配列を指定
+		rootParameters[rootParametersIndex].DescriptorTable.NumDescriptorRanges = static_cast<uint32_t>(descriptorRanges_[i + offset].size());//Tableで利用する数
 
 		rootParametersIndex++;
 

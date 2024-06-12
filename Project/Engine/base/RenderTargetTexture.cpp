@@ -62,6 +62,23 @@ void RenderTargetTexture::Initialize(
 	//DSVの生成
 	device->CreateDepthStencilView(dsvResource_.Get(), &dsvDesc, dsvHandle_);
 
+	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
+
+	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	depthTextureSrvDesc.Texture2D.MipLevels = 1;
+	
+	//SRVを作成するDescriptorHeapの場所を決める
+	depthSrvCPUHandles_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	depthSrvGPUHandles_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	depthSrvIndexDescriptorHeaps_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+
+	device->CreateShaderResourceView(dsvResource_.Get(), &depthTextureSrvDesc, depthSrvCPUHandles_);
+
+	depthTextureResouceStateIndex_ = kDepthTextureResouceStateIndexDepthWrite;
+
 	for (uint32_t i = 0; i < kResourceNum_; ++i) {
 
 		// RTVリソース
@@ -285,6 +302,81 @@ void RenderTargetTexture::TextureDraw(uint32_t resourceIndex)
 
 }
 
+void RenderTargetTexture::DepthTextureChangeDepthWriteResource()
+{
+
+	assert(commandList_);
+	assert(depthTextureResouceStateIndex_ != kDepthTextureResouceStateIndexDepthWrite);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = dsvResource_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = GetDepthTextureStateBefore();
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	//TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier);
+
+	depthTextureResouceStateIndex_ = kDepthTextureResouceStateIndexDepthWrite;
+
+}
+
+void RenderTargetTexture::DepthTextureChangePixelShaderResource()
+{
+
+	assert(commandList_);
+	assert(depthTextureResouceStateIndex_ != kDepthTextureResouceStateIndexPixelShaderResource);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = dsvResource_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = GetDepthTextureStateBefore();
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier);
+
+	depthTextureResouceStateIndex_ = kDepthTextureResouceStateIndexPixelShaderResource;
+
+}
+
+void RenderTargetTexture::DepthTextureChangeNonPixelShaderResource()
+{
+
+	assert(commandList_);
+	assert(depthTextureResouceStateIndex_ != kDepthTextureResouceStateIndexNonPixelShaderResource);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = dsvResource_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = GetDepthTextureStateBefore();
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier);
+
+	depthTextureResouceStateIndex_ = kDepthTextureResouceStateIndexNonPixelShaderResource;
+
+}
+
 D3D12_RESOURCE_STATES RenderTargetTexture::GetStateBefore(uint32_t resourceIndex)
 {
 
@@ -307,4 +399,29 @@ D3D12_RESOURCE_STATES RenderTargetTexture::GetStateBefore(uint32_t resourceIndex
 	}
 
 	return result;
+}
+
+D3D12_RESOURCE_STATES RenderTargetTexture::GetDepthTextureStateBefore()
+{
+
+	D3D12_RESOURCE_STATES result = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+
+	switch (depthTextureResouceStateIndex_)
+	{
+	case RenderTargetTexture::kDepthTextureResouceStateIndexDepthWrite:
+		result = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+		break;
+	case RenderTargetTexture::kDepthTextureResouceStateIndexPixelShaderResource:
+		result = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		break;
+	case RenderTargetTexture::kDepthTextureResouceStateIndexNonPixelShaderResource:
+		result = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+		break;
+	default:
+		assert(0);
+		break;
+	}
+
+	return result;
+
 }
