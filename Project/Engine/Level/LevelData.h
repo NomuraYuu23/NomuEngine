@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "../3D/TransformStructure.h"
+#include "../Collider/Collider.h"
+#include "../Collider/ColliderShape.h"
 
 class LevelData
 {
@@ -25,6 +27,9 @@ public: // サブクラス
 	/// </summary>
 	struct MeshData
 	{
+
+		~MeshData();
+
 		// 名前
 		std::string name;
 		// トランスフォーム
@@ -36,6 +41,10 @@ public: // サブクラス
 		std::string directoryPath;
 		// クラスの名前
 		std::string className;
+
+		// コライダー
+		ColliderShape collider;
+
 	};
 
 	/// <summary>

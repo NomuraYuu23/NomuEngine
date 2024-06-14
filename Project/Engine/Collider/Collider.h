@@ -29,6 +29,7 @@ public: //メンバ関数 (衝突)
 	void SetCollisionMask(uint32_t collisionMask) { collisionMask_ = collisionMask; }
 	
 	ColliderParentObject GetParentObject() { return parentObject_; }
+	void SetParentObject(ColliderParentObject parentObject) { parentObject_ = parentObject; }
 
 public:
 	// ワールドトランスフォーム

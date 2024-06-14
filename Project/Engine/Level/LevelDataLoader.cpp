@@ -1,6 +1,7 @@
 #include "LevelDataLoader.h"
 #include <fstream>
 #include <cassert>
+#include "../Collider/OBB/OBB.h"
 
 const std::string LevelDataLoader::kFileDirectoryName = "Resources/Level/";
 
@@ -193,6 +194,11 @@ void LevelDataLoader::MeshLoad(LevelData* levelData, nlohmann::json& object)
 		objectData.className = object["className"];
 	}
 
+	// コライダーがあるならとってくる
+	if (object.contains("collider")) {
+		objectData.collider = ColliderLoad(object);
+	}
+
 }
 
 void LevelDataLoader::CameraLoad(LevelData* levelData, nlohmann::json& object)
@@ -251,6 +257,44 @@ EulerTransform LevelDataLoader::TransformLoad(nlohmann::json& object)
 	result.scale.x = static_cast<float>(transform["scaling"][0]);
 	result.scale.y = static_cast<float>(transform["scaling"][2]);
 	result.scale.z = static_cast<float>(transform["scaling"][1]);
+
+	return result;
+
+}
+
+ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
+{
+
+	ColliderShape result;
+
+	// トランスフォームのパラメータ読み込み
+	nlohmann::json& collider = object["collider"];
+
+	// タイプ別処理
+	if (collider["type"] == "BOX") {
+
+		result = new OBB();
+
+		// 中心座標
+		Vector3 center = {
+		static_cast<float>(collider["center"][0]),
+		static_cast<float>(collider["center"][2]),
+		static_cast<float>(collider["center"][1]) 
+		};
+
+		// 大きさ  半分に
+		Vector3 size = {
+		static_cast<float>(collider["size"][0]) / 2.0f,
+		static_cast<float>(collider["size"][2]) / 2.0f,
+		static_cast<float>(collider["size"][1]) / 2.0f
+		};
+
+		// 初期化
+		std::get<OBB*>(result)->Initialize(
+			center, Matrix4x4::MakeIdentity4x4(),
+			size, static_cast<ColliderParentObject>(nullptr));
+
+	}
 
 	return result;
 

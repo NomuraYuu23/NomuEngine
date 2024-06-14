@@ -1,5 +1,6 @@
 #include "LevelDataViewing.h"
 #include "../2D/ImguiManager.h"
+#include "../Collider/OBB/OBB.h"
 
 const std::array<const std::string, LevelIndex::kLevelIndexOfCount>* LevelDataViewing::fileNames_ = nullptr;
 
@@ -99,6 +100,9 @@ void LevelDataViewing::ObjectViewing(LevelData::MeshData* objectData)
 		ClassNameViewing(objectData->className);
 	}
 
+	// コライダー
+	ColliderViewing(objectData->collider);
+
 }
 
 void LevelDataViewing::ObjectViewing(LevelData::CameraData* objectData)
@@ -165,5 +169,25 @@ void LevelDataViewing::ClassNameViewing(const std::string& className)
 
 	std::string text = "CLASS_NAME::" + className;
 	ImGui::Text(text.c_str());
+
+}
+
+void LevelDataViewing::ColliderViewing(ColliderShape collider)
+{
+
+	// 名前
+	std::string text = "COLLIDER";
+
+	// OBBなら
+	if (std::holds_alternative<OBB*>(collider)) {
+
+		OBB* obb = std::get<OBB*>(collider);
+
+		ImGui::Text(text.c_str());
+		ImGui::Text("type   :: OBB");
+		ImGui::Text("center :: x: %.4f, y: %.4f, z: %.4f", obb->center_.x, obb->center_.y, obb->center_.z);
+		ImGui::Text("size   :: x: %.4f, y: %.4f, z: %.4f", obb->size_.x, obb->size_.y, obb->size_.z);
+
+	}
 
 }

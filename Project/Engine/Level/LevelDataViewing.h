@@ -85,6 +85,12 @@ private: // オブジェクトタイプごとの表示処理で使う関数
 	/// <param name="className">クラスの名前</param>
 	static void ClassNameViewing(const std::string& className);
 
+	/// <summary>
+	/// コライダー表示
+	/// </summary>
+	/// <param name="collider">コライダー</param>
+	static void ColliderViewing(ColliderShape collider);
+
 private: // 定数
 
 	// ファイルの名前
