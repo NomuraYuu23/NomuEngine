@@ -176,9 +176,21 @@ void LevelDataLoader::MeshLoad(LevelData* levelData, nlohmann::json& object)
 	objectData.transform = TransformLoad(object);
 
 	// ファイルの名前があるならとってくる
-	if (object.contains("file_name")) {
+	if (object.contains("fileName")) {
 		// ファイル名
-		objectData.flieName = object["file_name"];
+		objectData.flieName = object["fileName"];
+	}
+
+	// ディレクトリパスがあるならとってくる
+	if (object.contains("directoryPath")) {
+		// ファイル名
+		objectData.directoryPath = object["directoryPath"];
+	}
+
+	// クラスの名前があるならとってくる
+	if (object.contains("className")) {
+		// ファイル名
+		objectData.className = object["className"];
 	}
 
 }

@@ -33,8 +33,11 @@ public: // 関数
 
 protected: // 変数
 
-    //  ファイル名前
-    std::string fileNmae_;
+    // ファイル名前
+    std::string fileName_;
+
+    // ディレクトリパス
+    std::string directoryPath_;
 
     // モデル
     Model* model_ = nullptr;

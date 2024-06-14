@@ -62,16 +62,28 @@ private: // オブジェクトタイプごとの表示処理で使う関数
 	static void NamaViewing(const std::string& name);
 
 	/// <summary>
+	/// トランスフォーム表示
+	/// </summary>
+	/// <param name="transform">トランスフォーム</param>
+	static void TransformViewing(EulerTransform& transform);
+
+	/// <summary>
 	/// ファイルの名前表示
 	/// </summary>
 	/// <param name="fileName">ファイルの名前</param>
 	static void FileNameViewing(const std::string& fileName);
 
 	/// <summary>
-	/// トランスフォーム表示
+	/// ディレクトリパス表示
 	/// </summary>
-	/// <param name="transform">トランスフォーム</param>
-	static void TransformViewing(EulerTransform& transform);
+	/// <param name="directoryPath">ディレクトリパス</param>
+	static void DirectoryPathViewing(const std::string& directoryPath);
+
+	/// <summary>
+	/// クラスの名前表示
+	/// </summary>
+	/// <param name="className">クラスの名前</param>
+	static void ClassNameViewing(const std::string& className);
 
 private: // 定数
 

@@ -21,31 +21,22 @@
                     1.0
                 ]
             },
-            "file_name": "Ball.obj",
-            "children": [
-                {
-                    "type": "MESH",
-                    "name": "ICO球",
-                    "transform": {
-                        "translation": [
-                            2.0,
-                            0.0,
-                            0.0
-                        ],
-                        "rotation": [
-                            0.0,
-                            -0.0,
-                            0.0
-                        ],
-                        "scaling": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "file_name": "Ball.obj"
-                }
-            ]
+            "fileName": "teapot.obj",
+            "directoryPath": "Resources/default/",
+            "className": "SampleObject",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         },
         {
             "type": "LIGHT",
@@ -87,6 +78,39 @@
                     1.0,
                     1.0
                 ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "球",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -4.269999980926514,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "fileName": "Ball.obj",
+            "directoryPath": "Resources/default/",
+            "className": "SampleObject",
+            "collider": {
+                "type": "SPHERE",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "radius": 2
             }
         }
     ]

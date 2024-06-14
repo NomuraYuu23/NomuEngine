@@ -27,10 +27,15 @@ public: // サブクラス
 	{
 		// 名前
 		std::string name;
-		// ファイルの名前
-		std::string flieName;
 		// トランスフォーム
 		EulerTransform transform;
+
+		// ファイルの名前
+		std::string flieName;
+		// ディレクトリパス
+		std::string directoryPath;
+		// クラスの名前
+		std::string className;
 	};
 
 	/// <summary>

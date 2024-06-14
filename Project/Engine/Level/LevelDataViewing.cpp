@@ -20,7 +20,7 @@ void LevelDataViewing::Initialize(std::array<std::unique_ptr<LevelData>, LevelIn
 void LevelDataViewing::ImGuiViewing()
 {
 
-	ImGui::Begin("EnemyEditor");
+	ImGui::Begin("LevelData");
 
 	// 閲覧するlevelを切り替える
 	ViewingIndexChange();
@@ -81,13 +81,23 @@ void LevelDataViewing::ObjectViewing(LevelData::MeshData* objectData)
 	// 名前
 	NamaViewing(objectData->name);
 
+	// トランスフォーム
+	TransformViewing(objectData->transform);
+
 	// ファイルの名前
 	if (!objectData->flieName.empty()) {
 		FileNameViewing(objectData->flieName);
 	}
 
-	// トランスフォーム
-	TransformViewing(objectData->transform);
+	// ディレクトリパス
+	if (!objectData->directoryPath.empty()) {
+		DirectoryPathViewing(objectData->directoryPath);
+	}
+
+	// クラスの名前
+	if (!objectData->className.empty()) {
+		ClassNameViewing(objectData->className);
+	}
 
 }
 
@@ -121,14 +131,6 @@ void LevelDataViewing::NamaViewing(const std::string& name)
 
 }
 
-void LevelDataViewing::FileNameViewing(const std::string& fileName)
-{
-
-	std::string text = "FILE_NAME::" + fileName;
-	ImGui::Text(text.c_str());
-
-}
-
 void LevelDataViewing::TransformViewing(EulerTransform& transform)
 {
 
@@ -139,5 +141,29 @@ void LevelDataViewing::TransformViewing(EulerTransform& transform)
 	ImGui::Text("tlanslation :: x: %.4f, y: %.4f, z: %.4f", transform.translate.x, transform.translate.y, transform.translate.z);
 	ImGui::Text("rotation     :: x: %.4f, y: %.4f, z: %.4f", transform.rotate.x, transform.rotate.y, transform.rotate.z);
 	ImGui::Text("scaling      :: x: %.4f, y: %.4f, z: %.4f", transform.scale.x, transform.scale.y, transform.scale.z);
+
+}
+
+void LevelDataViewing::FileNameViewing(const std::string& fileName)
+{
+
+	std::string text = "FILE_NAME::" + fileName;
+	ImGui::Text(text.c_str());
+
+}
+
+void LevelDataViewing::DirectoryPathViewing(const std::string& directoryPath)
+{
+
+	std::string text = "DIRECTORY_PATH::" + directoryPath;
+	ImGui::Text(text.c_str());
+
+}
+
+void LevelDataViewing::ClassNameViewing(const std::string& className)
+{
+
+	std::string text = "CLASS_NAME::" + className;
+	ImGui::Text(text.c_str());
 
 }

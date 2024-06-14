@@ -9,11 +9,13 @@ void MeshObject::Initialize(LevelData::MeshData* data)
 	name_ = data->name;
 
 	// ファイルの名前
-	fileNmae_ = data->flieName;
+	fileName_ = data->flieName;
+
+	// ディレクトリパス
+	directoryPath_ = data->directoryPath;
 
 	// モデル
-	// ディレクトリパスがまだ
-	model_ = ModelManager::GetInstance()->GetModel("Resources/default", fileNmae_);
+	model_ = ModelManager::GetInstance()->GetModel(directoryPath_, fileName_);
 
 	// ワールドトランスフォーム
 	worldTransform_.Initialize(model_->GetRootNode());
