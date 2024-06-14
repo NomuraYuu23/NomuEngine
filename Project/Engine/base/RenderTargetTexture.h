@@ -147,6 +147,9 @@ private: // 変数
 	// リソースの数
 	static const uint32_t kResourceNum_ = 8;
 
+	// クリアするときの色
+	static const Vector4 kClearColor_;
+
 	// 幅
 	int32_t backBufferWidth_;
 	// 高さ

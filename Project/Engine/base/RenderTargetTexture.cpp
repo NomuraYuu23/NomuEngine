@@ -6,6 +6,8 @@
 #include "BufferResource.h"
 #include "WindowSprite.h"
 
+const Vector4 RenderTargetTexture::kClearColor_ = { 0.0f,1.0f,0.0,1.0f };
+
 void RenderTargetTexture::Initialize(
 	ID3D12Device* device,
 	int32_t backBufferWidth,
@@ -79,6 +81,14 @@ void RenderTargetTexture::Initialize(
 
 	depthTextureResouceStateIndex_ = kDepthTextureResouceStateIndexDepthWrite;
 
+	// Clearの最適値
+	D3D12_CLEAR_VALUE clearValue;
+	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	clearValue.Color[0] = kClearColor_.x;
+	clearValue.Color[1] = kClearColor_.y;
+	clearValue.Color[2] = kClearColor_.z;
+	clearValue.Color[3] = kClearColor_.w;
+
 	for (uint32_t i = 0; i < kResourceNum_; ++i) {
 
 		// RTVリソース
@@ -101,7 +111,7 @@ void RenderTargetTexture::Initialize(
 			D3D12_HEAP_FLAG_NONE, //Heapの特殊な設定。特になし。
 			&rtvResouceDesc, //Resourceの設定
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, //データ転送される設定
-			nullptr, //Clear最適値。使わないのでnullptr
+			&clearValue, //Clear最適値
 			IID_PPV_ARGS(&resources_[i])); //作成するResourceポインタへのポインタ
 		assert(SUCCEEDED(hr));
 
@@ -198,7 +208,11 @@ void RenderTargetTexture::ClearRenderTarget(uint32_t resourceIndex)
 {
 
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+	float clearColor[] = { 
+		kClearColor_.x,
+		kClearColor_.y,
+		kClearColor_.z,
+		kClearColor_.w };
 	commandList_->ClearRenderTargetView(rtvHandles_[resourceIndex], clearColor, 0, nullptr);
 
 }

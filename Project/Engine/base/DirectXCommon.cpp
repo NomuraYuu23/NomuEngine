@@ -41,6 +41,10 @@ void DirectXCommon::Initialize(
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
+#ifdef _DEBUG
+	DebugLayer();
+#endif // DEBUG
+
 	// FPS固定初期化
 	InitializeFixFPS();
 
@@ -189,6 +193,20 @@ void DirectXCommon::UpdateFixFPS()
 	}
 	// 現在の時間を記録する
 	reference_ = std::chrono::steady_clock::now();
+
+}
+
+void DirectXCommon::DebugLayer()
+{
+
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
+
+		// デバッグレイヤーを有効化する
+		debugController_->EnableDebugLayer();
+		// GPU
+		debugController_->SetEnableGPUBasedValidation(TRUE);
+
+	}
 
 }
 

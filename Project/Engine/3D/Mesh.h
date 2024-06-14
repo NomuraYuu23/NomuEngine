@@ -50,7 +50,6 @@ public: // 関数
 	/// UAVバッファビュー
 	/// </summary>
 	/// <returns></returns>
-	D3D12_VERTEX_BUFFER_VIEW* GetVbViewUAV() { return &vbViewUAV_; }
 	void SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 	void SetGraphicsRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
@@ -127,8 +126,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuffUAV_;
 	// UAVバッファマップ
 	VertexData* vertMapUAV_ = nullptr;
-	// UAVバッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbViewUAV_{};
 
 	// CPUハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE vertUAVHandleCPU_{};

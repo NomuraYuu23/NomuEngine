@@ -57,7 +57,7 @@ ID3D12Resource* BufferResource::CreateBufferResourceUAV(ID3D12Device* device, co
 	//実際に頂点リソースを作る
 	ID3D12Resource* resource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-		&resourceDesc, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
+		&resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
 		IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
 

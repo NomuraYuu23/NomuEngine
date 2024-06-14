@@ -97,6 +97,9 @@ private:
 	// レンダーターゲット
 	std::unique_ptr<RenderTargetTexture> renderTargetTexture_;
 
+	// デバッグレイヤー
+	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController_;
+
 private: // シングルトン
 	DirectXCommon() = default;
 	~DirectXCommon() = default;
@@ -119,6 +122,11 @@ private: // 関数
 	/// FPS固定更新
 	/// </summary>
 	void UpdateFixFPS();
+
+	/// <summary>
+	/// デバッグレイヤー
+	/// </summary>
+	void DebugLayer();
 
 };
 
