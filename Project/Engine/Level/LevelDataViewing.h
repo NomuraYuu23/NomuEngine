@@ -89,7 +89,7 @@ private: // オブジェクトタイプごとの表示処理で使う関数
 	/// コライダー表示
 	/// </summary>
 	/// <param name="collider">コライダー</param>
-	static void ColliderViewing(ColliderShape* collider);
+	static void ColliderViewing(ColliderShape collider);
 
 private: // 定数
 

@@ -28,8 +28,6 @@ public: // サブクラス
 	struct MeshData
 	{
 
-		~MeshData();
-
 		// 名前
 		std::string name;
 		// トランスフォーム
@@ -43,7 +41,7 @@ public: // サブクラス
 		std::string className;
 
 		// コライダー
-		ColliderShape* collider;
+		ColliderShape collider;
 
 	};
 
