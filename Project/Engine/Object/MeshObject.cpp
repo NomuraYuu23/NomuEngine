@@ -25,6 +25,9 @@ void MeshObject::Initialize(LevelData::MeshData* data)
 	// マテリアル
 	material_.reset(Material::Create());
 
+
+	ColliderInitialize(data->collider);
+
 }
 
 void MeshObject::Draw(BaseCamera& camera)
@@ -39,5 +42,21 @@ void MeshObject::Draw(BaseCamera& camera)
 	desc.worldTransform = &worldTransform_;
 
 	ModelDraw::NormalObjectDraw(desc);
+
+}
+
+void MeshObject::ColliderInitialize(ColliderShape collider)
+{
+
+	// 値があるなら
+	if (std::holds_alternative<OBB>(collider)) {
+
+		ColliderShape* colliderShape = new ColliderShape();
+
+		*colliderShape = collider;
+
+		collider_.reset(colliderShape);
+
+	}
 
 }
