@@ -298,6 +298,29 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
 		result = obb;
 
 	}
+	// タイプ別処理
+	else if (collider["type"] == "SPHERE") {
+
+		Sphere sphere;
+
+		// 中心座標
+		Vector3 center = {
+		static_cast<float>(collider["center"][0]),
+		static_cast<float>(collider["center"][2]),
+		static_cast<float>(collider["center"][1])
+		};
+
+		// 大きさ  半分に
+		float radius = static_cast<float>(collider["radius"]) / 2.0f;
+
+		// 初期化
+
+		sphere.Initialize(
+			center, radius, static_cast<ColliderParentObject>(nullptr));
+
+		result = sphere;
+
+	}
 
 	return result;
 

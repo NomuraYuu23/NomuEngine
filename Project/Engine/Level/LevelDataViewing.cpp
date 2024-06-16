@@ -178,7 +178,7 @@ void LevelDataViewing::ColliderViewing(ColliderShape collider)
 	// 名前
 	std::string text = "COLLIDER";
 
-	// OBBなら
+	// OBB
 	if (std::holds_alternative<OBB>(collider)) {
 
 		OBB obb = std::get<OBB>(collider);
@@ -189,5 +189,17 @@ void LevelDataViewing::ColliderViewing(ColliderShape collider)
 		ImGui::Text("size   :: x: %.4f, y: %.4f, z: %.4f", obb.size_.x, obb.size_.y, obb.size_.z);
 
 	}
+	// SPHERE
+	else if (std::holds_alternative<Sphere>(collider)) {
+
+		Sphere sphere = std::get<Sphere>(collider);
+
+		ImGui::Text(text.c_str());
+		ImGui::Text("type   :: SPHERE");
+		ImGui::Text("center :: x: %.4f, y: %.4f, z: %.4f", sphere.center_.x, sphere.center_.y, sphere.center_.z);
+		ImGui::Text("radius :: %.4f", sphere.radius_);
+
+	}
+
 
 }

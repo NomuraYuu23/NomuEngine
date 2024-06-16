@@ -49,7 +49,7 @@ void MeshObject::ColliderInitialize(ColliderShape collider)
 {
 
 	// 値があるなら
-	if (std::holds_alternative<OBB>(collider)) {
+	if (std::holds_alternative<OBB>(collider) || std::holds_alternative<Sphere>(collider)) {
 
 		ColliderShape* colliderShape = new ColliderShape();
 
