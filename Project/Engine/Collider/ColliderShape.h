@@ -5,4 +5,4 @@
 #include "Sphere/Sphere.h"
 #include "Capsule/Capsule.h"
 
-using ColliderShape = std::variant<AABB*, OBB*, Sphere*, Capsule* >;
+using ColliderShape = std::variant<AABB, OBB, Sphere, Capsule>;

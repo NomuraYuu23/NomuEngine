@@ -172,21 +172,26 @@ void LevelDataViewing::ClassNameViewing(const std::string& className)
 
 }
 
-void LevelDataViewing::ColliderViewing(ColliderShape collider)
+void LevelDataViewing::ColliderViewing(ColliderShape* collider)
 {
+
+	// コライダーないのでreturn
+	if (!collider) {
+		return;
+	}
 
 	// 名前
 	std::string text = "COLLIDER";
 
 	// OBBなら
-	if (std::holds_alternative<OBB*>(collider)) {
+	if (std::holds_alternative<OBB>(*collider)) {
 
-		OBB* obb = std::get<OBB*>(collider);
+		OBB obb = std::get<OBB>(*collider);
 
 		ImGui::Text(text.c_str());
 		ImGui::Text("type   :: OBB");
-		ImGui::Text("center :: x: %.4f, y: %.4f, z: %.4f", obb->center_.x, obb->center_.y, obb->center_.z);
-		ImGui::Text("size   :: x: %.4f, y: %.4f, z: %.4f", obb->size_.x, obb->size_.y, obb->size_.z);
+		ImGui::Text("center :: x: %.4f, y: %.4f, z: %.4f", obb.center_.x, obb.center_.y, obb.center_.z);
+		ImGui::Text("size   :: x: %.4f, y: %.4f, z: %.4f", obb.size_.x, obb.size_.y, obb.size_.z);
 
 	}
 

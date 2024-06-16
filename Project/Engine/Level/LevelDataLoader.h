@@ -107,7 +107,7 @@ private: // オブジェクトタイプごとの読み込みで使う関数
 	/// </summary>
 	/// <param name="object">オブジェクト</param>
 	/// <returns>コライダー</returns>
-	static ColliderShape ColliderLoad(nlohmann::json& object);
+	static ColliderShape* ColliderLoad(nlohmann::json& object);
 
 };
 

@@ -262,10 +262,8 @@ EulerTransform LevelDataLoader::TransformLoad(nlohmann::json& object)
 
 }
 
-ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
+ColliderShape* LevelDataLoader::ColliderLoad(nlohmann::json& object)
 {
-
-	ColliderShape result;
 
 	// トランスフォームのパラメータ読み込み
 	nlohmann::json& collider = object["collider"];
@@ -273,7 +271,11 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
 	// タイプ別処理
 	if (collider["type"] == "BOX") {
 
-		result = new OBB();
+		ColliderShape* result;
+
+		result = new ColliderShape();
+
+		OBB obb;
 
 		// 中心座標
 		Vector3 center = {
@@ -290,12 +292,17 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
 		};
 
 		// 初期化
-		std::get<OBB*>(result)->Initialize(
+
+		obb.Initialize(
 			center, Matrix4x4::MakeIdentity4x4(),
 			size, static_cast<ColliderParentObject>(nullptr));
 
+		*result = obb;
+
+		return result;
+
 	}
 
-	return result;
+	return nullptr;
 
 }

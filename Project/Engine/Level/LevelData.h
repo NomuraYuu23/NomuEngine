@@ -43,7 +43,7 @@ public: // サブクラス
 		std::string className;
 
 		// コライダー
-		ColliderShape collider;
+		ColliderShape* collider;
 
 	};
 

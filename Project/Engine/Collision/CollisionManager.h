@@ -20,7 +20,7 @@ public: // メンバ関数
 	void ListClear();
 
 	// リスト登録
-	void ListRegister(ColliderShape collider);
+	void ListRegister(ColliderShape* collider);
 
 	// 衝突判定と応答
 	void CheakAllCollision();
@@ -28,9 +28,9 @@ public: // メンバ関数
 private:
 
 	// コライダーリスト
-	std::list<ColliderShape> colliders_;
+	std::list<ColliderShape*> colliders_;
 
 	// コライダー2つの衝突判定と応答
-	void CheckCollisionPair(ColliderShape colliderA, ColliderShape colliderB);
+	void CheckCollisionPair(ColliderShape* colliderA, ColliderShape* colliderB);
 
 };
