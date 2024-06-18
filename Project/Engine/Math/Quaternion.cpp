@@ -227,6 +227,29 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 
 }
 
+Quaternion Quaternion::DirectionToDirection(const Vector3& v0, const Vector3& v1)
+{
+
+	// n
+	Vector3 n = Vector3::Cross(v0, v1);
+
+	// cosTheta
+	float cosTheta = Vector3::Dot(v0, v1);
+
+	// なす角を求める
+	float theta = acosf(cosTheta);
+
+	Quaternion result = {
+		n.x * sinf(theta / 2.0f),
+		n.y * sinf(theta / 2.0f),
+		n.z * sinf(theta / 2.0f),
+		cosf(theta)
+	};
+
+	return result;
+
+}
+
 Quaternion Quaternion::operator+(const Quaternion& v)
 {
 

@@ -42,6 +42,8 @@ public:
 
 	static Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
 
+    static Quaternion DirectionToDirection(const Vector3& v0, const Vector3& v1);
+
 public: // オーバーロード
 
     /// <summary>
