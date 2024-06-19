@@ -150,7 +150,7 @@ void GameScene::Initialize() {
 
 	PostEffect::GetInstance()->SetThreshold(0.1f);
 	PostEffect::GetInstance()->SetKernelSize(33);
-	PostEffect::GetInstance()->SetSigma(33.0f);
+	PostEffect::GetInstance()->SetGaussianSigma(33.0f);
 
 	// モデルマネージャー
 	modelManager_->Initialize(dxCommon_, textureHandleManager_.get());

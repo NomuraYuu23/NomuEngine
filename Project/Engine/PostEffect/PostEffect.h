@@ -30,7 +30,7 @@ public: // サブクラス
 		Vector4 clearColor; // クリアするときの色
 
 		int32_t kernelSize; // カーネルサイズ
-		float sigma; // 標準偏差
+		float gaussianSigma; // 標準偏差
 		Vector2 rShift; // Rずらし
 
 		Vector2 gShift; // Gずらし
@@ -62,6 +62,8 @@ public: // サブクラス
 		Vector2 paraPosition; // パラの位置
 
 		Matrix4x4 projectionInverse; // プロジェクション逆行列
+
+		float outlineSigma; // 標準偏差
 
 		int32_t executionFlag; // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -268,8 +270,8 @@ public: // アクセッサ
 	/// <summary>
 	/// 標準偏差設定
 	/// </summary>
-	/// <param name="sigma">標準偏差</param>
-	void SetSigma(float sigma) { computeParametersMap_->sigma = sigma; }
+	/// <param name="gaussianSigma">標準偏差</param>
+	void SetGaussianSigma(float gaussianSigma) { computeParametersMap_->gaussianSigma = gaussianSigma; }
 
 	/// <summary>
 	/// 時間設定
@@ -414,6 +416,12 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="projectionInverse">プロジェクション逆行列</param>
 	void SetProjectionInverse(const Matrix4x4& projectionInverse) { computeParametersMap_->projectionInverse = projectionInverse; }
+
+	/// <summary>
+	/// アウトライン標準偏差設定
+	/// </summary>
+	/// <param name="outlineSigma">標準偏差</param>
+	void SetOutlineSigma(float outlineSigma) { computeParametersMap_->outlineSigma = outlineSigma; }
 
 	/// <summary>
 	/// 実行フラグ設定

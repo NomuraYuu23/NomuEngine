@@ -36,7 +36,7 @@ void PostEffect::Initialize()
 	computeParametersMap_->threshold = 0.8f; // しきい値
 
 	computeParametersMap_->kernelSize = 7; // カーネルサイズ
-	computeParametersMap_->sigma = 1.0f; // 標準偏差
+	computeParametersMap_->gaussianSigma = 1.0f; // 標準偏差
 
 	computeParametersMap_->time = 0.0f; // 時間
 
@@ -72,6 +72,8 @@ void PostEffect::Initialize()
 	computeParametersMap_->paraPosition = { 1.0f, 1.0f }; // パラの位置
 
 	computeParametersMap_->projectionInverse = Matrix4x4::MakeIdentity4x4(); // プロジェクション逆行列
+
+	computeParametersMap_->outlineSigma = 1.0f; // 標準偏差
 
 	computeParametersMap_->executionFlag = 15;
 
@@ -109,7 +111,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::Text("time %6.2f", computeParametersMap_->time);
 	ImGui::DragFloat("threshold", &computeParametersMap_->threshold, 0.01f, 0.0f, 1.0f);
 	ImGui::DragInt("kernelSize", &computeParametersMap_->kernelSize, 2, 3, 55);
-	ImGui::DragFloat("sigma", &computeParametersMap_->sigma, 0.01f, 0.0f);
+	ImGui::DragFloat("gaussianSigma", &computeParametersMap_->gaussianSigma, 0.01f, 0.0f);
 	ImGui::DragFloat2("rShift", &computeParametersMap_->rShift.x, 0.01f);
 	ImGui::DragFloat2("gShift", &computeParametersMap_->gShift.x, 0.01f);
 	ImGui::DragFloat2("bShift", &computeParametersMap_->bShift.x, 0.01f);
@@ -132,6 +134,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::ColorEdit4("paraColor", &computeParametersMap_->paraColor.x);
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
+	ImGui::DragFloat("outlineSigma", &computeParametersMap_->outlineSigma, 0.01f);
 
 	ImGui::DragInt("executionFlag", &computeParametersMap_->executionFlag, 0.1f, 0, 31);
 

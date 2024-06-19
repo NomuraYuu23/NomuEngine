@@ -20,7 +20,7 @@ struct ComputeParameters {
 	float32_t4 clearColor; // クリアするときの色
 	
 	int32_t kernelSize; // カーネルサイズ
-	float32_t sigma; // 標準偏差
+	float32_t gaussianSigma; // 標準偏差
 	float32_t2 rShift; // Rずらし
 	
 	float32_t2 gShift; // Gずらし
@@ -54,6 +54,8 @@ struct ComputeParameters {
 	float32_t2 paraPosition; // パラの位置
 
 	float32_t4x4 projectionInverse; // プロジェクション逆行列
+	
+	float32_t outlineSigma; // アウトライン標準偏差
 
 	uint32_t executionFlag;  // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -194,7 +196,7 @@ float32_t4 GaussianBlurHorizontal(in const float32_t2 index) {
 		}
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 
 		// outputに加算
 		output += sourceImage0[indexTmp] * weight;
@@ -251,7 +253,7 @@ float32_t4 GaussianBlurVertical(in const float32_t2 index) {
 		}
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 
 		// outputに加算
 		output += destinationImage1[indexTmp] * weight;
@@ -315,7 +317,7 @@ float32_t4 Bloom(in const float32_t2 index, in const  float32_t2 dir) {
 		}
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 
 		// 色確認
 		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
@@ -365,7 +367,7 @@ float32_t4 BloomHorizontal(in const float32_t2 index) {
 		input = sourceImage0[indexTmp];
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 
 		// 色確認
 		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
@@ -428,7 +430,7 @@ float32_t4 BloomVertical(in const float32_t2 index) {
 		input = destinationImage1[indexTmp];
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 
 		// 色確認
 		if (((input.r + input.g + input.b) * rcp(3.0f) > gComputeConstants.threshold)) {
@@ -500,7 +502,7 @@ float32_t4 MotionBlur(in const float32_t2 index) {
 		input = sourceImage0[indexTmp];
 
 		// 重み確認
-		weight = Gauss(float32_t(i), gComputeConstants.sigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.sigma);
+		weight = Gauss(float32_t(i), gComputeConstants.gaussianSigma) + Gauss(float32_t(i) + 1.0f, gComputeConstants.gaussianSigma);
 		
 		// outputに加算
 		output += input * weight;
@@ -947,7 +949,7 @@ float32_t4 Outline(in const float32_t2 index) {
 		for (int32_t y = -1; y < 2; ++y) {
 			// uv
 			float32_t2 indexTmp = index;
-			indexTmp += float32_t2(float32_t(x), float32_t(y)) * gComputeConstants.sigma;
+			indexTmp += float32_t2(float32_t(x), float32_t(y)) * gComputeConstants.outlineSigma;
 
 			float32_t ndcDepth = depthTexture[indexTmp].r;
 
