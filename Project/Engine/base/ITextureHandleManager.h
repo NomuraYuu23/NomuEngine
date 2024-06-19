@@ -18,10 +18,12 @@ public: // メンバ関数
 
 	void ResetTextureHandles();
 
-protected: // メンバ変数
+public: // メンバ変数
 
 	// テクスチャハンドル
 	std::array<uint32_t, kNumTextureHandle> textureHandles_;
+
+private: // メンバ変数
 
 	// 次の格納場所
 	uint32_t indexNextTextureHandle_ = 0u;

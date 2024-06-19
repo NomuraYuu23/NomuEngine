@@ -18,6 +18,8 @@ void PostEffect::Initialize()
 	// デバイス取得
 	device_ = DirectXCommon::GetInstance()->GetDevice();
 
+	textureManager_ = TextureManager::GetInstance();
+
 	commandList_ = nullptr;
 
 	// 定数バッファ作成
@@ -74,6 +76,7 @@ void PostEffect::Initialize()
 	computeParametersMap_->projectionInverse = Matrix4x4::MakeIdentity4x4(); // プロジェクション逆行列
 
 	computeParametersMap_->outlineSigma = 1.0f; // 標準偏差
+	computeParametersMap_->maskThreshold = 0.5f; // マスクしきい値
 
 	computeParametersMap_->executionFlag = 15;
 
@@ -101,6 +104,9 @@ void PostEffect::Initialize()
 	// デフォルト衝撃波パラメータ
 	shockWaveManager_ = std::make_unique<ShockWaveManager>();
 	shockWaveManager_->Initialize();
+
+	// マスク用の画像の初期化
+	MaskTextureHandleManagerInitialize();
 
 }
 
@@ -135,6 +141,7 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 	ImGui::DragFloat("outlineSigma", &computeParametersMap_->outlineSigma, 0.01f);
+	ImGui::DragFloat("maskThreshold", &computeParametersMap_->maskThreshold, 0.01f);
 
 	ImGui::DragInt("executionFlag", &computeParametersMap_->executionFlag, 0.1f, 0, 31);
 
@@ -231,6 +238,10 @@ void PostEffect::Execution(
 		commandList_->SetComputeRootDescriptorTable(rootParameterIndex, renderTargetTexture->GetDepthSrvGPUHandle());
 		rootParameterIndex++;
 
+		// マスク
+		textureManager_->SetComputeRootDescriptorTable(commandList_, rootParameterIndex, useMaskTextureHandle_);
+		rootParameterIndex++;
+
 		// 行先
 		for (uint32_t i = 0; i < kNumEditTexture; ++i) {
 			editTextures_[i]->SetRootDescriptorTable(commandList_, rootParameterIndex);
@@ -253,6 +264,28 @@ void PostEffect::Execution(
 
 }
 
+void PostEffect::SetMaskTextureHandleNumber(uint32_t num)
+{
+
+	assert(maskTextureHandles_[num] < kMaskTextureIndexOfCount);
+
+	useMaskTextureHandle_ = maskTextureHandles_[num];
+
+}
+
+void PostEffect::MaskTextureHandleManagerInitialize()
+{
+
+	// マスク用の画像
+	maskTextureHandleManager_ = std::make_unique<ITextureHandleManager>();
+	maskTextureHandleManager_->Initialize();
+
+	for (uint32_t i = 0; i < kMaskTextureIndexOfCount; ++i) {
+		maskTextureHandles_[i] = TextureManager::Load(kMaskTextureDirectoryPaths_[i], DirectXCommon::GetInstance(), maskTextureHandleManager_.get());
+	}
+
+}
+
 void PostEffect::CreateRootSignature()
 {
 
@@ -262,7 +295,7 @@ void PostEffect::CreateRootSignature()
 	descriptionRootsignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	// ルートパラメータ
-	D3D12_ROOT_PARAMETER rootParameters[20] = {};
+	D3D12_ROOT_PARAMETER rootParameters[21] = {};
 	uint32_t rootParametersIndex = 0;
 
 	// 定数バッファ * 1
@@ -278,10 +311,10 @@ void PostEffect::CreateRootSignature()
 	
 	}
 
-	descriptorRanges_.resize(11);
+	descriptorRanges_.resize(12);
 
-	// ソース * 8 + 1
-	for (uint32_t i = 0; i < 9; ++i) {
+	// ソース * 8 + 1 + 1
+	for (uint32_t i = 0; i < 10; ++i) {
 
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = i;//iから始まる
@@ -302,7 +335,7 @@ void PostEffect::CreateRootSignature()
 
 	// 行先 * 2
 
-	uint32_t offset = 9;
+	uint32_t offset = 10;
 
 	for (uint32_t i = 0; i < 2; ++i) {
 

@@ -6,6 +6,7 @@
 #include "../base/TextureUAV.h"
 #include "Velocity2DManager.h"
 #include "ShockWaveManager.h"
+#include "../base/TextureManager.h"
 
 class PostEffect
 {
@@ -64,6 +65,7 @@ public: // サブクラス
 		Matrix4x4 projectionInverse; // プロジェクション逆行列
 
 		float outlineSigma; // 標準偏差
+		float maskThreshold; // マスクしきい値
 
 		int32_t executionFlag; // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -91,6 +93,7 @@ public: // サブクラス
 		kPipelineIndexGrayScale, // グレイスケール
 		kPipelineIndexSepia, // セピア
 		kPipelineIndexOutline, // アウトライン
+		kPipelineIndexDissolve, // ディゾルブ
 
 		kPipelineIndexOfCount // 数を数える用（穴埋め用）
 	};
@@ -115,6 +118,7 @@ public: // サブクラス
 		kCommandIndexGrayScale, // グレイスケール
 		kCommandIndexSepia, // セピア
 		kCommandIndexOutline, // アウトライン
+		kCommandIndexDissolve, // ディゾルブ
 
 		kCommandIndexOfCount // 数を数えるよう
 	};
@@ -125,6 +129,15 @@ public: // サブクラス
 	struct ExecutionAdditionalDesc {
 		std::array<Velocity2DManager*, 4> velocity2DManagers = { nullptr, nullptr, nullptr, nullptr };
 		std::array<ShockWaveManager*, 4> shockWaveManagers = { nullptr, nullptr, nullptr, nullptr };
+	};
+
+	/// <summary>
+	/// マスク用テクスチャ番号
+	/// </summary>
+	enum MaskTextureIndex {
+		kMaskTextureIndexNoise0, // ノイズ1
+		kMaskTextureIndexNoise1, // ノイズ2
+		kMaskTextureIndexOfCount // 数を数えるよう
 	};
 
 private: // 定数
@@ -150,6 +163,7 @@ private: // 定数
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainGrayScale"}, // グレイスケール
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainSepia"}, // セピア
 		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainOutline"}, // アウトライン
+		std::pair{L"Resources/shaders/PostEffect/PostEffect.CS.hlsl", L"mainDissolve"}, // ディゾルブ
 	};
 
 	// コマンド情報(コマンド実行可能回数4回)
@@ -172,7 +186,14 @@ private: // 定数
 			{kPipelineIndexGrayScale, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // グレイスケール
 			{kPipelineIndexSepia, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // セピア
 			{kPipelineIndexOutline, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // アウトライン
+			{kPipelineIndexDissolve, kPipelineIndexOfCount, kPipelineIndexOfCount, kPipelineIndexOfCount}, // ディゾルブ
 		},
+	};
+
+	// マスク用画像のパス
+	const std::array<std::string, kMaskTextureIndexOfCount> kMaskTextureDirectoryPaths_ = {
+		"Resources/Sprite/Dissolve/noise0.png",
+		"Resources/Sprite/Dissolve/noise1.png"
 	};
 
 	// 画像の幅
@@ -224,6 +245,17 @@ public: // 関数
 		RenderTargetTexture* renderTargetTexture,
 		CommandIndex commandIndex,
 		ExecutionAdditionalDesc* executionAdditionalDesc = nullptr);
+
+	/// <summary>
+	/// マスク用の画像選択
+	/// </summary>
+	/// <param name="num">マスク用の画像ハンドルの番号</param>
+	void SetMaskTextureHandleNumber(uint32_t num);
+
+	/// <summary>
+	/// マスク用の画像の初期化
+	/// </summary>
+	void MaskTextureHandleManagerInitialize();
 
 private: // 関数
 
@@ -422,6 +454,12 @@ public: // アクセッサ
 	/// </summary>
 	/// <param name="outlineSigma">標準偏差</param>
 	void SetOutlineSigma(float outlineSigma) { computeParametersMap_->outlineSigma = outlineSigma; }
+	
+	/// <summary>
+	/// マスクしきい値設定
+	/// </summary>
+	/// <param name="outlineSigma">マスクしきい値</param>
+	void SetMaskThreshold(float maskThreshold) { computeParametersMap_->maskThreshold = maskThreshold; }
 
 	/// <summary>
 	/// 実行フラグ設定
@@ -461,6 +499,17 @@ private: // 変数
 	// ディスクリプタレンジ保存
 	std::vector<std::vector<D3D12_DESCRIPTOR_RANGE>> descriptorRanges_;
 
+	// マスク用テクスチャハンドルマネージャー
+	std::unique_ptr<ITextureHandleManager> maskTextureHandleManager_;
+
+	// 使用するマスク用テクスチャハンドル
+	uint32_t useMaskTextureHandle_ = 1;
+
+	// マスク用テクスチャハンドル
+	std::array<uint32_t, kMaskTextureIndexOfCount> maskTextureHandles_;
+
+	// テクスチャマネージャー
+	TextureManager* textureManager_ = nullptr;
 
 private: // シングルトン
 	PostEffect() = default;

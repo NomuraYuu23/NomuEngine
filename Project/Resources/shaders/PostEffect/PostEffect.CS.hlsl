@@ -56,6 +56,7 @@ struct ComputeParameters {
 	float32_t4x4 projectionInverse; // プロジェクション逆行列
 	
 	float32_t outlineSigma; // アウトライン標準偏差
+	float32_t maskThreshold; // マスクしきい値
 
 	uint32_t executionFlag;  // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -103,6 +104,9 @@ Texture2D<float32_t4> sourceImage7 : register(t7);
 
 // 深度値
 Texture2D<float32_t4> depthTexture : register(t8);
+
+// マスク画像
+Texture2D<float32_t4> maskTexture : register(t9);
 
 // 行先
 RWTexture2D<float32_t4> destinationImage0 : register(u0);
@@ -985,3 +989,30 @@ void mainOutline(uint32_t3 dispatchId : SV_DispatchThreadID) {
 	}
 
 }
+
+float32_t4 Dissolve(in const float32_t2 index) {
+
+
+	float32_t4 maskTextureColor = maskTexture[index];
+
+	float32_t mask = maskTextureColor.r;
+
+	if (mask <= gComputeConstants.maskThreshold) {
+		return gComputeConstants.clearColor;
+	}
+	return sourceImage0[index];
+
+}
+
+[numthreads(THREAD_X, THREAD_Y, THREAD_Z)]
+void mainDissolve(uint32_t3 dispatchId : SV_DispatchThreadID) {
+
+	if (dispatchId.x < gComputeConstants.threadIdTotalX &&
+		dispatchId.y < gComputeConstants.threadIdTotalY) {
+
+		destinationImage0[dispatchId.xy] = Dissolve(dispatchId.xy);
+
+	}
+
+}
+
