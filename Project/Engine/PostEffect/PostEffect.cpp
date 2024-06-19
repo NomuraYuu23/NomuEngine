@@ -76,7 +76,11 @@ void PostEffect::Initialize()
 	computeParametersMap_->projectionInverse = Matrix4x4::MakeIdentity4x4(); // プロジェクション逆行列
 
 	computeParametersMap_->outlineSigma = 1.0f; // 標準偏差
+	computeParametersMap_->maskEdgeColor = { 1.0f,0.4f,0.3f }; // マスクのエッジの色
+
 	computeParametersMap_->maskThreshold = 0.5f; // マスクしきい値
+
+	computeParametersMap_->maskEdgeRangeOfDetection = 0.03f; // マスクのエッジ検出範囲
 
 	computeParametersMap_->executionFlag = 15;
 
@@ -141,7 +145,9 @@ void PostEffect::ImGuiDraw()
 	ImGui::DragFloat2("paraSize", &computeParametersMap_->paraSize.x, 0.01f, 0.0f);
 	ImGui::DragFloat2("paraPosition", &computeParametersMap_->paraPosition.x, 0.01f);
 	ImGui::DragFloat("outlineSigma", &computeParametersMap_->outlineSigma, 0.01f);
+	ImGui::ColorEdit3("maskEdgeColor", &computeParametersMap_->maskEdgeColor.x);
 	ImGui::DragFloat("maskThreshold", &computeParametersMap_->maskThreshold, 0.01f);
+	ImGui::DragFloat("maskEdgeRangeOfDetection", &computeParametersMap_->maskEdgeRangeOfDetection, 0.001f);
 
 	ImGui::DragInt("executionFlag", &computeParametersMap_->executionFlag, 0.1f, 0, 31);
 

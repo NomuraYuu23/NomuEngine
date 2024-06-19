@@ -56,7 +56,10 @@ struct ComputeParameters {
 	float32_t4x4 projectionInverse; // プロジェクション逆行列
 	
 	float32_t outlineSigma; // アウトライン標準偏差
+	float32_t3 maskEdgeColor; // マスクのエッジの色
+
 	float32_t maskThreshold; // マスクしきい値
+	float32_t maskEdgeRangeOfDetection; // マスクのエッジ検出範囲
 
 	uint32_t executionFlag;  // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -993,14 +996,25 @@ void mainOutline(uint32_t3 dispatchId : SV_DispatchThreadID) {
 float32_t4 Dissolve(in const float32_t2 index) {
 
 
+	// マスク画像の色
 	float32_t4 maskTextureColor = maskTexture[index];
 
+	// マスクの値rを取ってくる
 	float32_t mask = maskTextureColor.r;
 
+	// しきい値確認
 	if (mask <= gComputeConstants.maskThreshold) {
 		return gComputeConstants.clearColor;
 	}
-	return sourceImage0[index];
+
+	// Edge
+	float32_t edge = 1.0f - smoothstep(gComputeConstants.maskThreshold, gComputeConstants.maskThreshold + gComputeConstants.maskEdgeRangeOfDetection, mask);
+
+	float32_t4 output = sourceImage0[index];
+
+	output.rgb += edge * gComputeConstants.maskEdgeColor;
+
+	return output;
 
 }
 

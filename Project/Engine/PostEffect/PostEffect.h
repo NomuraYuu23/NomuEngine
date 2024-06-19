@@ -65,7 +65,11 @@ public: // サブクラス
 		Matrix4x4 projectionInverse; // プロジェクション逆行列
 
 		float outlineSigma; // 標準偏差
+		Vector3 maskEdgeColor; // マスクのエッジの色
+
 		float maskThreshold; // マスクしきい値
+
+		float maskEdgeRangeOfDetection; // マスクのエッジ検出範囲
 
 		int32_t executionFlag; // 実行フラグ(複数組み合わせたときのやつ)
 
@@ -456,10 +460,22 @@ public: // アクセッサ
 	void SetOutlineSigma(float outlineSigma) { computeParametersMap_->outlineSigma = outlineSigma; }
 	
 	/// <summary>
+	/// マスクのエッジの色設定
+	/// </summary>
+	/// <param name="maskEdgeColor">マスクのエッジの色</param>
+	void SetMaskEdgeColor(const Vector3& maskEdgeColor) { computeParametersMap_->maskEdgeColor = maskEdgeColor; }
+
+	/// <summary>
 	/// マスクしきい値設定
 	/// </summary>
 	/// <param name="outlineSigma">マスクしきい値</param>
 	void SetMaskThreshold(float maskThreshold) { computeParametersMap_->maskThreshold = maskThreshold; }
+
+	/// <summary>
+	/// マスクのエッジ検出範囲設定
+	/// </summary>
+	/// <param name="maskEdgeRangeOfDetection">マスクのエッジ検出範囲</param>
+	void SetMaskEdgeRangeOfDetection(float maskEdgeRangeOfDetection) { computeParametersMap_->maskEdgeRangeOfDetection = maskEdgeRangeOfDetection; }
 
 	/// <summary>
 	/// 実行フラグ設定
@@ -503,7 +519,7 @@ private: // 変数
 	std::unique_ptr<ITextureHandleManager> maskTextureHandleManager_;
 
 	// 使用するマスク用テクスチャハンドル
-	uint32_t useMaskTextureHandle_ = 1;
+	uint32_t useMaskTextureHandle_ = 0;
 
 	// マスク用テクスチャハンドル
 	std::array<uint32_t, kMaskTextureIndexOfCount> maskTextureHandles_;
