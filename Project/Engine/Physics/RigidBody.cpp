@@ -88,3 +88,73 @@ Vector3 RigidBody::AngularVelocityCalc(
 	return result;
 
 }
+
+Vector3 RigidBody::PointVelocityCalc(
+	const Vector3& angularVelocity,
+	const Vector3& centerOfGravityVelocity,
+	const Vector3& point,
+	const Vector3& centerOfGravity)
+{
+
+	// 重心から剛体上の点pointに向かうベクトル
+	Vector3 r = Vector3::Subtract(point, centerOfGravity);
+
+	return Vector3::Add(centerOfGravityVelocity, Vector3::Cross(angularVelocity, r));
+
+}
+
+RigidBody::Jacobian RigidBody::JacobianCalc(
+	const Vector3& normalize, 
+	const Vector3& point, 
+	const Vector3& centerOfGravity)
+{
+
+	// 重心から剛体上の点pointに向かうベクトル
+	Vector3 r = Vector3::Subtract(point, centerOfGravity);
+	
+	Jacobian result{};
+
+	result.n = normalize;
+	result.nR = Vector3::Cross(r, normalize);
+
+	return result;
+
+}
+
+bool RigidBody::RestraintConfirmationJoint(
+	const Vector3& velocityA, 
+	const Vector3& velocityB)
+{
+
+	// 速度が同じなら拘束出来ている
+	if (velocityA.x == velocityB.x &&
+		velocityA.y == velocityB.y &&
+		velocityA.z == velocityB.z) {
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+bool RigidBody::RestraintConfirmationNoPenetration(
+	const Vector3& velocityA, 
+	const Vector3& velocityB, 
+	const Vector3& normalizeB)
+{
+
+	// 速度と法線で内積を出す
+	float dot = Vector3::Dot(normalizeB, Vector3::Subtract(velocityA, velocityB));
+
+	// 内積が0より大きいなら拘束出来ている
+	if (dot >= 0.0f) {
+
+		return true;
+
+	}
+
+	return false;
+
+}
