@@ -124,8 +124,6 @@ private:
 
 	// UAVバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuffUAV_;
-	// UAVバッファマップ
-	VertexData* vertMapUAV_ = nullptr;
 
 	// CPUハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE vertUAVHandleCPU_{};

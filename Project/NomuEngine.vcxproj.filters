@@ -253,6 +253,9 @@
     <Filter Include="Engine\Object">
       <UniqueIdentifier>{53de935d-e90a-426e-9881-4340ea2005fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Particle\GPUParticle">
+      <UniqueIdentifier>{377267d2-bb2a-4d05-a0f8-3c064729b44a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -656,6 +659,9 @@
       <Filter>Application\Object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\ModelManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Particle\GPUPaticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1202,6 +1208,12 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUPaticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleCS.h">
+      <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
