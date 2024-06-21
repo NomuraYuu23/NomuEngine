@@ -256,6 +256,9 @@
     <Filter Include="Engine\Particle\GPUParticle">
       <UniqueIdentifier>{377267d2-bb2a-4d05-a0f8-3c064729b44a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\GPUParticle">
+      <UniqueIdentifier>{9363cb23-03fa-4bcb-a9ff-08c5e5b39bbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -1339,6 +1342,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffect\LuminanceBasedOutline.CS.hlsl">
       <Filter>shaders\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\GPUParticle\GPUParticle.CS.hlsl">
+      <Filter>shaders\GPUParticle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
