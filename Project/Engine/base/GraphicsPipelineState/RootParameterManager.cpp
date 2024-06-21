@@ -141,6 +141,16 @@ void RootParameterManager::Initialize()
 	data.clear(); // クリア
 #pragma endregion
 
+#pragma region GPUパーティクル
+	//RootParameterInitializeForParticle();
+	data.push_back(kSRV_VSIndexGPUParticleForGPU); // GPUパーティクル用
+	data.push_back(kCBV_VSIndexGPUParticleView); // GPUパーティクルのView
+	data.push_back(kSRV_PSIndexTexture0); // テクスチャ
+	data.push_back(kCBV_PSIndexMaterial); // マテリアル
+	Analyze(kRootParameterIndexGPUParticle, data); // 解析
+	data.clear(); // クリア
+#pragma endregion
+
 #pragma region コライダーデバッグ2D
 	//RootParameterInitializeForCollision2DDebugDraw();
 	data.push_back(kCBV_PSIndexMaterial); // マテリアル

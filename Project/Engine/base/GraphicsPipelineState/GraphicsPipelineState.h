@@ -33,6 +33,7 @@ public: // サブクラス
 		kPipelineStateIndexWindowSpriteUAV, // ウィンドウスプライトUAV
 		kPipelineStateIndexLine, // 線
 		kPipelineStateIndexParticle, // パーティクル
+		kPipelineStateIndexGPUParticle, // GPUパーティクル
 
 		kPipelineStateIndexCollision2DDebugDraw, // コライダーデバッグ2D
 		kPipelineStateIndexSkyBox, // スカイボックス

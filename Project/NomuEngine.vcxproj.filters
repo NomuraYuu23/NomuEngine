@@ -1218,6 +1218,9 @@
     <ClInclude Include="Engine\Particle\ParticleCS.h">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUPerticleView.h">
+      <Filter>Engine\Particle\GPUParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -1259,6 +1262,9 @@
     </None>
     <None Include="Resources\shaders\Skybox\Skybox.hlsli">
       <Filter>shaders\SkyBox</Filter>
+    </None>
+    <None Include="Resources\shaders\GPUParticle\GPUParticle.hlsli">
+      <Filter>shaders\GPUParticle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1344,6 +1350,12 @@
       <Filter>shaders\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\GPUParticle\GPUParticle.CS.hlsl">
+      <Filter>shaders\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\GPUParticle\GPUParticle.VS.hlsl">
+      <Filter>shaders\GPUParticle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\GPUParticle\GPUParticle.PS.hlsl">
       <Filter>shaders\GPUParticle</Filter>
     </FxCompile>
   </ItemGroup>

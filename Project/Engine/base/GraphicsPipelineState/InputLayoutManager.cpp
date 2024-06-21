@@ -51,4 +51,22 @@ void InputLayoutManager::Initialize()
 	inputLayouts_[kInputLayoutIndexPositon].pInputElementDescs = inputElementDescs_[kInputLayoutIndexPositon].data();
 	inputLayouts_[kInputLayoutIndexPositon].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexPositon].size());
 
+	//kInputLayoutIndexGPUParticle
+	D3D12_INPUT_ELEMENT_DESC GPUParticleInputElementDescs[2] = {};
+	GPUParticleInputElementDescs[0].SemanticName = "POSITION";
+	GPUParticleInputElementDescs[0].SemanticIndex = 0;
+	GPUParticleInputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	GPUParticleInputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs_[kInputLayoutIndexGPUParticle].push_back(GPUParticleInputElementDescs[0]);
+	GPUParticleInputElementDescs[1].SemanticName = "TEXCOORD";
+	GPUParticleInputElementDescs[1].SemanticIndex = 0;
+	GPUParticleInputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	GPUParticleInputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs_[kInputLayoutIndexGPUParticle].push_back(GPUParticleInputElementDescs[1]);
+
+	inputLayouts_[kInputLayoutIndexGPUParticle].pInputElementDescs = inputElementDescs_[kInputLayoutIndexGPUParticle].data();
+	inputLayouts_[kInputLayoutIndexGPUParticle].NumElements = static_cast<uint32_t>(inputElementDescs_[kInputLayoutIndexGPUParticle].size());
+
+
+
 }
