@@ -26,6 +26,8 @@ DrawLine* IScene::drawLine_ = nullptr;
 LevelDataManager* IScene::levelDataManager_;
 // モデルマネージャー
 ModelManager* IScene::modelManager_;
+// GPUパーティクル
+GPUPaticle* IScene::gpuParticle_;
 
 void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 {
@@ -55,6 +57,9 @@ void IScene::StaticInitialize(LevelDataManager* levelDataManager)
 
 	// モデルマネージャー
 	modelManager_ = ModelManager::GetInstance();
+
+	// GPUパーティクル
+	gpuParticle_ = GPUPaticle::GetInstance();
 
 }
 

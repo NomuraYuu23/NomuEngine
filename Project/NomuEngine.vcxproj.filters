@@ -665,7 +665,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Particle\GPUPaticle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Particle\GPUParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1212,13 +1212,13 @@
     <ClInclude Include="Engine\3D\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\GPUPaticle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleCS.h">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\GPUPerticleView.h">
+      <Filter>Engine\Particle\GPUParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUPaticle.h">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
   </ItemGroup>

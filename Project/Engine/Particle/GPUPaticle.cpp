@@ -79,7 +79,7 @@ void GPUPaticle::Draw(
 	// マテリアル
 	commandList->SetGraphicsRootConstantBufferView(3, material_->GetMaterialBuff()->GetGPUVirtualAddress());
 	// 描画
-	commandList->DrawInstanced(6, 1024, 0, 0);
+	commandList->DrawInstanced(6, kParticleMax, 0, 0);
 
 }
 

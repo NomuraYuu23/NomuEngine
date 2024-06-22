@@ -261,14 +261,14 @@ void GameScene::Draw() {
 	skydome_->Draw(camera_);
 
 	//Obj
-	sampleObj_->Draw(camera_);
+	//sampleObj_->Draw(camera_);
 
 	//// 紐
 	//testString_->Draw(camera_);
 
 	//testManyObject_->Draw(camera_);
 
-	objectManager_->Draw(camera_);
+	//objectManager_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 
@@ -283,7 +283,9 @@ void GameScene::Draw() {
 #pragma region パーティクル描画
 
 	// パーティクルはここ
-	particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
+	//particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
+
+	gpuParticle_->Draw(dxCommon_->GetCommadList(),&camera_);
 
 #pragma endregion
 
