@@ -43,6 +43,7 @@
 
 // パーティクル
 #include "../Particle/ParticleManager.h"
+#include "../Particle/GPUPaticle.h"
 
 // Windowサイズのスプライト
 #include "../base/WindowSprite.h"

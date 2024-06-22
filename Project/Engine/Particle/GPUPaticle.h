@@ -7,6 +7,8 @@
 #include <wrl.h>
 #include <dxcapi.h>
 #include <array>
+#include "../3D/Model.h"
+#include "GPUPerticleView.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -28,11 +30,21 @@ public:
 
 public:
 
+	/// <summary>
+	/// インスタンス取得
+	/// </summary>
+	/// <returns></returns>
+	static GPUPaticle* GetInstance();
+
 	void Initialize(
 		ID3D12Device* device,
-		ID3D12GraphicsCommandList* commandList);
+		ID3D12GraphicsCommandList* commandList,
+		ID3D12RootSignature* rootSignature,
+		ID3D12PipelineState* pipelineState);
 
-	void Execution();
+	void Draw(
+		ID3D12GraphicsCommandList* commandList,
+		BaseCamera* camera);
 
 private:
 
@@ -48,10 +60,25 @@ private:
 	void BuffInitialize(ID3D12Device* device,
 		ID3D12GraphicsCommandList* commandList);
 
+	/// <summary>
+	/// モデルの初期化
+	/// </summary>
+	void ModelInitialize();
+
+	/// <summary>
+	/// GPUParticleViewマッピング
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	void GPUParticleViewMapping(BaseCamera* camera);
+
 private:
 
 	// パーティクルの最大数
 	const uint32_t kParticleMax = 1024;
+	// モデルのディレクトリパス
+	const std::string kDirectoryPath = "Resources/Particle/";
+	// モデルのファイルの名前
+	const std::string kFilename = "plane.obj";
 
 	// UAVバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> buff_;
@@ -74,6 +101,33 @@ private:
 	std::array<Microsoft::WRL::ComPtr<ID3D12RootSignature>, kPipelineStateCSIndexOfCount> rootSignaturesCS_;
 	// パイプラインステートオブジェクトCS
 	std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kPipelineStateCSIndexOfCount> pipelineStatesCS_;
+
+	// ルートシグネチャ
+	ID3D12RootSignature* rootSignature_;
+	// パイプラインステートオブジェクト
+	ID3D12PipelineState* pipelineState_;
+
+	// モデル
+	std::unique_ptr<Model> model_;
+
+	// マテリアル
+	std::unique_ptr<Material> material_;
+
+	// テクスチャハンドルマネージャー
+	std::unique_ptr<ITextureHandleManager> textureHandleManager_;
+
+	// GPUParticleViewバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> gpuParticleViewBuff_;
+
+	// GPUParticleViewマップ
+	GPUParticleView* gpuParticleViewMap = nullptr;
+
+private: // シングルトン
+
+	GPUPaticle() = default;
+	~GPUPaticle() = default;
+	GPUPaticle(const GPUPaticle&) = delete;
+	GPUPaticle& operator=(const GPUPaticle&) = delete;
 
 };
 

@@ -290,6 +290,8 @@ void PostEffect::MaskTextureHandleManagerInitialize()
 		maskTextureHandles_[i] = TextureManager::Load(kMaskTextureDirectoryPaths_[i], DirectXCommon::GetInstance(), maskTextureHandleManager_.get());
 	}
 
+	useMaskTextureHandle_ = maskTextureHandles_[0];
+
 }
 
 void PostEffect::CreateRootSignature()

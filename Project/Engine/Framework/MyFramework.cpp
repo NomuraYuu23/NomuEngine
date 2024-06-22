@@ -66,6 +66,13 @@ void MyFramework::Initialize()
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexParticle].Get()
 	);
 
+	GPUPaticle::GetInstance()->Initialize(
+		dxCommon->GetDevice(),
+		dxCommon->GetCommadList(),
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexGPUParticle].Get(),
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexGPUParticle].Get()
+		);
+
 	// ポストエフェクト
 	PostEffect::GetInstance()->Initialize();
 

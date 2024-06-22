@@ -4,10 +4,19 @@
 #include "../base/SRVDescriptorHerpManager.h"
 #include "../base/CompileShader.h"
 #include "../base/Log.h"
+#include "../base/TextureManager.h"
+
+GPUPaticle* GPUPaticle::GetInstance()
+{
+	static GPUPaticle instance;
+	return &instance;
+}
 
 void GPUPaticle::Initialize(
 	ID3D12Device* device,
-	ID3D12GraphicsCommandList* commandList)
+	ID3D12GraphicsCommandList* commandList,
+	ID3D12RootSignature* rootSignature,
+	ID3D12PipelineState* pipelineState)
 {
 
 	// CSの初期化
@@ -15,6 +24,62 @@ void GPUPaticle::Initialize(
 
 	// バッファの初期化
 	BuffInitialize(device, commandList);
+
+	// モデル関連の初期化
+	ModelInitialize();
+
+	rootSignature_ = rootSignature;
+
+	pipelineState_ = pipelineState;
+
+	//Sprite用のマテリアルリソースを作る
+	gpuParticleViewBuff_ = BufferResource::CreateBufferResource(device, (sizeof(GPUParticleView) + 0xff) & ~0xff);
+	//書き込むためのアドレスを取得
+	gpuParticleViewBuff_->Map(0, nullptr, reinterpret_cast<void**>(&gpuParticleViewMap));
+
+	gpuParticleViewMap->billboardMatrix = Matrix4x4::MakeIdentity4x4();
+	gpuParticleViewMap->viewProjection = Matrix4x4::MakeIdentity4x4();
+
+}
+
+void GPUPaticle::Draw(
+	ID3D12GraphicsCommandList* commandList,
+	BaseCamera* camera)
+{
+
+	assert(commandList);
+
+	GPUParticleViewMapping(camera);
+
+	// SRV
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//形状を設定。PS0に設定しているものとは別。
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// パイプライン
+	commandList->SetPipelineState(pipelineState_);
+	// ルートシグネチャ
+	commandList->SetGraphicsRootSignature(rootSignature_);
+
+	// 頂点データ
+	commandList->IASetVertexBuffers(0, 1, model_->GetMesh()->GetVbView());
+
+
+	// GPUパーティクル用
+	commandList->SetGraphicsRootDescriptorTable(0, srvHandleGPU_);
+	// GPUパーティクルのView
+	commandList->SetGraphicsRootConstantBufferView(1, gpuParticleViewBuff_->GetGPUVirtualAddress());
+	// テクスチャ
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(
+		commandList,
+		2,
+		model_->GetTextureHandles()[0]);
+	// マテリアル
+	commandList->SetGraphicsRootConstantBufferView(3, material_->GetMaterialBuff()->GetGPUVirtualAddress());
+	// 描画
+	commandList->DrawInstanced(6, 1024, 0, 0);
 
 }
 
@@ -148,11 +213,45 @@ void GPUPaticle::BuffInitialize(ID3D12Device* device,
 
 	// CSによる初期化
 
+	// SRV
+	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	commandList->SetPipelineState(pipelineStatesCS_[kPiprlineStateCSIndexInitialize].Get());//PS0を設定
 	commandList->SetComputeRootSignature(rootSignaturesCS_[kPiprlineStateCSIndexInitialize].Get());
 
-	commandList->SetComputeRootConstantBufferView(0, buff_->GetGPUVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(0, uavHandleGPU_);
 
 	commandList->Dispatch(1, 1, 1);
+
+}
+
+void GPUPaticle::ModelInitialize()
+{
+
+	textureHandleManager_ = std::make_unique<ITextureHandleManager>();
+	textureHandleManager_->Initialize();
+
+	model_.reset(Model::Create(
+		kDirectoryPath,
+		kFilename,
+		DirectXCommon::GetInstance(),
+		textureHandleManager_.get()));
+
+	material_.reset(Material::Create());
+
+}
+
+void GPUPaticle::GPUParticleViewMapping(BaseCamera* camera)
+{
+
+	// 全軸
+	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
+	gpuParticleViewMap->billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix, camera->GetTransformMatrix());
+	gpuParticleViewMap->billboardMatrix.m[3][0] = 0.0f;
+	gpuParticleViewMap->billboardMatrix.m[3][1] = 0.0f;
+	gpuParticleViewMap->billboardMatrix.m[3][2] = 0.0f;
+
+	gpuParticleViewMap->viewProjection = camera->GetViewProjectionMatrix();
 
 }

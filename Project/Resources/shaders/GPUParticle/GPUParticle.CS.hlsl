@@ -18,7 +18,7 @@ RWStructuredBuffer<Particle> gParticles : register(u0);
 void initialize(uint32_t3 DTid : SV_DispatchThreadID )
 {
 
-	uint32_t3 particleIndex = DTid.x;
+	uint32_t particleIndex = DTid.x;
 
 	if (particleIndex < kMaxParticles) {
 		gParticles[particleIndex] = (Particle)0;
