@@ -222,8 +222,6 @@ void GameScene::Update() {
 
 	skydome_->Update();
 
-	WindowSpriteStorage::GetInstance()->Reset();
-
 }
 
 /// <summary>

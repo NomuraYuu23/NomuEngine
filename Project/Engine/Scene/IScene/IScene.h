@@ -23,7 +23,6 @@
 #include "../../Particle/ParticleManager.h" // パーティクルマネージャー
 #include "../../PostEffect/PostEffect.h" // ポストエフェクト
 #include "../../../Engine/3D/ModelDraw.h" // モデル描画
-#include "../../../Engine/base/WindowSpriteStorage.h" // ウインドウスプライト保存
 #include "../../../Engine/base/WindowSprite.h" // ウインドウスプライト
 #include "../../Particle/GPUPaticle.h" // GPUパーティクル
 

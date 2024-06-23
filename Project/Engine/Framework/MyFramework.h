@@ -57,9 +57,6 @@
 // モデル描画
 #include "../3D/ModelDraw.h"
 
-// ウィンドウスプライト保存
-#include "../base/WindowSpriteStorage.h"
-
 // タイムスタンプ
 #include "../base/QueryTimestamp.h"
 

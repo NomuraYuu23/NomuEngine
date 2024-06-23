@@ -79,9 +79,6 @@ void MyFramework::Initialize()
 	// 霧
 	FogManager::GetInstance()->Initialize();
 
-	// ウィンドウスプライト保存
-	WindowSpriteStorage::GetInstance()->Initialize();
-
 	// クエリタイムスタンプ
 	//QueryTimestamp::GetInstance()->Initialize(dxCommon->GetDevice());
 
