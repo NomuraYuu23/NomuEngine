@@ -181,6 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Object\IObject.cpp" />
     <ClCompile Include="Engine\Object\MeshObject.cpp" />
     <ClCompile Include="Engine\Object\ObjectManager.cpp" />
+    <ClCompile Include="Engine\Particle\BillBoardMatrix.cpp" />
     <ClCompile Include="Engine\Particle\GPUPaticle.cpp" />
     <ClCompile Include="Engine\Particle\IEmitter.cpp" />
     <ClCompile Include="Engine\Particle\IParticle.cpp" />
@@ -343,6 +344,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Object\IObject.h" />
     <ClInclude Include="Engine\Object\MeshObject.h" />
     <ClInclude Include="Engine\Object\ObjectManager.h" />
+    <ClInclude Include="Engine\Particle\BillBoardMatrix.h" />
     <ClInclude Include="Engine\Particle\EmitterDesc.h" />
     <ClInclude Include="Engine\Particle\GPUPaticle.h" />
     <ClInclude Include="Engine\Particle\GPUPerticleView.h" />

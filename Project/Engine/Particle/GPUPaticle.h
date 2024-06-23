@@ -56,7 +56,7 @@ public:
 	/// <param name="camera">カメラ</param>
 	void Draw(
 		ID3D12GraphicsCommandList* commandList,
-		BaseCamera* camera);
+		BaseCamera& camera);
 
 private:
 
@@ -81,7 +81,7 @@ private:
 	/// GPUParticleViewマッピング
 	/// </summary>
 	/// <param name="camera">カメラ</param>
-	void GPUParticleViewMapping(BaseCamera* camera);
+	void GPUParticleViewMapping(BaseCamera& camera);
 
 private:
 

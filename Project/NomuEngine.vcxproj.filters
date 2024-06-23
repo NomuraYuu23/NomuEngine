@@ -667,6 +667,9 @@
     <ClCompile Include="Engine\Particle\GPUPaticle.cpp">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\BillBoardMatrix.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -1220,6 +1223,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Particle\GPUPaticle.h">
       <Filter>Engine\Particle\GPUParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\BillBoardMatrix.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

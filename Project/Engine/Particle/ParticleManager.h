@@ -93,12 +93,6 @@ public: // メンバ関数
 	void ModelCreate(std::array<Model*, kCountofParticleModelIndex> model);
 
 	/// <summary>
-	/// ビルボード更新
-	/// </summary>
-	/// <param name="cameraMatrix4x4"></param>
-	void BillBoardUpdate(BaseCamera& camera);
-
-	/// <summary>
 	/// エミッタ生成
 	/// </summary>
     /// <param name="emitterDesc">エミッタ引数</param>
@@ -118,7 +112,8 @@ public: // メンバ関数
 	/// <summary>
 	/// パーティクル更新
 	/// </summary>
-	void ParticlesUpdate();
+	/// <param name="camera">カメラ</param>
+	void ParticlesUpdate(BaseCamera& camera);
 
 	/// <summary>
 	/// 死んでるのを削除
@@ -138,12 +133,6 @@ private: // メンバ変数
 
 	// パーティクル
 	std::array<ParticleData, kCountofParticleModelIndex> particleDatas_;
-
-	// ビルボード
-	Matrix4x4 billBoardMatrix_;
-	Matrix4x4 billBoardMatrixX_;
-	Matrix4x4 billBoardMatrixY_;
-	Matrix4x4 billBoardMatrixZ_;
 
 	// エミッタ
 	std::list<IEmitter*> emitters_;

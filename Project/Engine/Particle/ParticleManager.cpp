@@ -9,6 +9,7 @@
 
 #include <cassert>
 #include "../base/OutputLog.h"
+#include "BillBoardMatrix.h"
 
 ParticleManager* ParticleManager::GetInstance()
 {
@@ -36,11 +37,6 @@ void ParticleManager::Initialize(ID3D12RootSignature* rootSignature,
 	}
 
 	SRVCreate();
-
-	billBoardMatrix_ = Matrix4x4::MakeIdentity4x4();
-	billBoardMatrixX_ = Matrix4x4::MakeIdentity4x4();
-	billBoardMatrixY_ = Matrix4x4::MakeIdentity4x4();
-	billBoardMatrixZ_ = Matrix4x4::MakeIdentity4x4();
 
 	for (size_t i = 0; i < particleDatas_.size(); i++) {
 		particleDatas_[i].instanceIndex_ = 0;
@@ -76,11 +72,9 @@ void ParticleManager::Update(BaseCamera& camera)
 
 	DeadDelete();
 
-	BillBoardUpdate(camera);
-
 	EmitterUpdate();
 
-	ParticlesUpdate();
+	ParticlesUpdate(camera);
 
 }
 
@@ -178,48 +172,6 @@ void ParticleManager::ModelCreate(std::array<Model*, kCountofParticleModelIndex>
 
 }
 
-void ParticleManager::BillBoardUpdate(BaseCamera& camera)
-{
-
-	// 全軸
-	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
-	billBoardMatrix_ = Matrix4x4::Multiply(backToFrontMatrix, camera.GetTransformMatrix());
-	billBoardMatrix_.m[3][0] = 0.0f;
-	billBoardMatrix_.m[3][1] = 0.0f;
-	billBoardMatrix_.m[3][2] = 0.0f;
-
-	// X
-	Matrix4x4 cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
-		{ 1.0f, 1.0f, 1.0f },
-		Vector3{ camera.GetRotate().x, 0.0f, 0.0f },
-		camera.GetTranslate());
-	billBoardMatrixX_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
-	billBoardMatrixX_.m[3][0] = 0.0f;
-	billBoardMatrixX_.m[3][1] = 0.0f;
-	billBoardMatrixX_.m[3][2] = 0.0f;
-
-	// Y
-	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
-		{ 1.0f, 1.0f, 1.0f },
-		Vector3{ 0.0f, camera.GetRotate().y, 0.0f},
-		camera.GetTranslate());
-	billBoardMatrixY_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
-	billBoardMatrixY_.m[3][0] = 0.0f;
-	billBoardMatrixY_.m[3][1] = 0.0f;
-	billBoardMatrixY_.m[3][2] = 0.0f;
-
-	// Z
-	cameraTransformMatrix = Matrix4x4::MakeAffineMatrix(
-		{ 1.0f, 1.0f, 1.0f },
-		Vector3{ 0.0f, 0.0f, camera.GetRotate().z },
-		camera.GetTranslate());
-	billBoardMatrixZ_ = Matrix4x4::Multiply(backToFrontMatrix, cameraTransformMatrix);
-	billBoardMatrixZ_.m[3][0] = 0.0f;
-	billBoardMatrixZ_.m[3][1] = 0.0f;
-	billBoardMatrixZ_.m[3][2] = 0.0f;
-
-}
-
 void ParticleManager::MakeEmitter(EmitterDesc* emitterDesc, uint32_t emitterName)
 {
 
@@ -247,7 +199,7 @@ void ParticleManager::AddParticles(std::list<IParticle*> particles, uint32_t par
 	particleDatas_[particleModelNum].instanceIndex_ = static_cast<uint32_t>(particleDatas_[particleModelNum].particles_.size());
 }
 
-void ParticleManager::ParticlesUpdate()
+void ParticleManager::ParticlesUpdate(BaseCamera& camera)
 {
 
 	for (uint32_t i = 0; i < kCountofParticleModelIndex; i++) {
@@ -255,16 +207,16 @@ void ParticleManager::ParticlesUpdate()
 			switch (particle->GetBillBoardName())
 			{
 			case IParticle::kBillBoardNameIndexAllAxis:
-				particle->Update(billBoardMatrix_);
+				particle->Update(BillBoardMatrix::GetBillBoardMatrixAll(camera));
 				break;
 			case IParticle::kBillBoardNameIndexXAxis:
-				particle->Update(billBoardMatrixX_);
+				particle->Update(BillBoardMatrix::GetBillBoardMatrixX(camera));
 				break;
 			case IParticle::kBillBoardNameIndexYAxis:
-				particle->Update(billBoardMatrixY_);
+				particle->Update(BillBoardMatrix::GetBillBoardMatrixY(camera));
 				break;
 			case IParticle::kBillBoardNameIndexZAxis:
-				particle->Update(billBoardMatrixZ_);
+				particle->Update(BillBoardMatrix::GetBillBoardMatrixZ(camera));
 				break;
 			default:
 				break;

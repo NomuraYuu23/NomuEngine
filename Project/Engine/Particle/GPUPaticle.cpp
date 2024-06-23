@@ -5,6 +5,7 @@
 #include "../base/CompileShader.h"
 #include "../base/Log.h"
 #include "../base/TextureManager.h"
+#include "BillBoardMatrix.h"
 
 GPUPaticle* GPUPaticle::GetInstance()
 {
@@ -44,7 +45,7 @@ void GPUPaticle::Initialize(
 
 void GPUPaticle::Draw(
 	ID3D12GraphicsCommandList* commandList,
-	BaseCamera* camera)
+	BaseCamera& camera)
 {
 
 	assert(commandList);
@@ -242,16 +243,12 @@ void GPUPaticle::ModelInitialize()
 
 }
 
-void GPUPaticle::GPUParticleViewMapping(BaseCamera* camera)
+void GPUPaticle::GPUParticleViewMapping(BaseCamera& camera)
 {
 
 	// 全軸
-	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeRotateXYZMatrix({ 0.0f, 3.14f, 0.0f });
-	gpuParticleViewMap->billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix, camera->GetTransformMatrix());
-	gpuParticleViewMap->billboardMatrix.m[3][0] = 0.0f;
-	gpuParticleViewMap->billboardMatrix.m[3][1] = 0.0f;
-	gpuParticleViewMap->billboardMatrix.m[3][2] = 0.0f;
+	gpuParticleViewMap->billboardMatrix = BillBoardMatrix::GetBillBoardMatrixAll(camera);
 
-	gpuParticleViewMap->viewProjection = camera->GetViewProjectionMatrix();
+	gpuParticleViewMap->viewProjection = camera.GetViewProjectionMatrix();
 
 }
