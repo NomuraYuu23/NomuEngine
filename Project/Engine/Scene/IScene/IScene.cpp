@@ -69,9 +69,6 @@ void IScene::Initialize()
 	sceneNoCheck_ = sceneNo_;
 	requestSceneNoCheck_ = requestSceneNo_;
 
-	textureHandleManager_ = std::make_unique<ITextureHandleManager>();
-	textureHandleManager_->Initialize();
-
 	// 点光源
 	pointLightManager_ = std::make_unique<PointLightManager>();
 	pointLightManager_->Initialize();
@@ -111,8 +108,6 @@ void IScene::Initialize()
 }
 
 IScene::~IScene(){
-
-	textureHandleManager_->ResetTextureHandles();
 
 	modelManager_->Finalize();
 

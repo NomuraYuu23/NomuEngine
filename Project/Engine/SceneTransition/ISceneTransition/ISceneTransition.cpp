@@ -4,8 +4,6 @@
 ISceneTransition::~ISceneTransition()
 {
 
-	textureHandleManager_->ResetTextureHandles();
-
 }
 
 void ISceneTransition::Initialize()
@@ -20,9 +18,6 @@ void ISceneTransition::Initialize()
 	switchScene_ = false; //シーンを切り替える
 
 	stoppingUpdates_ = false; // 更新を停止する
-
-	textureHandleManager_ = std::make_unique<ITextureHandleManager>();
-	textureHandleManager_->Initialize();
 
 }
 

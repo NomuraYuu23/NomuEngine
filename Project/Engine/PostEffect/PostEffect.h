@@ -515,9 +515,6 @@ private: // 変数
 	// ディスクリプタレンジ保存
 	std::vector<std::vector<D3D12_DESCRIPTOR_RANGE>> descriptorRanges_;
 
-	// マスク用テクスチャハンドルマネージャー
-	std::unique_ptr<ITextureHandleManager> maskTextureHandleManager_;
-
 	// 使用するマスク用テクスチャハンドル
 	uint32_t useMaskTextureHandle_ = 0;
 

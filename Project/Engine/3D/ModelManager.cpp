@@ -6,11 +6,10 @@ ModelManager* ModelManager::GetInstance()
     return &instance;
 }
 
-void ModelManager::Initialize(DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager)
+void ModelManager::Initialize(DirectXCommon* dxCommon)
 {
 
     dxCommon_ = dxCommon;
-    textureHandleManager_ = textureHandleManager;
 
 }
 
@@ -41,7 +40,7 @@ Model* ModelManager::GetModel(
     // なかったので作る
     if (!model) {
         std::unique_ptr<Model> newModel;
-        newModel.reset(Model::Create(directoryPath, fileName, dxCommon_, textureHandleManager_));
+        newModel.reset(Model::Create(directoryPath, fileName, dxCommon_));
         models_.push_back(std::move(newModel));
         model = models_.back().get();
     }

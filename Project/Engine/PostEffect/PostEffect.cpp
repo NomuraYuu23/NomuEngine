@@ -282,12 +282,8 @@ void PostEffect::SetMaskTextureHandleNumber(uint32_t num)
 void PostEffect::MaskTextureHandleManagerInitialize()
 {
 
-	// マスク用の画像
-	maskTextureHandleManager_ = std::make_unique<ITextureHandleManager>();
-	maskTextureHandleManager_->Initialize();
-
 	for (uint32_t i = 0; i < kMaskTextureIndexOfCount; ++i) {
-		maskTextureHandles_[i] = TextureManager::Load(kMaskTextureDirectoryPaths_[i], DirectXCommon::GetInstance(), maskTextureHandleManager_.get());
+		maskTextureHandles_[i] = TextureManager::Load(kMaskTextureDirectoryPaths_[i], DirectXCommon::GetInstance());
 	}
 
 	useMaskTextureHandle_ = maskTextureHandles_[0];

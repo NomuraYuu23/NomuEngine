@@ -601,9 +601,6 @@
     <ClCompile Include="Engine\3D\WorldTransform.cpp">
       <Filter>Engine\3D\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\ITextureHandleManager.cpp">
-      <Filter>Engine\Base\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\RenderTargetTexture.cpp">
       <Filter>Engine\Base\Texture</Filter>
     </ClCompile>
@@ -1145,9 +1142,6 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\ColorVertexData.h">
       <Filter>Engine\3D\Vertex</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\ITextureHandleManager.h">
-      <Filter>Engine\Base\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\RenderTargetTexture.h">
       <Filter>Engine\Base\Texture</Filter>

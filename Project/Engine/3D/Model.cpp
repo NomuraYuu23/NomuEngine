@@ -37,14 +37,14 @@ void Model::StaticInitialize(ID3D12Device* device) {
 /// 3Dモデル生成
 /// </summary>
 /// <returns></returns>
-Model* Model::Create(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager) {
+Model* Model::Create(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon) {
 
 	// 3Dオブジェクトのインスタンスを生成
 	Model* object3d = new Model();
 	assert(object3d);
 
 	// 初期化
-	object3d->Initialize(directoryPath, filename, dxCommon, textureHandleManager);
+	object3d->Initialize(directoryPath, filename, dxCommon);
 
 	return object3d;
 
@@ -53,7 +53,7 @@ Model* Model::Create(const std::string& directoryPath, const std::string& filena
 /// <summary>
 /// 初期化
 /// </summary>
-void Model::Initialize(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager) {
+void Model::Initialize(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon) {
 
 	assert(sDevice);
 
@@ -69,7 +69,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
 		// テクスチャハンドル
-		textureHandles_.push_back(TextureManager::Load(modelData_.material.textureFilePaths[i], dxCommon, textureHandleManager));
+		textureHandles_.push_back(TextureManager::Load(modelData_.material.textureFilePaths[i], dxCommon));
 		// リソース
 		resourceDescs_.push_back(TextureManager::GetInstance()->GetResourceDesc(textureHandles_[i]));
 	}

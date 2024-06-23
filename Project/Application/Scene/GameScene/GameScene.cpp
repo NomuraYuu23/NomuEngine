@@ -153,7 +153,7 @@ void GameScene::Initialize() {
 	PostEffect::GetInstance()->SetGaussianSigma(33.0f);
 
 	// モデルマネージャー
-	modelManager_->Initialize(dxCommon_, textureHandleManager_.get());
+	modelManager_->Initialize(dxCommon_);
 
 	// オブジェクトマネージャー
 	objectManager_->Initialize(kLevelIndexSample,levelDataManager_);
@@ -409,20 +409,20 @@ void GameScene::ModelCreate()
 {
 
 	// パーティクル
-	particleUvcheckerModel_.reset(Model::Create("Resources/default/", "plane.gltf", dxCommon_, textureHandleManager_.get()));
-	particleCircleModel_.reset(Model::Create("Resources/Particle/", "plane.obj", dxCommon_, textureHandleManager_.get()));
+	particleUvcheckerModel_.reset(Model::Create("Resources/default/", "plane.gltf", dxCommon_));
+	particleCircleModel_.reset(Model::Create("Resources/Particle/", "plane.obj", dxCommon_));
 
 	// サンプルobj
-	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_));
 	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
 
 	// テスト
-	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_, textureHandleManager_.get()));
+	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_));
 
 	// テスト 紐
-	testStringModel_.reset(Model::Create("Resources/Model/SpearRibbon_R/", "SpearRibbon_R.gltf", dxCommon_, textureHandleManager_.get()));
+	testStringModel_.reset(Model::Create("Resources/Model/SpearRibbon_R/", "SpearRibbon_R.gltf", dxCommon_));
 
-	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_, textureHandleManager_.get()));
+	skydomeModel_.reset(Model::Create("Resources/Model/Skydome/", "skydome.obj", dxCommon_));
 
 }
 
@@ -430,15 +430,15 @@ void GameScene::TextureLoad()
 {
 
 	collision2DDebugDrawTextures_ = {
-		TextureManager::Load("Resources/Debug/Box.png", DirectXCommon::GetInstance(), textureHandleManager_.get()),
-		TextureManager::Load("Resources/Debug/Circle.png", DirectXCommon::GetInstance(), textureHandleManager_.get())
+		TextureManager::Load("Resources/Debug/Box.png", DirectXCommon::GetInstance()),
+		TextureManager::Load("Resources/Debug/Circle.png", DirectXCommon::GetInstance())
 	};
 
 	//uiTextureHandles_ = {
 
 	//};
 
-	skyboxTextureHandle_ = TextureManager::Load("Resources/default/rostock_laage_airport_4k.dds", DirectXCommon::GetInstance(), textureHandleManager_.get());
+	skyboxTextureHandle_ = TextureManager::Load("Resources/default/rostock_laage_airport_4k.dds", DirectXCommon::GetInstance());
 
 }
 

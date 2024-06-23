@@ -20,8 +20,7 @@ public: // 関数
 	/// </summary>
 	/// <param name="dxCommon">dxCommon</param>
 	/// <param name="textureHandleManager">テクスチャハンドルマネージャー</param>
-	void Initialize(DirectXCommon* dxCommon,
-		ITextureHandleManager* textureHandleManager);
+	void Initialize(DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// 後処理
@@ -53,7 +52,6 @@ private: // 変数
 	std::vector<std::unique_ptr<Model>> models_;
 
 	DirectXCommon* dxCommon_ = nullptr;
-	ITextureHandleManager* textureHandleManager_ = nullptr;
 
 private:
 	ModelManager() = default;

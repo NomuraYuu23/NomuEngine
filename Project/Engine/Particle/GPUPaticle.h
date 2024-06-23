@@ -125,9 +125,6 @@ private:
 	// マテリアル
 	std::unique_ptr<Material> material_;
 
-	// テクスチャハンドルマネージャー
-	std::unique_ptr<ITextureHandleManager> textureHandleManager_;
-
 	// GPUParticleViewバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> gpuParticleViewBuff_;
 

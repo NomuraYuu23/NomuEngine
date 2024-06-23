@@ -9,7 +9,6 @@
 
 #include "WinApp.h"
 #include "DirectXCommon.h"
-#include "ITextureHandleManager.h"
 #include "SRVDescriptorHerpManager.h"
 
 using namespace DirectX;
@@ -39,7 +38,7 @@ public:
 	/// </summary>
 	/// <param name="fileName">ファイル名</param>
 	/// <returns>テクスチャハンドル</returns>
-	static uint32_t Load(const std::string& fileName, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager);
+	static uint32_t Load(const std::string& fileName, DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// シングルトンインスタンスの取得

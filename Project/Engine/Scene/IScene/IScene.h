@@ -5,7 +5,6 @@
 #include "../../Audio/Audio.h"// サウンド再生
 #include "../../Input/Input.h"//入力デバイス
 #include "../../base/TextureManager.h" // テクスチャマネージャー
-#include "../../base/ITextureHandleManager.h" // テクスチャハンドルマネージャー
 #include "../../base/D3DResourceLeakChecker.h" // リソース解放確認
 #include "../../2D/ImguiManager.h" // imGuiマネージャー
 #include "../../GlobalVariables/GlobalVariables.h" // グローバル変数
@@ -144,9 +143,6 @@ protected:  // メンバ関数
 	void InitilaizeCheck();
 
 protected: // メンバ変数
-
-	// テクスチャハンドル管理
-	std::unique_ptr<ITextureHandleManager> textureHandleManager_ = nullptr;
 
 	// シーンをリセット
 	bool resetScene_ = false;

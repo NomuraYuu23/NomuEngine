@@ -152,7 +152,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\GraphicsPipelineState\InputLayoutManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\RootParameterManager.cpp" />
     <ClCompile Include="Engine\base\GraphicsPipelineState\SamplerManager.cpp" />
-    <ClCompile Include="Engine\base\ITextureHandleManager.cpp" />
     <ClCompile Include="Engine\base\RenderTargetTexture.cpp" />
     <ClCompile Include="Engine\base\SwapChain.cpp" />
     <ClCompile Include="Engine\base\TextureUAV.cpp" />
@@ -306,7 +305,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\GraphicsPipelineState\InputLayoutManager.h" />
     <ClInclude Include="Engine\base\GraphicsPipelineState\RootParameterManager.h" />
     <ClInclude Include="Engine\base\GraphicsPipelineState\SamplerManager.h" />
-    <ClInclude Include="Engine\base\ITextureHandleManager.h" />
     <ClInclude Include="Engine\base\RenderTargetTexture.h" />
     <ClInclude Include="Engine\base\SwapChain.h" />
     <ClInclude Include="Engine\base\TextureUAV.h" />

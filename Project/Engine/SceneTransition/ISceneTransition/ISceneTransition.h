@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include "../../base/ITextureHandleManager.h"
 
 /// <summary>
 /// シーン遷移
@@ -55,8 +54,6 @@ protected: // メンバ変数
 	bool switchScene_; //シーンを切り替える
 
 	bool stoppingUpdates_; // 更新を停止する
-
-	std::unique_ptr<ITextureHandleManager> textureHandleManager_;
 
 };
 

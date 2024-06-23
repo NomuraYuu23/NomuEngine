@@ -30,7 +30,6 @@
 
 #include "../Camera/BaseCamera.h"
 
-#include "../base/ITextureHandleManager.h"
 #include "../Light/PointLight/PointLightManager.h"
 #include "../Light/SpotLight/SpotLightManager.h"
 #include "../Light/DirectionalLight/DirectionalLight.h"
@@ -79,8 +78,7 @@ public:
 	static Model* Create(
 		const std::string& directoryPath, 
 		const std::string& filename, 
-		DirectXCommon* dxCommon, 
-		ITextureHandleManager* textureHandleManager);
+		DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// デフォルトマテリアル取得
@@ -100,7 +98,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon, ITextureHandleManager* textureHandleManager);
+	void Initialize(const std::string& directoryPath, const std::string& filename, DirectXCommon* dxCommon);
 
 	/// <summary>
 	/// テクスチャハンドルの設定

@@ -8,7 +8,6 @@
 
 #include "WinApp.h"
 #include "DirectXCommon.h"
-#include "ITextureHandleManager.h"
 #include "SRVDescriptorHerpManager.h"
 
 using namespace DirectX;

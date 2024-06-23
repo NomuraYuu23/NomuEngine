@@ -229,15 +229,10 @@ void GPUPaticle::BuffInitialize(ID3D12Device* device,
 
 void GPUPaticle::ModelInitialize()
 {
-
-	textureHandleManager_ = std::make_unique<ITextureHandleManager>();
-	textureHandleManager_->Initialize();
-
 	model_.reset(Model::Create(
 		kDirectoryPath,
 		kFilename,
-		DirectXCommon::GetInstance(),
-		textureHandleManager_.get()));
+		DirectXCommon::GetInstance()));
 
 	material_.reset(Material::Create());
 
