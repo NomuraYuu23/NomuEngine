@@ -88,7 +88,7 @@ void Mesh::VertBuffInitialize(ID3D12Device* sDevice, const std::vector<VertexDat
 	vertHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
 	vertIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(vertBuff_.Get(), &srvDesc, vertHandleCPU_);
+	sDevice->CreateShaderResourceView(vertBuff_.Get(), &srvDesc, vertHandleCPU_);
 
 }
 
@@ -115,7 +115,7 @@ void Mesh::VertInfluenceBuffInitialize(ID3D12Device* sDevice, const std::vector<
 	influenceHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
 	influenceIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(influenceBuff_.Get(), &srvDesc, influenceHandleCPU_);
+	sDevice->CreateShaderResourceView(influenceBuff_.Get(), &srvDesc, influenceHandleCPU_);
 
 }
 

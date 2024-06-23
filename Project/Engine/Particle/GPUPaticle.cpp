@@ -207,7 +207,7 @@ void GPUPaticle::BuffInitialize(ID3D12Device* device,
 	srvIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 
-	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(buff_.Get(), &srvDesc, srvHandleCPU_);
+	device->CreateShaderResourceView(buff_.Get(), &srvDesc, srvHandleCPU_);
 
 	/// ここまでSRV
 
