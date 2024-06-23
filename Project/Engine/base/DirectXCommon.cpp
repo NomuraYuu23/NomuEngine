@@ -94,7 +94,7 @@ void DirectXCommon::Initialize(
 // 描画前処理
 void DirectXCommon::PreDraw() {
 
-	//QueryTimestamp::GetInstance()->Preprocessing(command_->GetCommadList());
+	QueryTimestamp::GetInstance()->Preprocessing(command_->GetCommadList());
 
 	renderTargetTexture_->PreDraw(command_->GetCommadList());
 
@@ -133,12 +133,12 @@ void DirectXCommon::PostDraw() {
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
 
-	//QueryTimestamp::GetInstance()->Postprocessing(command_->GetCommadList());
+	QueryTimestamp::GetInstance()->Postprocessing(command_->GetCommadList());
 
 	// FPS固定
 	UpdateFixFPS();
 
-	//QueryTimestamp::GetInstance()->Reading();
+	QueryTimestamp::GetInstance()->Reading();
 
 	//次のフレーム用のコマンドリストを準備
 	hr = command_->GetCommandAllocator()->Reset();
