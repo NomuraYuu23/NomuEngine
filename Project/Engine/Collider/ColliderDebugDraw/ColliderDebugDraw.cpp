@@ -1,5 +1,7 @@
 #include "ColliderDebugDraw.h"
 #include "../../2D/ImguiManager.h"
+#include <numbers>
+#include <cmath>
 
 void ColliderDebugDraw::Initialize()
 {
@@ -9,6 +11,8 @@ void ColliderDebugDraw::Initialize()
 	isDraw_ = false;
 
 	InitializeOBB();
+
+	InitializeSphere();
 
 }
 
@@ -45,6 +49,10 @@ void ColliderDebugDraw::DrawMap(DrawLine* drawLine)
 			OBB obb = std::get<OBB>(collider);
 			DrawMapOBB(drawLine, obb);
 
+		}
+		else if (std::holds_alternative<Sphere>(collider)) {
+			Sphere sphere = std::get<Sphere>(collider);
+			DrawMapSphere(drawLine, sphere);
 		}
 
 	}
@@ -157,5 +165,93 @@ void ColliderDebugDraw::DrawMapOBB(DrawLine* drawLine, const OBB& collider)
 	lineForGPU.position[0] = points[3];
 	lineForGPU.position[1] = points[7];
 	drawLine->Map(lineForGPU);
+
+}
+
+void ColliderDebugDraw::InitializeSphere()
+{
+
+	const float kPi = static_cast<float>(std::numbers::pi);
+
+	// 経度分割1つ分の角度
+	float kLonEvery = 2.0f * kPi / static_cast<float>(kSubdivision);
+	// 緯度分割1つ分の角度
+	float kLatEvery = kPi / static_cast<float>(kSubdivision);
+
+	// 緯度の方向に分割
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
+
+		// 現在の緯度
+		float lat = -1.0f * kPi / 2.0f + kLatEvery * static_cast<float>(latIndex);
+
+		// 経度の方向に分割
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
+		
+			// 現在の経度
+			float lon = static_cast<float>(lonIndex) * kLonEvery;
+
+			sphereOffsetPoints_[latIndex * kSubdivision + lonIndex] = {
+				std::cosf(lat) * std::cosf(lon),
+				std::sinf(lat),
+				std::cosf(lat)* std::sinf(lon)
+			};
+
+		}
+
+	}
+
+	// ラスト一個
+	sphereOffsetPoints_[kSubdivision * kSubdivision] = { 0.0f, std::sinf(kPi / 2.0f), 0.0f };
+
+}
+
+void ColliderDebugDraw::DrawMapSphere(DrawLine* drawLine, const Sphere& collider)
+{
+
+	std::array<Vector3, kSubdivision * kSubdivision + 1> points = {};
+
+	Vector3 center = collider.center_;
+	float raidus = collider.radius_;
+
+	for (uint32_t i = 0; i < points.size(); ++i) {
+
+		// offset * size
+		points[i] = sphereOffsetPoints_[i] * raidus;
+
+		// centerに移動
+		points[i] += center;
+
+	}
+
+	LineForGPU lineForGPU = {};
+	lineForGPU.color[0] = { 1.0f,1.0f,1.0f,1.0f };
+	lineForGPU.color[1] = { 1.0f,1.0f,1.0f,1.0f };
+
+	for (uint32_t i = 0; i < kSubdivision * kSubdivision; ++i) {
+
+		// kSubdivisionの倍数なら
+		if (i % kSubdivision == 0) {
+			lineForGPU.position[0] = points[i];
+			lineForGPU.position[1] = points[i + kSubdivision - 1];
+		}
+		else {
+			lineForGPU.position[0] = points[i];
+			lineForGPU.position[1] = points[i - 1];
+		}
+
+		drawLine->Map(lineForGPU);
+
+		if (i >= kSubdivision * (kSubdivision - 1)) {
+			lineForGPU.position[0] = points[i];
+			lineForGPU.position[1] = points[kSubdivision * kSubdivision];
+		}
+		else {
+			lineForGPU.position[0] = points[i];
+			lineForGPU.position[1] = points[i + kSubdivision];
+		}
+
+		drawLine->Map(lineForGPU);
+
+	}
 
 }

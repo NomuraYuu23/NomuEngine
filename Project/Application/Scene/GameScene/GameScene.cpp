@@ -198,9 +198,9 @@ void GameScene::Update() {
 	collisionManager_->CheakAllCollision();
 
 	colliderDebugDraw_->ListClear();
-	OBB obbTest;
-	obbTest.Initialize({0.0f,0.0f,0.0f},Matrix4x4::MakeIdentity4x4(),{1.0f,1.0f,1.0f},nullptr);
-	colliderDebugDraw_->AddCollider(obbTest);
+	Sphere sphereTest;
+	sphereTest.Initialize({0.0f,0.0f,-4.27f},1.0f,nullptr);
+	colliderDebugDraw_->AddCollider(sphereTest);
 	colliderDebugDraw_->DrawMap(drawLine_);
 
 	float radius = 160.0f;
@@ -275,7 +275,7 @@ void GameScene::Draw() {
 
 	//testManyObject_->Draw(camera_);
 
-	//objectManager_->Draw(camera_);
+	objectManager_->Draw(camera_);
 
 	ModelDraw::PostDraw();
 

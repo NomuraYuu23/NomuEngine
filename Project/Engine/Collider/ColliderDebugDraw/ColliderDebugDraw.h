@@ -48,11 +48,34 @@ public:
 
 private: 
 
+	/// <summary>
+	/// OBB初期化
+	/// </summary>
 	void InitializeOBB();
 
+	/// <summary>
+	/// OBBマッピング
+	/// </summary>
+	/// <param name="drawLine">線描画クラス</param>
+	/// <param name="collider">コライダー</param>
 	void DrawMapOBB(DrawLine* drawLine, const OBB& collider);
 
+	/// <summary>
+	/// Sphere初期化
+	/// </summary>
+	void InitializeSphere();
+
+	/// <summary>
+	/// Sphereマッピング
+	/// </summary>
+	/// <param name="drawLine">線描画クラス</param>
+	/// <param name="collider">コライダー</param>
+	void DrawMapSphere(DrawLine* drawLine, const Sphere& collider);
+
 private: // メンバ変数
+
+	// 分割数
+	static const uint32_t kSubdivision = 10;
 
 	// コライダー
 	std::list<ColliderShape> colliders_;
@@ -62,6 +85,9 @@ private: // メンバ変数
 
 	//OBB
 	std::array<Vector3, 8> obbOffsetPoints_;
+
+	// Sphere
+	std::array<Vector3, kSubdivision * kSubdivision + 1> sphereOffsetPoints_;
 
 };
 
