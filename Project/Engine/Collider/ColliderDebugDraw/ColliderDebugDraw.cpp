@@ -7,6 +7,9 @@ void ColliderDebugDraw::Initialize()
 	ListClear();
 
 	isDraw_ = false;
+
+	InitializeOBB();
+
 }
 
 void ColliderDebugDraw::ListClear()
@@ -26,6 +29,10 @@ void ColliderDebugDraw::AddCollider(const ColliderShape& collider)
 
 void ColliderDebugDraw::DrawMap(DrawLine* drawLine)
 {
+
+	if (!isDraw_) {
+		return;
+	}
 
 	for (std::list<ColliderShape>::iterator itr = colliders_.begin();
 		itr != colliders_.end(); ++itr) {

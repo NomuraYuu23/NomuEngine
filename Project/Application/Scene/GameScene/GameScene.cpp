@@ -62,6 +62,9 @@ void GameScene::Initialize() {
 	collisionManager_.reset(new CollisionManager);
 	collisionManager_->Initialize();
 
+	colliderDebugDraw_ = std::make_unique<ColliderDebugDraw>();
+	colliderDebugDraw_->Initialize();
+
 	// オーディオマネージャー
 	audioManager_ = std::make_unique<GameAudioManager>();
 	audioManager_->Initialize();
@@ -187,12 +190,18 @@ void GameScene::Update() {
 
 	//Obj
 	sampleObj_->Update();
-	sampleObj_->DebugDrawMap(drawLine_);
+	//sampleObj_->DebugDrawMap(drawLine_);
 
 	// あたり判定
 	collisionManager_->ListClear();
 	//collisionManager_->ListRegister();
 	collisionManager_->CheakAllCollision();
+
+	colliderDebugDraw_->ListClear();
+	OBB obbTest;
+	obbTest.Initialize({0.0f,0.0f,0.0f},Matrix4x4::MakeIdentity4x4(),{1.0f,1.0f,1.0f},nullptr);
+	colliderDebugDraw_->AddCollider(obbTest);
+	colliderDebugDraw_->DrawMap(drawLine_);
 
 	float radius = 160.0f;
 
@@ -218,7 +227,7 @@ void GameScene::Update() {
 
 	testString_->SetPosition(0, testStringAnchor_);
 	testString_->Update(stringWind);
-	testString_->DebugDrawMap(drawLine_);
+	//testString_->DebugDrawMap(drawLine_);
 
 	skydome_->Update();
 
@@ -357,6 +366,8 @@ void GameScene::ImguiDraw(){
 	debugCamera_->ImGuiDraw();
 
 	collision2DDebugDraw_->ImGuiDraw();
+
+	colliderDebugDraw_->ImGuiDraw();
 
 #endif // _DEBUG
 
