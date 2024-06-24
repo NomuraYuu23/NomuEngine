@@ -1,108 +1,46 @@
 #include "ColliderDebugDraw.h"
 #include "../../2D/ImguiManager.h"
 
-void ColliderDebugDraw::Initialize(const std::vector<Model*> models, Material* material)
+void ColliderDebugDraw::Initialize()
 {
 
-	models_ = models;
-
-	material_ = material;
-
-	EulerTransform uvTransform = {
-	{1.0f,1.0f,1.0f},
-	{0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f},
-	};
-	Vector4 color = { 1.0f, 1.0f, 1.0f, 0.5f };
-	material_->Update(uvTransform, color, None, 0.0f, 0.0f);
-
-	spheres_.clear();
-
-	aabbs_.clear();
-
-	obbs_.clear();
+	ListClear();
 
 	isDraw_ = false;
+}
+
+void ColliderDebugDraw::ListClear()
+{
+
+	colliders_.clear();
 
 }
 
-void ColliderDebugDraw::Update()
+
+void ColliderDebugDraw::AddCollider(const ColliderShape& collider)
 {
 
-	spheres_.remove_if([](Sphere* sphere) {
-		if (!sphere) {
-			return true;
-		}
-		return false;
-	});
-
-	aabbs_.remove_if([](AABB* aabb) {
-		if (!aabb) {
-			return true;
-		}
-		return false;
-	});
-
-	obbs_.remove_if([](OBB* obb) {
-		if (!obb) {
-			return true;
-		}
-		return false;
-	});
-
-	ImGuiDraw();
+	colliders_.push_back(collider);
 
 }
 
-void ColliderDebugDraw::Draw(BaseCamera& camera)
+void ColliderDebugDraw::DrawMap(DrawLine* drawLine)
 {
 
-	if (!isDraw_) {
-		return;
+	for (std::list<ColliderShape>::iterator itr = colliders_.begin();
+		itr != colliders_.end(); ++itr) {
+
+		ColliderShape collider = *itr;
+
+		// OBBなら
+		if (std::holds_alternative<OBB>(collider)) {
+
+			OBB obb = std::get<OBB>(collider);
+			DrawMapOBB(drawLine, obb);
+
+		}
+
 	}
-
-	//// 球
-	//for (Sphere* sphere : spheres_) {
-	//	models_[static_cast<size_t>(ModelNo::kSphere)]->Draw(sphere->worldTransform_, camera, material_);
-	//}
-
-	//// AABB
-	//for (AABB* aabb : aabbs_) {
-	//	models_[static_cast<size_t>(ModelNo::kAABB)]->Draw(aabb->worldTransform_, camera, material_);
-	//}
-	//// OBB
-	//for (OBB* obb : obbs_) {
-	//	models_[static_cast<size_t>(ModelNo::kOBB)]->Draw(obb->worldTransform_, camera, material_);
-	//}
-
-}
-
-void ColliderDebugDraw::AddCollider(Sphere* sphere)
-{
-
-	spheres_.push_back(sphere);
-
-}
-
-//void ColliderDebugDraw::AddCollider(Plane* plane)
-//{
-//}
-//
-//void ColliderDebugDraw::AddCollider(Triangle* triangle)
-//{
-//}
-
-void ColliderDebugDraw::AddCollider(AABB* aabb)
-{
-
-	aabbs_.push_back(aabb);
-
-}
-
-void ColliderDebugDraw::AddCollider(OBB* obb)
-{
-
-	obbs_.push_back(obb);
 
 }
 
@@ -113,4 +51,104 @@ void ColliderDebugDraw::ImGuiDraw()
 	ImGui::Checkbox("描画するか", &isDraw_);
 	ImGui::End();
 #endif // _DEBUG
+}
+
+void ColliderDebugDraw::InitializeOBB()
+{
+
+	obbOffsetPoints_ = {
+		{
+			{-1.0f, -1.0f, -1.0f},
+			{+1.0f, -1.0f, -1.0f},
+			{-1.0f, +1.0f, -1.0f},
+			{+1.0f, +1.0f, -1.0f},
+			{-1.0f, -1.0f, +1.0f},
+			{+1.0f, -1.0f, +1.0f},
+			{-1.0f, +1.0f, +1.0f},
+			{+1.0f, +1.0f, +1.0f}
+		}
+	};
+
+}
+
+void ColliderDebugDraw::DrawMapOBB(DrawLine* drawLine, const OBB& collider)
+{
+	
+	std::array<Vector3, 8> points = {};
+	
+	Vector3 size = collider.size_;
+	Matrix4x4 rotateMatrix = Matrix4x4::MakeIdentity4x4();
+
+	rotateMatrix.m[0][0] = collider.otientatuons_[0].x;
+	rotateMatrix.m[0][1] = collider.otientatuons_[0].y;
+	rotateMatrix.m[0][2] = collider.otientatuons_[0].z;
+
+	rotateMatrix.m[1][0] = collider.otientatuons_[1].x;
+	rotateMatrix.m[1][1] = collider.otientatuons_[1].y;
+	rotateMatrix.m[1][2] = collider.otientatuons_[1].z;
+
+	rotateMatrix.m[2][0] = collider.otientatuons_[2].x;
+	rotateMatrix.m[2][1] = collider.otientatuons_[2].y;
+	rotateMatrix.m[2][2] = collider.otientatuons_[2].z;
+
+	Vector3 center = collider.center_;
+
+	for (uint32_t i = 0; i < obbOffsetPoints_.size(); ++i) {
+		
+		// offset * size
+		points[i].x = obbOffsetPoints_[i].x * size.x;
+		points[i].y = obbOffsetPoints_[i].y * size.y;
+		points[i].z = obbOffsetPoints_[i].z * size.z;
+
+		// 軸で回転
+		points[i] = Matrix4x4::TransformNormal(points[i], rotateMatrix);
+
+		// centerに移動
+		points[i] += center;
+
+	}
+
+	LineForGPU lineForGPU = {};
+	lineForGPU.color[0] = { 1.0f,1.0f,1.0f,1.0f };
+	lineForGPU.color[1] = { 1.0f,1.0f,1.0f,1.0f };
+
+	lineForGPU.position[0] = points[0];
+	lineForGPU.position[1] = points[1];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[2];
+	lineForGPU.position[1] = points[3];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[0];
+	lineForGPU.position[1] = points[2];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[1];
+	lineForGPU.position[1] = points[3];
+	drawLine->Map(lineForGPU);
+
+	lineForGPU.position[0] = points[4];
+	lineForGPU.position[1] = points[5];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[6];
+	lineForGPU.position[1] = points[7];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[4];
+	lineForGPU.position[1] = points[6];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[5];
+	lineForGPU.position[1] = points[7];
+	drawLine->Map(lineForGPU);
+
+	lineForGPU.position[0] = points[0];
+	lineForGPU.position[1] = points[4];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[1];
+	lineForGPU.position[1] = points[5];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[2];
+	lineForGPU.position[1] = points[6];
+	drawLine->Map(lineForGPU);
+	lineForGPU.position[0] = points[3];
+	lineForGPU.position[1] = points[7];
+	drawLine->Map(lineForGPU);
+
 }
