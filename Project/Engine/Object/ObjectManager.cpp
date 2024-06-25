@@ -30,6 +30,16 @@ void ObjectManager::Initialize(LevelIndex levelIndex, LevelDataManager* levelDat
 
 }
 
+void ObjectManager::Update()
+{
+
+	for (std::vector<std::unique_ptr<IObject>>::iterator it = objects_.begin();
+		it != objects_.end(); ++it) {
+		it->get()->Update();
+	}
+
+}
+
 void ObjectManager::Draw(BaseCamera& camera)
 {
 

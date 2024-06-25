@@ -20,9 +20,9 @@ public:
 	void Initialize(LevelIndex levelIndex, LevelDataManager* levelDataManager);
 
 	/// <summary>
-	/// 更新 考え中
+	/// 更新
 	/// </summary>
-	void Update() {};
+	void Update();
 
 	/// <summary>
 	/// 描画
