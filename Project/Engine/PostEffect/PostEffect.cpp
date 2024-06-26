@@ -78,7 +78,7 @@ void PostEffect::Initialize()
 	computeParametersMap_->outlineSigma = 1.0f; // 標準偏差
 	computeParametersMap_->maskEdgeColor = { 1.0f,0.4f,0.3f }; // マスクのエッジの色
 
-	computeParametersMap_->maskThreshold = 0.5f; // マスクしきい値
+	computeParametersMap_->maskThreshold = 0.0f; // マスクしきい値
 
 	computeParametersMap_->maskEdgeRangeOfDetection = 0.03f; // マスクのエッジ検出範囲
 

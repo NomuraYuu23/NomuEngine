@@ -664,6 +664,9 @@
     <ClCompile Include="Engine\Particle\BillBoardMatrix.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Object\Sample\SampleRigidBodyObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -1213,6 +1216,9 @@
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\BillBoardMatrix.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Object\Sample\SampleRigidBodyObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

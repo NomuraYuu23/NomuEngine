@@ -29,6 +29,9 @@ public: // 変数
 	Vector3 angularVelocity; // 角速度
 	Vector3 angularMomentum; // 角運動量
 
+	Vector3 centerOfGravityVelocity; // 重心位置速度
+	Vector3 centerOfGravity; // 重心位置 
+
 public: // 関数
 
 	/// <summary>

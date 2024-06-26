@@ -115,6 +115,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp" />
     <ClCompile Include="Application\Object\ObjectFactory.cpp" />
     <ClCompile Include="Application\Object\Sample\SampleObject.cpp" />
+    <ClCompile Include="Application\Object\Sample\SampleRigidBodyObject.cpp" />
     <ClCompile Include="Application\Scene\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Application\Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Application\Scene\TutorialScene\TutorialScene.cpp" />
@@ -255,6 +256,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Collider\CollisionConfig.h" />
     <ClInclude Include="Application\Object\ObjectFactory.h" />
     <ClInclude Include="Application\Object\Sample\SampleObject.h" />
+    <ClInclude Include="Application\Object\Sample\SampleRigidBodyObject.h" />
     <ClInclude Include="Application\Particle\NewEmitterDssc.h" />
     <ClInclude Include="Application\Scene\SceneName.h" />
     <ClInclude Include="Application\Scene\SelectScene\SelectScene.h" />

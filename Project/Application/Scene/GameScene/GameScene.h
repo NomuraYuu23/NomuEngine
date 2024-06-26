@@ -13,6 +13,7 @@
 #include "../../../Engine/Physics/String.h"
 #include "../../../Engine/Physics/StructuralSpring.h"
 #include "../../../Engine/SkyBox/SkyBox.h"
+#include "../../Object/Sample/SampleRigidBodyObject.h"
 
 class GameScene : public IScene
 {
@@ -131,5 +132,8 @@ private:
 
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Model> skydomeModel_;
+
+	std::unique_ptr<SampleRigidBodyObject> sampleRigidBodyObject_;
+	std::unique_ptr<Model> sampleRigidBodyObjectModel_;
 
 };

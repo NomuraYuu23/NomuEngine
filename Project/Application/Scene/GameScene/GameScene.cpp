@@ -158,6 +158,11 @@ void GameScene::Initialize() {
 	// オブジェクトマネージャー
 	objectManager_->Initialize(kLevelIndexSample,levelDataManager_);
 
+	// 物理
+	sampleRigidBodyObject_ = std::make_unique<SampleRigidBodyObject>();
+	sampleRigidBodyObject_->Initialize(sampleRigidBodyObjectModel_.get());
+
+
 	IScene::InitilaizeCheck();
 
 }
@@ -188,6 +193,7 @@ void GameScene::Update() {
 	//Obj
 	sampleObj_->Update();
 	//sampleObj_->DebugDrawMap(drawLine_);
+	sampleRigidBodyObject_->Update();
 
 	objectManager_->Update();
 
@@ -268,7 +274,16 @@ void GameScene::Draw() {
 
 	//testManyObject_->Draw(camera_);
 
-	objectManager_->Draw(camera_, drawLine_);
+	//objectManager_->Draw(camera_, drawLine_);
+	sampleRigidBodyObject_->Draw(camera_);
+	
+	LineForGPU lineForGPUSampleRigidBodyObject;
+	lineForGPUSampleRigidBodyObject.position[0] = { 1.0f, 1.0f, 1.0f };
+	lineForGPUSampleRigidBodyObject.position[1] = { -1.0f, 1.0f, 1.0f };
+	lineForGPUSampleRigidBodyObject.color[0] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	lineForGPUSampleRigidBodyObject.color[1] = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+	drawLine_->Map(lineForGPUSampleRigidBodyObject);
 
 	ModelDraw::PostDraw();
 
@@ -283,7 +298,7 @@ void GameScene::Draw() {
 #pragma region パーティクル描画
 
 	// パーティクルはここ
-	particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
+	//particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
 
 	gpuParticle_->Draw(dxCommon_->GetCommadList(),camera_);
 
@@ -417,6 +432,7 @@ void GameScene::ModelCreate()
 	// サンプルobj
 	sampleObjModel_.reset(Model::Create("Resources/Model/Player2/", "player.gltf", dxCommon_));
 	//sampleObjModel_.reset(Model::Create("Resources/default/", "Ball.gltf", dxCommon_, textureHandleManager_.get()));
+	sampleRigidBodyObjectModel_.reset(Model::Create("Resources/default/", "box.obj", dxCommon_));
 
 	// テスト
 	testModel_.reset(Model::Create("Resources/default/", "Ball.obj", dxCommon_));
