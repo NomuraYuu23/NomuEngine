@@ -297,7 +297,7 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object, const EulerT
 
 		obb.Initialize(
 			center, Matrix4x4::MakeIdentity4x4(),
-			size, static_cast<ColliderParentObject>(nullptr));
+			size, static_cast<Null*>(nullptr));
 
 		result = obb;
 
@@ -324,7 +324,7 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object, const EulerT
 		// 初期化
 
 		sphere.Initialize(
-			center, radius, static_cast<ColliderParentObject>(nullptr));
+			center, radius, static_cast<Null*>(nullptr));
 
 		result = sphere;
 
