@@ -79,8 +79,12 @@ void MyFramework::Initialize()
 	// 霧
 	FogManager::GetInstance()->Initialize();
 
+#ifdef _DEBUG
+
 	// クエリタイムスタンプ
 	QueryTimestamp::GetInstance()->Initialize(dxCommon->GetDevice());
+
+#endif // _DEBUG
 
 	//サウンド
 	audio = Audio::GetInstance();
@@ -137,8 +141,12 @@ void MyFramework::Update()
 	// グローバル変数の更新
 	GlobalVariables::GetInstance()->Update();
 
+#ifdef _DEBUG
+
 	// クエリタイムスタンプ
 	QueryTimestamp::GetInstance()->ImGuiDraw();
+
+#endif // _DEBUG
 
 }
 
