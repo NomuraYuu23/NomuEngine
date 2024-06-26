@@ -39,6 +39,10 @@ protected: // 関数
     /// <param name="collider">コライダー</param>
     virtual void ColliderInitialize(ColliderShape collider);
 
+public: // アクセッサ
+
+    ColliderShape* GetCollider() { return collider_.get(); };
+
 protected: // 変数
 
     // ファイル名前

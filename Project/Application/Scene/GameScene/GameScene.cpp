@@ -62,9 +62,6 @@ void GameScene::Initialize() {
 	collisionManager_.reset(new CollisionManager);
 	collisionManager_->Initialize();
 
-	colliderDebugDraw_ = std::make_unique<ColliderDebugDraw>();
-	colliderDebugDraw_->Initialize();
-
 	// オーディオマネージャー
 	audioManager_ = std::make_unique<GameAudioManager>();
 	audioManager_->Initialize();
@@ -192,16 +189,12 @@ void GameScene::Update() {
 	sampleObj_->Update();
 	//sampleObj_->DebugDrawMap(drawLine_);
 
+	objectManager_->Update();
+
 	// あたり判定
 	collisionManager_->ListClear();
 	//collisionManager_->ListRegister();
 	collisionManager_->CheakAllCollision();
-
-	colliderDebugDraw_->ListClear();
-	Sphere sphereTest;
-	sphereTest.Initialize({0.0f,0.0f,-4.27f},1.0f,nullptr);
-	colliderDebugDraw_->AddCollider(sphereTest);
-	colliderDebugDraw_->DrawMap(drawLine_);
 
 	float radius = 160.0f;
 
@@ -275,7 +268,7 @@ void GameScene::Draw() {
 
 	//testManyObject_->Draw(camera_);
 
-	objectManager_->Draw(camera_);
+	objectManager_->Draw(camera_, drawLine_);
 
 	ModelDraw::PostDraw();
 
@@ -367,7 +360,7 @@ void GameScene::ImguiDraw(){
 
 	collision2DDebugDraw_->ImGuiDraw();
 
-	colliderDebugDraw_->ImGuiDraw();
+	objectManager_->ImGuiDraw();
 
 #endif // _DEBUG
 

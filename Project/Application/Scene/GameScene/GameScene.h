@@ -80,7 +80,6 @@ private:
 	std::unique_ptr<Model> particleCircleModel_ = nullptr;
 
 	std::unique_ptr<CollisionManager> collisionManager_;
-	std::unique_ptr<ColliderDebugDraw> colliderDebugDraw_;
 
 	// オーディオマネージャー
 	std::unique_ptr<GameAudioManager> audioManager_;
