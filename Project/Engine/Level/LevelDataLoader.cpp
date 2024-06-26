@@ -196,7 +196,7 @@ void LevelDataLoader::MeshLoad(LevelData* levelData, nlohmann::json& object)
 
 	// コライダーがあるならとってくる
 	if (object.contains("collider")) {
-		objectData.collider = ColliderLoad(object);
+		objectData.collider = ColliderLoad(object, objectData.transform);
 	}
 
 }
@@ -262,12 +262,12 @@ EulerTransform LevelDataLoader::TransformLoad(nlohmann::json& object)
 
 }
 
-ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
+ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object, const EulerTransform& transform)
 {
 
 	ColliderShape result;
 
-	// トランスフォームのパラメータ読み込み
+	// コライダーのパラメータ読み込み
 	nlohmann::json& collider = object["collider"];
 
 	// タイプ別処理
@@ -281,6 +281,10 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
 		static_cast<float>(collider["center"][2]),
 		static_cast<float>(collider["center"][1]) 
 		};
+
+		center = 
+			Matrix4x4::Transform(center, 
+				Matrix4x4::MakeAffineMatrix(transform.scale, transform.rotate, transform.translate));
 
 		// 大きさ  半分に
 		Vector3 size = {
@@ -309,6 +313,10 @@ ColliderShape LevelDataLoader::ColliderLoad(nlohmann::json& object)
 		static_cast<float>(collider["center"][2]),
 		static_cast<float>(collider["center"][1])
 		};
+
+		center =
+			Matrix4x4::Transform(center,
+				Matrix4x4::MakeAffineMatrix(transform.scale, transform.rotate, transform.translate));
 
 		// 大きさ  半分に
 		float radius = static_cast<float>(collider["radius"]) / 2.0f;

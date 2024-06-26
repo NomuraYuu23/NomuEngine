@@ -106,8 +106,9 @@ private: // オブジェクトタイプごとの読み込みで使う関数
 	/// コライダーのパラメータ読み込み(Blender版)
 	/// </summary>
 	/// <param name="object">オブジェクト</param>
+	/// <param name="transform">トランスフォーム</param>
 	/// <returns>コライダー</returns>
-	static ColliderShape ColliderLoad(nlohmann::json& object);
+	static ColliderShape ColliderLoad(nlohmann::json& object, const EulerTransform& transform);
 
 };
 
