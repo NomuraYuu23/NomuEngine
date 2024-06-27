@@ -377,6 +377,8 @@ void GameScene::ImguiDraw(){
 
 	objectManager_->ImGuiDraw();
 
+	sampleRigidBodyObject_->ImGuiDraw();
+
 #endif // _DEBUG
 
 }
