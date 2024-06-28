@@ -51,6 +51,7 @@ void MyFramework::Initialize()
 		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexNormalOutline].Get() };
 	
 	Model::StaticInitialize(dxCommon->GetDevice());
+	ModelManager::GetInstance()->Initialize(dxCommon);
 
 	// モデル描画
 	ModelDraw::Initialize(rootSignature, pipelineState);

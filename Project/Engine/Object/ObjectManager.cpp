@@ -22,8 +22,9 @@ void ObjectManager::Initialize(LevelIndex levelIndex, LevelDataManager* levelDat
 		object.reset(objectFactory->CreateObject(objectData));
 
 		if (object) {
+
 			// vectorへ
-			objects_.push_back(std::move(object));
+			objects_.emplace_back(object->GetName(), std::move(object));
 		}
 
 	}
@@ -44,14 +45,14 @@ void ObjectManager::Update()
 
 #endif // _DEBUG
 
-	for (std::vector<std::unique_ptr<IObject>>::iterator it = objects_.begin();
+	for (std::vector<ObjectPair>::iterator it = objects_.begin();
 		it != objects_.end(); ++it) {
-		it->get()->Update();
+		it->second->Update();
 
 #ifdef _DEBUG
 
 		// コライダー登録
-		colliderDebugDraw_->AddCollider(*static_cast<MeshObject*>(it->get())->GetCollider());
+		colliderDebugDraw_->AddCollider(*static_cast<MeshObject*>(it->second.get())->GetCollider());
 
 #endif // _DEBUG
 
@@ -62,9 +63,9 @@ void ObjectManager::Update()
 void ObjectManager::Draw(BaseCamera& camera)
 {
 
-	for (std::vector<std::unique_ptr<IObject>>::iterator it = objects_.begin();
+	for (std::vector<ObjectPair>::iterator it = objects_.begin();
 		it != objects_.end(); ++it) {
-		static_cast<MeshObject*>(it->get())->Draw(camera);
+		static_cast<MeshObject*>(it->second.get())->Draw(camera);
 	}
 
 }
@@ -83,6 +84,25 @@ void ObjectManager::ImGuiDraw()
 {
 
 	colliderDebugDraw_->ImGuiDraw();
+
+}
+
+IObject* ObjectManager::GetObjectPointer(const std::string name)
+{
+
+	IObject* result = nullptr;
+
+	for (std::vector<ObjectPair>::iterator it = objects_.begin();
+		it != objects_.end(); ++it) {
+
+		if (it->first == name) {
+			result = it->second.get();
+			return result;
+		}
+
+	}
+
+	return nullptr;
 
 }
 

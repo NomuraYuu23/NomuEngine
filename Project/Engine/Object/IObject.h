@@ -23,6 +23,12 @@ public: // 関数
 	/// </summary>
 	virtual void Update() = 0;
 
+	/// <summary>
+	/// 名前取得
+	/// </summary>
+	/// <returns></returns>
+	std::string GetName() { return name_; }
+
 protected: // 変数
 
 	// 名前

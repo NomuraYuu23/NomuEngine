@@ -43,10 +43,19 @@ public:
 	/// </summary>
 	void ImGuiDraw();
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	IObject* GetObjectPointer(const std::string name);
+
 private:
 
+	using ObjectPair = std::pair<std::string, std::unique_ptr<IObject>>;
+
 	// オブジェクト
-	std::vector<std::unique_ptr<IObject>> objects_{};
+	std::vector<ObjectPair> objects_{};
 
 	// コライダーのデバッグ描画
 	std::unique_ptr<ColliderDebugDraw> colliderDebugDraw_;
