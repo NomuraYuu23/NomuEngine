@@ -259,6 +259,9 @@
     <Filter Include="shaders\GPUParticle">
       <UniqueIdentifier>{9363cb23-03fa-4bcb-a9ff-08c5e5b39bbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\3D\Outline">
+      <UniqueIdentifier>{10fda53b-4812-413f-a93e-9f87e2417594}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -616,9 +619,6 @@
     <ClCompile Include="Engine\SkyBox\Skybox.cpp">
       <Filter>Engine\SkyBox</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Outline.cpp">
-      <Filter>Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp">
       <Filter>Application\Audio</Filter>
     </ClCompile>
@@ -655,17 +655,20 @@
     <ClCompile Include="Application\Object\ObjectFactory.cpp">
       <Filter>Application\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\ModelManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Particle\GPUPaticle.cpp">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Particle\BillBoardMatrix.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Application\Object\Sample\SampleRigidBodyObject.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Application\Object\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\ModelManager.cpp">
+      <Filter>Engine\3D\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Outline.cpp">
+      <Filter>Engine\3D\Outline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1074,9 +1077,6 @@
     <ClInclude Include="Engine\Particle\EmitterDesc.h">
       <Filter>Engine\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\OutlineData.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\OutputLog.h">
       <Filter>Engine\Base</Filter>
     </ClInclude>
@@ -1158,9 +1158,6 @@
     <ClInclude Include="Engine\SkyBox\Skybox.h">
       <Filter>Engine\SkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Outline.h">
-      <Filter>Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Application\AudioManager\TitleAudioManager.h">
       <Filter>Application\Audio</Filter>
     </ClInclude>
@@ -1203,9 +1200,6 @@
     <ClInclude Include="Application\Object\ObjectFactory.h">
       <Filter>Application\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\ModelManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleCS.h">
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
@@ -1216,10 +1210,19 @@
       <Filter>Engine\Particle\GPUParticle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\BillBoardMatrix.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Application\Object\Sample\SampleRigidBodyObject.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Application\Object\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\ModelManager.h">
+      <Filter>Engine\3D\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\OutlineData.h">
+      <Filter>Engine\3D\Outline</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Outline.h">
+      <Filter>Engine\3D\Outline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
