@@ -1361,6 +1361,9 @@
     <FxCompile Include="Resources\shaders\GPUParticle\GPUParticle.PS.hlsl">
       <Filter>shaders\GPUParticle</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\Model\AnimModelInitialize.CS.hlsl">
+      <Filter>shaders\Model\CS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NomuEngine.rc">

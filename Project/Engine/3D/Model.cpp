@@ -31,6 +31,8 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	// デフォルトマテリアル
 	sDefaultMaterial.reset(Material::Create());
 
+	Mesh::StaticInitialize(sDevice);
+
 }
 
 /// <summary>
@@ -65,7 +67,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 
 	//メッシュ生成
 	mesh_ = std::make_unique<Mesh>();
-	mesh_->CreateMesh(sDevice,modelData_.vertices,modelData_.vertexInfluences);
+	mesh_->CreateMesh(sDevice,modelData_.vertices,modelData_.vertexInfluences, dxCommon->GetCommadListLoad());
 
 	for (size_t i = 0; i < modelData_.material.textureFilePaths.size(); ++i) {
 		// テクスチャハンドル
