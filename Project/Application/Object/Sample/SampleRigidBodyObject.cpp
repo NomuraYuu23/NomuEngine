@@ -21,11 +21,11 @@ void SampleRigidBodyObject::Initialize(Model* model)
 
 	rigidBody_.centerOfGravityVelocity = { 0.0f,0.0f,0.0f }; // 重心位置速度
 	// 重心位置 
-	rigidBody_.centerOfGravity = worldTransform_.GetWorldPosition() + Vector3{ 0.0f, 1.0f, 1.0f };
+	rigidBody_.centerOfGravity = worldTransform_.GetWorldPosition() + Vector3{ 1.0f, 1.0f, 1.0f };
 
 	// 力を入れる
-	const Vector3 pointOfAction = worldTransform_.GetWorldPosition() + Vector3{ 0.0f, -1.0f, -1.0f };
-	const Vector3 force = { 0.0f,0.0f, 500.0f };
+	const Vector3 pointOfAction = worldTransform_.GetWorldPosition() + Vector3{ -1.0f, -1.0f, -1.0f };
+	const Vector3 force = { 0.0f,0.0f, 50.0f };
 	rigidBody_.torque = RigidBody::TorqueCalc(rigidBody_.centerOfGravity, pointOfAction, force);
 
 	// 慣性テンソル作成
