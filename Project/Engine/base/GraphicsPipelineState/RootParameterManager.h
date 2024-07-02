@@ -37,6 +37,7 @@ enum SRV_VSIndex {
 	kSRV_VSIndexTransformationMatrix = 3, // トランスフォーム行列
 	kSRV_VSIndexLineForGPU = 4, // 線描画
 	kSRV_VSIndexGPUParticleForGPU = 5, //  GPUパーティクル用
+	kSRV_VSIndexVertex= 6, // 頂点
 	kSRV_VSIndexOfCount,
 };
 
@@ -64,7 +65,7 @@ enum CBV_VSIndex {
 	kCBV_VSIndexViewProjection = 3,// viewProjection
 	kCBV_VSIndexSpriteForGPU = 4, // スプライト用
 	kCBV_VSIndexSkyboxForGPU = 5, // スカイボックス用
-	kCBV_VSIndexGPUParticleView = 5, //  GPUパーティクルのView
+	kCBV_VSIndexGPUParticleView = 6, //  GPUパーティクルのView
 	kCBV_VSIndexOfCount
 
 };

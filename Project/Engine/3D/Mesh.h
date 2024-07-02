@@ -51,8 +51,8 @@ public: // 関数
 	/// UAVバッファビュー
 	/// </summary>
 	/// <returns></returns>
-	void SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
-	void SetGraphicsRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
+	void SetComputeRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
+	void SetGraphicsRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// skinningバッファ

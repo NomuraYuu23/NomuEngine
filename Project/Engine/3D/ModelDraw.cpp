@@ -280,7 +280,7 @@ void ModelDraw::AnimObjectDraw(AnimObjectDesc& desc, uint32_t renderTargetIndex)
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
 
 	// 頂点
-	desc.model->GetMesh()->SetGraphicsRootDescriptorTableVertUAVHandleGPU(sCommandList, 16);
+	desc.model->GetMesh()->SetGraphicsRootDescriptorTableAnimVertHandleGPU(sCommandList, 16);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
@@ -446,7 +446,7 @@ void ModelDraw::AnimInverseObjectDraw(AnimObjectDesc& desc, uint32_t renderTarge
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
 
 	// 頂点
-	desc.model->GetMesh()->SetGraphicsRootDescriptorTableVertUAVHandleGPU(sCommandList, 16);
+	desc.model->GetMesh()->SetGraphicsRootDescriptorTableAnimVertHandleGPU(sCommandList, 16);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), 1, 0, 0);
@@ -514,7 +514,7 @@ void ModelDraw::ManyAnimObjectsDraw(ManyAnimObjectsDesc& desc)
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(sCommandList, 15, sEnvironmentTextureHandle_);
 
 	// 頂点
-	desc.model->GetMesh()->SetGraphicsRootDescriptorTableVertUAVHandleGPU(sCommandList, 16);
+	desc.model->GetMesh()->SetGraphicsRootDescriptorTableAnimVertHandleGPU(sCommandList, 16);
 
 	//描画
 	sCommandList->DrawInstanced(UINT(desc.model->GetModelData().vertices.size()), desc.numInstance, 0, 0);
@@ -627,7 +627,7 @@ void ModelDraw::UpdateVertexUAV(
 	mesh->SetComputeRootDescriptorTableVertHandleGPU(sCommandList, 1);
 	mesh->SetComputeRootDescriptorTableInfluenceHandleGPU(sCommandList, 2);
 	sCommandList->SetComputeRootDescriptorTable(3, localMatrixManager->localMatrixesHandleGPU_);
-	mesh->SetComputeRootDescriptorTableVertUAVHandleGPU(sCommandList, 4);
+	mesh->SetComputeRootDescriptorTableAnimVertHandleGPU(sCommandList, 4);
 
 	sCommandList->Dispatch(static_cast<UINT>(model->GetModelData().vertices.size() + 1023 ) / 1024, 1, 1);
 

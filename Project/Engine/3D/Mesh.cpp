@@ -57,14 +57,14 @@ void Mesh::SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommand
 	commandList->SetComputeRootDescriptorTable(rootParameterIndex, influenceHandleGPU_);
 }
 
-void Mesh::SetComputeRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+void Mesh::SetComputeRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
 {
 	commandList->SetComputeRootDescriptorTable(rootParameterIndex, animVertUAVHandleGPU_);
 }
 
-void Mesh::SetGraphicsRootDescriptorTableVertUAVHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
+void Mesh::SetGraphicsRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
 {
-	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, animVertUAVHandleGPU_);
+	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, animVertSRVHandleGPU_);
 }
 
 void Mesh::VertBuffInitialize(ID3D12Device* sDevice, const std::vector<VertexData>& vertices)
