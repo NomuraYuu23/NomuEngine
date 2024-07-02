@@ -59,12 +59,54 @@ void Mesh::SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommand
 
 void Mesh::SetComputeRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
 {
+	ChangeUnordertedAccess(commandList);
 	commandList->SetComputeRootDescriptorTable(rootParameterIndex, animVertUAVHandleGPU_);
 }
 
 void Mesh::SetGraphicsRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex)
 {
+	ChangeNonPixelShaderResource(commandList);
 	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, animVertSRVHandleGPU_);
+}
+
+void Mesh::ChangeNonPixelShaderResource(ID3D12GraphicsCommandList* commandList)
+{
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = animVertBuff_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
+}
+
+void Mesh::ChangeUnordertedAccess(ID3D12GraphicsCommandList* commandList)
+{
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = animVertBuff_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
 }
 
 void Mesh::VertBuffInitialize(ID3D12Device* sDevice, const std::vector<VertexData>& vertices)

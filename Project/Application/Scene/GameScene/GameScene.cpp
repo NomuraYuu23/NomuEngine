@@ -275,15 +275,15 @@ void GameScene::Draw() {
 	//testManyObject_->Draw(camera_);
 
 	//objectManager_->Draw(camera_, drawLine_);
-	sampleRigidBodyObject_->Draw(camera_);
-	
-	LineForGPU lineForGPUSampleRigidBodyObject;
-	lineForGPUSampleRigidBodyObject.position[0] = { 1.0f, 1.0f, 1.0f };
-	lineForGPUSampleRigidBodyObject.position[1] = { -1.0f, 1.0f, 1.0f };
-	lineForGPUSampleRigidBodyObject.color[0] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	lineForGPUSampleRigidBodyObject.color[1] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	//sampleRigidBodyObject_->Draw(camera_);
+	//
+	//LineForGPU lineForGPUSampleRigidBodyObject;
+	//lineForGPUSampleRigidBodyObject.position[0] = { 1.0f, 1.0f, 1.0f };
+	//lineForGPUSampleRigidBodyObject.position[1] = { -1.0f, 1.0f, 1.0f };
+	//lineForGPUSampleRigidBodyObject.color[0] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	//lineForGPUSampleRigidBodyObject.color[1] = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	drawLine_->Map(lineForGPUSampleRigidBodyObject);
+	//drawLine_->Map(lineForGPUSampleRigidBodyObject);
 
 	ModelDraw::PostDraw();
 
@@ -291,7 +291,7 @@ void GameScene::Draw() {
 	
 #pragma region 線描画
 
-	drawLine_->Draw(dxCommon_->GetCommadList(),camera_);
+	//drawLine_->Draw(dxCommon_->GetCommadList(),camera_);
 
 #pragma endregion
 	
@@ -300,14 +300,14 @@ void GameScene::Draw() {
 	// パーティクルはここ
 	//particleManager_->Draw(camera_.GetViewProjectionMatrix(), dxCommon_->GetCommadList());
 
-	gpuParticle_->Draw(dxCommon_->GetCommadList(),camera_);
+	//gpuParticle_->Draw(dxCommon_->GetCommadList(),camera_);
 
 #pragma endregion
 
 #ifdef _DEBUG
 #pragma region コライダー2d描画
 
-	collision2DDebugDraw_->Draw(dxCommon_->GetCommadList());
+	//collision2DDebugDraw_->Draw(dxCommon_->GetCommadList());
 
 #pragma endregion
 #endif // DEBUG_

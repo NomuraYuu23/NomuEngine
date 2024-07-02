@@ -133,8 +133,6 @@ void SampleObject::Draw(BaseCamera& camera)
 	desc.worldTransform = &worldTransform_;
 	ModelDraw::AnimInverseObjectDraw(desc);
 
-	ModelDraw::AnimInverseObjectDraw(desc, 2);
-
 }
 
 void SampleObject::ImGuiDraw()

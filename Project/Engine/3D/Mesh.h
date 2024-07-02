@@ -35,20 +35,20 @@ public: // 関数
 		ID3D12GraphicsCommandList* commandList);
 
 	/// <summary>
-	/// 頂点バッファビュー
+	/// 頂点バッファ
 	/// </summary>
 	/// <returns></returns>
 	D3D12_VERTEX_BUFFER_VIEW* GetVbView() { return &vbView_; }
 	void SetComputeRootDescriptorTableVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
-	/// インフルエンスバッファビュー
+	/// インフルエンスバッファ
 	/// </summary>
 	/// <returns></returns>
 	void SetComputeRootDescriptorTableInfluenceHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
 
 	/// <summary>
-	/// UAVバッファビュー
+	/// アニメーション頂点バッファ
 	/// </summary>
 	/// <returns></returns>
 	void SetComputeRootDescriptorTableAnimVertHandleGPU(ID3D12GraphicsCommandList* commandList, uint32_t rootParameterIndex);
@@ -65,6 +65,18 @@ public: // 関数
 	/// </summary>
 	/// <returns></returns>
 	SkinningInformation* GetSkinningInformationMap() { return skinningInformationMap_; }
+	
+	/// <summary>
+	/// ピクセルシェーダ以外用のリソースに変更
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	void ChangeNonPixelShaderResource(ID3D12GraphicsCommandList* commandList);
+
+	/// <summary>
+	/// UnordertedAccess用のリソースに変更
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	void ChangeUnordertedAccess(ID3D12GraphicsCommandList* commandList);
 
 private: // 関数
 
