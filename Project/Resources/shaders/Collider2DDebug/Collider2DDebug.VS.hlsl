@@ -9,7 +9,7 @@ struct Collider2DDebugDrawForGPU
 
 };
 
-StructuredBuffer<Collider2DDebugDrawForGPU> gCollider2DDebugDraw : register(t2);
+StructuredBuffer<Collider2DDebugDrawForGPU> gCollider2DDebugDraw : register(t1);
 
 struct VertexShaderInput {
 	float32_t4 position : POSITION0;

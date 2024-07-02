@@ -6,7 +6,7 @@ struct TransformationMatrix {
 	float32_t4x4 WorldInverseTranspose;
 };
 
-StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t3);
+StructuredBuffer<TransformationMatrix> gTransformationMatrixes : register(t2);
 
 struct Vertex {
 	float32_t4 position;
@@ -14,7 +14,7 @@ struct Vertex {
 	float32_t3 normal;
 };
 
-StructuredBuffer<Vertex> gVertices : register(t6);
+StructuredBuffer<Vertex> gVertices : register(t5);
 
 VertexShaderOutput main(uint32_t vertID : SV_VertexID, uint32_t instanceId : SV_InstanceID) {
 

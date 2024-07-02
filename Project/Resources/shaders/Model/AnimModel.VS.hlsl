@@ -14,7 +14,7 @@ struct Vertex {
 	float32_t3 normal;
 };
 
-StructuredBuffer<Vertex> gVertices : register(t6);
+StructuredBuffer<Vertex> gVertices : register(t5);
 
 VertexShaderOutput main(uint32_t vertID : SV_VertexID) {
 

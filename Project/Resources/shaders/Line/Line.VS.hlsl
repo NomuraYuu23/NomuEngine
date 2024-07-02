@@ -15,7 +15,7 @@ struct LineGPU {
 
 };
 
-StructuredBuffer<LineGPU> gLine : register(t4);
+StructuredBuffer<LineGPU> gLine : register(t3);
 
 VertexShaderOutput main(uint32_t vertexId : SV_VertexID, uint32_t instanceId : SV_InstanceID)
 {
