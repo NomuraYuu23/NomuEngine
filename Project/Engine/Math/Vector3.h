@@ -61,6 +61,13 @@ public: // 関数
 	static Vector3 Normalize(const Vector3& v);
 	
 	/// <summary>
+	/// 最大値正規化
+	/// </summary>
+	/// <param name="v">値</param>
+	/// <returns></returns>
+	static Vector3 MaximumNormalize(const Vector3& v);
+	
+	/// <summary>
 	/// クロス積
 	/// </summary>
 	/// <param name="v1">一個目の値</param>
@@ -93,6 +100,13 @@ public: // 関数
 	/// <param name="normal">法線</param>
 	/// <returns></returns>
 	static Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
+	/// <summary>
+	/// 値が一番でかいのを取ってくる
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	static float GetAbsMax(const Vector3& v);
 
 public: // オーバーロード
 

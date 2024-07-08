@@ -48,14 +48,6 @@ void ObjectManager::Update()
 	for (std::vector<ObjectPair>::iterator it = objects_.begin();
 		it != objects_.end(); ++it) {
 		it->second->Update();
-
-#ifdef _DEBUG
-
-		// コライダー登録
-		colliderDebugDraw_->AddCollider(*static_cast<MeshObject*>(it->second.get())->GetCollider());
-
-#endif // _DEBUG
-
 	}
 
 }
@@ -103,6 +95,29 @@ IObject* ObjectManager::GetObjectPointer(const std::string name)
 	}
 
 	return nullptr;
+
+}
+
+void ObjectManager::CollisionListRegister(CollisionManager* collisionManager)
+{
+
+	bool isDebug = false;
+
+#ifdef _DEBUG
+	isDebug = true;
+#endif // _DEBUG
+
+	for (std::vector<ObjectPair>::iterator it = objects_.begin();
+		it != objects_.end(); ++it) {
+
+		if (isDebug) {
+			static_cast<MeshObject*>(it->second.get())->CollisionListRegister(collisionManager, colliderDebugDraw_.get());
+		}
+		else {
+			static_cast<MeshObject*>(it->second.get())->CollisionListRegister(collisionManager);
+		}
+
+	}
 
 }
 

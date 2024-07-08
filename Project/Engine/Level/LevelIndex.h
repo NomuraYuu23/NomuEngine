@@ -4,6 +4,6 @@
 /// シーンの種類
 /// </summary>
 enum LevelIndex {
-	kLevelIndexSample, // サンプル
+	kLevelIndexSample,
 	kLevelIndexOfCount // 数を数える用
 };

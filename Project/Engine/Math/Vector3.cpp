@@ -96,6 +96,24 @@ Vector3 Vector3::Normalize(const Vector3& v) {
 
 }
 
+Vector3 Vector3::MaximumNormalize(const Vector3& v)
+{
+
+	Vector3 result = {0.0f,0.0f,0.0f};
+
+	float norm = GetAbsMax(v);
+
+	if (norm != 0.0f) {
+		//正規化
+		result.x = v.x / norm;
+		result.y = v.y / norm;
+		result.z = v.z / norm;
+	}
+
+	return result;
+
+}
+
 //クロス積
 Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {
 
@@ -175,6 +193,35 @@ Vector3 Vector3::Reflect(const Vector3& input, const Vector3& normal) {
 
 	return Subtract(input, Multiply(normal, 2.0f * Dot(input, normal)));
 
+}
+
+float Vector3::GetAbsMax(const Vector3& v)
+{
+
+	//絶対値を保存
+	Vector3 abs;
+	abs.x = std::fabsf(v.x);
+	abs.y = std::fabsf(v.y);
+	abs.z = std::fabsf(v.z);
+
+	if (abs.x >= abs.y) {
+		if (abs.x >= abs.z) {
+			return abs.x;
+		}
+		else {
+			return abs.z;
+		}
+	}
+	else {
+		if (abs.y >= abs.z) {
+			return abs.y;
+		}
+		else {
+			return abs.x;
+		}
+	}
+
+	return 0.0f;
 }
 
 Vector3 Vector3::operator+(const Vector3& v)

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cassert>
 #include "../Collider/OBB/OBB.h"
+#include "../base/OutputLog.h"
 
 const std::string LevelDataLoader::kFileDirectoryName = "Resources/Level/";
 
@@ -32,7 +33,8 @@ LevelData* LevelDataLoader::Load(const std::string& fileName)
 	nlohmann::json deserialized;
 
 	// ファイルのデータ読み込み(失敗したらエラー)
-	assert(FileLoad(deserialized, fileName));
+	bool success = FileLoad(deserialized, fileName);
+	assert(success);
 
 	// オブジェクトの走査
 	return ScanningObjects(deserialized);
@@ -93,6 +95,7 @@ LevelData* LevelDataLoader::ScanningObjects(nlohmann::json& deserialized)
 
 	// "objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"]) {
+
 		// "type"があるかどうか
 		assert(object.contains("type"));
 

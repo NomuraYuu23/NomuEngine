@@ -33,7 +33,6 @@ void SceneManager::Initialize(uint32_t earlySceneNo)
 
 	// シーンファクトリー
 	sceneFacyory_ = SceneFactory::GetInstance();
-
 	levelDataManager_ = std::make_unique<LevelDataManager>();
 	levelDataManager_->Initialize();
 	IScene::StaticInitialize(levelDataManager_.get());
