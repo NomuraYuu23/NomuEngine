@@ -46,14 +46,17 @@ void WindowSprite::DrawSRV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle)
 
 }
 
-void WindowSprite::DrawUAV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& uavGPUHandle)
+void WindowSprite::DrawSRV(TextureUAV* textureUAV)
 {
+
+	// 描画前処理
+	textureUAV->ChangePixelShaderResource(commandList_);
 
 	//RootSignatureを設定。
 	commandList_->SetPipelineState(
-		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexWindowSpriteUAV].Get());//PS0を設定
+		GraphicsPipelineState::sPipelineState[GraphicsPipelineState::kPipelineStateIndexWindowSpriteSRV].Get());//PS0を設定
 	commandList_->SetGraphicsRootSignature(
-		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexWindowSpriteUAV].Get());
+		GraphicsPipelineState::sRootSignature[GraphicsPipelineState::kPipelineStateIndexWindowSpriteSRV].Get());
 
 	// SRV
 	ID3D12DescriptorHeap* ppHeaps[] = { SRVDescriptorHerpManager::descriptorHeap_.Get() };
@@ -63,9 +66,12 @@ void WindowSprite::DrawUAV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& uavGPUHandle)
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// シェーダーリソースビューをセット
-	commandList_->SetGraphicsRootDescriptorTable(0, uavGPUHandle);
+	commandList_->SetGraphicsRootDescriptorTable(0, textureUAV->GetSrvHandleGPU());
 
 	//描画
 	commandList_->DrawInstanced(kVertNum, 1, 0, 0);
+
+	// 描画後処理
+	textureUAV->ChangeUnorderedAccessResource(commandList_);
 
 }

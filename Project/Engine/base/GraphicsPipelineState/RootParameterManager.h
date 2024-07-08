@@ -104,7 +104,6 @@ enum RootParameterIndex {
 	kRootParameterIndexCollision2DDebugDraw, // コライダーデバッグ2d
 	kRootParameterIndexLine, // 線
 	kRootParameterIndexWindowSpriteSRV, // ウィンドウスプライトSRV
-	kRootParameterIndexWindowSpriteUAV,// ウィンドウスプライトUAV
 	
 	kRootParameterIndexSkyBox, // スカイボックス
 

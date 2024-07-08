@@ -5,6 +5,7 @@
 #include "../Math/Matrix4x4.h"
 #include "../2D/SpriteForGPU.h"
 #include "../3D/Material.h"
+#include "TextureUAV.h"
 
 class WindowSprite
 {
@@ -41,10 +42,10 @@ public:
 	void DrawSRV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& srvGPUHandle);
 
 	/// <summary>
-	/// 描画UAV
+	/// 描画SRV
 	/// </summary>
-	/// <param name="uavGPUHandle">GPUハンドル</param>
-	void DrawUAV(const CD3DX12_GPU_DESCRIPTOR_HANDLE& uavGPUHandle);
+	/// <param name="textureUAV">テクスチャ</param>
+	void DrawSRV(TextureUAV* textureUAV);
 
 };
 

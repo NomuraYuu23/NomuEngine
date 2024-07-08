@@ -175,12 +175,6 @@ void RootParameterManager::Initialize()
 	data.clear(); // クリア
 #pragma endregion
 
-#pragma region ウィンドウスプライトUAV
-	data.push_back(kUAV_PSIndexTexture0); // テクスチャUAV
-	Analyze(kRootParameterIndexWindowSpriteUAV, data); // 解析
-	data.clear(); // クリア
-#pragma endregion
-
 #pragma region スカイボックス
 	data.push_back(kCBV_PSIndexMaterial); // マテリアル
 	data.push_back(kSRV_PSIndexTexture0); // テクスチャ

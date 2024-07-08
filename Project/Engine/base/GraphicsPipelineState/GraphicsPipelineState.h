@@ -30,7 +30,6 @@ public: // サブクラス
 
 		kPipelineStateIndexSprite, //スプライト
 		kPipelineStateIndexWindowSpriteSRV, // ウィンドウスプライトSRV
-		kPipelineStateIndexWindowSpriteUAV, // ウィンドウスプライトUAV
 		kPipelineStateIndexLine, // 線
 		kPipelineStateIndexParticle, // パーティクル
 		kPipelineStateIndexGPUParticle, // GPUパーティクル

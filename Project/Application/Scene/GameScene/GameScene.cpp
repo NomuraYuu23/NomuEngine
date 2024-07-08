@@ -341,9 +341,7 @@ void GameScene::Draw() {
 		PostEffect::kCommandIndexDissolve,
 		&desc);
 
-	PostEffect::GetInstance()->GetEditTextures(0)->ChangePixelShaderResource(dxCommon_->GetCommadList());
-	WindowSprite::GetInstance()->DrawSRV(PostEffect::GetInstance()->GetEditTextures(0)->GetSrvHandleGPU());
-	PostEffect::GetInstance()->GetEditTextures(0)->ChangeUnorderedAccessResource(dxCommon_->GetCommadList());
+	WindowSprite::GetInstance()->DrawSRV(PostEffect::GetInstance()->GetEditTextures(0));
 
 }
 

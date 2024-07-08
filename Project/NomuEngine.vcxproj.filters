@@ -1328,9 +1328,6 @@
     <FxCompile Include="Resources\shaders\Outline.PS.hlsl">
       <Filter>shaders\Outline\PS_hlsli</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\WindowSprite\WindowSpriteUAV.PS.hlsl">
-      <Filter>shaders\WindowSprite</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\Model\AnimModel.CS.hlsl">
       <Filter>shaders\Model\CS</Filter>
     </FxCompile>
