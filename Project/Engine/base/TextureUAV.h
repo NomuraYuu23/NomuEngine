@@ -44,13 +44,31 @@ public:
 	/// バリア
 	/// </summary>
 	/// <param name="commandList">コマンドリスト</param>
-	void Barrier(ID3D12GraphicsCommandList* commandList);
+	void UavBarrier(ID3D12GraphicsCommandList* commandList);
+
+	/// <summary>
+	/// ピクセルシェーダーリソースに変更
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	void ChangePixelShaderResource(ID3D12GraphicsCommandList* commandList);
+
+	/// <summary>
+	/// 順序なしアクセスリソースに変更
+	/// </summary>
+	/// <param name="commandList">コマンドリスト</param>
+	void ChangeUnorderedAccessResource(ID3D12GraphicsCommandList* commandList);
 	
 	/// <summary>
 	/// シェーダーリソースビューのハンドル(GPU)取得
 	/// </summary>
 	/// <returns></returns>
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetUavHandleGPU() { return uavHandleGPU_; }
+
+	/// <summary>
+	/// シェーダーリソースビューのハンドル(GPU)取得
+	/// </summary>
+	/// <returns></returns>
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return srvHandleGPU_; }
 
 private: // 変数
 	
@@ -61,7 +79,14 @@ private: // 変数
 	// シェーダーリソースビューのハンドル(GPU)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE uavHandleGPU_{};
 	//  SRVのインデックス
-	uint32_t indexDescriptorHeap_ = 0;
+	uint32_t uavIndexDescriptorHeap_ = 0;
+
+	// シェーダーリソースビューのハンドル(CPU)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_{};
+	// シェーダーリソースビューのハンドル(GPU)
+	CD3DX12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_{};
+	//  SRVのインデックス
+	uint32_t srvIndexDescriptorHeap_ = 0;
 
 };
 

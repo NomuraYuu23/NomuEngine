@@ -1,9 +1,11 @@
 #include "TextureUAV.h"
+#include <cassert>
 
 TextureUAV::~TextureUAV()
 {
 
-	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(indexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(uavIndexDescriptorHeap_);
+	SRVDescriptorHerpManager::DescriptorHeapsMakeNull(srvIndexDescriptorHeap_);
 
 }
 
@@ -49,7 +51,7 @@ void TextureUAV::Initialize(
 
 	uavHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
 	uavHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
-	indexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	uavIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
 	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
 
 	device->CreateUnorderedAccessView(
@@ -57,6 +59,19 @@ void TextureUAV::Initialize(
 		nullptr,
 		&desc,
 		uavHandleCPU_);
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	srvHandleCPU_ = SRVDescriptorHerpManager::GetCPUDescriptorHandle();
+	srvHandleGPU_ = SRVDescriptorHerpManager::GetGPUDescriptorHandle();
+	srvIndexDescriptorHeap_ = SRVDescriptorHerpManager::GetNextIndexDescriptorHeap();
+	SRVDescriptorHerpManager::NextIndexDescriptorHeapChange();
+
+	device->CreateShaderResourceView(resource_.Get(), &srvDesc, srvHandleCPU_);
 
 }
 
@@ -71,7 +86,7 @@ void TextureUAV::SetRootDescriptorTable(ID3D12GraphicsCommandList* commandList, 
 
 }
 
-void TextureUAV::Barrier(ID3D12GraphicsCommandList* commandList)
+void TextureUAV::UavBarrier(ID3D12GraphicsCommandList* commandList)
 {
 
 	assert(commandList);
@@ -84,6 +99,50 @@ void TextureUAV::Barrier(ID3D12GraphicsCommandList* commandList)
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。
 	barrier.UAV.pResource = resource_.Get();
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
+}
+
+void TextureUAV::ChangePixelShaderResource(ID3D12GraphicsCommandList* commandList)
+{
+
+	assert(commandList);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = resource_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
+}
+
+void TextureUAV::ChangeUnorderedAccessResource(ID3D12GraphicsCommandList* commandList)
+{
+
+	assert(commandList);
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。
+	barrier.Transition.pResource = resource_.Get();
+	//遷移前（現在）のResouceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//遷移後のResoureState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
