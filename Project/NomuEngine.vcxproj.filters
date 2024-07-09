@@ -673,6 +673,9 @@
     <ClCompile Include="Application\Object\GameSceneObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Collision\Octree.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -1228,6 +1231,9 @@
       <Filter>Engine\3D\Outline</Filter>
     </ClInclude>
     <ClInclude Include="Application\Object\GameSceneObjectManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\Octree.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

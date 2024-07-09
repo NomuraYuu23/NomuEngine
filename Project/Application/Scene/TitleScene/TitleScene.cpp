@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "../../../Engine/3D/ModelDraw.h"
 #include "../../../Engine/base/OutputLog.h"
+#include "../../../Engine/Collision/Octree.h"
 
 TitleScene::~TitleScene()
 {
@@ -87,6 +88,8 @@ void TitleScene::Update()
 	// スカイドーム
 	skydome_->Update();
 
+	result = Octree::MortonOrder(pos);
+
 }
 
 void TitleScene::Draw()
@@ -141,6 +144,8 @@ void TitleScene::ImguiDraw()
 #ifdef _DEBUG
 	ImGui::Begin("Title");
 	ImGui::Checkbox("isDrawSkydome", &isDrawSkydome_);
+	ImGui::DragFloat3("pos", &pos.x, 0.1f, -39.9f, 39.9f);
+	ImGui::DragInt("result", &result);
 	ImGui::End();
 		
 	debugCamera_->ImGuiDraw();
