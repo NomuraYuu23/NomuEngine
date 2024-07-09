@@ -3,46 +3,49 @@
 #include "IObject.h"
 #include "../Camera/BaseCamera.h"
 
-#include <vector>
+#include <list>
 #include "../Level/LevelIndex.h"
 #include "../Level/LevelDataManager.h"
 #include "../Collider/ColliderDebugDraw/ColliderDebugDraw.h"
 #include "../Collision/CollisionManager.h"
+#include "AbstractObjectFactory.h"
 
-class ObjectManager
+class BaseObjectManager
 {
 
-public:
+public: //virtual
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="levelIndex">レベル番号</param>
 	/// <param name="levelDataManager">レベルデータマネージャー</param>
-	void Initialize(LevelIndex levelIndex, LevelDataManager* levelDataManager);
+	virtual void Initialize(LevelIndex levelIndex, LevelDataManager* levelDataManager);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="camera">カメラ</param>
-	void Draw(BaseCamera& camera);
+	virtual void Draw(BaseCamera& camera);
 
 	/// <summary>
 	/// 描画(デバッグ)
 	/// </summary>
 	/// <param name="camera">カメラ</param>
 	/// <param name="drawLine">線描画クラス</param>
-	void Draw(BaseCamera& camera, DrawLine * drawLine);
+	virtual void Draw(BaseCamera& camera, DrawLine * drawLine);
 
 	/// <summary>
 	///	ImGui描画
 	/// </summary>
-	void ImGuiDraw();
+	virtual void ImGuiDraw();
+
+public: //virtualではない
 
 	/// <summary>
 	/// オブジェクト検索
@@ -57,15 +60,27 @@ public:
 	/// <param name="collisionManager"></param>
 	void CollisionListRegister(CollisionManager* collisionManager);
 
-private:
+	/// <summary>
+	/// リセット
+	/// </summary>
+	/// <param name="levelIndex">レベル番号</param>
+	void Reset(LevelIndex levelIndex);
+
+protected:
 
 	using ObjectPair = std::pair<std::string, std::unique_ptr<IObject>>;
 
 	// オブジェクト
-	std::vector<ObjectPair> objects_{};
+	std::list<ObjectPair> objects_{};
 
 	// コライダーのデバッグ描画
 	std::unique_ptr<ColliderDebugDraw> colliderDebugDraw_;
+
+	// レベルデータマネージャー
+	LevelDataManager* levelDataManager_;
+
+	// オブジェクトファクトリー
+	AbstractObjectFactory* objectFactory_;
 
 };
 

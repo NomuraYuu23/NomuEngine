@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "../../Particle/EmitterName.h"
 #include "../../Particle/NewEmitterDssc.h"
+#include "../../Object/GameSceneObjectManager.h"
 
 GameScene::~GameScene()
 {
@@ -156,6 +157,7 @@ void GameScene::Initialize() {
 	modelManager_->Initialize(dxCommon_);
 
 	// オブジェクトマネージャー
+	objectManager_ = std::make_unique<GameSceneObjectManager>();
 	objectManager_->Initialize(kLevelIndexSample,levelDataManager_);
 
 	// 物理

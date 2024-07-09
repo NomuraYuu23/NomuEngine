@@ -44,7 +44,7 @@
 // アプリケーション側
 #include "../../../Application/Scene/SceneName.h" // シーンの名前
 #include "../../Level/LevelDataManager.h"
-#include "../../Object/ObjectManager.h"
+#include "../../Object/BaseObjectManager.h"
 #include "../../3D/ModelManager.h"
 
 /// <summary>
@@ -165,7 +165,7 @@ protected: // メンバ変数
 	std::array<SpotLightData, SpotLightManager::kNumInstanceMax_> spotLightDatas_;
 
 	// オブジェクトマネージャー
-	std::unique_ptr<ObjectManager> objectManager_;
+	std::unique_ptr<BaseObjectManager> objectManager_;
 
 };
 

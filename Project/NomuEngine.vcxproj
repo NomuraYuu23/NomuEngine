@@ -113,6 +113,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\AudioManager\ClearAudioManager.cpp" />
     <ClCompile Include="Application\AudioManager\GameAudioManager.cpp" />
     <ClCompile Include="Application\AudioManager\TitleAudioManager.cpp" />
+    <ClCompile Include="Application\Object\GameSceneObjectManager.cpp" />
     <ClCompile Include="Application\Object\ObjectFactory.cpp" />
     <ClCompile Include="Application\Object\Sample\SampleObject.cpp" />
     <ClCompile Include="Application\Object\Sample\SampleRigidBodyObject.cpp" />
@@ -179,7 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Object\IObject.cpp" />
     <ClCompile Include="Engine\Object\MeshObject.cpp" />
-    <ClCompile Include="Engine\Object\ObjectManager.cpp" />
+    <ClCompile Include="Engine\Object\BaseObjectManager.cpp" />
     <ClCompile Include="Engine\Particle\BillBoardMatrix.cpp" />
     <ClCompile Include="Engine\Particle\GPUPaticle.cpp" />
     <ClCompile Include="Engine\Particle\IEmitter.cpp" />
@@ -254,6 +255,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Collider2D\CollisionConfig2D.h" />
     <ClInclude Include="Application\Collider\ColliderParentObject.h" />
     <ClInclude Include="Application\Collider\CollisionConfig.h" />
+    <ClInclude Include="Application\Object\GameSceneObjectManager.h" />
     <ClInclude Include="Application\Object\ObjectFactory.h" />
     <ClInclude Include="Application\Object\Sample\SampleObject.h" />
     <ClInclude Include="Application\Object\Sample\SampleRigidBodyObject.h" />
@@ -341,7 +343,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Object\AbstractObjectFactory.h" />
     <ClInclude Include="Engine\Object\IObject.h" />
     <ClInclude Include="Engine\Object\MeshObject.h" />
-    <ClInclude Include="Engine\Object\ObjectManager.h" />
+    <ClInclude Include="Engine\Object\BaseObjectManager.h" />
     <ClInclude Include="Engine\Particle\BillBoardMatrix.h" />
     <ClInclude Include="Engine\Particle\EmitterDesc.h" />
     <ClInclude Include="Engine\Particle\GPUPaticle.h" />

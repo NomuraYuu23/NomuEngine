@@ -102,9 +102,6 @@ void IScene::Initialize()
 	directionalLightData_.direction = { 0.0f, -1.0f, 0.0f };
 	directionalLightData_.intencity = 1.0f;
 
-	// オブジェクトマネージャー
-	objectManager_ = std::make_unique<ObjectManager>();
-
 }
 
 IScene::~IScene(){
