@@ -165,7 +165,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Collision2D\Collision2D.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DDebugDraw.cpp" />
     <ClCompile Include="Engine\Collision2D\Collision2DManager.cpp" />
-    <ClCompile Include="Engine\Collision\Octree.cpp" />
+    <ClCompile Include="Engine\Collision\Octree\Octree.cpp" />
+    <ClCompile Include="Engine\Collision\Octree\OctreeManager.cpp" />
     <ClCompile Include="Engine\ContactRecord\ContactRecord.cpp" />
     <ClCompile Include="Engine\Level\LevelData.cpp" />
     <ClCompile Include="Engine\Level\LevelDataManager.cpp" />
@@ -247,6 +248,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
+    <ClCompile Include="Engine\Collision\Octree\OctreeCell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\AudioManager\ClearAudioManager.h" />
@@ -325,7 +327,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Collision2D\Collision2DDebugDraw.h" />
     <ClInclude Include="Engine\Collision2D\Collision2DManager.h" />
     <ClInclude Include="Engine\Collision\CollisionData.h" />
-    <ClInclude Include="Engine\Collision\Octree.h" />
+    <ClInclude Include="Engine\Collision\Octree\Octree.h" />
+    <ClInclude Include="Engine\Collision\Octree\OctreeManager.h" />
     <ClInclude Include="Engine\ContactRecord\ContactRecord.h" />
     <ClInclude Include="Engine\Level\LevelData.h" />
     <ClInclude Include="Engine\Level\LevelDataManager.h" />
@@ -432,6 +435,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3D\VertexData.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\Animation\LocalMatrix.h" />
+    <ClInclude Include="Engine\Collision\Octree\OctreeCell.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Engine\Camera\ViewProjectionMatrix.h" />
   </ItemGroup>

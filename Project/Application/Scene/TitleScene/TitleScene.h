@@ -70,7 +70,8 @@ private: // メンバ変数
 	std::unique_ptr<Skybox> skybox_;
 
 
-	Vector3 pos = { 0.0f,0.0f,0.0f };
+	Vector3 pos1 = { 0.0f,0.0f,0.0f };
+	Vector3 pos2 = { 0.0f,0.0f,0.0f };
 
 	int32_t result = 0;
 

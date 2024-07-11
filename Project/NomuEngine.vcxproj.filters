@@ -673,7 +673,13 @@
     <ClCompile Include="Application\Object\GameSceneObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collision\Octree.cpp">
+    <ClCompile Include="Engine\Collision\Octree\Octree.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\Octree\OctreeCell.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\Octree\OctreeManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1233,7 +1239,13 @@
     <ClInclude Include="Application\Object\GameSceneObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collision\Octree.h">
+    <ClInclude Include="Engine\Collision\Octree\Octree.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\Octree\OctreeCell.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\Octree\OctreeManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
